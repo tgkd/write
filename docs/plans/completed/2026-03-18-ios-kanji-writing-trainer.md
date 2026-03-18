@@ -125,6 +125,6 @@ Build an iOS kanji writing trainer in Swift using KanjiVG stroke vector data, a 
 
 ### Task 7: Update documentation
 
-- [ ] Update README.md with project overview, setup instructions (how to preprocess KanjiVG data), and build instructions
-- [ ] Add CLAUDE.md with project conventions, architecture overview, and key patterns
-- [ ] Move this plan to `docs/plans/completed/`
+- [x] Update README.md with project overview, setup instructions (how to preprocess KanjiVG data), and build instructions
+- [x] Add CLAUDE.md with project conventions, architecture overview, and key patterns
+- [x] Move this plan to `docs/plans/completed/`
