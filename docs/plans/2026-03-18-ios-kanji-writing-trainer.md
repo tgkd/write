@@ -82,15 +82,15 @@ Build an iOS kanji writing trainer in Swift using KanjiVG stroke vector data, a 
 - Create: `Engine/FrechetDistance.swift` - discrete Frechet distance computation
 - Create: `Engine/StrokeValidator.swift` - orchestrates sampling, normalization, comparison, and scoring
 
-- [ ] Implement point sampling: walk along a CGPath (reference strokes) or point array (user strokes) and emit N equally-spaced points (default N=50)
-- [ ] Implement Procrustes normalization: translate curve centroid to origin, scale to unit size, try multiple rotations to find optimal alignment
-- [ ] Implement discrete Frechet distance between two normalized point sequences (respects curve direction - backwards strokes score poorly)
-- [ ] Create StrokeValidator that orchestrates the pipeline: sample -> normalize -> compare -> score (0-1 similarity)
-- [ ] Implement stroke identification: given a user stroke and list of unmatched reference strokes, find the best match using centroid distance as fast rejection filter then Frechet comparison
-- [ ] Implement stroke order validation: check if matched stroke number equals expected next stroke number
-- [ ] Configurable thresholds: leniency multiplier (default 1.0), shape similarity threshold (~0.3-0.4), direction tolerance, centroid position tolerance (~30% of canvas)
-- [ ] Write comprehensive tests: known stroke pairs with expected scores, backwards stroke scores lower than forward, correct stroke identification among candidates, threshold edge cases, Procrustes invariance to translation/scale/rotation
-- [ ] Run project test suite - must pass before task 5
+- [x] Implement point sampling: walk along a CGPath (reference strokes) or point array (user strokes) and emit N equally-spaced points (default N=50)
+- [x] Implement Procrustes normalization: translate curve centroid to origin, scale to unit size, try multiple rotations to find optimal alignment
+- [x] Implement discrete Frechet distance between two normalized point sequences (respects curve direction - backwards strokes score poorly)
+- [x] Create StrokeValidator that orchestrates the pipeline: sample -> normalize -> compare -> score (0-1 similarity)
+- [x] Implement stroke identification: given a user stroke and list of unmatched reference strokes, find the best match using centroid distance as fast rejection filter then Frechet comparison
+- [x] Implement stroke order validation: check if matched stroke number equals expected next stroke number
+- [x] Configurable thresholds: leniency multiplier (default 1.0), shape similarity threshold (~0.3-0.4), direction tolerance, centroid position tolerance (~30% of canvas)
+- [x] Write comprehensive tests: known stroke pairs with expected scores, backwards stroke scores lower than forward, correct stroke identification among candidates, threshold edge cases, Procrustes invariance to translation/scale/rotation
+- [x] Run project test suite - must pass before task 5
 
 ### Task 5: Three practice modes and kanji selection UI
 
