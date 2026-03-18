@@ -1,7 +1,16 @@
 import SwiftUI
 
 struct ContentView: View {
+    private let dataStore = KanjiDataStore()
+
     var body: some View {
-        Text("Write - Kanji Trainer")
+        NavigationStack {
+            KanjiPickerView(dataStore: dataStore)
+                .navigationDestination(for: String.self) { codePoint in
+                    if let kanji = dataStore.lookup(codePoint: codePoint) {
+                        PracticeView(kanjiData: kanji)
+                    }
+                }
+        }
     }
 }

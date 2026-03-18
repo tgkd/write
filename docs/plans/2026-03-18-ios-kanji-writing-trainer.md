@@ -102,17 +102,17 @@ Build an iOS kanji writing trainer in Swift using KanjiVG stroke vector data, a 
 - Create: `Views/KanjiPickerView.swift` - simple kanji selection grid
 - Create: `Views/ContentView.swift` - root navigation
 
-- [ ] Create PracticeState: state machine tracking stroke progression (waitingForInput -> userDrawing -> validating -> strokeAccepted/strokeRejected -> waitingForInput), current stroke index, attempt count
-- [ ] Create FeedbackOverlayView: green rendering for accepted strokes, red flash + clear for rejected strokes
-- [ ] Create PracticeMode enum with three cases, each configuring ghost stroke visibility, validation timing, and feedback behavior
-- [ ] Mode A (Trace): all ghost strokes visible at alpha 0.3, current expected stroke at alpha 0.5, per-stroke validation on completion
-- [ ] Mode B (Stroke-by-stroke): only next expected ghost stroke visible, animated in via strokeEnd, auto-hint after N consecutive misses (default 3)
-- [ ] Mode C (Free draw): no ghost strokes, per-stroke sequential matching with bounding-box normalization
-- [ ] Create PracticeView (SwiftUI): compose KanjiReferenceView + DrawingCanvasView + FeedbackOverlayView via UIViewRepresentable, wire up validation callbacks, mode selector
-- [ ] Create KanjiPickerView: grid of kanji characters, tapping one navigates to PracticeView
-- [ ] Create root ContentView with navigation from picker to practice
-- [ ] Write tests: state machine transitions, mode-specific ghost visibility configuration, stroke acceptance/rejection flow
-- [ ] Run project test suite - must pass before task 6
+- [x] Create PracticeState: state machine tracking stroke progression (waitingForInput -> userDrawing -> validating -> strokeAccepted/strokeRejected -> waitingForInput), current stroke index, attempt count
+- [x] Create FeedbackOverlayView: green rendering for accepted strokes, red flash + clear for rejected strokes
+- [x] Create PracticeMode enum with three cases, each configuring ghost stroke visibility, validation timing, and feedback behavior
+- [x] Mode A (Trace): all ghost strokes visible at alpha 0.3, current expected stroke at alpha 0.5, per-stroke validation on completion
+- [x] Mode B (Stroke-by-stroke): only next expected ghost stroke visible, animated in via strokeEnd, auto-hint after N consecutive misses (default 3)
+- [x] Mode C (Free draw): no ghost strokes, per-stroke sequential matching with bounding-box normalization
+- [x] Create PracticeView (SwiftUI): compose KanjiReferenceView + DrawingCanvasView + FeedbackOverlayView via UIViewRepresentable, wire up validation callbacks, mode selector
+- [x] Create KanjiPickerView: grid of kanji characters, tapping one navigates to PracticeView
+- [x] Create root ContentView with navigation from picker to practice
+- [x] Write tests: state machine transitions, mode-specific ghost visibility configuration, stroke acceptance/rejection flow
+- [x] Run project test suite - must pass before task 6
 
 ### Task 6: Verify acceptance criteria
 
