@@ -10,8 +10,12 @@ struct ValidationConfig: Sendable {
     /// Strokes above this threshold are rejected.
     var shapeThreshold: CGFloat = 0.42
 
-    /// Maximum centroid distance (as fraction of canvas size) for fast rejection.
+    /// Maximum centroid distance (as fraction of canvas diagonal) for fast rejection.
     var centroidTolerance: CGFloat = 0.35
+
+    /// Maximum centroid distance (as fraction of canvas diagonal) for position acceptance.
+    /// Tighter than centroidTolerance — strokes must be near the correct location.
+    var positionTolerance: CGFloat = 0.03
 
     /// Number of sample points for comparison.
     var sampleCount: Int = 50
@@ -142,6 +146,16 @@ enum StrokeValidator {
         matchedIndex: Int?,
         expectedIndex: Int?
     ) -> StrokeValidationResult {
+        // Position check: centroid distance in canvas space
+        let userCentroid = ProcrustesNormalizer.centroid(of: userPoints)
+        let refCentroid = ProcrustesNormalizer.centroid(of: referencePoints)
+        let centroidDist = hypot(userCentroid.x - refCentroid.x, userCentroid.y - refCentroid.y)
+        let canvasDiagonal = hypot(canvasSize.width, canvasSize.height)
+        let normalizedPosition = centroidDist / canvasDiagonal
+        let positionThreshold = config.positionTolerance * config.leniency
+        let positionPassed = normalizedPosition <= positionThreshold
+
+        // Shape check: Procrustes normalize then Frechet distance
         let (normUser, normRef) = ProcrustesNormalizer.normalize(
             source: userPoints,
             target: referencePoints,
@@ -153,17 +167,21 @@ enum StrokeValidator {
             and: normRef.points
         )
 
-        let threshold = config.shapeThreshold * config.leniency
-        let accepted = frechet <= threshold
+        let shapeThreshold = config.shapeThreshold * config.leniency
+        let shapePassed = frechet <= shapeThreshold
+        let accepted = shapePassed && positionPassed
 
-        let score: CGFloat
+        let shapeScore: CGFloat
         if frechet <= 0 {
-            score = 1.0
-        } else if frechet >= threshold * 2 {
-            score = 0.0
+            shapeScore = 1.0
+        } else if frechet >= shapeThreshold * 2 {
+            shapeScore = 0.0
         } else {
-            score = max(0, 1.0 - frechet / (threshold * 2))
+            shapeScore = max(0, 1.0 - frechet / (shapeThreshold * 2))
         }
+
+        let positionFactor = max(0, 1.0 - normalizedPosition / (positionThreshold * 2))
+        let score = shapeScore * positionFactor
 
         let correctOrder: Bool
         if let matched = matchedIndex, let expected = expectedIndex {
