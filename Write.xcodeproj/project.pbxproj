@@ -11,10 +11,13 @@
 		13805E5DF596D2D770066B07 /* WriteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1837E06356F61F94BAA0150 /* WriteApp.swift */; };
 		28975F97AAC63CD86AE2072B /* KanjiData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D3EA225B25052BFBC34F84 /* KanjiData.swift */; };
 		324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BE9563E3884403974EFDDA /* ContentView.swift */; };
+		42A4EC0BA54B8DF2FE3D25E9 /* KanjiReferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */; };
 		61AF686CC04E46EA3B27F4CF /* KanjiDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A573E07580005FA275E101 /* KanjiDataStore.swift */; };
 		74D81606F11AA2C7A201C6B6 /* SVGPath in Frameworks */ = {isa = PBXBuildFile; productRef = DF60413D51CD5403BC557C9F /* SVGPath */; };
 		7C92CC4ABC30580AF8D4269A /* KanjiStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */; };
+		8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */; };
 		931539011E1B5DE53D8C52E3 /* kanji_strokes.json in Resources */ = {isa = PBXBuildFile; fileRef = C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */; };
+		B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */; };
 		F0E3647DC6161023D81E8180 /* PreprocessingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,10 +32,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRenderer.swift; sourceTree = "<group>"; };
 		2C922C626F86D525633E5506 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		41BE9563E3884403974EFDDA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		51D3EA225B25052BFBC34F84 /* KanjiData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiData.swift; sourceTree = "<group>"; };
 		76A573E07580005FA275E101 /* KanjiDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStore.swift; sourceTree = "<group>"; };
+		81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRenderingTests.swift; sourceTree = "<group>"; };
 		8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStoreTests.swift; sourceTree = "<group>"; };
 		9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreprocessingTests.swift; sourceTree = "<group>"; };
 		A38E5D0257B76A3C0E3F76E1 /* WriteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WriteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -40,6 +45,7 @@
 		C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = kanji_strokes.json; sourceTree = "<group>"; };
 		E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiStroke.swift; sourceTree = "<group>"; };
 		F29AA3B6A1227A3707D69319 /* Write.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Write.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiReferenceView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +82,7 @@
 			children = (
 				8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */,
 				9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */,
+				81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */,
 			);
 			path = WriteTests;
 			sourceTree = "<group>";
@@ -89,6 +96,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		532E1ED38260C73ABF920966 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */,
+				0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		5E60320E56CD1A2EBE393D5C /* Write */ = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +113,7 @@
 				0C0746DA2F766895F8660F15 /* Models */,
 				916B2088AA8D1D1B9624CB8E /* Resources */,
 				126B37367CEE8F796D9EAFE6 /* Services */,
+				532E1ED38260C73ABF920966 /* Views */,
 			);
 			path = Write;
 			sourceTree = "<group>";
@@ -220,6 +237,7 @@
 			files = (
 				06ED2FD32F9E763D4E1F483C /* KanjiDataStoreTests.swift in Sources */,
 				F0E3647DC6161023D81E8180 /* PreprocessingTests.swift in Sources */,
+				B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,7 +248,9 @@
 				324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */,
 				28975F97AAC63CD86AE2072B /* KanjiData.swift in Sources */,
 				61AF686CC04E46EA3B27F4CF /* KanjiDataStore.swift in Sources */,
+				42A4EC0BA54B8DF2FE3D25E9 /* KanjiReferenceView.swift in Sources */,
 				7C92CC4ABC30580AF8D4269A /* KanjiStroke.swift in Sources */,
+				8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */,
 				13805E5DF596D2D770066B07 /* WriteApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

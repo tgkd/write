@@ -50,13 +50,13 @@ Build an iOS kanji writing trainer in Swift using KanjiVG stroke vector data, a 
 - Create: `Views/StrokeRenderer.swift` - CAShapeLayer-based stroke rendering
 - Create: `Views/KanjiReferenceView.swift` - UIView that displays ghost strokes for a kanji
 
-- [ ] Create StrokeRenderer: converts SVGPath-parsed CGPaths to CAShapeLayers, applies uniform scale transform from 109x109 KanjiVG coordinate space to canvas size
-- [ ] Implement ghost stroke rendering: configurable stroke color, alpha, and line width per stroke
-- [ ] Implement stroke-drawing animation using CABasicAnimation on strokeEnd (0 to 1), with configurable duration and sequential chaining via beginTime offsets
-- [ ] Create KanjiReferenceView (UIView) that takes a KanjiData and renders all strokes as ghost CAShapeLayers
-- [ ] Support per-stroke visibility control (show/hide/highlight individual strokes) and color changes (gray -> green for accepted, red flash for rejected)
-- [ ] Write tests: scale transform correctness (109 -> canvas size), stroke count matches KanjiData, animation parameters
-- [ ] Run project test suite - must pass before task 3
+- [x] Create StrokeRenderer: converts SVGPath-parsed CGPaths to CAShapeLayers, applies uniform scale transform from 109x109 KanjiVG coordinate space to canvas size
+- [x] Implement ghost stroke rendering: configurable stroke color, alpha, and line width per stroke
+- [x] Implement stroke-drawing animation using CABasicAnimation on strokeEnd (0 to 1), with configurable duration and sequential chaining via beginTime offsets
+- [x] Create KanjiReferenceView (UIView) that takes a KanjiData and renders all strokes as ghost CAShapeLayers
+- [x] Support per-stroke visibility control (show/hide/highlight individual strokes) and color changes (gray -> green for accepted, red flash for rejected)
+- [x] Write tests: scale transform correctness (109 -> canvas size), stroke count matches KanjiData, animation parameters
+- [x] Run project test suite - must pass before task 3
 
 ### Task 3: Drawing canvas with touch tracking and curve smoothing
 
