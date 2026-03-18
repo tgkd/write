@@ -1,3 +1,15 @@
 
 # ralphex progress logs
 .ralphex/progress/
+
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+DerivedData/
+build/
+*.moved-aside
+*.xcuserstate
+
+# KanjiVG raw data (large, not needed in repo - preprocessed JSON is committed)
+Data/
