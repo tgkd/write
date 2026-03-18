@@ -11,14 +11,18 @@ struct StrokeAppearance: Sendable {
     static let ghost = StrokeAppearance()
     static let currentGhost = StrokeAppearance(alpha: 0.5, lineWidth: 6.0)
 
+    static func ghost(lineWidth: CGFloat) -> StrokeAppearance {
+        StrokeAppearance(lineWidth: lineWidth)
+    }
+
+    static func currentGhost(lineWidth: CGFloat) -> StrokeAppearance {
+        StrokeAppearance(alpha: 0.5, lineWidth: lineWidth + 1)
+    }
+
     /// Returns a color for the given stroke index within a total stroke count.
     /// Produces a warm gradient: red → orange → yellow → green.
     static func strokeOrderColor(index: Int, total: Int) -> UIColor {
-        guard total > 1 else {
-            return UIColor(hue: 0.0, saturation: 0.60, brightness: 0.75, alpha: 1)
-        }
-        let hue = CGFloat(index) / CGFloat(total - 1) * 0.33
-        return UIColor(hue: hue, saturation: 0.60, brightness: 0.75, alpha: 1)
+        ColorPalette.warm.strokeOrderColor(index: index, total: total)
     }
 }
 

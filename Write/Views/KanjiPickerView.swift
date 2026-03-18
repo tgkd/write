@@ -7,6 +7,7 @@ struct KanjiPickerView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 6)
 
     @State private var searchText = ""
+    @State private var showSettings = false
 
     init(dataStore: KanjiDataStore) {
         self.dataStore = dataStore
@@ -40,5 +41,17 @@ struct KanjiPickerView: View {
         }
         .searchable(text: $searchText, prompt: "Search kanji")
         .navigationTitle("Write")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showSettings = true
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+            }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
+        }
     }
 }

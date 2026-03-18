@@ -4,11 +4,13 @@ import UIKit
 final class FeedbackOverlayView: UIView {
 
     private var feedbackLayers: [CAShapeLayer] = []
+    var acceptedColor: UIColor = .systemGreen
+    var rejectedColor: UIColor = .systemRed
 
     func showAccepted(points: [CGPoint]) {
         guard points.count >= 2 else { return }
         let path = CatmullRomSpline.createPath(from: points)
-        let shapeLayer = makeLayer(path: path, color: .systemGreen)
+        let shapeLayer = makeLayer(path: path, color: acceptedColor)
         layer.addSublayer(shapeLayer)
         feedbackLayers.append(shapeLayer)
         animateAndRemove(layer: shapeLayer, totalDuration: 0.6)
@@ -17,7 +19,7 @@ final class FeedbackOverlayView: UIView {
     func showRejected(points: [CGPoint]) {
         guard points.count >= 2 else { return }
         let path = CatmullRomSpline.createPath(from: points)
-        let shapeLayer = makeLayer(path: path, color: .systemRed)
+        let shapeLayer = makeLayer(path: path, color: rejectedColor)
         layer.addSublayer(shapeLayer)
         feedbackLayers.append(shapeLayer)
         animateAndRemove(layer: shapeLayer, totalDuration: 0.4)

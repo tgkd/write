@@ -10,6 +10,8 @@ class KanjiReferenceView: UIView {
     private var kanjiData: KanjiData?
     private var lastBuiltSize: CGSize = .zero
     var onLayersRebuilt: (() -> Void)?
+    var strokeLineWidth: CGFloat = 5.0
+    var colorProvider: (Int, Int) -> UIColor = StrokeAppearance.strokeOrderColor
 
     func configure(with kanjiData: KanjiData) {
         self.kanjiData = kanjiData
@@ -33,8 +35,8 @@ class KanjiReferenceView: UIView {
 
         let total = kanjiData.strokes.count
         for (index, stroke) in kanjiData.strokes.enumerated() {
-            let color = StrokeAppearance.strokeOrderColor(index: index, total: total)
-            let appearance = StrokeAppearance(strokeColor: color)
+            let color = colorProvider(index, total)
+            let appearance = StrokeAppearance(strokeColor: color, lineWidth: strokeLineWidth)
             if let layer = try? StrokeRenderer.createStrokeLayer(
                 from: stroke,
                 canvasSize: bounds.size,
@@ -46,6 +48,14 @@ class KanjiReferenceView: UIView {
         }
 
         onLayersRebuilt?()
+    }
+
+    func updateAppearance(lineWidth: CGFloat, colorProvider: @escaping (Int, Int) -> UIColor) {
+        self.strokeLineWidth = lineWidth
+        self.colorProvider = colorProvider
+        for layer in strokeLayers {
+            layer.lineWidth = lineWidth
+        }
     }
 
     // MARK: - Visibility control
@@ -134,6 +144,6 @@ class KanjiReferenceView: UIView {
     // MARK: - Private
 
     private func orderColor(at index: Int) -> UIColor {
-        StrokeAppearance.strokeOrderColor(index: index, total: strokeLayers.count)
+        colorProvider(index, strokeLayers.count)
     }
 }

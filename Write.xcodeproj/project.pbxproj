@@ -18,6 +18,7 @@
 		324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BE9563E3884403974EFDDA /* ContentView.swift */; };
 		33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */; };
 		42A4EC0BA54B8DF2FE3D25E9 /* KanjiReferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */; };
+		45EA541A8AE474627E14726C /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B138A055F1450C9C03D9543 /* ColorPalette.swift */; };
 		527CE900711B6897827483D1 /* PracticeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6D64264C7D7504993129BC /* PracticeTests.swift */; };
 		5B44846DBEA1792BA3DA966E /* PracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A5A9E84315E390CECEC817 /* PracticeView.swift */; };
 		5BB76FC40A8EAE79D4EFD86F /* PracticeMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA7AEFF588DE8BA39EAA351 /* PracticeMode.swift */; };
@@ -28,9 +29,11 @@
 		8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */; };
 		931539011E1B5DE53D8C52E3 /* kanji_strokes.json in Resources */ = {isa = PBXBuildFile; fileRef = C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */; };
 		998FCA762B4EEDEDFCDE2EC1 /* DrawingCanvasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */; };
+		9DA403F28AAB60A0F95271A9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2839C39B854D958B7C59CF /* SettingsView.swift */; };
 		A804FD3A9F8B74A9AE25B5DB /* ProcrustesNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF92521D279F5641C0A0668 /* ProcrustesNormalizer.swift */; };
 		B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */; };
 		C2092910EEFC045C62FDBA6A /* CatmullRomSpline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */; };
+		D8F590153A99714D63DB1421 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1218FC775663C580B435BC2E /* AppSettings.swift */; };
 		E06F60CC74BA13B9FCC60278 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1061A3078D31136BA4CE4C66 /* DrawingCanvasView.swift */; };
 		E1AD8F7E1D0D638F003925C1 /* BrushStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919D2510E02A64F8DC10620F /* BrushStroke.swift */; };
 		F0E3647DC6161023D81E8180 /* PreprocessingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */; };
@@ -50,7 +53,9 @@
 /* Begin PBXFileReference section */
 		0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRenderer.swift; sourceTree = "<group>"; };
 		1061A3078D31136BA4CE4C66 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
+		1218FC775663C580B435BC2E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatmullRomSpline.swift; sourceTree = "<group>"; };
+		2B138A055F1450C9C03D9543 /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
 		2C922C626F86D525633E5506 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeValidationTests.swift; sourceTree = "<group>"; };
 		3CA7AEFF588DE8BA39EAA351 /* PracticeMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeMode.swift; sourceTree = "<group>"; };
@@ -71,6 +76,7 @@
 		B1837E06356F61F94BAA0150 /* WriteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteApp.swift; sourceTree = "<group>"; };
 		BA6D64264C7D7504993129BC /* PracticeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeTests.swift; sourceTree = "<group>"; };
 		C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = kanji_strokes.json; sourceTree = "<group>"; };
+		CF2839C39B854D958B7C59CF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		DE816A45A5022B69DCC5ADCA /* FrechetDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrechetDistance.swift; sourceTree = "<group>"; };
 		E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiStroke.swift; sourceTree = "<group>"; };
 		F27A0064549BCC4192A32E45 /* PracticeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeState.swift; sourceTree = "<group>"; };
@@ -95,6 +101,8 @@
 		0C0746DA2F766895F8660F15 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1218FC775663C580B435BC2E /* AppSettings.swift */,
+				2B138A055F1450C9C03D9543 /* ColorPalette.swift */,
 				51D3EA225B25052BFBC34F84 /* KanjiData.swift */,
 				E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */,
 				3CA7AEFF588DE8BA39EAA351 /* PracticeMode.swift */,
@@ -153,6 +161,7 @@
 				5298C48D4E8206737F9A1C0B /* KanjiPickerView.swift */,
 				FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */,
 				44A5A9E84315E390CECEC817 /* PracticeView.swift */,
+				CF2839C39B854D958B7C59CF /* SettingsView.swift */,
 				0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */,
 			);
 			path = Views;
@@ -310,8 +319,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8F590153A99714D63DB1421 /* AppSettings.swift in Sources */,
 				E1AD8F7E1D0D638F003925C1 /* BrushStroke.swift in Sources */,
 				C2092910EEFC045C62FDBA6A /* CatmullRomSpline.swift in Sources */,
+				45EA541A8AE474627E14726C /* ColorPalette.swift in Sources */,
 				324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */,
 				29FCD16567BB62EEE606C520 /* DrawingCanvasRepresentable.swift in Sources */,
 				E06F60CC74BA13B9FCC60278 /* DrawingCanvasView.swift in Sources */,
@@ -327,6 +338,7 @@
 				013FE94AD914E50DD46A8286 /* PracticeState.swift in Sources */,
 				5B44846DBEA1792BA3DA966E /* PracticeView.swift in Sources */,
 				A804FD3A9F8B74A9AE25B5DB /* ProcrustesNormalizer.swift in Sources */,
+				9DA403F28AAB60A0F95271A9 /* SettingsView.swift in Sources */,
 				8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */,
 				33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */,
 				13805E5DF596D2D770066B07 /* WriteApp.swift in Sources */,

@@ -21,7 +21,7 @@ final class PracticeState: ObservableObject {
     @Published var mode: PracticeMode
 
     let kanjiData: KanjiData
-    let validationConfig: ValidationConfig
+    var validationConfig: ValidationConfig
 
     var totalStrokes: Int { kanjiData.strokes.count }
 

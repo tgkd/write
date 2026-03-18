@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PracticeView: View {
     @StateObject private var practiceState: PracticeState
+    @EnvironmentObject private var settings: AppSettings
     @State private var canvasView: DrawingCanvasView?
     @State private var referenceView: KanjiReferenceView?
     @State private var feedbackView: FeedbackOverlayView?
@@ -56,6 +57,26 @@ struct PracticeView: View {
             feedbackView?.clearAll()
             applyGhostVisibility()
         }
+        .onChange(of: settings.maskPathWidth) { _ in
+            practiceState.validationConfig = settings.validationConfig
+            referenceView?.updateAppearance(
+                lineWidth: settings.maskPathWidth,
+                colorProvider: settings.colorPalette.strokeOrderColor
+            )
+            applyGhostVisibility()
+        }
+        .onChange(of: settings.colorPalette) { _ in
+            referenceView?.updateAppearance(
+                lineWidth: settings.maskPathWidth,
+                colorProvider: settings.colorPalette.strokeOrderColor
+            )
+            feedbackView?.acceptedColor = settings.colorPalette.acceptedColor
+            feedbackView?.rejectedColor = settings.colorPalette.rejectedColor
+            applyGhostVisibility()
+        }
+        .onAppear {
+            practiceState.validationConfig = settings.validationConfig
+        }
     }
 
     // MARK: - Subviews
@@ -83,7 +104,7 @@ struct PracticeView: View {
 
     private func dotFillColor(for index: Int) -> Color {
         if practiceState.matchedStrokeIndices.contains(index) {
-            return Color(uiColor: StrokeAppearance.strokeOrderColor(
+            return Color(uiColor: settings.colorPalette.strokeOrderColor(
                 index: index, total: practiceState.totalStrokes
             ))
         }
@@ -107,6 +128,8 @@ struct PracticeView: View {
         ZStack {
             KanjiReferenceRepresentable(
                 kanjiData: practiceState.kanjiData,
+                lineWidth: settings.maskPathWidth,
+                palette: settings.colorPalette,
                 referenceView: $referenceView,
                 onReady: { applyGhostVisibility() }
             )
@@ -118,7 +141,10 @@ struct PracticeView: View {
                 canvasView: $canvasView
             )
 
-            FeedbackOverlayRepresentable(feedbackView: $feedbackView)
+            FeedbackOverlayRepresentable(
+                palette: settings.colorPalette,
+                feedbackView: $feedbackView
+            )
         }
     }
 
@@ -236,12 +262,16 @@ struct PracticeView: View {
 
 private struct KanjiReferenceRepresentable: UIViewRepresentable {
     let kanjiData: KanjiData
+    let lineWidth: CGFloat
+    let palette: ColorPalette
     @Binding var referenceView: KanjiReferenceView?
     var onReady: (() -> Void)?
 
     func makeUIView(context: Context) -> KanjiReferenceView {
         let view = KanjiReferenceView()
         view.backgroundColor = .clear
+        view.strokeLineWidth = lineWidth
+        view.colorProvider = palette.strokeOrderColor
         view.onLayersRebuilt = { [weak view] in
             guard let view else { return }
             DispatchQueue.main.async {
@@ -253,21 +283,29 @@ private struct KanjiReferenceRepresentable: UIViewRepresentable {
         return view
     }
 
-    func updateUIView(_ uiView: KanjiReferenceView, context: Context) {}
+    func updateUIView(_ uiView: KanjiReferenceView, context: Context) {
+        uiView.updateAppearance(lineWidth: lineWidth, colorProvider: palette.strokeOrderColor)
+    }
 }
 
 private struct FeedbackOverlayRepresentable: UIViewRepresentable {
+    let palette: ColorPalette
     @Binding var feedbackView: FeedbackOverlayView?
 
     func makeUIView(context: Context) -> FeedbackOverlayView {
         let view = FeedbackOverlayView()
         view.backgroundColor = .clear
         view.isUserInteractionEnabled = false
+        view.acceptedColor = palette.acceptedColor
+        view.rejectedColor = palette.rejectedColor
         DispatchQueue.main.async {
             self.feedbackView = view
         }
         return view
     }
 
-    func updateUIView(_ uiView: FeedbackOverlayView, context: Context) {}
+    func updateUIView(_ uiView: FeedbackOverlayView, context: Context) {
+        uiView.acceptedColor = palette.acceptedColor
+        uiView.rejectedColor = palette.rejectedColor
+    }
 }
