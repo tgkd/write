@@ -13,7 +13,11 @@ struct PracticeView: View {
     }
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) {
+            kanjiHeader
+
+            Spacer(minLength: 0)
+
             strokeProgressDots
                 .padding(.horizontal)
 
@@ -26,12 +30,11 @@ struct PracticeView: View {
                 )
                 .padding(.horizontal, 16)
 
-            kanjiMetadata
-
             controls
+                .padding(.bottom, 48)
         }
-        .navigationTitle(String(practiceState.kanjiData.character))
         .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { dismiss() } label: {
@@ -126,27 +129,23 @@ struct PracticeView: View {
         return Color(.systemGray5)
     }
 
-    private var kanjiMetadata: some View {
+    private var kanjiHeader: some View {
         let kanji = practiceState.kanjiData
-        return VStack(spacing: 4) {
-            if let meanings = kanji.meanings, !meanings.isEmpty {
-                Text(meanings.joined(separator: ", "))
+        return VStack(alignment: .leading, spacing: 2) {
+            Text(String(kanji.character))
+                .font(.system(size: 40))
+            if let on = kanji.onYomi, !on.isEmpty {
+                Text(on.joined(separator: "、 "))
                     .font(.subheadline)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.secondary)
             }
-            HStack(spacing: 16) {
-                if let on = kanji.onYomi, !on.isEmpty {
-                    Text(on.joined(separator: "、 "))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                if let kun = kanji.kunYomi, !kun.isEmpty {
-                    Text(kun.joined(separator: "、 "))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+            if let meanings = kanji.meanings, !meanings.isEmpty {
+                Text(meanings.prefix(3).joined(separator: ", "))
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
     }
 
