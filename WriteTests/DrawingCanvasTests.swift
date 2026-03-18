@@ -278,13 +278,17 @@ final class DrawingCanvasViewTests: XCTestCase {
 
 private class TestTouch: UITouch {
     private let _locationInView: CGPoint
+    private let _timestamp: TimeInterval
 
-    init(locationInView: CGPoint) {
+    init(locationInView: CGPoint, timestamp: TimeInterval = 0) {
         _locationInView = locationInView
+        _timestamp = timestamp
         super.init()
     }
 
     override func location(in view: UIView?) -> CGPoint {
         _locationInView
     }
+
+    override var timestamp: TimeInterval { _timestamp }
 }

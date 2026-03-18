@@ -252,7 +252,8 @@ final class KanjiReferenceViewTests: XCTestCase {
     func testMarkStrokeAccepted() {
         let view = makeConfiguredView()
         view.markStrokeAccepted(at: 1)
-        XCTAssertEqual(view.strokeLayers[1].strokeColor, UIColor.systemGreen.cgColor)
+        let expectedColor = StrokeAppearance.strokeOrderColor(index: 1, total: 3)
+        XCTAssertEqual(view.strokeLayers[1].strokeColor, expectedColor.cgColor)
     }
 
     func testSetStrokeColor() {

@@ -4,12 +4,22 @@ import SVGPath
 struct StrokeAppearance: Sendable {
     var strokeColor: UIColor = .gray
     var alpha: CGFloat = 0.3
-    var lineWidth: CGFloat = 3.0
+    var lineWidth: CGFloat = 5.0
     var lineCap: CAShapeLayerLineCap = .round
     var lineJoin: CAShapeLayerLineJoin = .round
 
     static let ghost = StrokeAppearance()
-    static let currentGhost = StrokeAppearance(alpha: 0.5, lineWidth: 3.5)
+    static let currentGhost = StrokeAppearance(alpha: 0.5, lineWidth: 6.0)
+
+    /// Returns a color for the given stroke index within a total stroke count.
+    /// Produces a warm gradient: red → orange → yellow → green.
+    static func strokeOrderColor(index: Int, total: Int) -> UIColor {
+        guard total > 1 else {
+            return UIColor(hue: 0.0, saturation: 0.60, brightness: 0.75, alpha: 1)
+        }
+        let hue = CGFloat(index) / CGFloat(total - 1) * 0.33
+        return UIColor(hue: hue, saturation: 0.60, brightness: 0.75, alpha: 1)
+    }
 }
 
 enum StrokeRenderer {

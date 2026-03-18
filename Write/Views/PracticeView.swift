@@ -5,28 +5,52 @@ struct PracticeView: View {
     @State private var canvasView: DrawingCanvasView?
     @State private var referenceView: KanjiReferenceView?
     @State private var feedbackView: FeedbackOverlayView?
+    @Environment(\.dismiss) private var dismiss
 
     init(kanjiData: KanjiData) {
         _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData))
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            modePicker
-            statusBar
+        VStack(spacing: 12) {
+            strokeProgressDots
+                .padding(.horizontal)
 
             canvasArea
                 .aspectRatio(1, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color(.separator), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color(.systemGray4), lineWidth: 0.5)
                 )
-                .padding(.horizontal)
+                .padding(.horizontal, 16)
 
             controls
         }
         .navigationTitle(String(practiceState.kanjiData.character))
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.backward")
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Picker("Mode", selection: Binding(
+                        get: { practiceState.mode },
+                        set: { practiceState.changeMode($0) }
+                    )) {
+                        ForEach(PracticeMode.allCases, id: \.self) { mode in
+                            Text(mode.displayName).tag(mode)
+                        }
+                    }
+                } label: {
+                    Text(practiceState.mode.displayName)
+                        .font(.subheadline)
+                }
+            }
+        }
         .onChange(of: practiceState.mode) { _ in
             canvasView?.clearAll()
             feedbackView?.clearAll()
@@ -36,30 +60,47 @@ struct PracticeView: View {
 
     // MARK: - Subviews
 
-    private var modePicker: some View {
-        Picker("Mode", selection: Binding(
-            get: { practiceState.mode },
-            set: { practiceState.changeMode($0) }
-        )) {
-            ForEach(PracticeMode.allCases, id: \.self) { mode in
-                Text(mode.displayName).tag(mode)
+    private var strokeProgressDots: some View {
+        HStack(spacing: 4) {
+            ForEach(0..<practiceState.totalStrokes, id: \.self) { i in
+                Circle()
+                    .fill(dotFillColor(for: i))
+                    .frame(width: dotSize, height: dotSize)
+                    .overlay(
+                        Circle()
+                            .stroke(dotBorderColor(for: i), lineWidth: 1)
+                    )
             }
         }
-        .pickerStyle(.segmented)
-        .padding(.horizontal)
     }
 
-    private var statusBar: some View {
-        HStack {
-            Text("\(practiceState.matchedStrokeIndices.count)/\(practiceState.totalStrokes)")
-                .monospacedDigit()
-            Spacer()
-            if practiceState.isComplete {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.green)
-            }
+    private var dotSize: CGFloat {
+        let total = practiceState.totalStrokes
+        if total <= 12 { return 10 }
+        if total <= 20 { return 8 }
+        return 6
+    }
+
+    private func dotFillColor(for index: Int) -> Color {
+        if practiceState.matchedStrokeIndices.contains(index) {
+            return Color(uiColor: StrokeAppearance.strokeOrderColor(
+                index: index, total: practiceState.totalStrokes
+            ))
         }
-        .padding(.horizontal)
+        if index == practiceState.currentStrokeIndex && !practiceState.isComplete {
+            return Color(.systemGray4)
+        }
+        return Color(.systemGray6)
+    }
+
+    private func dotBorderColor(for index: Int) -> Color {
+        if practiceState.matchedStrokeIndices.contains(index) {
+            return .clear
+        }
+        if index == practiceState.currentStrokeIndex && !practiceState.isComplete {
+            return Color(.systemGray3)
+        }
+        return Color(.systemGray5)
     }
 
     private var canvasArea: some View {
@@ -82,19 +123,26 @@ struct PracticeView: View {
     }
 
     private var controls: some View {
-        HStack(spacing: 24) {
-            Button("Clear") {
+        HStack(spacing: 32) {
+            Button {
                 canvasView?.clearAll()
                 feedbackView?.clearAll()
+            } label: {
+                Image(systemName: "eraser")
+                    .font(.title3)
             }
-            Button("Reset") {
+
+            Button {
                 practiceState.reset()
                 canvasView?.clearAll()
                 feedbackView?.clearAll()
                 applyGhostVisibility()
+            } label: {
+                Image(systemName: "arrow.counterclockwise")
+                    .font(.title3)
             }
         }
-        .padding(.horizontal)
+        .padding(.bottom, 4)
     }
 
     // MARK: - Logic

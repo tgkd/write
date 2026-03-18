@@ -1,26 +1,13 @@
 import UIKit
 
-/// A UIView that captures touch input as stroke point sequences and renders them as smooth curves.
+/// A UIView that captures touch input and renders strokes as variable-width calligraphy brush paths.
 @MainActor
 final class DrawingCanvasView: UIView {
 
     // MARK: - Configuration
 
-    /// Stroke appearance for user-drawn strokes.
-    struct StrokeStyle {
-        var color: UIColor = .label
-        var lineWidth: CGFloat = 4.0
-        var lineCap: CAShapeLayerLineCap = .round
-        var lineJoin: CAShapeLayerLineJoin = .round
-    }
-
-    var strokeStyle = StrokeStyle()
-
-    /// Number of Catmull-Rom subdivisions between control points.
-    var smoothingSubdivisions: Int = 8
-
-    /// Catmull-Rom alpha parameter. 0.5 = centripetal (default).
-    var smoothingAlpha: CGFloat = 0.5
+    var brushConfig = BrushStroke.Config()
+    var strokeColor: UIColor = .label
 
     // MARK: - Callbacks
 
@@ -36,7 +23,10 @@ final class DrawingCanvasView: UIView {
     private(set) var strokes: [[CGPoint]] = []
 
     /// Points being captured for the current in-progress stroke.
-    private(set) var currentStrokePoints: [CGPoint] = []
+    var currentStrokePoints: [CGPoint] { currentSamples.map(\.point) }
+
+    /// Touch samples (point + timestamp) for the current in-progress stroke.
+    private var currentSamples: [BrushStroke.Sample] = []
 
     /// CAShapeLayers for completed strokes.
     private var strokeLayers: [CAShapeLayer] = []
@@ -71,9 +61,9 @@ final class DrawingCanvasView: UIView {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self)
 
-        currentStrokePoints = [point]
+        currentSamples = [BrushStroke.Sample(point: point, timestamp: touch.timestamp)]
 
-        let shapeLayer = makeStrokeLayer()
+        let shapeLayer = makeBrushLayer()
         layer.addSublayer(shapeLayer)
         activeLayer = shapeLayer
 
@@ -85,7 +75,7 @@ final class DrawingCanvasView: UIView {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self)
 
-        currentStrokePoints.append(point)
+        currentSamples.append(BrushStroke.Sample(point: point, timestamp: touch.timestamp))
         updateActivePath()
         onPointAdded?(point, strokes.count)
     }
@@ -94,8 +84,8 @@ final class DrawingCanvasView: UIView {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self)
 
-        if point != currentStrokePoints.last {
-            currentStrokePoints.append(point)
+        if point != currentSamples.last?.point {
+            currentSamples.append(BrushStroke.Sample(point: point, timestamp: touch.timestamp))
         }
 
         finalizeCurrentStroke()
@@ -107,50 +97,37 @@ final class DrawingCanvasView: UIView {
 
     // MARK: - Private
 
-    private func makeStrokeLayer() -> CAShapeLayer {
+    private func makeBrushLayer() -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
-        shapeLayer.strokeColor = strokeStyle.color.cgColor
-        shapeLayer.fillColor = nil
-        shapeLayer.lineWidth = strokeStyle.lineWidth
-        shapeLayer.lineCap = strokeStyle.lineCap
-        shapeLayer.lineJoin = strokeStyle.lineJoin
+        shapeLayer.fillColor = strokeColor.cgColor
+        shapeLayer.strokeColor = nil
         return shapeLayer
     }
 
     private func updateActivePath() {
         guard let activeLayer else { return }
-        let path = CatmullRomSpline.createPath(
-            from: currentStrokePoints,
-            alpha: smoothingAlpha,
-            subdivisions: smoothingSubdivisions
-        )
-        activeLayer.path = path
+        activeLayer.path = BrushStroke.createPath(from: currentSamples, config: brushConfig)
     }
 
     private func finalizeCurrentStroke() {
-        let rawPoints = currentStrokePoints
+        let rawPoints = currentSamples.map(\.point)
         let strokeIndex = strokes.count
 
         strokes.append(rawPoints)
 
         if let active = activeLayer {
-            let finalPath = CatmullRomSpline.createPath(
-                from: rawPoints,
-                alpha: smoothingAlpha,
-                subdivisions: smoothingSubdivisions
-            )
-            active.path = finalPath
+            active.path = BrushStroke.createPath(from: currentSamples, config: brushConfig)
             strokeLayers.append(active)
             activeLayer = nil
         }
 
-        currentStrokePoints = []
+        currentSamples = []
         onStrokeCompleted?(rawPoints, strokeIndex)
     }
 
     private func cancelCurrentStroke() {
         activeLayer?.removeFromSuperlayer()
         activeLayer = nil
-        currentStrokePoints = []
+        currentSamples = []
     }
 }

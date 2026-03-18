@@ -3,9 +3,6 @@ import SwiftUI
 /// UIViewRepresentable wrapper for DrawingCanvasView, exposing it to SwiftUI.
 struct DrawingCanvasRepresentable: UIViewRepresentable {
 
-    /// Stroke appearance configuration.
-    var strokeStyle: DrawingCanvasView.StrokeStyle = .init()
-
     /// Called when a new point is added during drawing.
     var onPointAdded: ((CGPoint, Int) -> Void)?
 
@@ -17,7 +14,6 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> DrawingCanvasView {
         let view = DrawingCanvasView()
-        view.strokeStyle = strokeStyle
         view.onPointAdded = onPointAdded
         view.onStrokeCompleted = onStrokeCompleted
         view.backgroundColor = .clear
@@ -28,7 +24,6 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: DrawingCanvasView, context: Context) {
-        uiView.strokeStyle = strokeStyle
         uiView.onPointAdded = onPointAdded
         uiView.onStrokeCompleted = onStrokeCompleted
     }

@@ -8,10 +8,10 @@ struct ValidationConfig: Sendable {
 
     /// Maximum normalized Frechet distance for a stroke to be considered matching.
     /// Strokes above this threshold are rejected.
-    var shapeThreshold: CGFloat = 0.35
+    var shapeThreshold: CGFloat = 0.42
 
     /// Maximum centroid distance (as fraction of canvas size) for fast rejection.
-    var centroidTolerance: CGFloat = 0.30
+    var centroidTolerance: CGFloat = 0.35
 
     /// Number of sample points for comparison.
     var sampleCount: Int = 50

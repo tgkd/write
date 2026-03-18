@@ -8,6 +8,7 @@
 *.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
 DerivedData/
 build/
+TestResults*/
 *.moved-aside
 *.xcuserstate
 

@@ -4,6 +4,8 @@
 
 ```sh
 # Generate Xcode project (required after changing project.yml or adding/removing files)
+# WARNING: This overwrites Write.xcodeproj entirely. Never edit project settings
+# in Xcode's UI — all settings must live in project.yml or they will be lost.
 xcodegen generate
 
 # Run all tests

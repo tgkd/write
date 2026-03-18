@@ -31,10 +31,14 @@ class KanjiReferenceView: UIView {
         guard let kanjiData, !bounds.isEmpty else { return }
         lastBuiltSize = bounds.size
 
-        for stroke in kanjiData.strokes {
+        let total = kanjiData.strokes.count
+        for (index, stroke) in kanjiData.strokes.enumerated() {
+            let color = StrokeAppearance.strokeOrderColor(index: index, total: total)
+            let appearance = StrokeAppearance(strokeColor: color)
             if let layer = try? StrokeRenderer.createStrokeLayer(
                 from: stroke,
-                canvasSize: bounds.size
+                canvasSize: bounds.size,
+                appearance: appearance
             ) {
                 self.layer.addSublayer(layer)
                 strokeLayers.append(layer)
@@ -49,12 +53,13 @@ class KanjiReferenceView: UIView {
     func setStrokeVisibility(_ visibility: StrokeVisibility, at index: Int) {
         guard strokeLayers.indices.contains(index) else { return }
         let layer = strokeLayers[index]
+        let color = orderColor(at: index)
         switch visibility {
         case .hidden:
             layer.isHidden = true
         case .visible(let alpha):
             layer.isHidden = false
-            layer.strokeColor = UIColor.gray.withAlphaComponent(alpha).cgColor
+            layer.strokeColor = color.withAlphaComponent(alpha).cgColor
         }
     }
 
@@ -74,14 +79,16 @@ class KanjiReferenceView: UIView {
     func highlightStroke(at index: Int, alpha: CGFloat = 0.5) {
         guard strokeLayers.indices.contains(index) else { return }
         let layer = strokeLayers[index]
+        let color = orderColor(at: index)
         layer.isHidden = false
-        layer.strokeColor = UIColor.gray.withAlphaComponent(alpha).cgColor
+        layer.strokeColor = color.withAlphaComponent(alpha).cgColor
     }
 
     func markStrokeAccepted(at index: Int) {
         guard strokeLayers.indices.contains(index) else { return }
+        let color = orderColor(at: index)
         strokeLayers[index].isHidden = false
-        strokeLayers[index].strokeColor = UIColor.systemGreen.cgColor
+        strokeLayers[index].strokeColor = color.cgColor
     }
 
     func flashStrokeRejected(at index: Int, duration: CFTimeInterval = 0.5) {
@@ -122,5 +129,11 @@ class KanjiReferenceView: UIView {
                 beginTime: beginTime
             )
         }
+    }
+
+    // MARK: - Private
+
+    private func orderColor(at index: Int) -> UIColor {
+        StrokeAppearance.strokeOrderColor(index: index, total: strokeLayers.count)
     }
 }
