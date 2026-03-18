@@ -65,14 +65,14 @@ Build an iOS kanji writing trainer in Swift using KanjiVG stroke vector data, a 
 - Create: `Utilities/CatmullRomSpline.swift` - centripetal Catmull-Rom interpolation
 - Create: `Views/DrawingCanvasRepresentable.swift` - UIViewRepresentable wrapper
 
-- [ ] Create DrawingCanvasView (UIView) with touchesBegan/touchesMoved/touchesEnded capturing CGPoint sequences per stroke
-- [ ] Expose callbacks: onPointAdded (real-time during drawing), onStrokeCompleted (after touchesEnded)
-- [ ] Render user strokes as CAShapeLayers with configurable stroke color and width
-- [ ] Implement centripetal Catmull-Rom spline interpolation (alpha 0.5) to smooth raw touch points into clean curves
-- [ ] Support clearing individual strokes or all strokes
-- [ ] Create UIViewRepresentable wrapper for use in SwiftUI
-- [ ] Write tests: point capture accuracy, Catmull-Rom output passes through original control points, stroke count tracking
-- [ ] Run project test suite - must pass before task 4
+- [x] Create DrawingCanvasView (UIView) with touchesBegan/touchesMoved/touchesEnded capturing CGPoint sequences per stroke
+- [x] Expose callbacks: onPointAdded (real-time during drawing), onStrokeCompleted (after touchesEnded)
+- [x] Render user strokes as CAShapeLayers with configurable stroke color and width
+- [x] Implement centripetal Catmull-Rom spline interpolation (alpha 0.5) to smooth raw touch points into clean curves
+- [x] Support clearing individual strokes or all strokes
+- [x] Create UIViewRepresentable wrapper for use in SwiftUI
+- [x] Write tests: point capture accuracy, Catmull-Rom output passes through original control points, stroke count tracking
+- [x] Run project test suite - must pass before task 4
 
 ### Task 4: Stroke validation engine (Frechet distance + Procrustes analysis)
 
