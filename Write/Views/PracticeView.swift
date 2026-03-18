@@ -194,11 +194,13 @@ private struct KanjiReferenceRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> KanjiReferenceView {
         let view = KanjiReferenceView()
         view.backgroundColor = .clear
-        view.configure(with: kanjiData)
-        DispatchQueue.main.async {
-            self.referenceView = view
-            self.onReady?()
+        view.onLayersRebuilt = {
+            DispatchQueue.main.async {
+                self.referenceView = view
+                self.onReady?()
+            }
         }
+        view.configure(with: kanjiData)
         return view
     }
 

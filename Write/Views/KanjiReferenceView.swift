@@ -9,6 +9,7 @@ class KanjiReferenceView: UIView {
     private(set) var strokeLayers: [CAShapeLayer] = []
     private var kanjiData: KanjiData?
     private var lastBuiltSize: CGSize = .zero
+    var onLayersRebuilt: (() -> Void)?
 
     func configure(with kanjiData: KanjiData) {
         self.kanjiData = kanjiData
@@ -39,6 +40,8 @@ class KanjiReferenceView: UIView {
                 strokeLayers.append(layer)
             }
         }
+
+        onLayersRebuilt?()
     }
 
     // MARK: - Visibility control
