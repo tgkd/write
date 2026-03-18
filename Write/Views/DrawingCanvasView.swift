@@ -57,40 +57,12 @@ final class DrawingCanvasView: UIView {
         removed.removeFromSuperlayer()
     }
 
-    /// Removes a stroke at a specific index.
-    func removeStroke(at index: Int) {
-        guard index >= 0 && index < strokes.count else { return }
-        strokes.remove(at: index)
-        let removed = strokeLayers.remove(at: index)
-        removed.removeFromSuperlayer()
-    }
-
     /// Removes all completed strokes and clears the canvas.
     func clearAll() {
         strokes.removeAll()
         for l in strokeLayers { l.removeFromSuperlayer() }
         strokeLayers.removeAll()
         cancelCurrentStroke()
-    }
-
-    /// Returns smoothed points for a completed stroke at the given index.
-    func smoothedPoints(for strokeIndex: Int) -> [CGPoint] {
-        guard strokeIndex >= 0 && strokeIndex < strokes.count else { return [] }
-        return CatmullRomSpline.interpolate(
-            points: strokes[strokeIndex],
-            alpha: smoothingAlpha,
-            subdivisions: smoothingSubdivisions
-        )
-    }
-
-    /// Returns the smoothed CGPath for a completed stroke at the given index.
-    func smoothedPath(for strokeIndex: Int) -> CGPath? {
-        guard strokeIndex >= 0 && strokeIndex < strokes.count else { return nil }
-        return CatmullRomSpline.createPath(
-            from: strokes[strokeIndex],
-            alpha: smoothingAlpha,
-            subdivisions: smoothingSubdivisions
-        )
     }
 
     // MARK: - Touch Handling

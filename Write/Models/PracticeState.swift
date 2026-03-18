@@ -53,7 +53,8 @@ final class PracticeState: ObservableObject {
     func processValidationResult(_ result: StrokeValidationResult) {
         guard phase == .validating else { return }
 
-        if result.accepted, let matchedIndex = result.matchedStrokeIndex, result.correctOrder {
+        let orderOk = result.correctOrder || mode == .freeDraw
+        if result.accepted, let matchedIndex = result.matchedStrokeIndex, orderOk {
             matchedStrokeIndices.insert(matchedIndex)
             consecutiveMisses = 0
             currentStrokeIndex = matchedIndex + 1

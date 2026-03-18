@@ -10,10 +10,9 @@ enum PointSampler {
     static func sample(points: [CGPoint], count: Int = defaultSampleCount) -> [CGPoint] {
         guard points.count >= 2, count >= 2 else { return points }
 
-        let totalLength = cumulativeLengths(for: points).last ?? 0
-        guard totalLength > 0 else { return [points[0]] }
-
         let lengths = cumulativeLengths(for: points)
+        let totalLength = lengths.last ?? 0
+        guard totalLength > 0 else { return [points[0]] }
         var result: [CGPoint] = []
         result.reserveCapacity(count)
 

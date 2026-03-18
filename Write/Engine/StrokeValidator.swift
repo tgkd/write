@@ -17,8 +17,6 @@ struct ValidationConfig: Sendable {
     var sampleCount: Int = 50
 
     static let standard = ValidationConfig()
-    static let lenient = ValidationConfig(leniency: 1.5, shapeThreshold: 0.50)
-    static let strict = ValidationConfig(leniency: 0.7, shapeThreshold: 0.25)
 }
 
 /// Result of validating a single user stroke against a reference.
@@ -37,9 +35,6 @@ struct StrokeValidationResult: Sendable {
 
     /// Raw Frechet distance (normalized).
     let frechetDistance: CGFloat
-
-    /// Centroid distance between user stroke and matched reference.
-    let centroidDistance: CGFloat
 }
 
 /// Orchestrates the stroke validation pipeline: sample -> normalize -> compare -> score.
@@ -133,8 +128,7 @@ enum StrokeValidator {
             accepted: false,
             matchedStrokeIndex: nil,
             correctOrder: false,
-            frechetDistance: .infinity,
-            centroidDistance: .infinity
+            frechetDistance: .infinity
         )
     }
 
@@ -150,10 +144,11 @@ enum StrokeValidator {
     ) -> StrokeValidationResult {
         let (normUser, normRef) = ProcrustesNormalizer.normalize(
             source: userPoints,
-            target: referencePoints
+            target: referencePoints,
+            applyRotation: false
         )
 
-        let frechet = FrechetDistance.computeIterative(
+        let frechet = FrechetDistance.compute(
             between: normUser.points,
             and: normRef.points
         )
@@ -170,10 +165,6 @@ enum StrokeValidator {
             score = max(0, 1.0 - frechet / (threshold * 2))
         }
 
-        let userCentroid = ProcrustesNormalizer.centroid(of: userPoints)
-        let refCentroid = ProcrustesNormalizer.centroid(of: referencePoints)
-        let centroidDist = hypot(userCentroid.x - refCentroid.x, userCentroid.y - refCentroid.y)
-
         let correctOrder: Bool
         if let matched = matchedIndex, let expected = expectedIndex {
             correctOrder = matched == expected
@@ -186,8 +177,7 @@ enum StrokeValidator {
             accepted: accepted,
             matchedStrokeIndex: matchedIndex,
             correctOrder: correctOrder,
-            frechetDistance: frechet,
-            centroidDistance: centroidDist
+            frechetDistance: frechet
         )
     }
 }

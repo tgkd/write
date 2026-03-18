@@ -28,11 +28,13 @@ python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Write/Resources/kanji_str
    - PointSampler -> ProcrustesNormalizer -> FrechetDistance -> StrokeValidator pipeline
 2. **Models/** - Codable data models and state machines
 3. **Services/** - KanjiDataStore loads bundled JSON, provides lookup by code point or character
-4. **Views/** - UIKit views (DrawingCanvasView, KanjiReferenceView) wrapped in SwiftUI via UIViewRepresentable
+4. **Utilities/** - Standalone helpers (CatmullRomSpline for Catmull-Rom curve smoothing)
+5. **Views/** - UIKit views (DrawingCanvasView, KanjiReferenceView) wrapped in SwiftUI via UIViewRepresentable
+   - StrokeRenderer (in Views/) is also used by StrokeValidator to parse SVG paths and apply the KanjiVG-to-canvas scale transform; it's a shared dependency, not purely a view concern
 
 ### Validation pipeline
 
-User stroke -> sample N points -> Procrustes normalize -> Frechet distance against reference -> score (0-1)
+User stroke -> sample N points -> Procrustes normalize (center + scale, no rotation) -> Frechet distance against reference -> score (0-1)
 
 Stroke identification uses centroid distance as a fast rejection filter before running the full Frechet comparison.
 
@@ -44,6 +46,6 @@ KanjiVG uses a 109x109 coordinate space. StrokeRenderer applies a uniform scale 
 
 - One component per file
 - Models are Codable structs
-- PracticeState is an ObservableObject with @Published properties
+- PracticeState is a @MainActor ObservableObject with @Published properties
 - Tests are in WriteTests/, one test file per module area
 - The preprocessed kanji_strokes.json is committed; raw KanjiVG XML (Data/) is gitignored

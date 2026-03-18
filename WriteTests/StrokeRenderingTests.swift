@@ -9,7 +9,6 @@ final class StrokeRendererTests: XCTestCase {
     func testScaleTransformSquareCanvas() {
         let canvasSize = CGSize(width: 300, height: 300)
         let transform = StrokeRenderer.scaleTransform(to: canvasSize)
-        let expectedScale = 300.0 / 109.0
 
         let origin = CGPoint.zero.applying(transform)
         XCTAssertEqual(origin.x, 0, accuracy: 0.01)
@@ -22,8 +21,6 @@ final class StrokeRendererTests: XCTestCase {
         let mid = CGPoint(x: 54.5, y: 54.5).applying(transform)
         XCTAssertEqual(mid.x, 150, accuracy: 0.5)
         XCTAssertEqual(mid.y, 150, accuracy: 0.5)
-
-        _ = expectedScale
     }
 
     func testScaleTransformWideCanvas() {

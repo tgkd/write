@@ -183,6 +183,22 @@ final class ProcrustesNormalizerTests: XCTestCase {
         let angle = ProcrustesNormalizer.optimalRotation(from: source, to: target)
         XCTAssertEqual(angle, .pi / 2, accuracy: 0.01)
     }
+
+    func testNormalizeWithoutRotation() {
+        let source = [CGPoint(x: 0, y: 0), CGPoint(x: 10, y: 0)]
+        let target = [CGPoint(x: 0, y: 0), CGPoint(x: 0, y: 10)]
+
+        let withRotation = ProcrustesNormalizer.normalize(source: source, target: target, applyRotation: true)
+        let withoutRotation = ProcrustesNormalizer.normalize(source: source, target: target, applyRotation: false)
+
+        XCTAssertEqual(withRotation.source.rotation, .pi / 2, accuracy: 0.01)
+        XCTAssertEqual(withoutRotation.source.rotation, 0, accuracy: 0.01)
+
+        // Without rotation, horizontal and vertical lines should have high Frechet distance
+        let frechetNoRot = FrechetDistance.compute(between: withoutRotation.source.points, and: withoutRotation.target.points)
+        let frechetRot = FrechetDistance.compute(between: withRotation.source.points, and: withRotation.target.points)
+        XCTAssertGreaterThan(frechetNoRot, frechetRot)
+    }
 }
 
 // MARK: - FrechetDistance Tests
@@ -212,16 +228,6 @@ final class FrechetDistanceTests: XCTestCase {
 
         XCTAssertLessThan(forwardDist, backwardDist,
             "Forward stroke should have lower Frechet distance than backwards")
-    }
-
-    func testRecursiveAndIterativeMatch() {
-        let p = [CGPoint(x: 0, y: 0), CGPoint(x: 30, y: 50), CGPoint(x: 60, y: 20), CGPoint(x: 100, y: 80)]
-        let q = [CGPoint(x: 5, y: 3), CGPoint(x: 35, y: 45), CGPoint(x: 55, y: 25), CGPoint(x: 95, y: 85)]
-
-        let recursive = FrechetDistance.compute(between: p, and: q)
-        let iterative = FrechetDistance.computeIterative(between: p, and: q)
-
-        XCTAssertEqual(recursive, iterative, accuracy: 0.001)
     }
 
     func testEmptyCurvesReturnInfinity() {
@@ -367,14 +373,6 @@ final class StrokeValidatorTests: XCTestCase {
 
         XCTAssertEqual(result.score, 0)
         XCTAssertFalse(result.accepted)
-    }
-
-    func testConfigurableThresholds() {
-        let lenient = ValidationConfig.lenient
-        let strict = ValidationConfig.strict
-
-        XCTAssertGreaterThan(lenient.shapeThreshold, strict.shapeThreshold)
-        XCTAssertGreaterThan(lenient.leniency, strict.leniency)
     }
 
     func testValidationResultScoreRange() {

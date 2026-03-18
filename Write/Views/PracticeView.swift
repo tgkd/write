@@ -83,9 +83,6 @@ struct PracticeView: View {
 
     private var controls: some View {
         HStack(spacing: 24) {
-            Button("Undo") {
-                canvasView?.removeLastStroke()
-            }
             Button("Clear") {
                 canvasView?.clearAll()
                 feedbackView?.clearAll()

@@ -207,19 +207,6 @@ final class DrawingCanvasViewTests: XCTestCase {
         XCTAssertEqual(canvas.strokes[0].first!, CGPoint(x: 0, y: 0))
     }
 
-    func testRemoveStrokeAtIndex() {
-        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-
-        simulateStroke(on: canvas, points: [CGPoint(x: 0, y: 0), CGPoint(x: 10, y: 10)])
-        simulateStroke(on: canvas, points: [CGPoint(x: 20, y: 20), CGPoint(x: 30, y: 30)])
-        simulateStroke(on: canvas, points: [CGPoint(x: 40, y: 40), CGPoint(x: 50, y: 50)])
-
-        canvas.removeStroke(at: 1) // remove middle stroke
-        XCTAssertEqual(canvas.strokeCount, 2)
-        XCTAssertEqual(canvas.strokes[0].first!, CGPoint(x: 0, y: 0))
-        XCTAssertEqual(canvas.strokes[1].first!, CGPoint(x: 40, y: 40))
-    }
-
     func testClearAll() {
         let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
 
@@ -231,54 +218,9 @@ final class DrawingCanvasViewTests: XCTestCase {
         XCTAssertTrue(canvas.strokes.isEmpty)
     }
 
-    func testSmoothedPointsForStroke() {
-        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-
-        let rawPoints = [
-            CGPoint(x: 0, y: 0),
-            CGPoint(x: 50, y: 100),
-            CGPoint(x: 100, y: 50),
-            CGPoint(x: 150, y: 80)
-        ]
-        simulateStroke(on: canvas, points: rawPoints)
-
-        let smoothed = canvas.smoothedPoints(for: 0)
-        XCTAssertGreaterThan(smoothed.count, rawPoints.count)
-
-        // Smoothed points should pass through original control points
-        for controlPoint in rawPoints {
-            let found = smoothed.contains { p in
-                abs(p.x - controlPoint.x) < 0.001 && abs(p.y - controlPoint.y) < 0.001
-            }
-            XCTAssertTrue(found, "Smoothed output should pass through control point (\(controlPoint.x), \(controlPoint.y))")
-        }
-    }
-
-    func testSmoothedPathReturnsValidPath() {
-        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-
-        simulateStroke(on: canvas, points: [
-            CGPoint(x: 0, y: 0),
-            CGPoint(x: 50, y: 50),
-            CGPoint(x: 100, y: 0)
-        ])
-
-        let path = canvas.smoothedPath(for: 0)
-        XCTAssertNotNil(path)
-        XCTAssertFalse(path!.isEmpty)
-    }
-
-    func testSmoothedPointsOutOfBounds() {
-        let canvas = DrawingCanvasView()
-        XCTAssertTrue(canvas.smoothedPoints(for: 0).isEmpty)
-        XCTAssertTrue(canvas.smoothedPoints(for: -1).isEmpty)
-        XCTAssertNil(canvas.smoothedPath(for: 5))
-    }
-
     func testRemoveOnEmptyCanvas() {
         let canvas = DrawingCanvasView()
         canvas.removeLastStroke() // should not crash
-        canvas.removeStroke(at: 0) // should not crash
         canvas.clearAll() // should not crash
         XCTAssertEqual(canvas.strokeCount, 0)
     }

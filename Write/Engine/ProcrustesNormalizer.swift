@@ -76,9 +76,12 @@ enum ProcrustesNormalizer {
     }
 
     /// Full Procrustes normalization: center, scale, then optimally rotate source to match target.
+    /// When `applyRotation` is false, only translation and uniform scaling are applied,
+    /// preserving the original curve direction for Frechet distance comparison.
     static func normalize(
         source: [CGPoint],
-        target: [CGPoint]
+        target: [CGPoint],
+        applyRotation: Bool = true
     ) -> (source: NormalizedCurve, target: NormalizedCurve) {
         let sourceCentroid = centroid(of: source)
         let targetCentroid = centroid(of: target)
@@ -89,12 +92,19 @@ enum ProcrustesNormalizer {
         let (sourceScaled, sourceSize) = scaleToUnit(sourceCentered)
         let (targetScaled, targetSize) = scaleToUnit(targetCentered)
 
-        let angle = optimalRotation(from: sourceScaled, to: targetScaled)
-        let sourceRotated = rotate(sourceScaled, by: angle)
+        let angle: CGFloat
+        let sourceAligned: [CGPoint]
+        if applyRotation {
+            angle = optimalRotation(from: sourceScaled, to: targetScaled)
+            sourceAligned = rotate(sourceScaled, by: angle)
+        } else {
+            angle = 0
+            sourceAligned = sourceScaled
+        }
 
         return (
             source: NormalizedCurve(
-                points: sourceRotated,
+                points: sourceAligned,
                 centroid: sourceCentroid,
                 scale: sourceSize,
                 rotation: angle

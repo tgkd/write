@@ -8,15 +8,17 @@ class KanjiReferenceView: UIView {
 
     private(set) var strokeLayers: [CAShapeLayer] = []
     private var kanjiData: KanjiData?
+    private var lastBuiltSize: CGSize = .zero
 
     func configure(with kanjiData: KanjiData) {
         self.kanjiData = kanjiData
+        lastBuiltSize = .zero
         rebuildStrokeLayers()
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        if kanjiData != nil {
+        if kanjiData != nil && bounds.size != lastBuiltSize {
             rebuildStrokeLayers()
         }
     }
@@ -26,6 +28,7 @@ class KanjiReferenceView: UIView {
         strokeLayers.removeAll()
 
         guard let kanjiData, !bounds.isEmpty else { return }
+        lastBuiltSize = bounds.size
 
         for stroke in kanjiData.strokes {
             if let layer = try? StrokeRenderer.createStrokeLayer(

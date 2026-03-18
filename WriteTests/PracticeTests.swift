@@ -70,8 +70,7 @@ final class PracticeStateTests: XCTestCase {
             accepted: true,
             matchedStrokeIndex: matchedIndex,
             correctOrder: matchedIndex == expectedIndex,
-            frechetDistance: 0.1,
-            centroidDistance: 10.0
+            frechetDistance: 0.1
         )
     }
 
@@ -81,8 +80,7 @@ final class PracticeStateTests: XCTestCase {
             accepted: false,
             matchedStrokeIndex: nil,
             correctOrder: false,
-            frechetDistance: 0.8,
-            centroidDistance: 50.0
+            frechetDistance: 0.8
         )
     }
 
@@ -181,25 +179,40 @@ final class PracticeStateTests: XCTestCase {
         XCTAssertEqual(state.phase, .waitingForInput)
     }
 
-    func testOutOfOrderStrokeRejected() {
-        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3))
+    func testOutOfOrderStrokeRejectedInTraceMode() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3), mode: .trace)
         state.beginDrawing()
         state.beginValidation()
 
-        // Stroke matches index 1 but expected index is 0 - correctOrder is false
         let result = StrokeValidationResult(
             score: 0.9,
             accepted: true,
             matchedStrokeIndex: 1,
             correctOrder: false,
-            frechetDistance: 0.1,
-            centroidDistance: 10.0
+            frechetDistance: 0.1
         )
         state.processValidationResult(result)
 
-        // Should be rejected because correctOrder is false
         XCTAssertEqual(state.phase, .strokeRejected)
         XCTAssertTrue(state.matchedStrokeIndices.isEmpty)
+    }
+
+    func testOutOfOrderStrokeAcceptedInFreeDrawMode() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3), mode: .freeDraw)
+        state.beginDrawing()
+        state.beginValidation()
+
+        let result = StrokeValidationResult(
+            score: 0.9,
+            accepted: true,
+            matchedStrokeIndex: 2,
+            correctOrder: false,
+            frechetDistance: 0.1
+        )
+        state.processValidationResult(result)
+
+        XCTAssertEqual(state.phase, .strokeAccepted(strokeIndex: 2))
+        XCTAssertEqual(state.matchedStrokeIndices, [2])
     }
 
     // MARK: - Completion
