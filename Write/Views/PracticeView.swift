@@ -194,7 +194,8 @@ private struct KanjiReferenceRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> KanjiReferenceView {
         let view = KanjiReferenceView()
         view.backgroundColor = .clear
-        view.onLayersRebuilt = {
+        view.onLayersRebuilt = { [weak view] in
+            guard let view else { return }
             DispatchQueue.main.async {
                 self.referenceView = view
                 self.onReady?()
