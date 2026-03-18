@@ -116,12 +116,12 @@ Build an iOS kanji writing trainer in Swift using KanjiVG stroke vector data, a 
 
 ### Task 6: Verify acceptance criteria
 
-- [ ] Manual test: select a kanji from the picker, draw it in Trace mode, verify ghost strokes visible and stroke validation works (green for correct, red flash for incorrect)
-- [ ] Manual test: Stroke-by-stroke mode reveals one stroke at a time, auto-hint triggers after 3 misses
-- [ ] Manual test: Free draw mode shows no ghosts, validates each stroke against expected order
-- [ ] Run full test suite
-- [ ] Run linter (swiftlint if configured)
-- [ ] Verify test coverage meets 80%+ for Engine/ (validation core)
+- [x] Manual test: select a kanji from the picker, draw it in Trace mode, verify ghost strokes visible and stroke validation works (green for correct, red flash for incorrect)
+- [x] Manual test: Stroke-by-stroke mode reveals one stroke at a time, auto-hint triggers after 3 misses
+- [x] Manual test: Free draw mode shows no ghosts, validates each stroke against expected order
+- [x] Run full test suite
+- [x] Run linter (swiftlint if configured)
+- [x] Verify test coverage meets 80%+ for Engine/ (validation core)
 
 ### Task 7: Update documentation
 
