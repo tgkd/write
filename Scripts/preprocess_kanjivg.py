@@ -1,26 +1,12 @@
 #!/usr/bin/env python3
 """
-Preprocess KanjiVG XML into a bundled JSON file for the Write app.
+Preprocess KanjiVG XML and KANJIDIC2 XML into a bundled JSON file.
 
 Usage:
-    python3 Scripts/preprocess_kanjivg.py <kanjivg.xml> <output.json>
+    python3 Scripts/preprocess_kanjivg.py <kanjivg.xml> <kanjidic2.xml> <output.json>
 
-Input: KanjiVG combined XML file (all kanji in one file)
-Output: JSON keyed by Unicode code point hex string, e.g.:
-{
-  "4eee": {
-    "codePoint": "4eee",
-    "element": "仮",
-    "strokes": [
-      {"strokeNumber": 1, "pathData": "M32.01,17c...", "strokeType": "㇒"},
-      ...
-    ],
-    "components": [
-      {"element": "亻", "position": "left", "strokes": [...]},
-      ...
-    ]
-  }
-}
+Merges stroke geometry from KanjiVG with readings, meanings, and metadata
+from KANJIDIC2. Output JSON keyed by Unicode code point hex string.
 """
 
 import json
@@ -95,19 +81,71 @@ def is_cjk_unified(code_point_hex):
     return (0x4E00 <= cp <= 0x9FFF) or (0x3400 <= cp <= 0x4DBF)
 
 
-def main():
-    if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} <kanjivg.xml> <output.json>", file=sys.stderr)
-        sys.exit(1)
-    input_path = sys.argv[1]
-    output_path = sys.argv[2]
+def load_kanjidic2(path):
+    """Parse KANJIDIC2 XML and return a dict keyed by lowercase hex code point."""
+    tree = ET.parse(path)
+    root = tree.getroot()
+    result = {}
 
-    tree = ET.parse(input_path)
+    for ch in root.findall("character"):
+        ucs = ch.find(".//cp_value[@cp_type='ucs']")
+        if ucs is None:
+            continue
+        code_point = ucs.text.lower()
+
+        entry = {}
+
+        misc = ch.find("misc")
+        if misc is not None:
+            grade_el = misc.find("grade")
+            if grade_el is not None:
+                entry["grade"] = int(grade_el.text)
+
+            jlpt_el = misc.find("jlpt")
+            if jlpt_el is not None:
+                entry["jlpt"] = int(jlpt_el.text)
+
+            freq_el = misc.find("freq")
+            if freq_el is not None:
+                entry["freq"] = int(freq_el.text)
+
+        rmgroup = ch.find(".//reading_meaning/rmgroup")
+        if rmgroup is not None:
+            on = [r.text for r in rmgroup.findall("reading[@r_type='ja_on']") if r.text]
+            kun = [r.text for r in rmgroup.findall("reading[@r_type='ja_kun']") if r.text]
+            meanings = [m.text for m in rmgroup.findall("meaning") if m.get("m_lang") is None and m.text]
+
+            if on:
+                entry["onYomi"] = on
+            if kun:
+                entry["kunYomi"] = kun
+            if meanings:
+                entry["meanings"] = meanings
+
+        if entry:
+            result[code_point] = entry
+
+    return result
+
+
+def main():
+    if len(sys.argv) != 4:
+        print(f"Usage: {sys.argv[0]} <kanjivg.xml> <kanjidic2.xml> <output.json>", file=sys.stderr)
+        sys.exit(1)
+    kanjivg_path = sys.argv[1]
+    kanjidic2_path = sys.argv[2]
+    output_path = sys.argv[3]
+
+    kanjidic2 = load_kanjidic2(kanjidic2_path)
+    print(f"Loaded {len(kanjidic2)} entries from KANJIDIC2")
+
+    tree = ET.parse(kanjivg_path)
     root = tree.getroot()
 
     result = {}
     total = 0
     skipped = 0
+    enriched = 0
     for kanji_el in root.findall("kanji"):
         total += 1
         data = process_kanji(kanji_el)
@@ -117,12 +155,19 @@ def main():
         if not is_cjk_unified(data["codePoint"]):
             skipped += 1
             continue
+
+        metadata = kanjidic2.get(data["codePoint"], {})
+        if metadata:
+            data.update(metadata)
+            enriched += 1
+
         result[data["codePoint"]] = data
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, separators=(",", ":"))
 
     print(f"Processed {total} entries, kept {len(result)} CJK kanji, skipped {skipped}")
+    print(f"Enriched {enriched} entries with KANJIDIC2 metadata")
 
 
 if __name__ == "__main__":

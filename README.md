@@ -11,6 +11,9 @@ An iOS app for practicing kanji handwriting using stroke-level validation. The a
 - Real-time stroke validation using discrete Frechet distance and Procrustes normalization
 - Catmull-Rom spline smoothing for natural-feeling input
 - KanjiVG-based stroke data for CJK Unified Ideographs
+- Kanji readings (on'yomi, kun'yomi), meanings, and metadata from KANJIDIC2
+- Search by kanji character, reading, or English meaning
+- Configurable guide stroke width and color palette
 
 ## Requirements
 
@@ -22,24 +25,25 @@ An iOS app for practicing kanji handwriting using stroke-level validation. The a
 
 ## Setup
 
-### 1. Download KanjiVG data
+### 1. Download source data
 
-Download the KanjiVG combined XML file and place it at `Data/kanjivg.xml`:
+Download KanjiVG and KANJIDIC2 XML files into `Data/`:
 
 ```sh
 mkdir -p Data
 curl -L "https://github.com/KanjiVG/kanjivg/releases/latest/download/kanjivg-20240807.xml.gz" | gunzip > Data/kanjivg.xml
+curl -L "http://www.edrdg.org/kanjidic/kanjidic2.xml.gz" | gunzip > Data/kanjidic2.xml
 ```
 
-### 2. Preprocess stroke data
+### 2. Preprocess data
 
-Convert the raw XML into the bundled JSON format:
+Merge stroke geometry (KanjiVG) with readings/meanings (KANJIDIC2):
 
 ```sh
-python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Write/Resources/kanji_strokes.json
+python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Data/kanjidic2.xml Write/Resources/kanji_strokes.json
 ```
 
-This produces `Write/Resources/kanji_strokes.json`, which is committed to the repo. You only need to re-run this if updating the KanjiVG dataset.
+This produces `Write/Resources/kanji_strokes.json`, which is committed to the repo. You only need to re-run this if updating the source datasets.
 
 ### 3. Generate Xcode project
 
@@ -74,11 +78,13 @@ Write/
     StrokeValidator       Orchestrates the validation pipeline
   Models/         Data models
     KanjiStroke           Single stroke (path data, type, number)
-    KanjiData             Full kanji (strokes + components)
+    KanjiData             Full kanji (strokes, components, readings, meanings)
     PracticeMode          Three mode configurations
     PracticeState         State machine for stroke progression
+    AppSettings           User preferences (guide width, color palette)
+    ColorPalette          Stroke color palette definitions
   Services/       Data loading
-    KanjiDataStore        Loads and queries bundled kanji JSON
+    KanjiDataStore        Loads, queries, and searches bundled kanji JSON
   Utilities/      Helpers
     CatmullRomSpline      Centripetal Catmull-Rom curve smoothing
   Views/          UI layer
@@ -86,9 +92,10 @@ Write/
     KanjiReferenceView          Ghost stroke display (UIView)
     DrawingCanvasView           Touch-tracking canvas (UIView)
     DrawingCanvasRepresentable  SwiftUI wrapper for DrawingCanvasView
-    FeedbackOverlayView         Green/red stroke feedback
-    KanjiPickerView             Kanji selection grid
+    FeedbackOverlayView         Stroke acceptance/rejection feedback
+    KanjiPickerView             Kanji selection grid with search
     PracticeView                Main practice screen
+    SettingsView                Guide width and color palette settings
   Resources/
     kanji_strokes.json    Preprocessed KanjiVG data
 
@@ -102,6 +109,7 @@ WriteTests/               Unit tests (139 tests, 98% Engine coverage)
 ## Data sources
 
 - [KanjiVG](https://kanjivg.tagaini.net/) - Stroke vector data (CC BY-SA 3.0)
+- [KANJIDIC2](http://www.edrdg.org/wiki/index.php/KANJIDIC_Project) - Readings, meanings, and metadata (CC BY-SA 4.0)
 - SVG path parsing via [nicklockwood/SVGPath](https://github.com/nicklockwood/SVGPath) (MIT)
 
 ## License

@@ -14,8 +14,8 @@ xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iO
 # Run a single test class
 xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:WriteTests/StrokeValidationTests
 
-# Preprocess KanjiVG data (only needed when updating the dataset)
-python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Write/Resources/kanji_strokes.json
+# Preprocess KanjiVG + KANJIDIC2 data (only needed when updating the dataset)
+python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Data/kanjidic2.xml Write/Resources/kanji_strokes.json
 ```
 
 ## Architecture
@@ -29,7 +29,7 @@ python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Write/Resources/kanji_str
 1. **Engine/** - Pure geometric validation (no UI dependencies). Highly testable, 98% coverage.
    - PointSampler -> ProcrustesNormalizer -> FrechetDistance -> StrokeValidator pipeline
 2. **Models/** - Codable data models and state machines
-3. **Services/** - KanjiDataStore loads bundled JSON, provides lookup by code point or character
+3. **Services/** - KanjiDataStore loads bundled JSON, provides lookup by code point/character and search by reading/meaning
 4. **Utilities/** - Standalone helpers (CatmullRomSpline for Catmull-Rom curve smoothing)
 5. **Views/** - UIKit views (DrawingCanvasView, KanjiReferenceView) wrapped in SwiftUI via UIViewRepresentable
    - StrokeRenderer (in Views/) is also used by StrokeValidator to parse SVG paths and apply the KanjiVG-to-canvas scale transform; it's a shared dependency, not purely a view concern
@@ -50,4 +50,6 @@ KanjiVG uses a 109x109 coordinate space. StrokeRenderer applies a uniform scale 
 - Models are Codable structs
 - PracticeState is a @MainActor ObservableObject with @Published properties
 - Tests are in WriteTests/, one test file per module area
-- The preprocessed kanji_strokes.json is committed; raw KanjiVG XML (Data/) is gitignored
+- The preprocessed kanji_strokes.json is committed; raw XML sources (Data/) are gitignored
+- KanjiData has optional KANJIDIC2 fields (onYomi, kunYomi, meanings, grade, jlpt, freq) — use default nil values in tests
+- AppSettings (@EnvironmentObject) holds user preferences; persisted via UserDefaults

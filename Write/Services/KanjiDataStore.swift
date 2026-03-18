@@ -40,6 +40,22 @@ final class KanjiDataStore: Sendable {
         return kanjiMap[hex]
     }
 
+    func search(query: String) -> [KanjiData] {
+        let q = query.lowercased()
+        return allCodePoints.compactMap { kanjiMap[$0] }.filter { kanji in
+            if let meanings = kanji.meanings {
+                if meanings.contains(where: { $0.lowercased().contains(q) }) { return true }
+            }
+            if let on = kanji.onYomi {
+                if on.contains(where: { $0.contains(query) }) { return true }
+            }
+            if let kun = kanji.kunYomi {
+                if kun.contains(where: { $0.contains(query) }) { return true }
+            }
+            return false
+        }
+    }
+
     var count: Int {
         kanjiMap.count
     }

@@ -18,9 +18,19 @@ struct KanjiPickerView: View {
         if searchText.isEmpty {
             return allKanji
         }
-        return searchText.unicodeScalars.compactMap { scalar in
-            dataStore.lookup(character: Character(scalar))
+        var results: [KanjiData] = []
+        var seen = Set<String>()
+        for scalar in searchText.unicodeScalars {
+            if let kanji = dataStore.lookup(character: Character(scalar)), !seen.contains(kanji.codePoint) {
+                results.append(kanji)
+                seen.insert(kanji.codePoint)
+            }
         }
+        for kanji in dataStore.search(query: searchText) where !seen.contains(kanji.codePoint) {
+            results.append(kanji)
+            seen.insert(kanji.codePoint)
+        }
+        return results
     }
 
     var body: some View {

@@ -26,6 +26,8 @@ struct PracticeView: View {
                 )
                 .padding(.horizontal, 16)
 
+            kanjiMetadata
+
             controls
         }
         .navigationTitle(String(practiceState.kanjiData.character))
@@ -122,6 +124,30 @@ struct PracticeView: View {
             return Color(.systemGray3)
         }
         return Color(.systemGray5)
+    }
+
+    private var kanjiMetadata: some View {
+        let kanji = practiceState.kanjiData
+        return VStack(spacing: 4) {
+            if let meanings = kanji.meanings, !meanings.isEmpty {
+                Text(meanings.joined(separator: ", "))
+                    .font(.subheadline)
+                    .foregroundStyle(.primary)
+            }
+            HStack(spacing: 16) {
+                if let on = kanji.onYomi, !on.isEmpty {
+                    Text(on.joined(separator: "、 "))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                if let kun = kanji.kunYomi, !kun.isEmpty {
+                    Text(kun.joined(separator: "、 "))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
     }
 
     private var canvasArea: some View {

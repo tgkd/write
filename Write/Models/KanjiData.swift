@@ -11,6 +11,12 @@ struct KanjiData: Codable, Equatable, Sendable {
     let element: String?
     let strokes: [KanjiStroke]
     let components: [KanjiComponent]
+    var onYomi: [String]? = nil
+    var kunYomi: [String]? = nil
+    var meanings: [String]? = nil
+    var grade: Int? = nil
+    var jlpt: Int? = nil
+    var freq: Int? = nil
 
     var character: Character {
         guard let scalar = UInt32(codePoint, radix: 16),
