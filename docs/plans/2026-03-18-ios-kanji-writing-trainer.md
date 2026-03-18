@@ -34,15 +34,15 @@ Build an iOS kanji writing trainer in Swift using KanjiVG stroke vector data, a 
 - Create: `Services/KanjiDataStore.swift` - loads and queries bundled kanji data
 - Bundled: `Resources/kanji_strokes.json` - preprocessed KanjiVG data
 
-- [ ] Create new Xcode project (iOS App, SwiftUI lifecycle, minimum deployment iOS 16)
-- [ ] Add nicklockwood/SVGPath as SPM dependency
-- [ ] Download KanjiVG dataset and add to project as raw resource (or git submodule)
-- [ ] Write preprocessing script: parse KanjiVG XML files, strip DOCTYPE, extract stroke paths (d attribute), stroke IDs, kvg:type, and component hierarchy (kvg:element, kvg:position, kvg:radical) per kanji
-- [ ] Output preprocessed data as JSON keyed by Unicode code point (e.g., "4eee" -> {element, strokes: [{strokeNumber, pathData, strokeType}], components: [{element, position, strokes}]})
-- [ ] Create KanjiStroke and KanjiData Swift models with Codable conformance
-- [ ] Create KanjiDataStore that loads the bundled JSON and provides lookup by Unicode code point and by character
-- [ ] Write tests: preprocessing output correctness for a known kanji (e.g., 仮), KanjiDataStore lookup, stroke ordering
-- [ ] Run project test suite - must pass before task 2
+- [x] Create new Xcode project (iOS App, SwiftUI lifecycle, minimum deployment iOS 16)
+- [x] Add nicklockwood/SVGPath as SPM dependency
+- [x] Download KanjiVG dataset and add to project as raw resource (or git submodule)
+- [x] Write preprocessing script: parse KanjiVG XML files, strip DOCTYPE, extract stroke paths (d attribute), stroke IDs, kvg:type, and component hierarchy (kvg:element, kvg:position, kvg:radical) per kanji
+- [x] Output preprocessed data as JSON keyed by Unicode code point (e.g., "4eee" -> {element, strokes: [{strokeNumber, pathData, strokeType}], components: [{element, position, strokes}]})
+- [x] Create KanjiStroke and KanjiData Swift models with Codable conformance
+- [x] Create KanjiDataStore that loads the bundled JSON and provides lookup by Unicode code point and by character
+- [x] Write tests: preprocessing output correctness for a known kanji (e.g., 仮), KanjiDataStore lookup, stroke ordering
+- [x] Run project test suite - must pass before task 2
 
 ### Task 2: Stroke rendering and animation
 
