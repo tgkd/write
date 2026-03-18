@@ -6,10 +6,13 @@ Usage:
     python3 Scripts/preprocess_kanjivg.py <kanjivg.xml> <kanjidic2.xml> <output.json>
 
 Merges stroke geometry from KanjiVG with readings, meanings, and metadata
-from KANJIDIC2. Output JSON keyed by Unicode code point hex string.
+from KANJIDIC2. JLPT levels use the community N5-N1 mapping from
+Data/jlpt_levels.json (sourced from kanjiapi.dev) instead of the obsolete
+4-level values in KANJIDIC2.
 """
 
 import json
+import os
 import sys
 import xml.etree.ElementTree as ET
 
@@ -101,9 +104,6 @@ def load_kanjidic2(path):
             if grade_el is not None:
                 entry["grade"] = int(grade_el.text)
 
-            jlpt_el = misc.find("jlpt")
-            if jlpt_el is not None:
-                entry["jlpt"] = int(jlpt_el.text)
 
             freq_el = misc.find("freq")
             if freq_el is not None:
@@ -136,6 +136,11 @@ def main():
     kanjidic2_path = sys.argv[2]
     output_path = sys.argv[3]
 
+    jlpt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jlpt_levels.json")
+    with open(jlpt_path, encoding="utf-8") as f:
+        jlpt_map = json.load(f)
+    print(f"Loaded {len(jlpt_map)} JLPT N5-N1 mappings")
+
     kanjidic2 = load_kanjidic2(kanjidic2_path)
     print(f"Loaded {len(kanjidic2)} entries from KANJIDIC2")
 
@@ -160,6 +165,10 @@ def main():
         if metadata:
             data.update(metadata)
             enriched += 1
+
+        jlpt_level = jlpt_map.get(data["codePoint"])
+        if jlpt_level is not None:
+            data["jlpt"] = jlpt_level
 
         result[data["codePoint"]] = data
 
