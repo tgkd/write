@@ -7,6 +7,7 @@ struct KanjiPickerView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 6)
     private static let jlptLevels = [5, 4, 3, 2, 1]
 
+    @EnvironmentObject private var settings: AppSettings
     @State private var searchText = ""
     @State private var showSettings = false
     @State private var selectedJLPT: Int? = nil
@@ -64,16 +65,28 @@ struct KanjiPickerView: View {
         .navigationTitle("Write")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showSettings = true
-                } label: {
-                    Image(systemName: "gearshape")
+                HStack(spacing: 16) {
+                    sessionButton
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
                 }
             }
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
         }
+    }
+
+    private var sessionButton: some View {
+        let kanji = dataStore.randomKanji(jlpt: selectedJLPT, count: settings.sessionCount)
+        let route = SessionRoute(codePoints: kanji.map(\.codePoint))
+        return NavigationLink(value: route) {
+            Image(systemName: "play.fill")
+        }
+        .disabled(kanji.isEmpty)
     }
 
     private var jlptFilterBar: some View {

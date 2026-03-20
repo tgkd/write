@@ -15,12 +15,19 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(colorPalette.rawValue, forKey: "colorPalette") }
     }
 
+    @Published var sessionCount: Int {
+        didSet { UserDefaults.standard.set(sessionCount, forKey: "sessionCount") }
+    }
+
     init() {
         let storedWidth = UserDefaults.standard.double(forKey: "maskPathWidth")
         self.maskPathWidth = storedWidth > 0 ? CGFloat(storedWidth) : Self.defaultMaskPathWidth
 
         let storedPalette = UserDefaults.standard.string(forKey: "colorPalette") ?? ""
         self.colorPalette = ColorPalette(rawValue: storedPalette) ?? .warm
+
+        let storedCount = UserDefaults.standard.integer(forKey: "sessionCount")
+        self.sessionCount = storedCount > 0 ? storedCount : 10
     }
 
     var derivedLeniency: CGFloat {

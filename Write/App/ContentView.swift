@@ -11,6 +11,10 @@ struct ContentView: View {
                         PracticeView(kanjiData: kanji)
                     }
                 }
+                .navigationDestination(for: SessionRoute.self) { route in
+                    let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
+                    SessionPracticeView(kanji: kanji)
+                }
         }
     }
 }

@@ -56,6 +56,12 @@ final class KanjiDataStore: Sendable {
         }
     }
 
+    func randomKanji(jlpt: Int?, count: Int) -> [KanjiData] {
+        let pool = allCodePoints.compactMap { kanjiMap[$0] }
+            .filter { jlpt == nil || $0.jlpt == jlpt }
+        return Array(pool.shuffled().prefix(count))
+    }
+
     var count: Int {
         kanjiMap.count
     }

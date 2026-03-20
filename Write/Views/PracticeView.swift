@@ -6,10 +6,18 @@ struct PracticeView: View {
     @State private var canvasView: DrawingCanvasView?
     @State private var referenceView: KanjiReferenceView?
     @State private var feedbackView: FeedbackOverlayView?
+    @State private var showCompletionCheck = false
     @Environment(\.dismiss) private var dismiss
 
-    init(kanjiData: KanjiData) {
-        _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData))
+    let onComplete: ((Int) -> Void)?
+    let onModeChange: ((PracticeMode) -> Void)?
+    let showToolbar: Bool
+
+    init(kanjiData: KanjiData, mode: PracticeMode = .trace, showToolbar: Bool = true, onComplete: ((Int) -> Void)? = nil, onModeChange: ((PracticeMode) -> Void)? = nil) {
+        _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode))
+        self.showToolbar = showToolbar
+        self.onComplete = onComplete
+        self.onModeChange = onModeChange
     }
 
     var body: some View {
@@ -36,9 +44,11 @@ struct PracticeView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.backward")
+            if showToolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button { dismiss() } label: {
+                        Image(systemName: "chevron.backward")
+                    }
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -61,6 +71,7 @@ struct PracticeView: View {
             canvasView?.clearAll()
             feedbackView?.clearAll()
             applyGhostVisibility()
+            onModeChange?(practiceState.mode)
         }
         .onChange(of: settings.maskPathWidth) { _ in
             practiceState.validationConfig = settings.validationConfig
@@ -139,6 +150,11 @@ struct PracticeView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
+            if let kun = kanji.kunYomi, !kun.isEmpty {
+                Text(kun.joined(separator: "、 "))
+                    .font(.subheadline)
+                    .foregroundStyle(.tertiary)
+            }
             if let meanings = kanji.meanings, !meanings.isEmpty {
                 Text(meanings.prefix(3).joined(separator: ", "))
                     .font(.caption)
@@ -170,7 +186,19 @@ struct PracticeView: View {
                 palette: settings.colorPalette,
                 feedbackView: $feedbackView
             )
+
+            if showCompletionCheck {
+                completionOverlay
+            }
         }
+    }
+
+    private var completionOverlay: some View {
+        Image(systemName: "checkmark.circle.fill")
+            .font(.system(size: 80, weight: .medium))
+            .foregroundStyle(.white)
+            .shadow(color: .black.opacity(0.3), radius: 12, y: 4)
+            .transition(.scale(scale: 0.5).combined(with: .opacity))
     }
 
     private var controls: some View {
@@ -187,6 +215,7 @@ struct PracticeView: View {
                 practiceState.reset()
                 canvasView?.clearAll()
                 feedbackView?.clearAll()
+                showCompletionCheck = false
                 applyGhostVisibility()
             } label: {
                 Image(systemName: "arrow.counterclockwise")
@@ -224,6 +253,10 @@ struct PracticeView: View {
             applyGhostVisibility()
             practiceState.acknowledgeResult()
 
+            if practiceState.isComplete {
+                triggerCompletionFeedback()
+            }
+
         case .strokeRejected:
             feedbackView?.showRejected(points: points)
             canvasView.removeLastStroke()
@@ -239,6 +272,23 @@ struct PracticeView: View {
         default:
             break
         }
+    }
+
+    private func triggerCompletionFeedback() {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+            showCompletionCheck = true
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            withAnimation(.easeOut(duration: 0.4)) {
+                showCompletionCheck = false
+            }
+        }
+
+        onComplete?(practiceState.attemptCount)
     }
 
     private func applyGhostVisibility() {

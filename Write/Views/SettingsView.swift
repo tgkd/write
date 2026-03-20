@@ -15,6 +15,28 @@ struct SettingsView: View {
                     )
 
                     VStack(alignment: .leading, spacing: 12) {
+                        Text("Session")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+                            .padding(.leading, 4)
+
+                        HStack {
+                            Text("Kanji per session")
+                            Spacer()
+                            Stepper(
+                                "\(settings.sessionCount)",
+                                value: $settings.sessionCount,
+                                in: 3...30,
+                                step: 1
+                            )
+                        }
+                        .padding(16)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+
+                    VStack(alignment: .leading, spacing: 12) {
                         Text("Color Palette")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)

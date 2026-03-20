@@ -14,3 +14,6 @@ TestResults*/
 
 # KanjiVG raw data (large, not needed in repo - preprocessed JSON is committed)
 Data/
+
+# App Store screenshot generator
+appstore-screenshots/
