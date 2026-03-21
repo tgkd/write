@@ -54,6 +54,31 @@ struct SettingsView: View {
                         .background(Color(.secondarySystemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Acknowledgments")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .textCase(.uppercase)
+                            .padding(.leading, 4)
+
+                        VStack(alignment: .leading, spacing: 12) {
+                            acknowledgmentRow(
+                                title: "KanjiVG",
+                                detail: "Stroke data — CC BY-SA 3.0",
+                                url: "https://kanjivg.tagaini.net/"
+                            )
+                            Divider()
+                            acknowledgmentRow(
+                                title: "KANJIDIC2",
+                                detail: "Readings & meanings — CC BY-SA 4.0",
+                                url: "https://www.edrdg.org/wiki/index.php/KANJIDIC_Project"
+                            )
+                        }
+                        .padding(16)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
                 }
                 .padding()
             }
@@ -64,6 +89,24 @@ struct SettingsView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") { dismiss() }
                 }
+            }
+        }
+    }
+
+    private func acknowledgmentRow(title: String, detail: String, url: String) -> some View {
+        Link(destination: URL(string: url)!) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .foregroundStyle(.primary)
+                    Text(detail)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "arrow.up.right")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }
