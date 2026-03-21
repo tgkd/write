@@ -4,17 +4,31 @@ struct KanjiPickerView: View {
     let dataStore: KanjiDataStore
     private let allKanji: [KanjiData]
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 6)
     private static let jlptLevels = [5, 4, 3, 2, 1]
 
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var searchText = ""
     @State private var showSettings = false
     @State private var selectedJLPT: Int? = nil
 
-    init(dataStore: KanjiDataStore) {
+    @Binding var selectedCodePoint: String?
+    private let usesSelectionBinding: Bool
+
+    init(dataStore: KanjiDataStore, selectedCodePoint: Binding<String?>? = nil) {
         self.dataStore = dataStore
         self.allKanji = dataStore.allCodePoints.compactMap { dataStore.lookup(codePoint: $0) }
+        if let binding = selectedCodePoint {
+            _selectedCodePoint = binding
+            usesSelectionBinding = true
+        } else {
+            _selectedCodePoint = .constant(nil)
+            usesSelectionBinding = false
+        }
+    }
+
+    private var columns: [GridItem] {
+        return Array(repeating: GridItem(.flexible(), spacing: 8), count: 6)
     }
 
     private var displayedKanji: [KanjiData] {
@@ -49,14 +63,7 @@ struct KanjiPickerView: View {
 
             LazyVGrid(columns: columns, spacing: 8) {
                 ForEach(displayedKanji, id: \.codePoint) { kanji in
-                    NavigationLink(value: kanji.codePoint) {
-                        Text(String(kanji.character))
-                            .font(.system(size: 32))
-                            .frame(width: 56, height: 56)
-                            .background(Color(.secondarySystemBackground))
-                            .cornerRadius(8)
-                    }
-                    .buttonStyle(.plain)
+                    kanjiCell(kanji)
                 }
             }
             .padding()
@@ -80,6 +87,40 @@ struct KanjiPickerView: View {
         }
     }
 
+    @ViewBuilder
+    private func kanjiCell(_ kanji: KanjiData) -> some View {
+        if usesSelectionBinding {
+            Button {
+                selectedCodePoint = kanji.codePoint
+            } label: {
+                kanjiCellContent(kanji)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(
+                                selectedCodePoint == kanji.codePoint ? Color.accentColor : .clear,
+                                lineWidth: 2
+                            )
+                    )
+            }
+            .buttonStyle(.plain)
+        } else {
+            NavigationLink(value: kanji.codePoint) {
+                kanjiCellContent(kanji)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    private func kanjiCellContent(_ kanji: KanjiData) -> some View {
+        let size: CGFloat = usesSelectionBinding ? 40 : 56
+        let fontSize: CGFloat = usesSelectionBinding ? 24 : 32
+        return Text(String(kanji.character))
+            .font(.system(size: fontSize))
+            .frame(width: size, height: size)
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(8)
+    }
+
     private var sessionButton: some View {
         let kanji = dataStore.randomKanji(jlpt: selectedJLPT, count: settings.sessionCount)
         let route = SessionRoute(codePoints: kanji.map(\.codePoint))
@@ -90,10 +131,12 @@ struct KanjiPickerView: View {
     }
 
     private var jlptFilterBar: some View {
-        HStack(spacing: 8) {
-            filterPill(label: "All", level: nil)
-            ForEach(Self.jlptLevels, id: \.self) { level in
-                filterPill(label: "N\(level)", level: level)
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                filterPill(label: "All", level: nil)
+                ForEach(Self.jlptLevels, id: \.self) { level in
+                    filterPill(label: "N\(level)", level: level)
+                }
             }
         }
     }
@@ -107,6 +150,7 @@ struct KanjiPickerView: View {
         } label: {
             Text(label)
                 .font(.subheadline.weight(.medium))
+                .fixedSize()
                 .padding(.horizontal, 14)
                 .padding(.vertical, 6)
                 .background(isSelected ? Color.primary : Color(.secondarySystemBackground))

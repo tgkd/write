@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		013FE94AD914E50DD46A8286 /* PracticeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27A0064549BCC4192A32E45 /* PracticeState.swift */; };
+		028D2CD45EACE89EA13418F4 /* NotebookState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2831D7F7EA0D4F8AFDFE0A /* NotebookState.swift */; };
 		06ED2FD32F9E763D4E1F483C /* KanjiDataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */; };
 		0B56AA0894FC0939DE713946 /* PointSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CCAD6A2FD879ACF245B117 /* PointSampler.swift */; };
 		0B90B5789BF02FDAC1F392BF /* KanjiPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5298C48D4E8206737F9A1C0B /* KanjiPickerView.swift */; };
@@ -16,16 +17,21 @@
 		28975F97AAC63CD86AE2072B /* KanjiData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D3EA225B25052BFBC34F84 /* KanjiData.swift */; };
 		29FCD16567BB62EEE606C520 /* DrawingCanvasRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465DCAF6696204E7C3D85D5 /* DrawingCanvasRepresentable.swift */; };
 		2CE8603ECFE626A50B41BC45 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE1B0BE867D120C7B58025A /* SessionState.swift */; };
+		30CCFD7614AB420B6D3825DB /* NotebookViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C89F5B131A72BBA8176DDC /* NotebookViewRepresentable.swift */; };
 		324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BE9563E3884403974EFDDA /* ContentView.swift */; };
 		33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */; };
+		39ECD52B8B08B574C3074A3D /* NotebookCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD320AB71FFAF63D74985CC /* NotebookCellView.swift */; };
 		3E13794820A9F2D53A2AA677 /* SessionPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB30AA618797898AC069C94E /* SessionPracticeView.swift */; };
 		42A4EC0BA54B8DF2FE3D25E9 /* KanjiReferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */; };
 		45EA541A8AE474627E14726C /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B138A055F1450C9C03D9543 /* ColorPalette.swift */; };
 		503286B1C7B9044CEB698754 /* SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA098E08F2A4A327E0D81283 /* SessionSummaryView.swift */; };
 		527CE900711B6897827483D1 /* PracticeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6D64264C7D7504993129BC /* PracticeTests.swift */; };
+		58B3E6FB68562DEBB49C55E0 /* KanjiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92038E6935D91F956A09DDB9 /* KanjiDetailView.swift */; };
 		5B44846DBEA1792BA3DA966E /* PracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A5A9E84315E390CECEC817 /* PracticeView.swift */; };
 		5BB76FC40A8EAE79D4EFD86F /* PracticeMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA7AEFF588DE8BA39EAA351 /* PracticeMode.swift */; };
 		61AF686CC04E46EA3B27F4CF /* KanjiDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A573E07580005FA275E101 /* KanjiDataStore.swift */; };
+		674696AC2B9A184A1FCDAA24 /* NotebookTipsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112DFDA96E143651A19DDCE5 /* NotebookTipsOverlay.swift */; };
+		6CCBA1457AF84E85537FD908 /* NotebookHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D15C8C8ADEE5C47903061F /* NotebookHeaderView.swift */; };
 		74D81606F11AA2C7A201C6B6 /* SVGPath in Frameworks */ = {isa = PBXBuildFile; productRef = DF60413D51CD5403BC557C9F /* SVGPath */; };
 		755988C696FFBA3B1AA9F255 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2DBBD44BE4A42882EE1B8AF0 /* PrivacyInfo.xcprivacy */; };
 		7A7256E4B35872AE7EE73CCF /* FeedbackOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DEE31691318124C4601AF7 /* FeedbackOverlayView.swift */; };
@@ -36,9 +42,15 @@
 		9DA403F28AAB60A0F95271A9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2839C39B854D958B7C59CF /* SettingsView.swift */; };
 		A21F66443E84A863FCF86A82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69E91D1D521520E6868119AF /* Assets.xcassets */; };
 		A804FD3A9F8B74A9AE25B5DB /* ProcrustesNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF92521D279F5641C0A0668 /* ProcrustesNormalizer.swift */; };
+		B30641609562A0245EF1E843 /* iPadPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B587A13BCDF864D27A86F0 /* iPadPracticeView.swift */; };
+		B91198FA842033EEFEBB4BD6 /* PracticeCanvasArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AA9B63CD622B139D3F46A7 /* PracticeCanvasArea.swift */; };
 		B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */; };
 		C2092910EEFC045C62FDBA6A /* CatmullRomSpline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */; };
+		C7720D4B2FB8B039A59FCD9C /* PencilSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C63D0EA4D3CD0F61D0FCE6 /* PencilSettings.swift */; };
+		C97338CC8DDF48D66C991762 /* NotebookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71A065B609837DC66E2821B /* NotebookViewController.swift */; };
+		D2D61E0D2D8B7AE6A0AEFE32 /* DeviceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCDF2D84EC554E13B5DBD09 /* DeviceContext.swift */; };
 		D8F590153A99714D63DB1421 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1218FC775663C580B435BC2E /* AppSettings.swift */; };
+		D929EB0B1EF8579EA8287EBA /* CrosshairGuideLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C302B2757CE396E280A4F2A /* CrosshairGuideLayer.swift */; };
 		E06F60CC74BA13B9FCC60278 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1061A3078D31136BA4CE4C66 /* DrawingCanvasView.swift */; };
 		E1AD8F7E1D0D638F003925C1 /* BrushStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919D2510E02A64F8DC10620F /* BrushStroke.swift */; };
 		F0E3647DC6161023D81E8180 /* PreprocessingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */; };
@@ -56,12 +68,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		09AA9B63CD622B139D3F46A7 /* PracticeCanvasArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeCanvasArea.swift; sourceTree = "<group>"; };
 		0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRenderer.swift; sourceTree = "<group>"; };
 		0FE1B0BE867D120C7B58025A /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		1061A3078D31136BA4CE4C66 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
+		10C89F5B131A72BBA8176DDC /* NotebookViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookViewRepresentable.swift; sourceTree = "<group>"; };
+		112DFDA96E143651A19DDCE5 /* NotebookTipsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookTipsOverlay.swift; sourceTree = "<group>"; };
 		1218FC775663C580B435BC2E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatmullRomSpline.swift; sourceTree = "<group>"; };
+		2A2831D7F7EA0D4F8AFDFE0A /* NotebookState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookState.swift; sourceTree = "<group>"; };
 		2B138A055F1450C9C03D9543 /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
+		2C302B2757CE396E280A4F2A /* CrosshairGuideLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrosshairGuideLayer.swift; sourceTree = "<group>"; };
 		2C922C626F86D525633E5506 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2DBBD44BE4A42882EE1B8AF0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeValidationTests.swift; sourceTree = "<group>"; };
@@ -69,14 +86,18 @@
 		41BE9563E3884403974EFDDA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		44A5A9E84315E390CECEC817 /* PracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeView.swift; sourceTree = "<group>"; };
 		47CCAD6A2FD879ACF245B117 /* PointSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointSampler.swift; sourceTree = "<group>"; };
+		4CD320AB71FFAF63D74985CC /* NotebookCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookCellView.swift; sourceTree = "<group>"; };
 		51D3EA225B25052BFBC34F84 /* KanjiData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiData.swift; sourceTree = "<group>"; };
 		5298C48D4E8206737F9A1C0B /* KanjiPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiPickerView.swift; sourceTree = "<group>"; };
 		5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasTests.swift; sourceTree = "<group>"; };
 		69E91D1D521520E6868119AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6BCDF2D84EC554E13B5DBD09 /* DeviceContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceContext.swift; sourceTree = "<group>"; };
 		76A573E07580005FA275E101 /* KanjiDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStore.swift; sourceTree = "<group>"; };
 		81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRenderingTests.swift; sourceTree = "<group>"; };
+		88B587A13BCDF864D27A86F0 /* iPadPracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iPadPracticeView.swift; sourceTree = "<group>"; };
 		8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStoreTests.swift; sourceTree = "<group>"; };
 		919D2510E02A64F8DC10620F /* BrushStroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushStroke.swift; sourceTree = "<group>"; };
+		92038E6935D91F956A09DDB9 /* KanjiDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDetailView.swift; sourceTree = "<group>"; };
 		94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeValidator.swift; sourceTree = "<group>"; };
 		9AF92521D279F5641C0A0668 /* ProcrustesNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcrustesNormalizer.swift; sourceTree = "<group>"; };
 		9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreprocessingTests.swift; sourceTree = "<group>"; };
@@ -84,14 +105,17 @@
 		B1837E06356F61F94BAA0150 /* WriteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteApp.swift; sourceTree = "<group>"; };
 		BA6D64264C7D7504993129BC /* PracticeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeTests.swift; sourceTree = "<group>"; };
 		BB30AA618797898AC069C94E /* SessionPracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPracticeView.swift; sourceTree = "<group>"; };
+		C2D15C8C8ADEE5C47903061F /* NotebookHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookHeaderView.swift; sourceTree = "<group>"; };
 		C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = kanji_strokes.json; sourceTree = "<group>"; };
 		CF2839C39B854D958B7C59CF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D7C63D0EA4D3CD0F61D0FCE6 /* PencilSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilSettings.swift; sourceTree = "<group>"; };
 		DE816A45A5022B69DCC5ADCA /* FrechetDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrechetDistance.swift; sourceTree = "<group>"; };
 		E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiStroke.swift; sourceTree = "<group>"; };
 		F27A0064549BCC4192A32E45 /* PracticeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeState.swift; sourceTree = "<group>"; };
 		F29AA3B6A1227A3707D69319 /* Write.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Write.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F465DCAF6696204E7C3D85D5 /* DrawingCanvasRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasRepresentable.swift; sourceTree = "<group>"; };
 		F5DEE31691318124C4601AF7 /* FeedbackOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackOverlayView.swift; sourceTree = "<group>"; };
+		F71A065B609837DC66E2821B /* NotebookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookViewController.swift; sourceTree = "<group>"; };
 		FA098E08F2A4A327E0D81283 /* SessionSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSummaryView.swift; sourceTree = "<group>"; };
 		FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiReferenceView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,6 +139,8 @@
 				2B138A055F1450C9C03D9543 /* ColorPalette.swift */,
 				51D3EA225B25052BFBC34F84 /* KanjiData.swift */,
 				E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */,
+				2A2831D7F7EA0D4F8AFDFE0A /* NotebookState.swift */,
+				D7C63D0EA4D3CD0F61D0FCE6 /* PencilSettings.swift */,
 				3CA7AEFF588DE8BA39EAA351 /* PracticeMode.swift */,
 				F27A0064549BCC4192A32E45 /* PracticeState.swift */,
 				0FE1B0BE867D120C7B58025A /* SessionState.swift */,
@@ -176,6 +202,7 @@
 				FA098E08F2A4A327E0D81283 /* SessionSummaryView.swift */,
 				CF2839C39B854D958B7C59CF /* SettingsView.swift */,
 				0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */,
+				FC5E58EBCE220ADF7CC39E57 /* iPad */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -228,8 +255,25 @@
 			children = (
 				919D2510E02A64F8DC10620F /* BrushStroke.swift */,
 				17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */,
+				6BCDF2D84EC554E13B5DBD09 /* DeviceContext.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		FC5E58EBCE220ADF7CC39E57 /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+				2C302B2757CE396E280A4F2A /* CrosshairGuideLayer.swift */,
+				88B587A13BCDF864D27A86F0 /* iPadPracticeView.swift */,
+				92038E6935D91F956A09DDB9 /* KanjiDetailView.swift */,
+				4CD320AB71FFAF63D74985CC /* NotebookCellView.swift */,
+				C2D15C8C8ADEE5C47903061F /* NotebookHeaderView.swift */,
+				112DFDA96E143651A19DDCE5 /* NotebookTipsOverlay.swift */,
+				F71A065B609837DC66E2821B /* NotebookViewController.swift */,
+				10C89F5B131A72BBA8176DDC /* NotebookViewRepresentable.swift */,
+				09AA9B63CD622B139D3F46A7 /* PracticeCanvasArea.swift */,
+			);
+			path = iPad;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -343,16 +387,27 @@
 				C2092910EEFC045C62FDBA6A /* CatmullRomSpline.swift in Sources */,
 				45EA541A8AE474627E14726C /* ColorPalette.swift in Sources */,
 				324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */,
+				D929EB0B1EF8579EA8287EBA /* CrosshairGuideLayer.swift in Sources */,
+				D2D61E0D2D8B7AE6A0AEFE32 /* DeviceContext.swift in Sources */,
 				29FCD16567BB62EEE606C520 /* DrawingCanvasRepresentable.swift in Sources */,
 				E06F60CC74BA13B9FCC60278 /* DrawingCanvasView.swift in Sources */,
 				7A7256E4B35872AE7EE73CCF /* FeedbackOverlayView.swift in Sources */,
 				1149E4FC127AC902C2BDD55C /* FrechetDistance.swift in Sources */,
 				28975F97AAC63CD86AE2072B /* KanjiData.swift in Sources */,
 				61AF686CC04E46EA3B27F4CF /* KanjiDataStore.swift in Sources */,
+				58B3E6FB68562DEBB49C55E0 /* KanjiDetailView.swift in Sources */,
 				0B90B5789BF02FDAC1F392BF /* KanjiPickerView.swift in Sources */,
 				42A4EC0BA54B8DF2FE3D25E9 /* KanjiReferenceView.swift in Sources */,
 				7C92CC4ABC30580AF8D4269A /* KanjiStroke.swift in Sources */,
+				39ECD52B8B08B574C3074A3D /* NotebookCellView.swift in Sources */,
+				6CCBA1457AF84E85537FD908 /* NotebookHeaderView.swift in Sources */,
+				028D2CD45EACE89EA13418F4 /* NotebookState.swift in Sources */,
+				674696AC2B9A184A1FCDAA24 /* NotebookTipsOverlay.swift in Sources */,
+				C97338CC8DDF48D66C991762 /* NotebookViewController.swift in Sources */,
+				30CCFD7614AB420B6D3825DB /* NotebookViewRepresentable.swift in Sources */,
+				C7720D4B2FB8B039A59FCD9C /* PencilSettings.swift in Sources */,
 				0B56AA0894FC0939DE713946 /* PointSampler.swift in Sources */,
+				B91198FA842033EEFEBB4BD6 /* PracticeCanvasArea.swift in Sources */,
 				5BB76FC40A8EAE79D4EFD86F /* PracticeMode.swift in Sources */,
 				013FE94AD914E50DD46A8286 /* PracticeState.swift in Sources */,
 				5B44846DBEA1792BA3DA966E /* PracticeView.swift in Sources */,
@@ -364,6 +419,7 @@
 				8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */,
 				33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */,
 				13805E5DF596D2D770066B07 /* WriteApp.swift in Sources */,
+				B30641609562A0245EF1E843 /* iPadPracticeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,7 +449,7 @@
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.j.write;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -502,7 +558,7 @@
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.j.write;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};

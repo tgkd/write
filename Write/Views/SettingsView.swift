@@ -55,6 +55,10 @@ struct SettingsView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
 
+                    if DeviceContext.isIPad {
+                        iPadSettingsSection
+                    }
+
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Acknowledgments")
                             .font(.subheadline)
@@ -90,6 +94,84 @@ struct SettingsView: View {
                     Button("Done") { dismiss() }
                 }
             }
+        }
+    }
+
+    private var iPadSettingsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Apple Pencil")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+                .padding(.leading, 4)
+
+            VStack(spacing: 0) {
+                HStack {
+                    Text("Pressure Sensitivity")
+                    Spacer()
+                    Picker("", selection: $settings.pressureSensitivity) {
+                        ForEach(PressureSensitivity.allCases, id: \.self) { level in
+                            Text(level.displayName).tag(level)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+
+                Divider().padding(.leading, 16)
+
+                Toggle("Allow Finger Drawing", isOn: $settings.allowFingerDrawing)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+
+                Divider().padding(.leading, 16)
+
+                HStack {
+                    Text("Double-Tap Action")
+                    Spacer()
+                    Picker("", selection: $settings.pencilDoubleTapAction) {
+                        ForEach(PencilDoubleTapAction.allCases, id: \.self) { action in
+                            Text(action.displayName).tag(action)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            }
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+
+            Text("Notebook")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+                .padding(.leading, 4)
+                .padding(.top, 8)
+
+            VStack(spacing: 0) {
+                Toggle("Crosshair Guidelines", isOn: $settings.showCrosshairGuidelines)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+
+                Divider().padding(.leading, 16)
+
+                HStack {
+                    Text("Cells per Row")
+                    Spacer()
+                    Stepper(
+                        "\(settings.cellsPerRow)",
+                        value: $settings.cellsPerRow,
+                        in: 6...10,
+                        step: 2
+                    )
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            }
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
 

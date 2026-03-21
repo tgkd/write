@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct PracticeView: View {
+struct iPadPracticeView: View {
     @StateObject private var practiceState: PracticeState
     @EnvironmentObject private var settings: AppSettings
     @State private var canvasView: DrawingCanvasView?
@@ -10,60 +10,29 @@ struct PracticeView: View {
     @Environment(\.dismiss) private var dismiss
 
     let onComplete: ((Int) -> Void)?
-    let onModeChange: ((PracticeMode) -> Void)?
-    let showToolbar: Bool
 
-    init(kanjiData: KanjiData, mode: PracticeMode = .trace, showToolbar: Bool = true, onComplete: ((Int) -> Void)? = nil, onModeChange: ((PracticeMode) -> Void)? = nil) {
+    init(kanjiData: KanjiData, mode: PracticeMode = .trace, onComplete: ((Int) -> Void)? = nil) {
         _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode))
-        self.showToolbar = showToolbar
         self.onComplete = onComplete
-        self.onModeChange = onModeChange
     }
 
     var body: some View {
-        VStack(spacing: 8) {
-            kanjiHeader
+        HStack(spacing: 0) {
+            infoPanel
+                .frame(width: 280)
+                .padding()
 
-            Spacer(minLength: 0)
+            Divider()
 
-            strokeProgressDots
-                .padding(.horizontal)
-
-            canvasArea
-                .aspectRatio(1, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color(.systemGray4), lineWidth: 0.5)
-                )
-                .padding(.horizontal, 16)
-
-            controls
-                .padding(.bottom, 48)
+            canvasPanel
+                .padding(24)
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if showToolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button { dismiss() } label: {
-                        Image(systemName: "chevron.backward")
-                    }
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Picker("Mode", selection: Binding(
-                        get: { practiceState.mode },
-                        set: { practiceState.changeMode($0) }
-                    )) {
-                        ForEach(PracticeMode.allCases, id: \.self) { mode in
-                            Text(mode.displayName).tag(mode)
-                        }
-                    }
-                } label: {
-                    Text(practiceState.mode.displayName)
-                        .font(.subheadline)
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.backward")
                 }
             }
         }
@@ -71,7 +40,6 @@ struct PracticeView: View {
             canvasView?.clearAll()
             feedbackView?.clearAll()
             applyGhostVisibility()
-            onModeChange?(practiceState.mode)
         }
         .onChange(of: settings.maskPathWidth) { _ in
             practiceState.validationConfig = settings.validationConfig
@@ -95,11 +63,54 @@ struct PracticeView: View {
         }
     }
 
-    // MARK: - Subviews
+    // MARK: - Left Panel
+
+    private var infoPanel: some View {
+        VStack(spacing: 20) {
+            Spacer()
+
+            Text(String(practiceState.kanjiData.character))
+                .font(.system(size: 80))
+
+            readingsBlock
+
+            strokeProgressDots
+
+            modePicker
+
+            controls
+
+            Spacer()
+        }
+    }
+
+    private var readingsBlock: some View {
+        VStack(spacing: 4) {
+            if let on = practiceState.kanjiData.onYomi, !on.isEmpty {
+                Text(on.joined(separator: "、 "))
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+            }
+            if let kun = practiceState.kanjiData.kunYomi, !kun.isEmpty {
+                Text(kun.joined(separator: "、 "))
+                    .font(.body)
+                    .foregroundStyle(.tertiary)
+            }
+            if let meanings = practiceState.kanjiData.meanings, !meanings.isEmpty {
+                Text(meanings.prefix(3).joined(separator: ", "))
+                    .font(.subheadline)
+                    .foregroundStyle(.tertiary)
+                    .padding(.top, 2)
+            }
+        }
+    }
 
     private var strokeProgressDots: some View {
-        HStack(spacing: 4) {
-            ForEach(0..<practiceState.totalStrokes, id: \.self) { i in
+        let total = practiceState.totalStrokes
+        let dotSize: CGFloat = total <= 12 ? 10 : (total <= 20 ? 8 : 6)
+
+        return HStack(spacing: 4) {
+            ForEach(0..<total, id: \.self) { i in
                 Circle()
                     .fill(dotFillColor(for: i))
                     .frame(width: dotSize, height: dotSize)
@@ -111,79 +122,16 @@ struct PracticeView: View {
         }
     }
 
-    private var dotSize: CGFloat {
-        let total = practiceState.totalStrokes
-        if total <= 12 { return 10 }
-        if total <= 20 { return 8 }
-        return 6
-    }
-
-    private func dotFillColor(for index: Int) -> Color {
-        if practiceState.matchedStrokeIndices.contains(index) {
-            return Color(uiColor: settings.colorPalette.strokeOrderColor(
-                index: index, total: practiceState.totalStrokes
-            ))
-        }
-        if index == practiceState.currentStrokeIndex && !practiceState.isComplete {
-            return Color(.systemGray4)
-        }
-        return Color(.systemGray6)
-    }
-
-    private func dotBorderColor(for index: Int) -> Color {
-        if practiceState.matchedStrokeIndices.contains(index) {
-            return .clear
-        }
-        if index == practiceState.currentStrokeIndex && !practiceState.isComplete {
-            return Color(.systemGray3)
-        }
-        return Color(.systemGray5)
-    }
-
-    private var kanjiHeader: some View {
-        let kanji = practiceState.kanjiData
-        return VStack(alignment: .leading, spacing: 2) {
-            Text(String(kanji.character))
-                .font(.system(size: 40))
-            if let on = kanji.onYomi, !on.isEmpty {
-                Text(on.joined(separator: "、 "))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            if let kun = kanji.kunYomi, !kun.isEmpty {
-                Text(kun.joined(separator: "、 "))
-                    .font(.subheadline)
-                    .foregroundStyle(.tertiary)
-            }
-            if let meanings = kanji.meanings, !meanings.isEmpty {
-                Text(meanings.prefix(3).joined(separator: ", "))
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+    private var modePicker: some View {
+        Picker("Mode", selection: Binding(
+            get: { practiceState.mode },
+            set: { practiceState.changeMode($0) }
+        )) {
+            ForEach(PracticeMode.allCases, id: \.self) { mode in
+                Text(mode.displayName).tag(mode)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 16)
-    }
-
-    private var canvasArea: some View {
-        PracticeCanvasArea(
-            kanjiData: practiceState.kanjiData,
-            lineWidth: settings.maskPathWidth,
-            palette: settings.colorPalette,
-            allowedTouchTypes: settings.allowedTouchTypes,
-            pressureSensitivity: settings.pressureSensitivity,
-            showCompletionCheck: showCompletionCheck,
-            onStrokeCompleted: { points in
-                handleStrokeCompleted(points: points)
-            },
-            onPencilDoubleTap: {
-                handlePencilDoubleTap()
-            },
-            canvasView: $canvasView,
-            referenceView: $referenceView,
-            feedbackView: $feedbackView,
-            onReferenceReady: { applyGhostVisibility() }
-        )
+        .pickerStyle(.segmented)
     }
 
     private var controls: some View {
@@ -207,7 +155,35 @@ struct PracticeView: View {
                     .font(.title3)
             }
         }
-        .padding(.bottom, 4)
+    }
+
+    // MARK: - Right Panel
+
+    private var canvasPanel: some View {
+        PracticeCanvasArea(
+            kanjiData: practiceState.kanjiData,
+            lineWidth: settings.maskPathWidth,
+            palette: settings.colorPalette,
+            allowedTouchTypes: settings.allowedTouchTypes,
+            pressureSensitivity: settings.pressureSensitivity,
+            showCompletionCheck: showCompletionCheck,
+            onStrokeCompleted: { points in
+                handleStrokeCompleted(points: points)
+            },
+            onPencilDoubleTap: {
+                handlePencilDoubleTap()
+            },
+            canvasView: $canvasView,
+            referenceView: $referenceView,
+            feedbackView: $feedbackView,
+            onReferenceReady: { applyGhostVisibility() }
+        )
+        .aspectRatio(1, contentMode: .fit)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color(.systemGray4), lineWidth: 0.5)
+        )
     }
 
     // MARK: - Logic
@@ -327,5 +303,27 @@ struct PracticeView: View {
                 referenceView.setStrokeVisibility(.hidden, at: i)
             }
         }
+    }
+
+    private func dotFillColor(for index: Int) -> Color {
+        if practiceState.matchedStrokeIndices.contains(index) {
+            return Color(uiColor: settings.colorPalette.strokeOrderColor(
+                index: index, total: practiceState.totalStrokes
+            ))
+        }
+        if index == practiceState.currentStrokeIndex && !practiceState.isComplete {
+            return Color(.systemGray4)
+        }
+        return Color(.systemGray6)
+    }
+
+    private func dotBorderColor(for index: Int) -> Color {
+        if practiceState.matchedStrokeIndices.contains(index) {
+            return .clear
+        }
+        if index == practiceState.currentStrokeIndex && !practiceState.isComplete {
+            return Color(.systemGray3)
+        }
+        return Color(.systemGray5)
     }
 }

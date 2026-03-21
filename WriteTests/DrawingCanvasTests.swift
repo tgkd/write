@@ -257,19 +257,19 @@ final class DrawingCanvasViewTests: XCTestCase {
     private func simulateStroke(on canvas: DrawingCanvasView, points: [CGPoint]) {
         guard let first = points.first else { return }
 
-        let beginTouch = TestTouch(locationInView: first)
-        canvas.touchesBegan([beginTouch], with: nil)
+        let touch = TestTouch(locationInView: first)
+        canvas.touchesBegan([touch], with: nil)
 
         for point in points.dropFirst().dropLast() {
-            let moveTouch = TestTouch(locationInView: point)
-            canvas.touchesMoved([moveTouch], with: nil)
+            touch.updateLocation(point)
+            canvas.touchesMoved([touch], with: nil)
         }
 
         if points.count > 1 {
-            let endTouch = TestTouch(locationInView: points.last!)
-            canvas.touchesEnded([endTouch], with: nil)
+            touch.updateLocation(points.last!)
+            canvas.touchesEnded([touch], with: nil)
         } else {
-            canvas.touchesEnded([beginTouch], with: nil)
+            canvas.touchesEnded([touch], with: nil)
         }
     }
 }
@@ -277,13 +277,17 @@ final class DrawingCanvasViewTests: XCTestCase {
 // MARK: - Test Touch Helper
 
 private class TestTouch: UITouch {
-    private let _locationInView: CGPoint
+    private var _locationInView: CGPoint
     private let _timestamp: TimeInterval
 
     init(locationInView: CGPoint, timestamp: TimeInterval = 0) {
         _locationInView = locationInView
         _timestamp = timestamp
         super.init()
+    }
+
+    func updateLocation(_ point: CGPoint) {
+        _locationInView = point
     }
 
     override func location(in view: UIView?) -> CGPoint {

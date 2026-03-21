@@ -1,5 +1,4 @@
-import Foundation
-import CoreGraphics
+import UIKit
 
 @MainActor
 final class AppSettings: ObservableObject {
@@ -19,6 +18,28 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(sessionCount, forKey: "sessionCount") }
     }
 
+    // MARK: - iPad Settings
+
+    @Published var pressureSensitivity: PressureSensitivity {
+        didSet { UserDefaults.standard.set(pressureSensitivity.rawValue, forKey: "pressureSensitivity") }
+    }
+
+    @Published var allowFingerDrawing: Bool {
+        didSet { UserDefaults.standard.set(allowFingerDrawing, forKey: "allowFingerDrawing") }
+    }
+
+    @Published var pencilDoubleTapAction: PencilDoubleTapAction {
+        didSet { UserDefaults.standard.set(pencilDoubleTapAction.rawValue, forKey: "pencilDoubleTapAction") }
+    }
+
+    @Published var showCrosshairGuidelines: Bool {
+        didSet { UserDefaults.standard.set(showCrosshairGuidelines, forKey: "showCrosshairGuidelines") }
+    }
+
+    @Published var cellsPerRow: Int {
+        didSet { UserDefaults.standard.set(cellsPerRow, forKey: "cellsPerRow") }
+    }
+
     init() {
         let storedWidth = UserDefaults.standard.double(forKey: "maskPathWidth")
         self.maskPathWidth = storedWidth > 0 ? CGFloat(storedWidth) : Self.defaultMaskPathWidth
@@ -28,6 +49,23 @@ final class AppSettings: ObservableObject {
 
         let storedCount = UserDefaults.standard.integer(forKey: "sessionCount")
         self.sessionCount = storedCount > 0 ? storedCount : 10
+
+        let storedSensitivity = UserDefaults.standard.string(forKey: "pressureSensitivity") ?? ""
+        self.pressureSensitivity = PressureSensitivity(rawValue: storedSensitivity) ?? .medium
+
+        self.allowFingerDrawing = UserDefaults.standard.object(forKey: "allowFingerDrawing") == nil
+            ? true
+            : UserDefaults.standard.bool(forKey: "allowFingerDrawing")
+
+        let storedDoubleTap = UserDefaults.standard.string(forKey: "pencilDoubleTapAction") ?? ""
+        self.pencilDoubleTapAction = PencilDoubleTapAction(rawValue: storedDoubleTap) ?? .undo
+
+        self.showCrosshairGuidelines = UserDefaults.standard.object(forKey: "showCrosshairGuidelines") == nil
+            ? true
+            : UserDefaults.standard.bool(forKey: "showCrosshairGuidelines")
+
+        let storedCells = UserDefaults.standard.integer(forKey: "cellsPerRow")
+        self.cellsPerRow = storedCells > 0 ? storedCells : 8
     }
 
     var derivedLeniency: CGFloat {
@@ -38,5 +76,12 @@ final class AppSettings: ObservableObject {
         var config = ValidationConfig.standard
         config.leniency = derivedLeniency
         return config
+    }
+
+    var allowedTouchTypes: Set<UITouch.TouchType> {
+        if DeviceContext.isIPad && !allowFingerDrawing {
+            return [.pencil]
+        }
+        return [.direct, .pencil]
     }
 }

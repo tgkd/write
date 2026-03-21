@@ -8,6 +8,13 @@ enum BrushStroke {
     struct Sample {
         let point: CGPoint
         let timestamp: TimeInterval
+        let force: CGFloat?
+
+        init(point: CGPoint, timestamp: TimeInterval, force: CGFloat? = nil) {
+            self.point = point
+            self.timestamp = timestamp
+            self.force = force
+        }
     }
 
     struct Config {
@@ -17,6 +24,7 @@ enum BrushStroke {
         var speedSmoothing: CGFloat = 0.7
         var smoothingAlpha: CGFloat = 0.5
         var smoothingSubdivisions: Int = 16
+        var pressureSensitivity: PressureSensitivity = .off
     }
 
     /// Creates a filled CGPath with variable width from touch samples.
@@ -70,9 +78,19 @@ enum BrushStroke {
 
         let slowSpeed: CGFloat = 100
         let fastSpeed: CGFloat = 1500
-        var widths = speeds.map { speed -> CGFloat in
-            let t = min(1, max(0, (speed - slowSpeed) / (fastSpeed - slowSpeed)))
-            return config.maxWidth - t * (config.maxWidth - config.minWidth)
+        let blend = config.pressureSensitivity.blendFactor
+        var widths: [CGFloat] = samples.enumerated().map { i, sample in
+            let speedT = min(1, max(0, (speeds[i] - slowSpeed) / (fastSpeed - slowSpeed)))
+            let speedWidth = config.maxWidth - speedT * (config.maxWidth - config.minWidth)
+
+            guard blend > 0, let force = sample.force, force > 0 else {
+                return speedWidth
+            }
+
+            let maxForce: CGFloat = 4.0
+            let forceT = min(1, force / maxForce)
+            let forceWidth = config.minWidth + forceT * (config.maxWidth - config.minWidth)
+            return speedWidth * (1 - blend) + forceWidth * blend
         }
 
         // Taper at start and end
