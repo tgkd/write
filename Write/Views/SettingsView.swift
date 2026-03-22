@@ -125,20 +125,6 @@ struct SettingsView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
 
-                Divider().padding(.leading, 16)
-
-                HStack {
-                    Text("Double-Tap Action")
-                    Spacer()
-                    Picker("", selection: $settings.pencilDoubleTapAction) {
-                        ForEach(PencilDoubleTapAction.allCases, id: \.self) { action in
-                            Text(action.displayName).tag(action)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
             }
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 10))

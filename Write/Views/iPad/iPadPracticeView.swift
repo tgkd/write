@@ -24,8 +24,15 @@ struct iPadPracticeView: View {
 
             Divider()
 
-            canvasPanel
-                .padding(24)
+            GeometryReader { geo in
+                let maxDim = min(geo.size.width, geo.size.height)
+                let canvasSize = maxDim * settings.practiceCanvasScale
+
+                canvasPanel
+                    .frame(width: canvasSize, height: canvasSize)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .padding(24)
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
@@ -34,6 +41,23 @@ struct iPadPracticeView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.backward")
                 }
+            }
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button {
+                    let newScale = settings.practiceCanvasScale - AppSettings.canvasScaleStep
+                    settings.practiceCanvasScale = max(AppSettings.canvasScaleRange.lowerBound, newScale)
+                } label: {
+                    Image(systemName: "minus")
+                }
+                .disabled(settings.practiceCanvasScale <= AppSettings.canvasScaleRange.lowerBound)
+
+                Button {
+                    let newScale = settings.practiceCanvasScale + AppSettings.canvasScaleStep
+                    settings.practiceCanvasScale = min(AppSettings.canvasScaleRange.upperBound, newScale)
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .disabled(settings.practiceCanvasScale >= AppSettings.canvasScaleRange.upperBound)
             }
         }
         .onChange(of: practiceState.mode) { _ in
@@ -178,7 +202,6 @@ struct iPadPracticeView: View {
             feedbackView: $feedbackView,
             onReferenceReady: { applyGhostVisibility() }
         )
-        .aspectRatio(1, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)
@@ -236,15 +259,8 @@ struct iPadPracticeView: View {
     }
 
     private func handlePencilDoubleTap() {
-        switch settings.pencilDoubleTapAction {
-        case .undo:
-            canvasView?.removeLastStroke()
-        case .clearCell:
-            canvasView?.clearAll()
-            feedbackView?.clearAll()
-        case .nextCell:
-            break
-        }
+        canvasView?.clearAll()
+        feedbackView?.clearAll()
     }
 
     private func triggerCompletionFeedback() {

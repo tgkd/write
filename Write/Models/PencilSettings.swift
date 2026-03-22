@@ -25,16 +25,3 @@ enum PressureSensitivity: String, CaseIterable, Sendable {
     }
 }
 
-enum PencilDoubleTapAction: String, CaseIterable, Sendable {
-    case undo
-    case clearCell
-    case nextCell
-
-    var displayName: String {
-        switch self {
-        case .undo: return "Undo"
-        case .clearCell: return "Clear Cell"
-        case .nextCell: return "Next Cell"
-        }
-    }
-}

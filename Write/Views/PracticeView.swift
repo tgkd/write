@@ -260,15 +260,8 @@ struct PracticeView: View {
     }
 
     private func handlePencilDoubleTap() {
-        switch settings.pencilDoubleTapAction {
-        case .undo:
-            canvasView?.removeLastStroke()
-        case .clearCell:
-            canvasView?.clearAll()
-            feedbackView?.clearAll()
-        case .nextCell:
-            break
-        }
+        canvasView?.clearAll()
+        feedbackView?.clearAll()
     }
 
     private func triggerCompletionFeedback() {

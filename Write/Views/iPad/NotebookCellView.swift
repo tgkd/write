@@ -172,7 +172,7 @@ final class NotebookCellView: UICollectionViewCell {
         canvas.allowedTouchTypes = allowedTouchTypes
         canvas.brushConfig.pressureSensitivity = pressureSensitivity
         canvas.onPencilDoubleTap = { [weak canvas] in
-            canvas?.removeLastStroke()
+            canvas?.clearAll()
         }
         contentView.addSubview(canvas)
         canvasView = canvas

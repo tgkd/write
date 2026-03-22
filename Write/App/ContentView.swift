@@ -33,9 +33,10 @@ struct ContentView: View {
 
     @State private var selectedCodePoint: String?
     @State private var iPadNavigationPath = NavigationPath()
+    @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
 
     private var iPadLayout: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             KanjiPickerView(dataStore: dataStore, selectedCodePoint: $selectedCodePoint)
                 .navigationDestination(for: SessionRoute.self) { route in
                     let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
@@ -52,6 +53,7 @@ struct ContentView: View {
                         },
                         onNotebook: {
                             iPadNavigationPath.append(NotebookRoute(codePoints: [codePoint]))
+                            columnVisibility = .detailOnly
                         }
                     )
                 } else {

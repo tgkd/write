@@ -28,16 +28,19 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(allowFingerDrawing, forKey: "allowFingerDrawing") }
     }
 
-    @Published var pencilDoubleTapAction: PencilDoubleTapAction {
-        didSet { UserDefaults.standard.set(pencilDoubleTapAction.rawValue, forKey: "pencilDoubleTapAction") }
-    }
-
     @Published var showCrosshairGuidelines: Bool {
         didSet { UserDefaults.standard.set(showCrosshairGuidelines, forKey: "showCrosshairGuidelines") }
     }
 
     @Published var cellsPerRow: Int {
         didSet { UserDefaults.standard.set(cellsPerRow, forKey: "cellsPerRow") }
+    }
+
+    static let canvasScaleRange: ClosedRange<CGFloat> = 0.4...1.0
+    static let canvasScaleStep: CGFloat = 0.1
+
+    @Published var practiceCanvasScale: CGFloat {
+        didSet { UserDefaults.standard.set(Double(practiceCanvasScale), forKey: "practiceCanvasScale") }
     }
 
     init() {
@@ -57,15 +60,15 @@ final class AppSettings: ObservableObject {
             ? true
             : UserDefaults.standard.bool(forKey: "allowFingerDrawing")
 
-        let storedDoubleTap = UserDefaults.standard.string(forKey: "pencilDoubleTapAction") ?? ""
-        self.pencilDoubleTapAction = PencilDoubleTapAction(rawValue: storedDoubleTap) ?? .undo
-
         self.showCrosshairGuidelines = UserDefaults.standard.object(forKey: "showCrosshairGuidelines") == nil
             ? true
             : UserDefaults.standard.bool(forKey: "showCrosshairGuidelines")
 
         let storedCells = UserDefaults.standard.integer(forKey: "cellsPerRow")
         self.cellsPerRow = storedCells > 0 ? storedCells : 8
+
+        let storedScale = UserDefaults.standard.double(forKey: "practiceCanvasScale")
+        self.practiceCanvasScale = storedScale > 0 ? CGFloat(storedScale) : 0.7
     }
 
     var derivedLeniency: CGFloat {

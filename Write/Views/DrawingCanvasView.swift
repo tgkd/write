@@ -29,6 +29,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
     private var predictedLayer: CAShapeLayer?
     private var hoverLayer: CAShapeLayer?
     private var activeTouch: UITouch?
+    private var lastLayoutSize: CGSize = .zero
 
     // MARK: - Init
 
@@ -42,6 +43,46 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
         super.init(coder: coder)
         setupPencilInteraction()
         setupHoverGesture()
+    }
+
+    // MARK: - Layout
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let newSize = bounds.size
+        guard lastLayoutSize.width > 0, lastLayoutSize.height > 0,
+              newSize.width > 0, newSize.height > 0,
+              newSize != lastLayoutSize else {
+            if lastLayoutSize == .zero { lastLayoutSize = newSize }
+            return
+        }
+
+        let sx = newSize.width / lastLayoutSize.width
+        let sy = newSize.height / lastLayoutSize.height
+        var transform = CGAffineTransform(scaleX: sx, y: sy)
+
+        for strokeLayer in strokeLayers {
+            if let path = strokeLayer.path {
+                strokeLayer.path = path.copy(using: &transform)
+            }
+        }
+
+        strokes = strokes.map { points in
+            points.map { CGPoint(x: $0.x * sx, y: $0.y * sy) }
+        }
+
+        if let activeLayer, let path = activeLayer.path {
+            activeLayer.path = path.copy(using: &transform)
+            currentSamples = currentSamples.map {
+                BrushStroke.Sample(
+                    point: CGPoint(x: $0.point.x * sx, y: $0.point.y * sy),
+                    timestamp: $0.timestamp,
+                    force: $0.force
+                )
+            }
+        }
+
+        lastLayoutSize = newSize
     }
 
     // MARK: - Public API
@@ -85,23 +126,16 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = activeTouch, touches.contains(touch) else { return }
-        let point = touch.location(in: self)
-        let force = touch.type == .pencil ? touch.force : nil
 
-        currentSamples.append(BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force))
-
-        // Coalesce touches for smoother strokes
-        if let coalesced = event?.coalescedTouches(for: touch), coalesced.count > 1 {
-            for ct in coalesced.dropFirst() {
-                let cp = ct.location(in: self)
-                let cf = ct.type == .pencil ? ct.force : nil
-                currentSamples.append(BrushStroke.Sample(point: cp, timestamp: ct.timestamp, force: cf))
-            }
+        let allTouches = event?.coalescedTouches(for: touch) ?? [touch]
+        for ct in allTouches {
+            let cp = ct.location(in: self)
+            let cf = ct.type == .pencil ? ct.force : nil
+            currentSamples.append(BrushStroke.Sample(point: cp, timestamp: ct.timestamp, force: cf))
         }
 
         updateActivePath()
 
-        // Render predicted touches for low-latency visual feedback
         if let predicted = event?.predictedTouches(for: touch), !predicted.isEmpty {
             var predictedSamples = currentSamples
             for pt in predicted {
@@ -114,7 +148,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
             clearPredicted()
         }
 
-        onPointAdded?(point, strokes.count)
+        onPointAdded?(touch.location(in: self), strokes.count)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

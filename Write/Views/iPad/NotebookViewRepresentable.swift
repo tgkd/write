@@ -27,9 +27,12 @@ struct NotebookViewRepresentable: UIViewControllerRepresentable {
     func updateUIViewController(_ nav: UINavigationController, context: Context) {
         guard let vc = context.coordinator.viewController else { return }
         let settingsObj = settings
-        vc.showCrosshair = settingsObj.showCrosshairGuidelines
-        vc.allowedTouchTypes = settingsObj.allowedTouchTypes
-        vc.pressureSensitivity = settingsObj.pressureSensitivity
+        vc.applySettingsUpdate(
+            showCrosshair: settingsObj.showCrosshairGuidelines,
+            allowedTouchTypes: settingsObj.allowedTouchTypes,
+            pressureSensitivity: settingsObj.pressureSensitivity,
+            cellsPerRow: settingsObj.cellsPerRow
+        )
     }
 
     func makeCoordinator() -> Coordinator {

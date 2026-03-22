@@ -14,7 +14,7 @@ struct CellCoordinate: Equatable, Hashable, Sendable {
 final class NotebookState: ObservableObject {
     @Published var rows: [NotebookRow]
 
-    let cellsPerRow: Int
+    private(set) var cellsPerRow: Int
 
     init(kanjiList: [KanjiData], cellsPerRow: Int) {
         self.cellsPerRow = cellsPerRow
@@ -23,5 +23,11 @@ final class NotebookState: ObservableObject {
 
     func addRow(kanji: KanjiData) {
         rows.append(NotebookRow(kanjiData: kanji, cellCount: cellsPerRow))
+    }
+
+    func updateCellsPerRow(_ newValue: Int) {
+        guard newValue != cellsPerRow else { return }
+        cellsPerRow = newValue
+        rows = rows.map { NotebookRow(kanjiData: $0.kanjiData, cellCount: newValue) }
     }
 }

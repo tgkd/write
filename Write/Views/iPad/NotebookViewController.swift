@@ -13,6 +13,32 @@ final class NotebookViewController: UIViewController {
 
     var sourceKanji: [KanjiData] = []
 
+    func applySettingsUpdate(
+        showCrosshair: Bool,
+        allowedTouchTypes: Set<UITouch.TouchType>,
+        pressureSensitivity: PressureSensitivity,
+        cellsPerRow: Int
+    ) {
+        let needsReload = self.showCrosshair != showCrosshair
+            || self.allowedTouchTypes != allowedTouchTypes
+            || self.pressureSensitivity != pressureSensitivity
+
+        self.showCrosshair = showCrosshair
+        self.allowedTouchTypes = allowedTouchTypes
+        self.pressureSensitivity = pressureSensitivity
+
+        let cellsChanged = notebookState?.cellsPerRow != cellsPerRow
+        if cellsChanged {
+            notebookState?.updateCellsPerRow(cellsPerRow)
+            didFillRows = false
+            collectionView?.collectionViewLayout.invalidateLayout()
+            collectionView?.reloadData()
+            fillRowsIfNeeded()
+        } else if needsReload {
+            collectionView?.reloadData()
+        }
+    }
+
     private var collectionView: UICollectionView!
     private var didFillRows = false
 
