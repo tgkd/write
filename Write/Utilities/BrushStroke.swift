@@ -29,12 +29,13 @@ enum BrushStroke {
 
     /// Creates a filled CGPath with variable width from touch samples.
     static func createPath(from samples: [Sample], config: Config = Config()) -> CGPath {
-        let points = samples.map(\.point)
+        let filtered = filterByDistance(samples)
+        let points = filtered.map(\.point)
         guard points.count >= 2 else {
             return dotPath(at: points.first ?? .zero, radius: config.maxWidth / 2)
         }
 
-        let rawWidths = computeWidths(from: samples, config: config)
+        let rawWidths = computeWidths(from: filtered, config: config)
 
         let smoothedPoints = CatmullRomSpline.interpolate(
             points: points,
@@ -54,6 +55,23 @@ enum BrushStroke {
 
     // MARK: - Private
 
+    private static func filterByDistance(_ samples: [Sample], minDistance: CGFloat = 2.0) -> [Sample] {
+        guard samples.count >= 2 else { return samples }
+        var result = [samples[0]]
+        let minDistSq = minDistance * minDistance
+        for i in 1..<(samples.count - 1) {
+            let prev = result.last!.point
+            let cur = samples[i].point
+            let dx = cur.x - prev.x
+            let dy = cur.y - prev.y
+            if dx * dx + dy * dy >= minDistSq {
+                result.append(samples[i])
+            }
+        }
+        result.append(samples.last!)
+        return result
+    }
+
     private static func computeWidths(from samples: [Sample], config: Config) -> [CGFloat] {
         let count = samples.count
         guard count >= 2 else { return [config.maxWidth] }
@@ -71,9 +89,18 @@ enum BrushStroke {
         }
         speeds[0] = speeds[1]
 
-        // Exponential moving average
+        // Bidirectional exponential moving average
+        let alpha = config.speedSmoothing
+        var forward = speeds
         for i in 1..<count {
-            speeds[i] = speeds[i - 1] * config.speedSmoothing + speeds[i] * (1 - config.speedSmoothing)
+            forward[i] = forward[i - 1] * alpha + forward[i] * (1 - alpha)
+        }
+        var backward = speeds
+        for i in stride(from: count - 2, through: 0, by: -1) {
+            backward[i] = backward[i + 1] * alpha + backward[i] * (1 - alpha)
+        }
+        for i in 0..<count {
+            speeds[i] = (forward[i] + backward[i]) / 2
         }
 
         let slowSpeed: CGFloat = 100
@@ -137,11 +164,18 @@ enum BrushStroke {
         var prevNx: CGFloat = 1
         var prevNy: CGFloat = 0
 
+        let spans = [1, 3, 5]
+        let spanWeights: [CGFloat] = [0.5, 0.3, 0.2]
+
         for i in 0..<points.count {
-            let prev = i > 0 ? points[i - 1] : points[i]
-            let next = i < points.count - 1 ? points[i + 1] : points[i]
-            let dx = next.x - prev.x
-            let dy = next.y - prev.y
+            var dx: CGFloat = 0
+            var dy: CGFloat = 0
+            for (span, weight) in zip(spans, spanWeights) {
+                let p = max(0, i - span)
+                let n = min(points.count - 1, i + span)
+                dx += (points[n].x - points[p].x) * weight
+                dy += (points[n].y - points[p].y) * weight
+            }
             let len = hypot(dx, dy)
 
             let nx: CGFloat

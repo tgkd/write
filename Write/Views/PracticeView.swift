@@ -189,12 +189,12 @@ struct PracticeView: View {
     private var controls: some View {
         HStack(spacing: 32) {
             Button {
-                canvasView?.clearAll()
-                feedbackView?.clearAll()
+                handleUndo()
             } label: {
-                Image(systemName: "eraser")
+                Image(systemName: "arrow.uturn.backward")
                     .font(.title3)
             }
+            .disabled(practiceState.matchedStrokeIndices.isEmpty)
 
             Button {
                 practiceState.reset()
@@ -234,7 +234,6 @@ struct PracticeView: View {
         case .strokeAccepted(let strokeIndex):
             feedbackView?.showAccepted(points: points)
             referenceView?.markStrokeAccepted(at: strokeIndex)
-            canvasView.removeLastStroke()
             applyGhostVisibility()
             practiceState.acknowledgeResult()
 
@@ -260,8 +259,14 @@ struct PracticeView: View {
     }
 
     private func handlePencilDoubleTap() {
-        canvasView?.clearAll()
-        feedbackView?.clearAll()
+        handleUndo()
+    }
+
+    private func handleUndo() {
+        guard practiceState.undoLastStroke() != nil else { return }
+        canvasView?.removeLastStroke()
+        showCompletionCheck = false
+        applyGhostVisibility()
     }
 
     private func triggerCompletionFeedback() {

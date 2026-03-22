@@ -80,6 +80,16 @@ final class PracticeState: ObservableObject {
         }
     }
 
+    func undoLastStroke() -> Int? {
+        guard !matchedStrokeIndices.isEmpty else { return nil }
+        guard let lastMatched = matchedStrokeIndices.max() else { return nil }
+        matchedStrokeIndices.remove(lastMatched)
+        currentStrokeIndex = lastMatched
+        isComplete = false
+        phase = .waitingForInput
+        return lastMatched
+    }
+
     func reset() {
         phase = .waitingForInput
         currentStrokeIndex = 0
