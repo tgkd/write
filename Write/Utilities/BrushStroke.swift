@@ -21,9 +21,9 @@ enum BrushStroke {
         var minWidth: CGFloat = 1.5
         var maxWidth: CGFloat = 8.0
         var taperFraction: CGFloat = 0.15
-        var speedSmoothing: CGFloat = 0.7
+        var speedSmoothing: CGFloat = 0.85
         var smoothingAlpha: CGFloat = 0.5
-        var smoothingSubdivisions: Int = 16
+        var smoothingSubdivisions: Int = 8
         var pressureSensitivity: PressureSensitivity = .off
     }
 
@@ -55,7 +55,7 @@ enum BrushStroke {
 
     // MARK: - Private
 
-    private static func filterByDistance(_ samples: [Sample], minDistance: CGFloat = 2.0) -> [Sample] {
+    private static func filterByDistance(_ samples: [Sample], minDistance: CGFloat = 4.0) -> [Sample] {
         guard samples.count >= 2 else { return samples }
         var result = [samples[0]]
         let minDistSq = minDistance * minDistance

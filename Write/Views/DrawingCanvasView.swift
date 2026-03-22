@@ -29,6 +29,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
     private var predictedLayer: CAShapeLayer?
     private var hoverLayer: CAShapeLayer?
     private var activeTouch: UITouch?
+    private var inputFilter = OneEuroFilter()
     private var lastLayoutSize: CGSize = .zero
 
     // MARK: - Init
@@ -110,8 +111,11 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
         guard let touch = touches.first(where: { allowedTouchTypes.contains($0.type) }) else { return }
 
         activeTouch = touch
-        let point = touch.location(in: self)
+        let rawPoint = touch.location(in: self)
         let force = touch.type == .pencil ? touch.force : nil
+
+        inputFilter.reset()
+        let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
 
         currentSamples = [BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force)]
 
@@ -121,7 +125,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
         updateActivePath()
         hideHover()
-        onPointAdded?(point, strokes.count)
+        onPointAdded?(rawPoint, strokes.count)
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -129,9 +133,10 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
         let allTouches = event?.coalescedTouches(for: touch) ?? [touch]
         for ct in allTouches {
-            let cp = ct.location(in: self)
+            let rawPoint = ct.location(in: self)
             let cf = ct.type == .pencil ? ct.force : nil
-            currentSamples.append(BrushStroke.Sample(point: cp, timestamp: ct.timestamp, force: cf))
+            let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
+            currentSamples.append(BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf))
         }
 
         updateActivePath()
@@ -153,8 +158,9 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = activeTouch, touches.contains(touch) else { return }
-        let point = touch.location(in: self)
+        let rawPoint = touch.location(in: self)
         let force = touch.type == .pencil ? touch.force : nil
+        let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
 
         if point != currentSamples.last?.point {
             currentSamples.append(BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force))
