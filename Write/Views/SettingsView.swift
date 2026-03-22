@@ -107,7 +107,7 @@ struct SettingsView: View {
 
             VStack(spacing: 0) {
                 HStack {
-                    Text("Pressure Sensitivity")
+                    Text("Pen Pressure")
                     Spacer()
                     Picker("", selection: $settings.pressureSensitivity) {
                         ForEach(PressureSensitivity.allCases, id: \.self) { level in

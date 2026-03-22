@@ -1,4 +1,8 @@
-# Write - Kanji Writing Trainer
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+# Kakijun - Kanji Writing Trainer
 
 ## Build & Test
 
@@ -28,11 +32,12 @@ python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Data/kanjidic2.xml Write/
 
 1. **Engine/** - Pure geometric validation (no UI dependencies). Highly testable, 98% coverage.
    - PointSampler -> ProcrustesNormalizer -> FrechetDistance -> StrokeValidator pipeline
-2. **Models/** - Codable data models and state machines
+2. **Models/** - Codable data models and state machines (PracticeState, SessionState, NotebookState, AppSettings, PencilSettings)
 3. **Services/** - KanjiDataStore loads bundled JSON, provides lookup by code point/character and search by reading/meaning
-4. **Utilities/** - Standalone helpers (CatmullRomSpline for Catmull-Rom curve smoothing)
+4. **Utilities/** - Standalone helpers (CatmullRomSpline, OneEuroFilter for Apple Pencil smoothing, BrushStroke, DeviceContext)
 5. **Views/** - UIKit views (DrawingCanvasView, KanjiReferenceView) wrapped in SwiftUI via UIViewRepresentable
    - StrokeRenderer (in Views/) is also used by StrokeValidator to parse SVG paths and apply the KanjiVG-to-canvas scale transform; it's a shared dependency, not purely a view concern
+   - **Views/iPad/** - iPad-specific views: NotebookViewController (UIKit notebook grid), iPadPracticeView, crosshair guides, notebook cells
 
 ### Validation pipeline
 
@@ -53,3 +58,5 @@ KanjiVG uses a 109x109 coordinate space. StrokeRenderer applies a uniform scale 
 - The preprocessed kanji_strokes.json is committed; raw XML sources (Data/) are gitignored
 - KanjiData has optional KANJIDIC2 fields (onYomi, kunYomi, meanings, grade, jlpt, freq) — use default nil values in tests
 - AppSettings (@EnvironmentObject) holds user preferences; persisted via UserDefaults
+- iPad has a separate notebook-style UI (NotebookViewController) with Apple Pencil support (OneEuroFilter for input smoothing)
+- iPhone and iPad share the same Engine/Models/Services; only Views diverge
