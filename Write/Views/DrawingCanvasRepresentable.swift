@@ -10,6 +10,9 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
 
     var allowedTouchTypes: Set<UITouch.TouchType> = [.direct, .pencil]
     var pressureSensitivity: PressureSensitivity = .off
+    var tiltSensitivity: TiltSensitivity = .off
+    var smoothingStrength: SmoothingStrength = .medium
+    var brushThickness: BrushThickness = .medium
 
     @Binding var canvasView: DrawingCanvasView?
 
@@ -20,7 +23,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         view.onPencilDoubleTap = onPencilDoubleTap
         view.onPencilSqueeze = onPencilSqueeze
         view.allowedTouchTypes = allowedTouchTypes
-        view.brushConfig.pressureSensitivity = pressureSensitivity
+        applyBrushSettings(to: view)
         view.backgroundColor = .clear
         DispatchQueue.main.async {
             self.canvasView = view
@@ -34,6 +37,17 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         uiView.onPencilDoubleTap = onPencilDoubleTap
         uiView.onPencilSqueeze = onPencilSqueeze
         uiView.allowedTouchTypes = allowedTouchTypes
-        uiView.brushConfig.pressureSensitivity = pressureSensitivity
+        applyBrushSettings(to: uiView)
+    }
+
+    private func applyBrushSettings(to view: DrawingCanvasView) {
+        view.brushConfig.pressureSensitivity = pressureSensitivity
+        view.brushConfig.tiltSensitivity = tiltSensitivity
+        let filterParams = smoothingStrength.filterParams
+        view.brushConfig.filterMinCutoff = filterParams.minCutoff
+        view.brushConfig.filterBeta = filterParams.beta
+        let widthRange = brushThickness.widthRange
+        view.brushConfig.minWidth = widthRange.min
+        view.brushConfig.maxWidth = widthRange.max
     }
 }

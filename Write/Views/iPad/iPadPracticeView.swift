@@ -18,21 +18,19 @@ struct iPadPracticeView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            infoPanel
-                .frame(width: 280)
-                .padding()
-
-            Divider()
-
-            GeometryReader { geo in
-                let maxDim = min(geo.size.width, geo.size.height)
-                let canvasSize = maxDim * settings.practiceCanvasScale
-
-                canvasPanel
-                    .frame(width: canvasSize, height: canvasSize)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if settings.handedness == .left {
+                canvasArea
+                Divider()
+                infoPanel
+                    .frame(width: 280)
+                    .padding()
+            } else {
+                infoPanel
+                    .frame(width: 280)
+                    .padding()
+                Divider()
+                canvasArea
             }
-            .padding(24)
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
@@ -183,6 +181,18 @@ struct iPadPracticeView: View {
 
     // MARK: - Right Panel
 
+    private var canvasArea: some View {
+        GeometryReader { geo in
+            let maxDim = min(geo.size.width, geo.size.height)
+            let canvasSize = maxDim * settings.practiceCanvasScale
+
+            canvasPanel
+                .frame(width: canvasSize, height: canvasSize)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .padding(24)
+    }
+
     private var canvasPanel: some View {
         PracticeCanvasArea(
             kanjiData: practiceState.kanjiData,
@@ -190,6 +200,9 @@ struct iPadPracticeView: View {
             palette: settings.colorPalette,
             allowedTouchTypes: settings.allowedTouchTypes,
             pressureSensitivity: settings.pressureSensitivity,
+            tiltSensitivity: settings.tiltSensitivity,
+            smoothingStrength: settings.smoothingStrength,
+            brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)

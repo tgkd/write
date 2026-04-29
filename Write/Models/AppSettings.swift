@@ -24,8 +24,24 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(pressureSensitivity.rawValue, forKey: "pressureSensitivity") }
     }
 
+    @Published var tiltSensitivity: TiltSensitivity {
+        didSet { UserDefaults.standard.set(tiltSensitivity.rawValue, forKey: "tiltSensitivity") }
+    }
+
+    @Published var smoothingStrength: SmoothingStrength {
+        didSet { UserDefaults.standard.set(smoothingStrength.rawValue, forKey: "smoothingStrength") }
+    }
+
+    @Published var brushThickness: BrushThickness {
+        didSet { UserDefaults.standard.set(brushThickness.rawValue, forKey: "brushThickness") }
+    }
+
     @Published var allowFingerDrawing: Bool {
         didSet { UserDefaults.standard.set(allowFingerDrawing, forKey: "allowFingerDrawing") }
+    }
+
+    @Published var handedness: Handedness {
+        didSet { UserDefaults.standard.set(handedness.rawValue, forKey: "handedness") }
     }
 
     @Published var showCrosshairGuidelines: Bool {
@@ -56,9 +72,21 @@ final class AppSettings: ObservableObject {
         let storedSensitivity = UserDefaults.standard.string(forKey: "pressureSensitivity") ?? ""
         self.pressureSensitivity = PressureSensitivity(rawValue: storedSensitivity) ?? .medium
 
+        let storedTilt = UserDefaults.standard.string(forKey: "tiltSensitivity") ?? ""
+        self.tiltSensitivity = TiltSensitivity(rawValue: storedTilt) ?? .low
+
+        let storedSmoothing = UserDefaults.standard.string(forKey: "smoothingStrength") ?? ""
+        self.smoothingStrength = SmoothingStrength(rawValue: storedSmoothing) ?? .medium
+
+        let storedThickness = UserDefaults.standard.string(forKey: "brushThickness") ?? ""
+        self.brushThickness = BrushThickness(rawValue: storedThickness) ?? .medium
+
         self.allowFingerDrawing = UserDefaults.standard.object(forKey: "allowFingerDrawing") == nil
             ? true
             : UserDefaults.standard.bool(forKey: "allowFingerDrawing")
+
+        let storedHandedness = UserDefaults.standard.string(forKey: "handedness") ?? ""
+        self.handedness = Handedness(rawValue: storedHandedness) ?? .right
 
         self.showCrosshairGuidelines = UserDefaults.standard.object(forKey: "showCrosshairGuidelines") == nil
             ? true

@@ -55,6 +55,8 @@ struct SettingsView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
 
+                    drawingSection
+
                     if DeviceContext.isIPad {
                         iPadSettingsSection
                     }
@@ -97,9 +99,9 @@ struct SettingsView: View {
         }
     }
 
-    private var iPadSettingsSection: some View {
+    private var drawingSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Apple Pencil")
+            Text("Drawing")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
@@ -107,10 +109,91 @@ struct SettingsView: View {
 
             VStack(spacing: 0) {
                 HStack {
+                    Text("Smoothing")
+                    Spacer()
+                    Picker("", selection: $settings.smoothingStrength) {
+                        ForEach(SmoothingStrength.allCases, id: \.self) { level in
+                            Text(level.displayName).tag(level)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+
+                Divider().padding(.leading, 16)
+
+                HStack {
+                    Text("Brush Thickness")
+                    Spacer()
+                    Picker("", selection: $settings.brushThickness) {
+                        ForEach(BrushThickness.allCases, id: \.self) { level in
+                            Text(level.displayName).tag(level)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            }
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+    }
+
+    private var iPadSettingsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Layout")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+                .padding(.leading, 4)
+
+            VStack(spacing: 0) {
+                HStack {
+                    Text("Handedness")
+                    Spacer()
+                    Picker("", selection: $settings.handedness) {
+                        ForEach(Handedness.allCases, id: \.self) { h in
+                            Text(h.displayName).tag(h)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            }
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+
+            Text("Apple Pencil")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+                .padding(.leading, 4)
+                .padding(.top, 8)
+
+            VStack(spacing: 0) {
+                HStack {
                     Text("Pen Pressure")
                     Spacer()
                     Picker("", selection: $settings.pressureSensitivity) {
                         ForEach(PressureSensitivity.allCases, id: \.self) { level in
+                            Text(level.displayName).tag(level)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+
+                Divider().padding(.leading, 16)
+
+                HStack {
+                    Text("Pen Tilt")
+                    Spacer()
+                    Picker("", selection: $settings.tiltSensitivity) {
+                        ForEach(TiltSensitivity.allCases, id: \.self) { level in
                             Text(level.displayName).tag(level)
                         }
                     }

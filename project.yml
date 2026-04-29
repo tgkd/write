@@ -27,11 +27,17 @@ targets:
       base:
         INFOPLIST_FILE: Write/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.j.write
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "1"
+        MARKETING_VERSION: "0.0.1"
+        CURRENT_PROJECT_VERSION: "2"
         GENERATE_INFOPLIST_FILE: false
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1,2"
+        DEVELOPMENT_TEAM: ULU867Y7LC
+        CODE_SIGN_IDENTITY: "iPhone Developer"
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+        SUPPORTS_MACCATALYST: false
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: false
     dependencies:
       - package: SVGPath
     info:

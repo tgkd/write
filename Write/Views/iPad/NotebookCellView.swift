@@ -152,18 +152,30 @@ final class NotebookCellView: UICollectionViewCell {
     func configurePractice(
         showCrosshair: Bool,
         allowedTouchTypes: Set<UITouch.TouchType>,
-        pressureSensitivity: PressureSensitivity
+        pressureSensitivity: PressureSensitivity,
+        tiltSensitivity: TiltSensitivity,
+        smoothingStrength: SmoothingStrength,
+        brushThickness: BrushThickness
     ) {
         self.showCrosshair = showCrosshair
         contentView.backgroundColor = .clear
-        installCanvas(allowedTouchTypes: allowedTouchTypes, pressureSensitivity: pressureSensitivity)
+        installCanvas(
+            allowedTouchTypes: allowedTouchTypes,
+            pressureSensitivity: pressureSensitivity,
+            tiltSensitivity: tiltSensitivity,
+            smoothingStrength: smoothingStrength,
+            brushThickness: brushThickness
+        )
     }
 
     // MARK: - Canvas
 
     private func installCanvas(
         allowedTouchTypes: Set<UITouch.TouchType>,
-        pressureSensitivity: PressureSensitivity
+        pressureSensitivity: PressureSensitivity,
+        tiltSensitivity: TiltSensitivity,
+        smoothingStrength: SmoothingStrength,
+        brushThickness: BrushThickness
     ) {
         if canvasView != nil { return }
 
@@ -171,6 +183,13 @@ final class NotebookCellView: UICollectionViewCell {
         canvas.backgroundColor = .clear
         canvas.allowedTouchTypes = allowedTouchTypes
         canvas.brushConfig.pressureSensitivity = pressureSensitivity
+        canvas.brushConfig.tiltSensitivity = tiltSensitivity
+        let filterParams = smoothingStrength.filterParams
+        canvas.brushConfig.filterMinCutoff = filterParams.minCutoff
+        canvas.brushConfig.filterBeta = filterParams.beta
+        let widthRange = brushThickness.widthRange
+        canvas.brushConfig.minWidth = widthRange.min
+        canvas.brushConfig.maxWidth = widthRange.max
         canvas.onPencilDoubleTap = { [weak canvas] in
             canvas?.clearAll()
         }

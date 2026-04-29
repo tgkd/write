@@ -172,6 +172,9 @@ struct PracticeView: View {
             palette: settings.colorPalette,
             allowedTouchTypes: settings.allowedTouchTypes,
             pressureSensitivity: settings.pressureSensitivity,
+            tiltSensitivity: settings.tiltSensitivity,
+            smoothingStrength: settings.smoothingStrength,
+            brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)

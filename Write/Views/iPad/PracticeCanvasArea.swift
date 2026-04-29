@@ -6,6 +6,9 @@ struct PracticeCanvasArea: View {
     let palette: ColorPalette
     let allowedTouchTypes: Set<UITouch.TouchType>
     let pressureSensitivity: PressureSensitivity
+    let tiltSensitivity: TiltSensitivity
+    let smoothingStrength: SmoothingStrength
+    let brushThickness: BrushThickness
     let showCompletionCheck: Bool
 
     var onStrokeCompleted: (([CGPoint]) -> Void)?
@@ -34,6 +37,9 @@ struct PracticeCanvasArea: View {
                 onPencilDoubleTap: onPencilDoubleTap,
                 allowedTouchTypes: allowedTouchTypes,
                 pressureSensitivity: pressureSensitivity,
+                tiltSensitivity: tiltSensitivity,
+                smoothingStrength: smoothingStrength,
+                brushThickness: brushThickness,
                 canvasView: $canvasView
             )
 

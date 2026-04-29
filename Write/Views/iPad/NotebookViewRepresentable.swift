@@ -15,6 +15,10 @@ struct NotebookViewRepresentable: UIViewControllerRepresentable {
         vc.showCrosshair = settingsObj.showCrosshairGuidelines
         vc.allowedTouchTypes = settingsObj.allowedTouchTypes
         vc.pressureSensitivity = settingsObj.pressureSensitivity
+        vc.tiltSensitivity = settingsObj.tiltSensitivity
+        vc.smoothingStrength = settingsObj.smoothingStrength
+        vc.brushThickness = settingsObj.brushThickness
+        vc.handedness = settingsObj.handedness
         vc.title = "Notebook"
 
         context.coordinator.viewController = vc
@@ -31,6 +35,10 @@ struct NotebookViewRepresentable: UIViewControllerRepresentable {
             showCrosshair: settingsObj.showCrosshairGuidelines,
             allowedTouchTypes: settingsObj.allowedTouchTypes,
             pressureSensitivity: settingsObj.pressureSensitivity,
+            tiltSensitivity: settingsObj.tiltSensitivity,
+            smoothingStrength: settingsObj.smoothingStrength,
+            brushThickness: settingsObj.brushThickness,
+            handedness: settingsObj.handedness,
             cellsPerRow: settingsObj.cellsPerRow
         )
     }

@@ -10,6 +10,10 @@ final class NotebookViewController: UIViewController {
     var showCrosshair: Bool = true
     var allowedTouchTypes: Set<UITouch.TouchType> = [.direct, .pencil]
     var pressureSensitivity: PressureSensitivity = .off
+    var tiltSensitivity: TiltSensitivity = .off
+    var smoothingStrength: SmoothingStrength = .medium
+    var brushThickness: BrushThickness = .medium
+    var handedness: Handedness = .right
 
     var sourceKanji: [KanjiData] = []
 
@@ -17,15 +21,27 @@ final class NotebookViewController: UIViewController {
         showCrosshair: Bool,
         allowedTouchTypes: Set<UITouch.TouchType>,
         pressureSensitivity: PressureSensitivity,
+        tiltSensitivity: TiltSensitivity,
+        smoothingStrength: SmoothingStrength,
+        brushThickness: BrushThickness,
+        handedness: Handedness,
         cellsPerRow: Int
     ) {
         let needsReload = self.showCrosshair != showCrosshair
             || self.allowedTouchTypes != allowedTouchTypes
             || self.pressureSensitivity != pressureSensitivity
+            || self.tiltSensitivity != tiltSensitivity
+            || self.smoothingStrength != smoothingStrength
+            || self.brushThickness != brushThickness
+            || self.handedness != handedness
 
         self.showCrosshair = showCrosshair
         self.allowedTouchTypes = allowedTouchTypes
         self.pressureSensitivity = pressureSensitivity
+        self.tiltSensitivity = tiltSensitivity
+        self.smoothingStrength = smoothingStrength
+        self.brushThickness = brushThickness
+        self.handedness = handedness
 
         let cellsChanged = notebookState?.cellsPerRow != cellsPerRow
         if cellsChanged {
@@ -64,7 +80,12 @@ final class NotebookViewController: UIViewController {
 
         var tips: [NotebookTip] = []
 
-        let refIndexPath = IndexPath(item: 0, section: 0)
+        let cellCount = state.rows[0].cellCount
+        let refItem = handedness == .left ? cellCount : 0
+        let firstPracticeItem = handedness == .left ? 0 : 1
+        let secondPracticeItem = handedness == .left ? 1 : 2
+
+        let refIndexPath = IndexPath(item: refItem, section: 0)
         if let refCell = collectionView.cellForItem(at: refIndexPath) {
             let rect = refCell.convert(refCell.bounds, to: view)
             tips.append(NotebookTip(
@@ -74,7 +95,7 @@ final class NotebookViewController: UIViewController {
             ))
         }
 
-        let practiceIndexPath = IndexPath(item: 1, section: 0)
+        let practiceIndexPath = IndexPath(item: firstPracticeItem, section: 0)
         if let practiceCell = collectionView.cellForItem(at: practiceIndexPath) {
             let rect = practiceCell.convert(practiceCell.bounds, to: view)
             tips.append(NotebookTip(
@@ -84,7 +105,7 @@ final class NotebookViewController: UIViewController {
             ))
         }
 
-        let lastPracticeIndexPath = IndexPath(item: 2, section: 0)
+        let lastPracticeIndexPath = IndexPath(item: secondPracticeItem, section: 0)
         if let cell = collectionView.cellForItem(at: lastPracticeIndexPath) {
             let rect = cell.convert(cell.bounds, to: view)
             tips.append(NotebookTip(
@@ -226,7 +247,7 @@ extension NotebookViewController: UICollectionViewDataSource {
 
         guard let state = notebookState else { return cell }
 
-        if indexPath.item == 0 {
+        if isReferenceItem(at: indexPath) {
             cell.configureReference(kanji: state.rows[indexPath.section].kanjiData)
             return cell
         }
@@ -234,8 +255,17 @@ extension NotebookViewController: UICollectionViewDataSource {
         cell.configurePractice(
             showCrosshair: showCrosshair,
             allowedTouchTypes: allowedTouchTypes,
-            pressureSensitivity: pressureSensitivity
+            pressureSensitivity: pressureSensitivity,
+            tiltSensitivity: tiltSensitivity,
+            smoothingStrength: smoothingStrength,
+            brushThickness: brushThickness
         )
         return cell
+    }
+
+    private func isReferenceItem(at indexPath: IndexPath) -> Bool {
+        guard let state = notebookState else { return false }
+        let lastIndex = state.rows[indexPath.section].cellCount
+        return handedness == .left ? indexPath.item == lastIndex : indexPath.item == 0
     }
 }

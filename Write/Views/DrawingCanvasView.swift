@@ -113,11 +113,14 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
         activeTouch = touch
         let rawPoint = touch.location(in: self)
         let force = touch.type == .pencil ? touch.force : nil
+        let altitude = touch.type == .pencil ? touch.altitudeAngle : nil
 
+        inputFilter.minCutoff = brushConfig.filterMinCutoff
+        inputFilter.beta = brushConfig.filterBeta
         inputFilter.reset()
         let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
 
-        currentSamples = [BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force)]
+        currentSamples = [BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude)]
 
         let shapeLayer = makeBrushLayer()
         layer.addSublayer(shapeLayer)
@@ -135,8 +138,9 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
         for ct in allTouches {
             let rawPoint = ct.location(in: self)
             let cf = ct.type == .pencil ? ct.force : nil
+            let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
-            currentSamples.append(BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf))
+            currentSamples.append(BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca))
         }
 
         updateActivePath()
@@ -146,7 +150,8 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
             for pt in predicted {
                 let pp = pt.location(in: self)
                 let pf = pt.type == .pencil ? pt.force : nil
-                predictedSamples.append(BrushStroke.Sample(point: pp, timestamp: pt.timestamp, force: pf))
+                let pa = pt.type == .pencil ? pt.altitudeAngle : nil
+                predictedSamples.append(BrushStroke.Sample(point: pp, timestamp: pt.timestamp, force: pf, altitude: pa))
             }
             updatePredictedPath(samples: predictedSamples)
         } else {
@@ -160,10 +165,11 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
         guard let touch = activeTouch, touches.contains(touch) else { return }
         let rawPoint = touch.location(in: self)
         let force = touch.type == .pencil ? touch.force : nil
+        let altitude = touch.type == .pencil ? touch.altitudeAngle : nil
         let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
 
         if point != currentSamples.last?.point {
-            currentSamples.append(BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force))
+            currentSamples.append(BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude))
         }
 
         clearPredicted()

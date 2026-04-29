@@ -9,11 +9,14 @@ enum BrushStroke {
         let point: CGPoint
         let timestamp: TimeInterval
         let force: CGFloat?
+        /// Pencil altitude in radians. π/2 ≈ perpendicular to surface, near 0 ≈ flat against surface.
+        let altitude: CGFloat?
 
-        init(point: CGPoint, timestamp: TimeInterval, force: CGFloat? = nil) {
+        init(point: CGPoint, timestamp: TimeInterval, force: CGFloat? = nil, altitude: CGFloat? = nil) {
             self.point = point
             self.timestamp = timestamp
             self.force = force
+            self.altitude = altitude
         }
     }
 
@@ -25,6 +28,9 @@ enum BrushStroke {
         var smoothingAlpha: CGFloat = 0.5
         var smoothingSubdivisions: Int = 8
         var pressureSensitivity: PressureSensitivity = .off
+        var tiltSensitivity: TiltSensitivity = .off
+        var filterMinCutoff: CGFloat = 1.5
+        var filterBeta: CGFloat = 0.5
     }
 
     /// Creates a filled CGPath with variable width from touch samples.
@@ -105,19 +111,26 @@ enum BrushStroke {
 
         let slowSpeed: CGFloat = 100
         let fastSpeed: CGFloat = 1500
-        let blend = config.pressureSensitivity.blendFactor
+        let pressureBlend = config.pressureSensitivity.blendFactor
+        let tiltBlend = config.tiltSensitivity.blendFactor
         var widths: [CGFloat] = samples.enumerated().map { i, sample in
             let speedT = min(1, max(0, (speeds[i] - slowSpeed) / (fastSpeed - slowSpeed)))
-            let speedWidth = config.maxWidth - speedT * (config.maxWidth - config.minWidth)
+            var width = config.maxWidth - speedT * (config.maxWidth - config.minWidth)
 
-            guard blend > 0, let force = sample.force, force > 0 else {
-                return speedWidth
+            if pressureBlend > 0, let force = sample.force, force > 0 {
+                let maxForce: CGFloat = 4.0
+                let forceT = min(1, force / maxForce)
+                let forceWidth = config.minWidth + forceT * (config.maxWidth - config.minWidth)
+                width = width * (1 - pressureBlend) + forceWidth * pressureBlend
             }
 
-            let maxForce: CGFloat = 4.0
-            let forceT = min(1, force / maxForce)
-            let forceWidth = config.minWidth + forceT * (config.maxWidth - config.minWidth)
-            return speedWidth * (1 - blend) + forceWidth * blend
+            if tiltBlend > 0, let altitude = sample.altitude {
+                let tiltT = max(0, min(1, 1 - altitude / (.pi / 2)))
+                let tiltWidth = config.minWidth + tiltT * (config.maxWidth - config.minWidth)
+                width = width * (1 - tiltBlend) + tiltWidth * tiltBlend
+            }
+
+            return width
         }
 
         // Taper at start and end
