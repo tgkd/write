@@ -111,7 +111,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
         guard let touch = touches.first(where: { allowedTouchTypes.contains($0.type) }) else { return }
 
         activeTouch = touch
-        let rawPoint = touch.location(in: self)
+        let rawPoint = location(of: touch)
         let force = touch.type == .pencil ? touch.force : nil
         let altitude = touch.type == .pencil ? touch.altitudeAngle : nil
 
@@ -128,7 +128,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
         updateActivePath()
         hideHover()
-        onPointAdded?(rawPoint, strokes.count)
+        onPointAdded?(touch.location(in: self), strokes.count)
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -136,7 +136,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
         let allTouches = event?.coalescedTouches(for: touch) ?? [touch]
         for ct in allTouches {
-            let rawPoint = ct.location(in: self)
+            let rawPoint = location(of: ct)
             let cf = ct.type == .pencil ? ct.force : nil
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
@@ -148,7 +148,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
         if let predicted = event?.predictedTouches(for: touch), !predicted.isEmpty {
             var predictedSamples = currentSamples
             for pt in predicted {
-                let pp = pt.location(in: self)
+                let pp = location(of: pt)
                 let pf = pt.type == .pencil ? pt.force : nil
                 let pa = pt.type == .pencil ? pt.altitudeAngle : nil
                 predictedSamples.append(BrushStroke.Sample(point: pp, timestamp: pt.timestamp, force: pf, altitude: pa))
@@ -163,7 +163,7 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = activeTouch, touches.contains(touch) else { return }
-        let rawPoint = touch.location(in: self)
+        let rawPoint = location(of: touch)
         let force = touch.type == .pencil ? touch.force : nil
         let altitude = touch.type == .pencil ? touch.altitudeAngle : nil
         let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
@@ -240,10 +240,18 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
     // MARK: - Private
 
+    /// Returns the most precise location available for a touch.
+    /// Apple Pencil reports sub-point coordinates via `preciseLocation`, avoiding the
+    /// 1pt-grid quantization jitter of `location(in:)`. Finger touches are identical.
+    private func location(of touch: UITouch) -> CGPoint {
+        touch.type == .pencil ? touch.preciseLocation(in: self) : touch.location(in: self)
+    }
+
     private func makeBrushLayer() -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = strokeColor.cgColor
         shapeLayer.strokeColor = nil
+        shapeLayer.actions = ["path": NSNull()]
         return shapeLayer
     }
 

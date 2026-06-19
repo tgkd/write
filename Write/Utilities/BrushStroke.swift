@@ -61,6 +61,14 @@ enum BrushStroke {
 
     // MARK: - Private
 
+    /// Maximum samples tapered at each end, independent of total stroke length, so the
+    /// start/end of a stroke stops re-tapering (visibly thinning) as the stroke grows.
+    private static let maxTaperSamples = 6
+
+    /// Minimum fraction of width retained at the very tip of a taper, so stroke ends
+    /// round off instead of collapsing to a sharp needle point.
+    private static let taperTipFloor: CGFloat = 0.4
+
     private static func filterByDistance(_ samples: [Sample], minDistance: CGFloat = 4.0) -> [Sample] {
         guard samples.count >= 2 else { return samples }
         var result = [samples[0]]
@@ -134,15 +142,15 @@ enum BrushStroke {
         }
 
         // Taper at start and end
-        let taperCount = max(1, Int(CGFloat(count) * config.taperFraction))
+        let taperCount = max(1, min(Int(CGFloat(count) * config.taperFraction), maxTaperSamples))
         for i in 0..<min(taperCount, count) {
             let t = CGFloat(i + 1) / CGFloat(taperCount + 1)
-            widths[i] *= t
+            widths[i] *= taperTipFloor + (1 - taperTipFloor) * t
         }
         for i in 0..<min(taperCount, count) {
             let idx = count - 1 - i
             let t = CGFloat(i + 1) / CGFloat(taperCount + 1)
-            widths[idx] *= t
+            widths[idx] *= taperTipFloor + (1 - taperTipFloor) * t
         }
 
         return widths
