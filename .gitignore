@@ -18,3 +18,12 @@ Data/
 # App Store screenshot generator
 appstore-screenshots/
 docs/
+
+# macOS
+.DS_Store
+
+# Cloudflare Wrangler
+.wrangler/
+
+# Pi / codetask runner
+.pi/
