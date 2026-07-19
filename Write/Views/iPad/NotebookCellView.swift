@@ -182,14 +182,12 @@ final class NotebookCellView: UICollectionViewCell {
         let canvas = DrawingCanvasView(frame: contentView.bounds)
         canvas.backgroundColor = .clear
         canvas.allowedTouchTypes = allowedTouchTypes
-        canvas.brushConfig.pressureSensitivity = pressureSensitivity
-        canvas.brushConfig.tiltSensitivity = tiltSensitivity
-        let filterParams = smoothingStrength.filterParams
-        canvas.brushConfig.filterMinCutoff = filterParams.minCutoff
-        canvas.brushConfig.filterBeta = filterParams.beta
-        let widthRange = brushThickness.widthRange
-        canvas.brushConfig.minWidth = widthRange.min
-        canvas.brushConfig.maxWidth = widthRange.max
+        canvas.brushConfig = BrushStroke.Config(
+            pressure: pressureSensitivity,
+            tilt: tiltSensitivity,
+            smoothing: smoothingStrength,
+            thickness: brushThickness
+        )
         canvas.onPencilDoubleTap = { [weak canvas] in
             canvas?.clearAll()
         }

@@ -1,5 +1,25 @@
 import Foundation
 
+extension BrushStroke.Config {
+    /// Builds a brush config from the user-facing settings enums.
+    init(
+        pressure: PressureSensitivity,
+        tilt: TiltSensitivity,
+        smoothing: SmoothingStrength,
+        thickness: BrushThickness
+    ) {
+        self.init()
+        pressureSensitivity = pressure
+        tiltSensitivity = tilt
+        let filterParams = smoothing.filterParams
+        filterMinCutoff = filterParams.minCutoff
+        filterBeta = filterParams.beta
+        let widthRange = thickness.widthRange
+        minWidth = widthRange.min
+        maxWidth = widthRange.max
+    }
+}
+
 enum PressureSensitivity: String, CaseIterable, Sendable {
     case off
     case low

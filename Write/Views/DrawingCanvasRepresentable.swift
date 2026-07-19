@@ -41,13 +41,11 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     }
 
     private func applyBrushSettings(to view: DrawingCanvasView) {
-        view.brushConfig.pressureSensitivity = pressureSensitivity
-        view.brushConfig.tiltSensitivity = tiltSensitivity
-        let filterParams = smoothingStrength.filterParams
-        view.brushConfig.filterMinCutoff = filterParams.minCutoff
-        view.brushConfig.filterBeta = filterParams.beta
-        let widthRange = brushThickness.widthRange
-        view.brushConfig.minWidth = widthRange.min
-        view.brushConfig.maxWidth = widthRange.max
+        view.brushConfig = BrushStroke.Config(
+            pressure: pressureSensitivity,
+            tilt: tiltSensitivity,
+            smoothing: smoothingStrength,
+            thickness: brushThickness
+        )
     }
 }
