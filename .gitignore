@@ -3,9 +3,10 @@
 .ralphex/progress/
 
 # Xcode
+# Package.resolved must stay committed: Xcode Cloud disables automatic
+# package resolution and fails without it.
 *.xcodeproj/xcuserdata/
 *.xcodeproj/project.xcworkspace/xcuserdata/
-*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
 DerivedData/
 build/
 TestResults*/
