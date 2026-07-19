@@ -30,6 +30,7 @@ final class DrawingCanvasView: UIView {
     private var hoverLayer: CAShapeLayer?
     private var activeTouch: UITouch?
     private var inputFilter = OneEuroFilter()
+    private var liveRenderer: BrushStroke.LiveRenderer?
     private var lastLayoutSize: CGSize = .zero
 
     /// Pencil force/altitude arrive as estimates and are refined a few frames
@@ -164,7 +165,10 @@ final class DrawingCanvasView: UIView {
 
         pendingRefinement = nil
         activeEstimationIndexMap = [:]
-        currentSamples = [BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude)]
+        let sample = BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude)
+        currentSamples = [sample]
+        liveRenderer = BrushStroke.LiveRenderer(config: brushConfig)
+        liveRenderer?.append(sample)
         recordEstimationIndex(for: touch, sampleIndex: 0)
 
         let shapeLayer = makeBrushLayer()
@@ -185,21 +189,23 @@ final class DrawingCanvasView: UIView {
             let cf = normalizedForce(of: ct)
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
-            currentSamples.append(BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca))
+            let sample = BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca)
+            currentSamples.append(sample)
+            liveRenderer?.append(sample)
             recordEstimationIndex(for: ct, sampleIndex: currentSamples.count - 1)
         }
 
         updateActivePath()
 
         if let predicted = event?.predictedTouches(for: touch), !predicted.isEmpty {
-            var predictedSamples = currentSamples
+            var predictedSamples: [BrushStroke.Sample] = []
             for pt in predicted {
                 let pp = location(of: pt)
                 let pf = normalizedForce(of: pt)
                 let pa = pt.type == .pencil ? pt.altitudeAngle : nil
                 predictedSamples.append(BrushStroke.Sample(point: pp, timestamp: pt.timestamp, force: pf, altitude: pa))
             }
-            updatePredictedPath(samples: predictedSamples)
+            updatePredictedPath(predictedSamples: predictedSamples)
         } else {
             clearPredicted()
         }
@@ -219,7 +225,9 @@ final class DrawingCanvasView: UIView {
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
             if point != currentSamples.last?.point {
-                currentSamples.append(BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca))
+                let sample = BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca)
+                currentSamples.append(sample)
+                liveRenderer?.append(sample)
                 recordEstimationIndex(for: ct, sampleIndex: currentSamples.count - 1)
             }
         }
@@ -251,6 +259,7 @@ final class DrawingCanvasView: UIView {
                 currentSamples[idx] = BrushStroke.Sample(
                     point: old.point, timestamp: old.timestamp, force: force, altitude: altitude
                 )
+                liveRenderer?.refine(rawIndex: idx, force: force, altitude: altitude)
                 activeNeedsRender = true
             } else if var pending = pendingRefinement,
                       let idx = pending.indexMap[key],
@@ -343,17 +352,19 @@ final class DrawingCanvasView: UIView {
 
     private func updateActivePath() {
         guard let activeLayer else { return }
-        activeLayer.path = BrushStroke.createPath(from: currentSamples, config: brushConfig)
+        activeLayer.path = liveRenderer?.currentPath()
+            ?? BrushStroke.createPath(from: currentSamples, config: brushConfig)
     }
 
-    private func updatePredictedPath(samples: [BrushStroke.Sample]) {
+    private func updatePredictedPath(predictedSamples: [BrushStroke.Sample]) {
+        guard let liveRenderer else { return }
         if predictedLayer == nil {
             let pl = makeBrushLayer()
             pl.opacity = 0.4
             layer.addSublayer(pl)
             predictedLayer = pl
         }
-        predictedLayer?.path = BrushStroke.createPath(from: samples, config: brushConfig)
+        predictedLayer?.path = liveRenderer.predictedPath(with: predictedSamples)
     }
 
     private func clearPredicted() {
@@ -378,6 +389,7 @@ final class DrawingCanvasView: UIView {
 
         activeEstimationIndexMap = [:]
         currentSamples = []
+        liveRenderer = nil
         onStrokeCompleted?(rawPoints, strokeIndex)
     }
 
@@ -385,6 +397,7 @@ final class DrawingCanvasView: UIView {
         activeLayer?.removeFromSuperlayer()
         activeLayer = nil
         currentSamples = []
+        liveRenderer = nil
         activeEstimationIndexMap = [:]
     }
 }

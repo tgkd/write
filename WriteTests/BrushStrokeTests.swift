@@ -53,6 +53,73 @@ final class PencilSettingsPresetsTests: XCTestCase {
     }
 }
 
+// MARK: - LiveRenderer equivalence tests
+
+final class BrushStrokeLiveRendererTests: XCTestCase {
+
+    /// A long curved stroke: 120 samples on a sine wave, 8pt apart in x.
+    private func makeLongStroke() -> [BrushStroke.Sample] {
+        (0..<120).map { i in
+            BrushStroke.Sample(
+                point: CGPoint(x: CGFloat(i) * 8, y: 200 + 40 * sin(CGFloat(i) * 0.3)),
+                timestamp: TimeInterval(i) * 0.008,
+                force: nil,
+                altitude: nil
+            )
+        }
+    }
+
+    /// The incremental live path must stay a close approximation of the full
+    /// rebuild at every point during the stroke (checked via bounding boxes).
+    func testLivePathTracksFullRebuild() {
+        let config = BrushStroke.Config()
+        let samples = makeLongStroke()
+        var renderer = BrushStroke.LiveRenderer(config: config)
+
+        // 120 samples with tailWindow 16 guarantees several freeze steps.
+        for (i, sample) in samples.enumerated() {
+            renderer.append(sample)
+
+            let checkpoints = [20, 50, 80, 119]
+            guard checkpoints.contains(i) else { continue }
+
+            let live = renderer.currentPath().boundingBoxOfPath
+            let full = BrushStroke.createPath(from: Array(samples[0...i]), config: config)
+                .boundingBoxOfPath
+
+            XCTAssertEqual(live.minX, full.minX, accuracy: 1.5, "minX at sample \(i)")
+            XCTAssertEqual(live.minY, full.minY, accuracy: 1.5, "minY at sample \(i)")
+            XCTAssertEqual(live.maxX, full.maxX, accuracy: 1.5, "maxX at sample \(i)")
+            XCTAssertEqual(live.maxY, full.maxY, accuracy: 1.5, "maxY at sample \(i)")
+        }
+    }
+
+    func testRefineUpdatesUnfrozenSample() {
+        var config = BrushStroke.Config()
+        config.pressureSensitivity = .high
+
+        var renderer = BrushStroke.LiveRenderer(config: config)
+        let samples = (0..<10).map { i in
+            BrushStroke.Sample(
+                point: CGPoint(x: CGFloat(i) * 30, y: 100),
+                timestamp: TimeInterval(i) * 0.02,
+                force: 0.05,
+                altitude: nil
+            )
+        }
+        for sample in samples { renderer.append(sample) }
+        let before = renderer.currentPath().boundingBoxOfPath.height
+
+        for i in 0..<10 {
+            renderer.refine(rawIndex: i, force: 0.9, altitude: nil)
+        }
+        let after = renderer.currentPath().boundingBoxOfPath.height
+
+        XCTAssertGreaterThan(after, before + 0.5,
+            "Refining force on unfrozen samples must widen the live ribbon")
+    }
+}
+
 // MARK: - BrushStroke pressure-blend tests
 
 final class BrushStrokePressureTests: XCTestCase {

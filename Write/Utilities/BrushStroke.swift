@@ -36,13 +36,26 @@ enum BrushStroke {
 
     /// Creates a filled CGPath with variable width from touch samples.
     static func createPath(from samples: [Sample], config: Config = Config()) -> CGPath {
-        let filtered = filterByDistance(samples)
+        path(fromFiltered: filterByDistance(samples), config: config, taperStart: true, taperEnd: true)
+    }
+
+    /// Builds the ribbon for samples that are ALREADY distance-filtered.
+    /// Taper flags let the incremental renderer build interior segments that
+    /// must not thin out at their cut points.
+    static func path(
+        fromFiltered filtered: [Sample],
+        config: Config,
+        taperStart: Bool,
+        taperEnd: Bool
+    ) -> CGPath {
         let points = filtered.map(\.point)
         guard points.count >= 2 else {
             return dotPath(at: points.first ?? .zero, radius: config.maxWidth / 2)
         }
 
-        let rawWidths = computeWidths(from: filtered, config: config)
+        let rawWidths = computeWidths(
+            from: filtered, config: config, taperStart: taperStart, taperEnd: taperEnd
+        )
 
         let smoothedPoints = CatmullRomSpline.interpolate(
             points: points,
@@ -58,6 +71,121 @@ enum BrushStroke {
         )
 
         return buildRibbon(points: smoothedPoints, widths: smoothedWidths)
+    }
+
+    /// Incrementally renders an in-progress stroke in O(tail) per update
+    /// instead of O(stroke) — ribbon geometry older than `tailWindow` filtered
+    /// samples is frozen into a prefix path and only the tail is rebuilt.
+    ///
+    /// The live path is a close approximation (frozen chunks compute widths
+    /// from local context, and refinements to frozen samples are not
+    /// re-rendered); callers must build the COMMITTED stroke with
+    /// `createPath(from:config:)` so final ink is identical to a full build.
+    /// Frozen chunks overlap their neighbors by 2 samples; the overlapping
+    /// fills only hide seams for opaque single-color ink.
+    ///
+    /// Not value-semantic (the frozen prefix is a shared CGMutablePath) —
+    /// intended for a single owner per stroke.
+    struct LiveRenderer {
+
+        /// Filtered samples covered by both the end taper and the ribbon's
+        /// normal/width smoothing windows; geometry older than this cannot
+        /// visibly change as new samples arrive.
+        static let tailWindow = 16
+        private static let overlap = 2
+        private static let minDistanceSq: CGFloat = 16  // matches filterByDistance's 4pt
+
+        private let config: Config
+        private var kept: [Sample] = []
+        private var keptRawIndices: [Int] = []
+        private var provisional: Sample?
+        private var provisionalRawIndex: Int?
+        private var rawCount = 0
+        private var frozenPath = CGMutablePath()
+        private var frozenKeptCount = 0
+
+        init(config: Config) {
+            self.config = config
+        }
+
+        /// Appends the next raw sample, applying the same incremental distance
+        /// filter as `filterByDistance` (last raw sample always rides along).
+        mutating func append(_ sample: Sample) {
+            if let prov = provisional, let provIdx = provisionalRawIndex {
+                let farEnough = kept.last.map {
+                    let dx = prov.point.x - $0.point.x
+                    let dy = prov.point.y - $0.point.y
+                    return dx * dx + dy * dy >= Self.minDistanceSq
+                } ?? true
+                if farEnough {
+                    kept.append(prov)
+                    keptRawIndices.append(provIdx)
+                }
+            }
+            provisional = sample
+            provisionalRawIndex = rawCount
+            rawCount += 1
+            freezeIfNeeded()
+        }
+
+        /// Patches force/altitude of a raw sample if it can still affect the
+        /// live path. Refinements landing in frozen geometry are ignored here;
+        /// the committed rebuild picks them up.
+        mutating func refine(rawIndex: Int, force: CGFloat?, altitude: CGFloat?) {
+            if provisionalRawIndex == rawIndex, let p = provisional {
+                provisional = Sample(point: p.point, timestamp: p.timestamp, force: force, altitude: altitude)
+                return
+            }
+            var i = keptRawIndices.count - 1
+            while i >= frozenKeptCount {
+                if keptRawIndices[i] == rawIndex {
+                    let s = kept[i]
+                    kept[i] = Sample(point: s.point, timestamp: s.timestamp, force: force, altitude: altitude)
+                    return
+                }
+                i -= 1
+            }
+        }
+
+        /// The full live path: frozen prefix plus a freshly built tail.
+        func currentPath() -> CGPath {
+            let start = max(0, frozenKeptCount - Self.overlap)
+            var tail = Array(kept[start...])
+            if let prov = provisional { tail.append(prov) }
+            let tailPath = BrushStroke.path(
+                fromFiltered: tail, config: config, taperStart: start == 0, taperEnd: true
+            )
+            if frozenPath.isEmpty { return tailPath }
+            let combined = CGMutablePath()
+            combined.addPath(frozenPath)
+            combined.addPath(tailPath)
+            return combined
+        }
+
+        /// A short stub from the last committed samples plus the predictions —
+        /// the predicted layer no longer redraws the whole stroke.
+        func predictedPath(with predictedSamples: [Sample]) -> CGPath {
+            var stub = Array(kept.suffix(3))
+            if let prov = provisional { stub.append(prov) }
+            return BrushStroke.path(
+                fromFiltered: stub + predictedSamples, config: config,
+                taperStart: false, taperEnd: true
+            )
+        }
+
+        private mutating func freezeIfNeeded() {
+            while kept.count - frozenKeptCount > 2 * Self.tailWindow {
+                let chunkEnd = frozenKeptCount + Self.tailWindow
+                let start = max(0, frozenKeptCount - Self.overlap)
+                let end = min(kept.count, chunkEnd + Self.overlap)
+                let chunk = BrushStroke.path(
+                    fromFiltered: Array(kept[start..<end]), config: config,
+                    taperStart: start == 0, taperEnd: false
+                )
+                frozenPath.addPath(chunk)
+                frozenKeptCount = chunkEnd
+            }
+        }
     }
 
     // MARK: - Private
@@ -92,7 +220,12 @@ enum BrushStroke {
         return result
     }
 
-    private static func computeWidths(from samples: [Sample], config: Config) -> [CGFloat] {
+    private static func computeWidths(
+        from samples: [Sample],
+        config: Config,
+        taperStart: Bool = true,
+        taperEnd: Bool = true
+    ) -> [CGFloat] {
         let count = samples.count
         guard count >= 2 else { return [config.maxWidth] }
 
@@ -148,14 +281,18 @@ enum BrushStroke {
 
         // Taper at start and end
         let taperCount = max(1, min(Int(CGFloat(count) * config.taperFraction), maxTaperSamples))
-        for i in 0..<min(taperCount, count) {
-            let t = CGFloat(i + 1) / CGFloat(taperCount + 1)
-            widths[i] *= taperTipFloor + (1 - taperTipFloor) * t
+        if taperStart {
+            for i in 0..<min(taperCount, count) {
+                let t = CGFloat(i + 1) / CGFloat(taperCount + 1)
+                widths[i] *= taperTipFloor + (1 - taperTipFloor) * t
+            }
         }
-        for i in 0..<min(taperCount, count) {
-            let idx = count - 1 - i
-            let t = CGFloat(i + 1) / CGFloat(taperCount + 1)
-            widths[idx] *= taperTipFloor + (1 - taperTipFloor) * t
+        if taperEnd {
+            for i in 0..<min(taperCount, count) {
+                let idx = count - 1 - i
+                let t = CGFloat(i + 1) / CGFloat(taperCount + 1)
+                widths[idx] *= taperTipFloor + (1 - taperTipFloor) * t
+            }
         }
 
         return widths
