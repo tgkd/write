@@ -510,6 +510,7 @@ private class TestTouch: UITouch {
     override var timestamp: TimeInterval { _timestamp }
     override var type: UITouch.TouchType { touchType }
     override var force: CGFloat { testForce }
+    override var maximumPossibleForce: CGFloat { 4.17 }
     override var altitudeAngle: CGFloat { testAltitude }
     override var estimationUpdateIndex: NSNumber? { estimationIndex }
     override var estimatedPropertiesExpectingUpdates: UITouch.Properties { expectingUpdates }

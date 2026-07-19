@@ -8,6 +8,7 @@ enum BrushStroke {
     struct Sample {
         let point: CGPoint
         let timestamp: TimeInterval
+        /// Pencil force normalized to 0…1 of the device's maximumPossibleForce.
         let force: CGFloat?
         /// Pencil altitude in radians. π/2 ≈ perpendicular to surface, near 0 ≈ flat against surface.
         let altitude: CGFloat?
@@ -69,6 +70,11 @@ enum BrushStroke {
     /// round off instead of collapsing to a sharp needle point.
     private static let taperTipFloor: CGFloat = 0.4
 
+    /// Response curve for normalized force. Average handwriting force is only
+    /// ~0.24 of maximumPossibleForce; a square root lifts it to mid-width so
+    /// the pressure setting is perceptible at typical writing pressure.
+    private static let forceGamma: CGFloat = 0.5
+
     private static func filterByDistance(_ samples: [Sample], minDistance: CGFloat = 4.0) -> [Sample] {
         guard samples.count >= 2 else { return samples }
         var result = [samples[0]]
@@ -126,8 +132,7 @@ enum BrushStroke {
             var width = config.maxWidth - speedT * (config.maxWidth - config.minWidth)
 
             if pressureBlend > 0, let force = sample.force, force > 0 {
-                let maxForce: CGFloat = 4.0
-                let forceT = min(1, force / maxForce)
+                let forceT = min(1, pow(force, forceGamma))
                 let forceWidth = config.minWidth + forceT * (config.maxWidth - config.minWidth)
                 width = width * (1 - pressureBlend) + forceWidth * pressureBlend
             }

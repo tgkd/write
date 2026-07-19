@@ -134,7 +134,7 @@ final class DrawingCanvasView: UIView {
 
         activeTouch = touch
         let rawPoint = location(of: touch)
-        let force = touch.type == .pencil ? touch.force : nil
+        let force = normalizedForce(of: touch)
         let altitude = touch.type == .pencil ? touch.altitudeAngle : nil
 
         inputFilter.minCutoff = brushConfig.filterMinCutoff
@@ -162,7 +162,7 @@ final class DrawingCanvasView: UIView {
         let allTouches = event?.coalescedTouches(for: touch) ?? [touch]
         for ct in allTouches {
             let rawPoint = location(of: ct)
-            let cf = ct.type == .pencil ? ct.force : nil
+            let cf = normalizedForce(of: ct)
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
             currentSamples.append(BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca))
@@ -175,7 +175,7 @@ final class DrawingCanvasView: UIView {
             var predictedSamples = currentSamples
             for pt in predicted {
                 let pp = location(of: pt)
-                let pf = pt.type == .pencil ? pt.force : nil
+                let pf = normalizedForce(of: pt)
                 let pa = pt.type == .pencil ? pt.altitudeAngle : nil
                 predictedSamples.append(BrushStroke.Sample(point: pp, timestamp: pt.timestamp, force: pf, altitude: pa))
             }
@@ -195,7 +195,7 @@ final class DrawingCanvasView: UIView {
         let allTouches = event?.coalescedTouches(for: touch) ?? [touch]
         for ct in allTouches {
             let rawPoint = location(of: ct)
-            let cf = ct.type == .pencil ? ct.force : nil
+            let cf = normalizedForce(of: ct)
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
             if point != currentSamples.last?.point {
@@ -223,7 +223,7 @@ final class DrawingCanvasView: UIView {
         var activeNeedsRender = false
         for touch in touches {
             guard let key = touch.estimationUpdateIndex, touch.type == .pencil else { continue }
-            let force = touch.force
+            let force = normalizedForce(of: touch)
             let altitude = touch.altitudeAngle
 
             if let idx = activeEstimationIndexMap[key], currentSamples.indices.contains(idx) {
@@ -295,6 +295,12 @@ final class DrawingCanvasView: UIView {
     /// 1pt-grid quantization jitter of `location(in:)`. Finger touches are identical.
     private func location(of touch: UITouch) -> CGPoint {
         touch.type == .pencil ? touch.preciseLocation(in: self) : touch.location(in: self)
+    }
+
+    /// Pencil force normalized to 0…1 of the device's maximum, nil for fingers.
+    private func normalizedForce(of touch: UITouch) -> CGFloat? {
+        guard touch.type == .pencil else { return nil }
+        return touch.force / max(touch.maximumPossibleForce, 0.0001)
     }
 
     /// Remembers which sample a future estimated-property update will refine.

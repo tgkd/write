@@ -53,6 +53,63 @@ final class PencilSettingsPresetsTests: XCTestCase {
     }
 }
 
+// MARK: - BrushStroke pressure-blend tests
+
+final class BrushStrokePressureTests: XCTestCase {
+
+    /// Horizontal stroke with a fixed normalized force (0…1) on every sample.
+    private func makeHorizontalStroke(force: CGFloat?) -> [BrushStroke.Sample] {
+        var samples: [BrushStroke.Sample] = []
+        var t: TimeInterval = 0
+        for i in 0..<12 {
+            let x = CGFloat(i) * 30 + 50
+            samples.append(BrushStroke.Sample(
+                point: CGPoint(x: x, y: 100),
+                timestamp: t,
+                force: force,
+                altitude: nil
+            ))
+            t += 0.02
+        }
+        return samples
+    }
+
+    private func ribbonHeight(force: CGFloat?, sensitivity: PressureSensitivity) -> CGFloat {
+        var config = BrushStroke.Config()
+        config.pressureSensitivity = sensitivity
+        return BrushStroke.createPath(from: makeHorizontalStroke(force: force), config: config)
+            .boundingBoxOfPath.height
+    }
+
+    func testPressureOffIgnoresForce() {
+        XCTAssertEqual(
+            ribbonHeight(force: 0.9, sensitivity: .off),
+            ribbonHeight(force: nil, sensitivity: .off),
+            accuracy: 0.5
+        )
+    }
+
+    func testPressureHighWidthMonotonicWithForce() {
+        let light = ribbonHeight(force: 0.1, sensitivity: .high)
+        let medium = ribbonHeight(force: 0.5, sensitivity: .high)
+        let heavy = ribbonHeight(force: 0.9, sensitivity: .high)
+
+        XCTAssertGreaterThan(medium, light)
+        XCTAssertGreaterThan(heavy, medium)
+    }
+
+    func testTypicalWritingForceReachesMidWidth() {
+        // Average handwriting force ≈ 0.24 normalized. The response curve must
+        // land it around mid-width; the old linear mapping left it near minimum.
+        let height = ribbonHeight(force: 0.24, sensitivity: .high)
+        let config = BrushStroke.Config()
+        let midWidth = (config.minWidth + config.maxWidth) / 2
+
+        XCTAssertGreaterThan(height, midWidth * 0.8,
+            "Typical writing force should produce a clearly visible width response")
+    }
+}
+
 // MARK: - BrushStroke tilt-blend tests
 
 final class BrushStrokeTiltTests: XCTestCase {
