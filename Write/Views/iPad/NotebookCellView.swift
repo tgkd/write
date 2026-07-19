@@ -10,7 +10,7 @@ final class NotebookCellView: UICollectionViewCell {
     }
 
     private let crosshairLayer = CrosshairGuideLayer()
-    private var canvasView: DrawingCanvasView?
+    private(set) var canvasView: DrawingCanvasView?
 
     // MARK: - Reference state
 
@@ -166,6 +166,19 @@ final class NotebookCellView: UICollectionViewCell {
             smoothingStrength: smoothingStrength,
             brushThickness: brushThickness
         )
+    }
+
+    /// Applies non-structural settings changes to an existing practice canvas
+    /// without recreating it, so drawn ink survives. No-op on reference cells.
+    func updatePracticeSettings(
+        showCrosshair: Bool,
+        allowedTouchTypes: Set<UITouch.TouchType>,
+        brushConfig: BrushStroke.Config
+    ) {
+        guard let canvas = canvasView else { return }
+        self.showCrosshair = showCrosshair
+        canvas.allowedTouchTypes = allowedTouchTypes
+        canvas.brushConfig = brushConfig
     }
 
     // MARK: - Canvas

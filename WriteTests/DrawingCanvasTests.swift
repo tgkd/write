@@ -274,6 +274,67 @@ final class DrawingCanvasViewTests: XCTestCase {
     }
 }
 
+// MARK: - NotebookCellView Tests
+
+@MainActor
+final class NotebookCellViewTests: XCTestCase {
+
+    func testInkSurvivesInPlaceSettingsUpdate() {
+        let cell = NotebookCellView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        cell.configurePractice(
+            showCrosshair: true,
+            allowedTouchTypes: [.direct, .pencil],
+            pressureSensitivity: .off,
+            tiltSensitivity: .off,
+            smoothingStrength: .medium,
+            brushThickness: .medium
+        )
+
+        guard let canvas = cell.canvasView else {
+            return XCTFail("Practice cell should have a canvas")
+        }
+
+        let touch = TestTouch(locationInView: CGPoint(x: 10, y: 10))
+        canvas.touchesBegan([touch], with: nil)
+        touch.updateLocation(CGPoint(x: 60, y: 60))
+        canvas.touchesEnded([touch], with: nil)
+        XCTAssertEqual(canvas.strokeCount, 1)
+
+        cell.updatePracticeSettings(
+            showCrosshair: false,
+            allowedTouchTypes: [.pencil],
+            brushConfig: BrushStroke.Config(
+                pressure: .high, tilt: .off, smoothing: .low, thickness: .thick
+            )
+        )
+
+        XCTAssertTrue(cell.canvasView === canvas, "Canvas must not be recreated")
+        XCTAssertEqual(canvas.strokeCount, 1, "Drawn ink must survive the update")
+        XCTAssertEqual(canvas.brushConfig.maxWidth, BrushThickness.thick.widthRange.max)
+        XCTAssertEqual(canvas.allowedTouchTypes, [.pencil])
+    }
+
+    func testUpdatePracticeSettingsIgnoresReferenceCell() {
+        let cell = NotebookCellView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        cell.configureReference(kanji: KanjiData(
+            codePoint: "4e00",
+            element: nil,
+            strokes: [],
+            components: []
+        ))
+
+        XCTAssertNil(cell.canvasView)
+        cell.updatePracticeSettings(
+            showCrosshair: false,
+            allowedTouchTypes: [.pencil],
+            brushConfig: BrushStroke.Config(
+                pressure: .off, tilt: .off, smoothing: .medium, thickness: .medium
+            )
+        )
+        XCTAssertNil(cell.canvasView)
+    }
+}
+
 // MARK: - Test Touch Helper
 
 private class TestTouch: UITouch {

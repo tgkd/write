@@ -27,13 +27,16 @@ final class NotebookViewController: UIViewController {
         handedness: Handedness,
         cellsPerRow: Int
     ) {
-        let needsReload = self.showCrosshair != showCrosshair
+        // Handedness moves the reference cell to the other end of each row, so it
+        // needs a reload (drawn ink is lost there). Everything else is applied to
+        // the existing canvases in place to preserve ink.
+        let structuralChange = self.handedness != handedness
+        let inPlaceChange = self.showCrosshair != showCrosshair
             || self.allowedTouchTypes != allowedTouchTypes
             || self.pressureSensitivity != pressureSensitivity
             || self.tiltSensitivity != tiltSensitivity
             || self.smoothingStrength != smoothingStrength
             || self.brushThickness != brushThickness
-            || self.handedness != handedness
 
         self.showCrosshair = showCrosshair
         self.allowedTouchTypes = allowedTouchTypes
@@ -50,8 +53,22 @@ final class NotebookViewController: UIViewController {
             collectionView?.collectionViewLayout.invalidateLayout()
             collectionView?.reloadData()
             fillRowsIfNeeded()
-        } else if needsReload {
+        } else if structuralChange {
             collectionView?.reloadData()
+        } else if inPlaceChange {
+            let config = BrushStroke.Config(
+                pressure: pressureSensitivity,
+                tilt: tiltSensitivity,
+                smoothing: smoothingStrength,
+                thickness: brushThickness
+            )
+            for case let cell as NotebookCellView in collectionView?.visibleCells ?? [] {
+                cell.updatePracticeSettings(
+                    showCrosshair: showCrosshair,
+                    allowedTouchTypes: allowedTouchTypes,
+                    brushConfig: config
+                )
+            }
         }
     }
 
