@@ -329,6 +329,44 @@ final class StrokeValidatorTests: XCTestCase {
         XCTAssertTrue(result.correctOrder)
     }
 
+    func testPrecomputedSamplesMatchLegacyPath() {
+        let strokes = [
+            KanjiStroke(strokeNumber: 1, pathData: "M18,18 L90,18", strokeType: nil),
+            KanjiStroke(strokeNumber: 2, pathData: "M18,18 L18,90", strokeType: nil),
+            KanjiStroke(strokeNumber: 3, pathData: "M18,90 L90,90", strokeType: nil),
+        ]
+
+        let scale = min(canvasSize.width, canvasSize.height) / 109.0
+        let userPoints = [
+            CGPoint(x: 18 * scale, y: 18 * scale),
+            CGPoint(x: 90 * scale, y: 18 * scale)
+        ]
+
+        let legacy = StrokeValidator.identifyStroke(
+            userPoints: userPoints,
+            referenceStrokes: strokes,
+            unmatchedIndices: Set(0..<strokes.count),
+            canvasSize: canvasSize,
+            expectedStrokeIndex: 0
+        )
+
+        let samples = StrokeValidator.sampleReferenceStrokes(
+            strokes, canvasSize: canvasSize, sampleCount: ValidationConfig.standard.sampleCount
+        )
+        let cached = StrokeValidator.identifyStroke(
+            userPoints: userPoints,
+            referenceSamples: samples,
+            unmatchedIndices: Set(0..<strokes.count),
+            canvasSize: canvasSize,
+            expectedStrokeIndex: 0
+        )
+
+        XCTAssertEqual(legacy.accepted, cached.accepted)
+        XCTAssertEqual(legacy.matchedStrokeIndex, cached.matchedStrokeIndex)
+        XCTAssertEqual(legacy.score, cached.score, accuracy: 0.0001)
+        XCTAssertEqual(legacy.frechetDistance, cached.frechetDistance, accuracy: 0.0001)
+    }
+
     func testStrokeOrderValidation() {
         let strokes = [
             KanjiStroke(strokeNumber: 1, pathData: "M18,18 L90,18", strokeType: nil),

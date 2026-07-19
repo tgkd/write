@@ -73,10 +73,51 @@ enum StrokeValidator {
         )
     }
 
+    /// Parses, scales and samples every reference stroke for a canvas size.
+    /// The result can be cached by the caller and fed to the
+    /// `identifyStroke(userPoints:referenceSamples:...)` overload, avoiding an
+    /// SVG parse of every unmatched stroke on each completed user stroke.
+    /// Strokes that fail to parse yield an empty array.
+    static func sampleReferenceStrokes(
+        _ strokes: [KanjiStroke],
+        canvasSize: CGSize,
+        sampleCount: Int
+    ) -> [[CGPoint]] {
+        var transform = StrokeRenderer.scaleTransform(to: canvasSize)
+        return strokes.map { stroke in
+            guard let path = try? StrokeRenderer.createPath(from: stroke.pathData),
+                  let scaled = path.copy(using: &transform) else {
+                return []
+            }
+            return PointSampler.sample(path: scaled, count: sampleCount)
+        }
+    }
+
     /// Given a user stroke, finds the best match among unmatched reference strokes.
     static func identifyStroke(
         userPoints: [CGPoint],
         referenceStrokes: [KanjiStroke],
+        unmatchedIndices: Set<Int>,
+        canvasSize: CGSize,
+        expectedStrokeIndex: Int,
+        config: ValidationConfig = .standard
+    ) -> StrokeValidationResult {
+        identifyStroke(
+            userPoints: userPoints,
+            referenceSamples: sampleReferenceStrokes(
+                referenceStrokes, canvasSize: canvasSize, sampleCount: config.sampleCount
+            ),
+            unmatchedIndices: unmatchedIndices,
+            canvasSize: canvasSize,
+            expectedStrokeIndex: expectedStrokeIndex,
+            config: config
+        )
+    }
+
+    /// Overload taking reference samples precomputed by `sampleReferenceStrokes`.
+    static func identifyStroke(
+        userPoints: [CGPoint],
+        referenceSamples: [[CGPoint]],
         unmatchedIndices: Set<Int>,
         canvasSize: CGSize,
         expectedStrokeIndex: Int,
@@ -93,14 +134,10 @@ enum StrokeValidator {
         var bestResult: StrokeValidationResult?
 
         for idx in unmatchedIndices.sorted() {
-            guard let refPath = try? StrokeRenderer.createPath(from: referenceStrokes[idx].pathData) else {
-                continue
-            }
+            guard referenceSamples.indices.contains(idx) else { continue }
+            let refPoints = referenceSamples[idx]
+            guard !refPoints.isEmpty else { continue }
 
-            var transform = StrokeRenderer.scaleTransform(to: canvasSize)
-            guard let scaledPath = refPath.copy(using: &transform) else { continue }
-
-            let refPoints = PointSampler.sample(path: scaledPath, count: config.sampleCount)
             let refCentroid = ProcrustesNormalizer.centroid(of: refPoints)
 
             let centroidDist = hypot(userCentroid.x - refCentroid.x, userCentroid.y - refCentroid.y)

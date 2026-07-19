@@ -28,6 +28,8 @@ final class PracticeState: ObservableObject {
     let kanjiData: KanjiData
     var validationConfig: ValidationConfig
 
+    private var referenceSampleCache: (canvasSize: CGSize, sampleCount: Int, samples: [[CGPoint]])?
+
     var totalStrokes: Int { kanjiData.strokes.count }
 
     var unmatchedIndices: Set<Int> {
@@ -108,5 +110,20 @@ final class PracticeState: ObservableObject {
     func changeMode(_ newMode: PracticeMode) {
         mode = newMode
         reset()
+    }
+
+    /// Reference strokes parsed/scaled/sampled for a canvas size, cached so
+    /// validation doesn't re-parse every stroke's SVG on each attempt.
+    func referenceSamples(canvasSize: CGSize) -> [[CGPoint]] {
+        let sampleCount = validationConfig.sampleCount
+        if let cache = referenceSampleCache,
+           cache.canvasSize == canvasSize, cache.sampleCount == sampleCount {
+            return cache.samples
+        }
+        let samples = StrokeValidator.sampleReferenceStrokes(
+            kanjiData.strokes, canvasSize: canvasSize, sampleCount: sampleCount
+        )
+        referenceSampleCache = (canvasSize, sampleCount, samples)
+        return samples
     }
 }
