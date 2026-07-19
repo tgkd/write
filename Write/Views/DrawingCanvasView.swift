@@ -1,9 +1,11 @@
 import UIKit
 
 /// A UIView that captures touch input and renders strokes as variable-width calligraphy brush paths.
-/// Supports Apple Pencil with pressure sensitivity, predicted touches, hover, and pencil interactions.
+/// Supports Apple Pencil with pressure sensitivity, predicted touches, and hover.
+/// Pencil hardware interactions (double-tap) are owned by the hosting screen,
+/// not the canvas, so a screen with many canvases installs only one interaction.
 @MainActor
-final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
+final class DrawingCanvasView: UIView {
 
     // MARK: - Configuration
 
@@ -16,8 +18,6 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
     var onPointAdded: ((CGPoint, Int) -> Void)?
     var onStrokeCompleted: (([CGPoint], Int) -> Void)?
-    var onPencilDoubleTap: (() -> Void)?
-    var onPencilSqueeze: (() -> Void)?
 
     // MARK: - State
 
@@ -36,13 +36,11 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupPencilInteraction()
         setupHoverGesture()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupPencilInteraction()
         setupHoverGesture()
     }
 
@@ -182,20 +180,6 @@ final class DrawingCanvasView: UIView, UIPencilInteractionDelegate {
         clearPredicted()
         cancelCurrentStroke()
         activeTouch = nil
-    }
-
-    // MARK: - Pencil Interaction
-
-    private func setupPencilInteraction() {
-        let interaction = UIPencilInteraction()
-        interaction.delegate = self
-        addInteraction(interaction)
-    }
-
-    nonisolated func pencilInteractionDidTap(_ interaction: UIPencilInteraction) {
-        MainActor.assumeIsolated {
-            onPencilDoubleTap?()
-        }
     }
 
     // MARK: - Hover

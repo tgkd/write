@@ -75,12 +75,18 @@ final class NotebookViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var didFillRows = false
 
+    /// The canvas the user most recently drew in — target of the Pencil
+    /// hardware double-tap. One interaction for the whole grid; per-canvas
+    /// interactions would all fire on a single hardware tap.
+    private weak var lastDrawnCanvas: DrawingCanvasView?
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupCollectionView()
+        setupPencilInteraction()
         navigationItem.hidesBackButton = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "info.circle"),
@@ -168,6 +174,12 @@ final class NotebookViewController: UIViewController {
     }
 
     // MARK: - Setup
+
+    private func setupPencilInteraction() {
+        let interaction = UIPencilInteraction()
+        interaction.delegate = self
+        view.addInteraction(interaction)
+    }
 
     private func setupCollectionView() {
         let layout = createLayout()
@@ -277,6 +289,9 @@ extension NotebookViewController: UICollectionViewDataSource {
             smoothingStrength: smoothingStrength,
             brushThickness: brushThickness
         )
+        cell.onDrawingActivity = { [weak self, weak cell] in
+            self?.lastDrawnCanvas = cell?.canvasView
+        }
         return cell
     }
 
@@ -284,5 +299,17 @@ extension NotebookViewController: UICollectionViewDataSource {
         guard let state = notebookState else { return false }
         let lastIndex = state.rows[indexPath.section].cellCount
         return handedness == .left ? indexPath.item == lastIndex : indexPath.item == 0
+    }
+}
+
+// MARK: - UIPencilInteractionDelegate
+
+extension NotebookViewController: UIPencilInteractionDelegate {
+
+    nonisolated func pencilInteractionDidTap(_ interaction: UIPencilInteraction) {
+        MainActor.assumeIsolated {
+            guard UIPencilInteraction.preferredTapAction != .ignore else { return }
+            lastDrawnCanvas?.clearAll()
+        }
     }
 }
