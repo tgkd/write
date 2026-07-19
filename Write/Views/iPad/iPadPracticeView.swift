@@ -128,20 +128,7 @@ struct iPadPracticeView: View {
     }
 
     private var strokeProgressDots: some View {
-        let total = practiceState.totalStrokes
-        let dotSize: CGFloat = total <= 12 ? 10 : (total <= 20 ? 8 : 6)
-
-        return HStack(spacing: 4) {
-            ForEach(0..<total, id: \.self) { i in
-                Circle()
-                    .fill(dotFillColor(for: i))
-                    .frame(width: dotSize, height: dotSize)
-                    .overlay(
-                        Circle()
-                            .stroke(dotBorderColor(for: i), lineWidth: 1)
-                    )
-            }
-        }
+        StrokeProgressDots(practiceState: practiceState, palette: settings.colorPalette)
     }
 
     private var modePicker: some View {
@@ -225,48 +212,15 @@ struct iPadPracticeView: View {
     // MARK: - Logic
 
     private func handleStrokeCompleted(points: [CGPoint]) {
-        guard !practiceState.isComplete else { return }
         guard let canvasView else { return }
-
-        practiceState.beginDrawing()
-        practiceState.beginValidation()
-
-        let result = StrokeValidator.identifyStroke(
-            userPoints: points,
-            referenceStrokes: practiceState.kanjiData.strokes,
-            unmatchedIndices: practiceState.unmatchedIndices,
-            canvasSize: canvasView.bounds.size,
-            expectedStrokeIndex: practiceState.currentStrokeIndex,
-            config: practiceState.validationConfig
+        let completed = practiceState.handleCompletedStroke(
+            points: points,
+            canvas: canvasView,
+            reference: referenceView,
+            feedback: feedbackView
         )
-
-        practiceState.processValidationResult(result)
-
-        switch practiceState.phase {
-        case .strokeAccepted(let strokeIndex):
-            feedbackView?.showAccepted(points: points)
-            referenceView?.markStrokeAccepted(at: strokeIndex)
-            applyGhostVisibility()
-            practiceState.acknowledgeResult()
-
-            if practiceState.isComplete {
-                triggerCompletionFeedback()
-            }
-
-        case .strokeRejected:
-            feedbackView?.showRejected(points: points)
-            canvasView.removeLastStroke()
-
-            if practiceState.shouldShowAutoHint {
-                let idx = practiceState.currentStrokeIndex
-                referenceView?.highlightStroke(at: idx, alpha: 0.6)
-                referenceView?.animateStrokeDrawing(at: idx)
-            }
-
-            practiceState.acknowledgeResult()
-
-        default:
-            break
+        if completed {
+            triggerCompletionFeedback()
         }
     }
 
@@ -300,64 +254,6 @@ struct iPadPracticeView: View {
 
     private func applyGhostVisibility() {
         guard let referenceView else { return }
-        let mode = practiceState.mode
-        let currentIndex = practiceState.currentStrokeIndex
-
-        for i in 0..<practiceState.totalStrokes {
-            if practiceState.matchedStrokeIndices.contains(i) {
-                referenceView.markStrokeAccepted(at: i)
-                continue
-            }
-
-            switch mode {
-            case .trace:
-                if i == currentIndex {
-                    referenceView.setStrokeVisibility(
-                        .visible(alpha: mode.currentStrokeAlpha ?? 0.5), at: i
-                    )
-                } else {
-                    referenceView.setStrokeVisibility(
-                        .visible(alpha: mode.ghostStrokeAlpha ?? 0.3), at: i
-                    )
-                }
-
-            case .strokeByStroke:
-                if i == currentIndex {
-                    referenceView.setStrokeVisibility(
-                        .visible(alpha: mode.currentStrokeAlpha ?? 0.5), at: i
-                    )
-                    if mode.animateStrokeReveal {
-                        referenceView.animateStrokeDrawing(at: i)
-                    }
-                } else {
-                    referenceView.setStrokeVisibility(.hidden, at: i)
-                }
-
-            case .freeDraw:
-                referenceView.setStrokeVisibility(.hidden, at: i)
-            }
-        }
-    }
-
-    private func dotFillColor(for index: Int) -> Color {
-        if practiceState.matchedStrokeIndices.contains(index) {
-            return Color(uiColor: settings.colorPalette.strokeOrderColor(
-                index: index, total: practiceState.totalStrokes
-            ))
-        }
-        if index == practiceState.currentStrokeIndex && !practiceState.isComplete {
-            return Color(.systemGray4)
-        }
-        return Color(.systemGray6)
-    }
-
-    private func dotBorderColor(for index: Int) -> Color {
-        if practiceState.matchedStrokeIndices.contains(index) {
-            return .clear
-        }
-        if index == practiceState.currentStrokeIndex && !practiceState.isComplete {
-            return Color(.systemGray3)
-        }
-        return Color(.systemGray5)
+        practiceState.applyGhostVisibility(to: referenceView)
     }
 }

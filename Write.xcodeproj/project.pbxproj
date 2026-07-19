@@ -33,6 +33,7 @@
 		5BB76FC40A8EAE79D4EFD86F /* PracticeMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA7AEFF588DE8BA39EAA351 /* PracticeMode.swift */; };
 		61AF686CC04E46EA3B27F4CF /* KanjiDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A573E07580005FA275E101 /* KanjiDataStore.swift */; };
 		674696AC2B9A184A1FCDAA24 /* NotebookTipsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112DFDA96E143651A19DDCE5 /* NotebookTipsOverlay.swift */; };
+		686299C8F3EAA5E06F5F4B64 /* StrokeProgressDots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCCDE40E98E78252A0FD0E /* StrokeProgressDots.swift */; };
 		6CCBA1457AF84E85537FD908 /* NotebookHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D15C8C8ADEE5C47903061F /* NotebookHeaderView.swift */; };
 		74D81606F11AA2C7A201C6B6 /* SVGPath in Frameworks */ = {isa = PBXBuildFile; productRef = DF60413D51CD5403BC557C9F /* SVGPath */; };
 		755988C696FFBA3B1AA9F255 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2DBBD44BE4A42882EE1B8AF0 /* PrivacyInfo.xcprivacy */; };
@@ -46,6 +47,7 @@
 		A5B185377B1743E1A27978E3 /* OneEuroFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C4444928FFE24B6BBA78EF /* OneEuroFilter.swift */; };
 		A804FD3A9F8B74A9AE25B5DB /* ProcrustesNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF92521D279F5641C0A0668 /* ProcrustesNormalizer.swift */; };
 		B30641609562A0245EF1E843 /* iPadPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B587A13BCDF864D27A86F0 /* iPadPracticeView.swift */; };
+		B78475BE7EA8CECEEEE3D241 /* PracticeSessionActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */; };
 		B91198FA842033EEFEBB4BD6 /* PracticeCanvasArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AA9B63CD622B139D3F46A7 /* PracticeCanvasArea.swift */; };
 		B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */; };
 		C2092910EEFC045C62FDBA6A /* CatmullRomSpline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */; };
@@ -87,6 +89,7 @@
 		2DBBD44BE4A42882EE1B8AF0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeValidationTests.swift; sourceTree = "<group>"; };
 		3CA7AEFF588DE8BA39EAA351 /* PracticeMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeMode.swift; sourceTree = "<group>"; };
+		3DDCCDE40E98E78252A0FD0E /* StrokeProgressDots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeProgressDots.swift; sourceTree = "<group>"; };
 		41BE9563E3884403974EFDDA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		44A5A9E84315E390CECEC817 /* PracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeView.swift; sourceTree = "<group>"; };
 		47CCAD6A2FD879ACF245B117 /* PointSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointSampler.swift; sourceTree = "<group>"; };
@@ -115,6 +118,7 @@
 		C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = kanji_strokes.json; sourceTree = "<group>"; };
 		CF2839C39B854D958B7C59CF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D7C63D0EA4D3CD0F61D0FCE6 /* PencilSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilSettings.swift; sourceTree = "<group>"; };
+		DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionActions.swift; sourceTree = "<group>"; };
 		DE816A45A5022B69DCC5ADCA /* FrechetDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrechetDistance.swift; sourceTree = "<group>"; };
 		E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiStroke.swift; sourceTree = "<group>"; };
 		F27A0064549BCC4192A32E45 /* PracticeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeState.swift; sourceTree = "<group>"; };
@@ -205,10 +209,12 @@
 				F5DEE31691318124C4601AF7 /* FeedbackOverlayView.swift */,
 				5298C48D4E8206737F9A1C0B /* KanjiPickerView.swift */,
 				FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */,
+				DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */,
 				44A5A9E84315E390CECEC817 /* PracticeView.swift */,
 				BB30AA618797898AC069C94E /* SessionPracticeView.swift */,
 				FA098E08F2A4A327E0D81283 /* SessionSummaryView.swift */,
 				CF2839C39B854D958B7C59CF /* SettingsView.swift */,
+				3DDCCDE40E98E78252A0FD0E /* StrokeProgressDots.swift */,
 				0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */,
 				FC5E58EBCE220ADF7CC39E57 /* iPad */,
 			);
@@ -425,6 +431,7 @@
 				0B56AA0894FC0939DE713946 /* PointSampler.swift in Sources */,
 				B91198FA842033EEFEBB4BD6 /* PracticeCanvasArea.swift in Sources */,
 				5BB76FC40A8EAE79D4EFD86F /* PracticeMode.swift in Sources */,
+				B78475BE7EA8CECEEEE3D241 /* PracticeSessionActions.swift in Sources */,
 				013FE94AD914E50DD46A8286 /* PracticeState.swift in Sources */,
 				5B44846DBEA1792BA3DA966E /* PracticeView.swift in Sources */,
 				A804FD3A9F8B74A9AE25B5DB /* ProcrustesNormalizer.swift in Sources */,
@@ -432,6 +439,7 @@
 				2CE8603ECFE626A50B41BC45 /* SessionState.swift in Sources */,
 				503286B1C7B9044CEB698754 /* SessionSummaryView.swift in Sources */,
 				9DA403F28AAB60A0F95271A9 /* SettingsView.swift in Sources */,
+				686299C8F3EAA5E06F5F4B64 /* StrokeProgressDots.swift in Sources */,
 				8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */,
 				33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */,
 				13805E5DF596D2D770066B07 /* WriteApp.swift in Sources */,
