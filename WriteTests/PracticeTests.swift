@@ -84,6 +84,53 @@ final class PracticeStateTests: XCTestCase {
         )
     }
 
+    /// Drives one accepted stroke through the full phase machine.
+    private func acceptStroke(_ state: PracticeState, matchedIndex: Int) {
+        state.beginDrawing()
+        state.beginValidation()
+        state.processValidationResult(
+            makeAcceptedResult(matchedIndex: matchedIndex, expectedIndex: matchedIndex)
+        )
+        state.acknowledgeResult()
+    }
+
+    // MARK: - Undo
+
+    func testUndoRemovesLastAcceptedStrokeInOrder() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3))
+        acceptStroke(state, matchedIndex: 0)
+        acceptStroke(state, matchedIndex: 1)
+
+        XCTAssertEqual(state.undoLastStroke(), 1)
+        XCTAssertEqual(state.matchedStrokeIndices, [0])
+        XCTAssertEqual(state.currentStrokeIndex, 1)
+    }
+
+    func testUndoInFreeDrawRemovesLastDrawnNotHighestIndex() {
+        // In freeDraw, strokes are accepted out of order. Undo must remove the
+        // LAST-DRAWN acceptance — the same stroke whose ink layer the views pop.
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 6), mode: .freeDraw)
+        acceptStroke(state, matchedIndex: 5)
+        acceptStroke(state, matchedIndex: 2)
+
+        XCTAssertEqual(state.undoLastStroke(), 2,
+            "Undo must return the last-drawn stroke (2), not the highest index (5)")
+        XCTAssertEqual(state.matchedStrokeIndices, [5])
+
+        XCTAssertEqual(state.undoLastStroke(), 5)
+        XCTAssertTrue(state.matchedStrokeIndices.isEmpty)
+        XCTAssertNil(state.undoLastStroke())
+    }
+
+    func testResetClearsAcceptanceOrder() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2))
+        acceptStroke(state, matchedIndex: 0)
+        state.reset()
+
+        XCTAssertNil(state.undoLastStroke(), "Reset must clear the undo stack")
+        XCTAssertTrue(state.matchedStrokeIndices.isEmpty)
+    }
+
     // MARK: - Initial state
 
     func testInitialState() {

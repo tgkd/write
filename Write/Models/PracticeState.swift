@@ -15,6 +15,11 @@ final class PracticeState: ObservableObject {
     @Published private(set) var phase: Phase = .waitingForInput
     @Published private(set) var currentStrokeIndex: Int = 0
     @Published private(set) var matchedStrokeIndices: Set<Int> = []
+
+    /// Matched reference indices in the order the user drew them. Undo must
+    /// remove the last-drawn acceptance — in freeDraw, strokes are accepted
+    /// out of order, so this is not `matchedStrokeIndices.max()`.
+    private(set) var acceptanceOrder: [Int] = []
     @Published private(set) var attemptCount: Int = 0
     @Published private(set) var consecutiveMisses: Int = 0
     @Published private(set) var isComplete: Bool = false
@@ -56,6 +61,7 @@ final class PracticeState: ObservableObject {
         let orderOk = result.correctOrder || mode == .freeDraw
         if result.accepted, let matchedIndex = result.matchedStrokeIndex, orderOk {
             matchedStrokeIndices.insert(matchedIndex)
+            acceptanceOrder.append(matchedIndex)
             consecutiveMisses = 0
             currentStrokeIndex = matchedIndex + 1
 
@@ -81,19 +87,19 @@ final class PracticeState: ObservableObject {
     }
 
     func undoLastStroke() -> Int? {
-        guard !matchedStrokeIndices.isEmpty else { return nil }
-        guard let lastMatched = matchedStrokeIndices.max() else { return nil }
-        matchedStrokeIndices.remove(lastMatched)
-        currentStrokeIndex = lastMatched
+        guard let lastDrawn = acceptanceOrder.popLast() else { return nil }
+        matchedStrokeIndices.remove(lastDrawn)
+        currentStrokeIndex = lastDrawn
         isComplete = false
         phase = .waitingForInput
-        return lastMatched
+        return lastDrawn
     }
 
     func reset() {
         phase = .waitingForInput
         currentStrokeIndex = 0
         matchedStrokeIndices = []
+        acceptanceOrder = []
         attemptCount = 0
         consecutiveMisses = 0
         isComplete = false
