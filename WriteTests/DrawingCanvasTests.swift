@@ -252,6 +252,85 @@ final class DrawingCanvasViewTests: XCTestCase {
         XCTAssertTrue(canvas.currentStrokePoints.isEmpty, "currentStrokePoints should be empty after stroke completes")
     }
 
+    // MARK: - Estimated property refinement
+
+    /// Draws a pencil stroke whose force values are estimates, then delivers
+    /// refined (higher) force after the stroke was finalized. The committed
+    /// layer's ribbon must widen.
+    func testEstimatedForceRefinementUpdatesFinalizedStroke() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        canvas.brushConfig.pressureSensitivity = .high
+
+        let touch = TestTouch(locationInView: CGPoint(x: 20, y: 100))
+        touch.touchType = .pencil
+        touch.testForce = 0.1
+        touch.expectingUpdates = [.force]
+        touch.estimationIndex = NSNumber(value: 1)
+        canvas.touchesBegan([touch], with: nil)
+
+        for (i, x) in [60, 100, 140, 180].enumerated() {
+            touch.updateLocation(CGPoint(x: CGFloat(x), y: 100))
+            touch.estimationIndex = NSNumber(value: i + 2)
+            canvas.touchesMoved([touch], with: nil)
+        }
+        touch.updateLocation(CGPoint(x: 220, y: 100))
+        touch.estimationIndex = NSNumber(value: 6)
+        canvas.touchesEnded([touch], with: nil)
+
+        guard let strokeLayer = canvas.layer.sublayers?.first as? CAShapeLayer,
+              let pathBefore = strokeLayer.path else {
+            return XCTFail("Expected a committed stroke layer with a path")
+        }
+        let heightBefore = pathBefore.boundingBoxOfPath.height
+
+        // Deliver refinements for every recorded sample with much higher force.
+        touch.testForce = 3.9
+        for key in 1...6 {
+            touch.estimationIndex = NSNumber(value: key)
+            canvas.touchesEstimatedPropertiesUpdated([touch])
+        }
+
+        guard let pathAfter = strokeLayer.path else {
+            return XCTFail("Layer path missing after refinement")
+        }
+        XCTAssertGreaterThan(pathAfter.boundingBoxOfPath.height, heightBefore + 0.5,
+            "Refined higher force must widen the committed ribbon")
+    }
+
+    func testEstimatedForceRefinementUpdatesActiveStroke() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        canvas.brushConfig.pressureSensitivity = .high
+
+        let touch = TestTouch(locationInView: CGPoint(x: 20, y: 100))
+        touch.touchType = .pencil
+        touch.testForce = 0.1
+        touch.expectingUpdates = [.force]
+        touch.estimationIndex = NSNumber(value: 10)
+        canvas.touchesBegan([touch], with: nil)
+
+        touch.updateLocation(CGPoint(x: 120, y: 100))
+        touch.estimationIndex = NSNumber(value: 11)
+        canvas.touchesMoved([touch], with: nil)
+
+        guard let activeLayer = canvas.layer.sublayers?.first as? CAShapeLayer,
+              let before = activeLayer.path else {
+            return XCTFail("Expected an active stroke layer")
+        }
+        let heightBefore = before.boundingBoxOfPath.height
+
+        touch.testForce = 3.9
+        for key in [10, 11] {
+            touch.estimationIndex = NSNumber(value: key)
+            canvas.touchesEstimatedPropertiesUpdated([touch])
+        }
+
+        guard let after = activeLayer.path else { return XCTFail("Active path missing") }
+        XCTAssertGreaterThan(after.boundingBoxOfPath.height, heightBefore + 0.5,
+            "Refined force must re-render the in-progress stroke")
+
+        canvas.touchesEnded([touch], with: nil)
+    }
+
     // MARK: - Helpers
 
     private func simulateStroke(on canvas: DrawingCanvasView, points: [CGPoint]) {
@@ -361,6 +440,12 @@ private class TestTouch: UITouch {
     private var _locationInView: CGPoint
     private let _timestamp: TimeInterval
 
+    var touchType: UITouch.TouchType = .direct
+    var testForce: CGFloat = 0
+    var testAltitude: CGFloat = .pi / 2
+    var estimationIndex: NSNumber?
+    var expectingUpdates: UITouch.Properties = []
+
     init(locationInView: CGPoint, timestamp: TimeInterval = 0) {
         _locationInView = locationInView
         _timestamp = timestamp
@@ -375,5 +460,14 @@ private class TestTouch: UITouch {
         _locationInView
     }
 
+    override func preciseLocation(in view: UIView?) -> CGPoint {
+        _locationInView
+    }
+
     override var timestamp: TimeInterval { _timestamp }
+    override var type: UITouch.TouchType { touchType }
+    override var force: CGFloat { testForce }
+    override var altitudeAngle: CGFloat { testAltitude }
+    override var estimationUpdateIndex: NSNumber? { estimationIndex }
+    override var estimatedPropertiesExpectingUpdates: UITouch.Properties { expectingUpdates }
 }

@@ -32,6 +32,14 @@ final class DrawingCanvasView: UIView {
     private var inputFilter = OneEuroFilter()
     private var lastLayoutSize: CGSize = .zero
 
+    /// Pencil force/altitude arrive as estimates and are refined a few frames
+    /// later via touchesEstimatedPropertiesUpdated. Maps estimationUpdateIndex
+    /// to the index of the sample it refines.
+    private var activeEstimationIndexMap: [NSNumber: Int] = [:]
+    /// Refinements for the most recently finalized stroke, which can still
+    /// arrive after touchesEnded. Dropped when the next stroke begins.
+    private var pendingRefinement: (samples: [BrushStroke.Sample], layer: CAShapeLayer, indexMap: [NSNumber: Int])?
+
     // MARK: - Init
 
     override init(frame: CGRect) {
@@ -93,12 +101,16 @@ final class DrawingCanvasView: UIView {
         strokes.removeLast()
         let removed = strokeLayers.removeLast()
         removed.removeFromSuperlayer()
+        if pendingRefinement?.layer === removed {
+            pendingRefinement = nil
+        }
     }
 
     func clearAll() {
         strokes.removeAll()
         for l in strokeLayers { l.removeFromSuperlayer() }
         strokeLayers.removeAll()
+        pendingRefinement = nil
         cancelCurrentStroke()
     }
 
@@ -118,7 +130,10 @@ final class DrawingCanvasView: UIView {
         inputFilter.reset()
         let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
 
+        pendingRefinement = nil
+        activeEstimationIndexMap = [:]
         currentSamples = [BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude)]
+        recordEstimationIndex(for: touch, sampleIndex: 0)
 
         let shapeLayer = makeBrushLayer()
         layer.addSublayer(shapeLayer)
@@ -139,6 +154,7 @@ final class DrawingCanvasView: UIView {
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
             currentSamples.append(BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca))
+            recordEstimationIndex(for: ct, sampleIndex: currentSamples.count - 1)
         }
 
         updateActivePath()
@@ -168,6 +184,7 @@ final class DrawingCanvasView: UIView {
 
         if point != currentSamples.last?.point {
             currentSamples.append(BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude))
+            recordEstimationIndex(for: touch, sampleIndex: currentSamples.count - 1)
         }
 
         clearPredicted()
@@ -180,6 +197,38 @@ final class DrawingCanvasView: UIView {
         clearPredicted()
         cancelCurrentStroke()
         activeTouch = nil
+    }
+
+    /// Applies refined force/altitude values that UIKit delivers after the
+    /// original estimates. Only brush geometry is refined — stroke POINTS are
+    /// never touched, since they have already been handed to validation.
+    override func touchesEstimatedPropertiesUpdated(_ touches: Set<UITouch>) {
+        var activeNeedsRender = false
+        for touch in touches {
+            guard let key = touch.estimationUpdateIndex, touch.type == .pencil else { continue }
+            let force = touch.force
+            let altitude = touch.altitudeAngle
+
+            if let idx = activeEstimationIndexMap[key], currentSamples.indices.contains(idx) {
+                let old = currentSamples[idx]
+                currentSamples[idx] = BrushStroke.Sample(
+                    point: old.point, timestamp: old.timestamp, force: force, altitude: altitude
+                )
+                activeNeedsRender = true
+            } else if var pending = pendingRefinement,
+                      let idx = pending.indexMap[key],
+                      pending.samples.indices.contains(idx) {
+                let old = pending.samples[idx]
+                pending.samples[idx] = BrushStroke.Sample(
+                    point: old.point, timestamp: old.timestamp, force: force, altitude: altitude
+                )
+                pendingRefinement = pending
+                pending.layer.path = BrushStroke.createPath(from: pending.samples, config: brushConfig)
+            }
+        }
+        if activeNeedsRender {
+            updateActivePath()
+        }
     }
 
     // MARK: - Hover
@@ -231,6 +280,16 @@ final class DrawingCanvasView: UIView {
         touch.type == .pencil ? touch.preciseLocation(in: self) : touch.location(in: self)
     }
 
+    /// Remembers which sample a future estimated-property update will refine.
+    /// Skipped when neither pressure nor tilt can affect rendering.
+    private func recordEstimationIndex(for touch: UITouch, sampleIndex: Int) {
+        guard touch.type == .pencil,
+              brushConfig.pressureSensitivity != .off || brushConfig.tiltSensitivity != .off,
+              !touch.estimatedPropertiesExpectingUpdates.isEmpty,
+              let key = touch.estimationUpdateIndex else { return }
+        activeEstimationIndexMap[key] = sampleIndex
+    }
+
     private func makeBrushLayer() -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = strokeColor.cgColor
@@ -268,9 +327,13 @@ final class DrawingCanvasView: UIView {
         if let active = activeLayer {
             active.path = BrushStroke.createPath(from: currentSamples, config: brushConfig)
             strokeLayers.append(active)
+            if !activeEstimationIndexMap.isEmpty {
+                pendingRefinement = (currentSamples, active, activeEstimationIndexMap)
+            }
             activeLayer = nil
         }
 
+        activeEstimationIndexMap = [:]
         currentSamples = []
         onStrokeCompleted?(rawPoints, strokeIndex)
     }
@@ -279,5 +342,6 @@ final class DrawingCanvasView: UIView {
         activeLayer?.removeFromSuperlayer()
         activeLayer = nil
         currentSamples = []
+        activeEstimationIndexMap = [:]
     }
 }
