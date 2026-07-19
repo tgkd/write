@@ -79,16 +79,17 @@ final class DrawingCanvasView: UIView {
             points.map { CGPoint(x: $0.x * sx, y: $0.y * sy) }
         }
 
-        if let activeLayer, let path = activeLayer.path {
-            activeLayer.path = path.copy(using: &transform)
-            currentSamples = currentSamples.map {
-                BrushStroke.Sample(
-                    point: CGPoint(x: $0.point.x * sx, y: $0.point.y * sy),
-                    timestamp: $0.timestamp,
-                    force: $0.force
-                )
-            }
+        // A mid-stroke resize cannot be rescaled consistently: the input
+        // filter's state and the live renderer stay in the old coordinate
+        // space. Cancel the in-flight stroke instead of distorting it.
+        if activeTouch != nil || activeLayer != nil {
+            clearPredicted()
+            cancelCurrentStroke()
+            activeTouch = nil
         }
+        // Pending refinement samples are in the old space too; the layer path
+        // was rescaled above, so a late re-render would undo the rescale.
+        pendingRefinement = nil
 
         lastLayoutSize = newSize
     }
@@ -177,7 +178,7 @@ final class DrawingCanvasView: UIView {
 
         updateActivePath()
         hideHover()
-        onPointAdded?(touch.location(in: self), strokes.count)
+        onPointAdded?(point, strokes.count)
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -210,7 +211,9 @@ final class DrawingCanvasView: UIView {
             clearPredicted()
         }
 
-        onPointAdded?(touch.location(in: self), strokes.count)
+        if let point = currentSamples.last?.point {
+            onPointAdded?(point, strokes.count)
+        }
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
