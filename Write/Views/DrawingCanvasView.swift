@@ -117,8 +117,20 @@ final class DrawingCanvasView: UIView {
     // MARK: - Touch Handling
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard activeTouch == nil else { return }
-        guard let touch = touches.first(where: { allowedTouchTypes.contains($0.type) }) else { return }
+        var takeoverTouch: UITouch?
+        if let current = activeTouch {
+            // A Pencil takes over from an active finger stroke (typically a
+            // resting palm that claimed the touch first); the palm ink is
+            // discarded. Nothing interrupts a Pencil stroke.
+            guard current.type == .direct,
+                  allowedTouchTypes.contains(.pencil),
+                  let pencil = touches.first(where: { $0.type == .pencil }) else { return }
+            clearPredicted()
+            cancelCurrentStroke()
+            activeTouch = nil
+            takeoverTouch = pencil
+        }
+        guard let touch = takeoverTouch ?? touches.first(where: { allowedTouchTypes.contains($0.type) }) else { return }
 
         activeTouch = touch
         let rawPoint = location(of: touch)

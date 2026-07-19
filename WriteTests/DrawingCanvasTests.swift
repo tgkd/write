@@ -252,6 +252,49 @@ final class DrawingCanvasViewTests: XCTestCase {
         XCTAssertTrue(canvas.currentStrokePoints.isEmpty, "currentStrokePoints should be empty after stroke completes")
     }
 
+    // MARK: - Pencil takeover
+
+    func testPencilTakesOverActiveFingerStroke() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+
+        let finger = TestTouch(locationInView: CGPoint(x: 10, y: 10))
+        canvas.touchesBegan([finger], with: nil)
+        finger.updateLocation(CGPoint(x: 40, y: 40))
+        canvas.touchesMoved([finger], with: nil)
+
+        let pencil = TestTouch(locationInView: CGPoint(x: 200, y: 200))
+        pencil.touchType = .pencil
+        canvas.touchesBegan([pencil], with: nil)
+
+        XCTAssertEqual(canvas.currentStrokePoints.first, CGPoint(x: 200, y: 200),
+            "Pencil must take over: the active stroke restarts at the pencil location")
+
+        pencil.updateLocation(CGPoint(x: 250, y: 250))
+        canvas.touchesEnded([pencil], with: nil)
+
+        XCTAssertEqual(canvas.strokeCount, 1, "The finger stroke must be discarded, not committed")
+        XCTAssertEqual(canvas.strokes[0].first, CGPoint(x: 200, y: 200))
+        XCTAssertEqual(canvas.layer.sublayers?.count ?? 0, 1,
+            "The abandoned finger stroke must leave no layer behind")
+    }
+
+    func testFingerCannotInterruptPencilStroke() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+
+        let pencil = TestTouch(locationInView: CGPoint(x: 100, y: 100))
+        pencil.touchType = .pencil
+        canvas.touchesBegan([pencil], with: nil)
+
+        let finger = TestTouch(locationInView: CGPoint(x: 20, y: 20))
+        canvas.touchesBegan([finger], with: nil)
+
+        XCTAssertEqual(canvas.currentStrokePoints.first, CGPoint(x: 100, y: 100),
+            "A finger touch must not interrupt an active pencil stroke")
+
+        canvas.touchesEnded([pencil], with: nil)
+        XCTAssertEqual(canvas.strokeCount, 1)
+    }
+
     // MARK: - Estimated property refinement
 
     /// Draws a pencil stroke whose force values are estimates, then delivers
