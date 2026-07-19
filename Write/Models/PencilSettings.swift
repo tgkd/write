@@ -64,11 +64,12 @@ enum SmoothingStrength: String, CaseIterable, Sendable {
     }
 
     /// (minCutoff, beta) for OneEuroFilter. dCutoff stays at 10.
+    /// Lower minCutoff/beta = heavier filtering, so "high" smoothing maps to the LOW tuple.
     var filterParams: (minCutoff: CGFloat, beta: CGFloat) {
         switch self {
-        case .low: return (0.8, 0.3)
+        case .low: return (3.0, 0.8)
         case .medium: return (1.5, 0.5)
-        case .high: return (3.0, 0.8)
+        case .high: return (0.8, 0.3)
         }
     }
 }

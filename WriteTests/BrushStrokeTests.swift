@@ -15,14 +15,16 @@ final class PencilSettingsPresetsTests: XCTestCase {
     }
 
     func testSmoothingStrengthOrderingMonotonic() {
+        // In a One Euro filter, LOWER minCutoff/beta = MORE smoothing, so the
+        // "high" smoothing setting must have the smallest parameter values.
         let low = SmoothingStrength.low.filterParams
         let medium = SmoothingStrength.medium.filterParams
         let high = SmoothingStrength.high.filterParams
 
-        XCTAssertLessThan(low.minCutoff, medium.minCutoff)
-        XCTAssertLessThan(medium.minCutoff, high.minCutoff)
-        XCTAssertLessThan(low.beta, medium.beta)
-        XCTAssertLessThan(medium.beta, high.beta)
+        XCTAssertLessThan(high.minCutoff, medium.minCutoff)
+        XCTAssertLessThan(medium.minCutoff, low.minCutoff)
+        XCTAssertLessThan(high.beta, medium.beta)
+        XCTAssertLessThan(medium.beta, low.beta)
     }
 
     func testBrushThicknessMediumMatchesHistoricalDefault() {

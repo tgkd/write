@@ -25,6 +25,7 @@
 		42A4EC0BA54B8DF2FE3D25E9 /* KanjiReferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */; };
 		45EA541A8AE474627E14726C /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B138A055F1450C9C03D9543 /* ColorPalette.swift */; };
 		503286B1C7B9044CEB698754 /* SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA098E08F2A4A327E0D81283 /* SessionSummaryView.swift */; };
+		5272AF7CD2F1F2BA028E887E /* OneEuroFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07296BCD0F4677A61F19D871 /* OneEuroFilterTests.swift */; };
 		527CE900711B6897827483D1 /* PracticeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6D64264C7D7504993129BC /* PracticeTests.swift */; };
 		57FD5A159505ECDB5FE4E51E /* BrushStrokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557D1B9D499A8C2ED26666D7 /* BrushStrokeTests.swift */; };
 		58B3E6FB68562DEBB49C55E0 /* KanjiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92038E6935D91F956A09DDB9 /* KanjiDetailView.swift */; };
@@ -70,6 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07296BCD0F4677A61F19D871 /* OneEuroFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneEuroFilterTests.swift; sourceTree = "<group>"; };
 		09AA9B63CD622B139D3F46A7 /* PracticeCanvasArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeCanvasArea.swift; sourceTree = "<group>"; };
 		0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRenderer.swift; sourceTree = "<group>"; };
 		0FE1B0BE867D120C7B58025A /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				557D1B9D499A8C2ED26666D7 /* BrushStrokeTests.swift */,
 				5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */,
 				8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */,
+				07296BCD0F4677A61F19D871 /* OneEuroFilterTests.swift */,
 				BA6D64264C7D7504993129BC /* PracticeTests.swift */,
 				9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */,
 				81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */,
@@ -382,6 +385,7 @@
 				57FD5A159505ECDB5FE4E51E /* BrushStrokeTests.swift in Sources */,
 				998FCA762B4EEDEDFCDE2EC1 /* DrawingCanvasTests.swift in Sources */,
 				06ED2FD32F9E763D4E1F483C /* KanjiDataStoreTests.swift in Sources */,
+				5272AF7CD2F1F2BA028E887E /* OneEuroFilterTests.swift in Sources */,
 				527CE900711B6897827483D1 /* PracticeTests.swift in Sources */,
 				F0E3647DC6161023D81E8180 /* PreprocessingTests.swift in Sources */,
 				B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */,
