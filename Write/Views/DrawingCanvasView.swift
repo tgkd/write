@@ -92,6 +92,26 @@ final class DrawingCanvasView: UIView {
         lastLayoutSize = newSize
     }
 
+    // MARK: - Trait changes
+
+    /// Layer colors are resolved CGColors; re-resolve them when the interface
+    /// style flips or committed ink keeps the previous appearance's color.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        let resolved = strokeColor.resolvedColor(with: traitCollection).cgColor
+        for strokeLayer in strokeLayers { strokeLayer.fillColor = resolved }
+        activeLayer?.fillColor = resolved
+        predictedLayer?.fillColor = resolved
+        if let hover = hoverLayer {
+            hover.fillColor = UIColor.label.withAlphaComponent(0.15)
+                .resolvedColor(with: traitCollection).cgColor
+            hover.strokeColor = UIColor.label.withAlphaComponent(0.3)
+                .resolvedColor(with: traitCollection).cgColor
+        }
+    }
+
     // MARK: - Public API
 
     var strokeCount: Int { strokes.count }

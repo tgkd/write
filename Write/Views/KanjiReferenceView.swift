@@ -37,6 +37,17 @@ class KanjiReferenceView: UIView {
         }
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+        // Stroke colors are resolved CGColors; re-resolve for the new style.
+        traitCollection.performAsCurrent {
+            for index in strokeLayers.indices {
+                applyDisplayState(at: index)
+            }
+        }
+    }
+
     private func rebuildStrokeLayers() {
         strokeLayers.forEach { $0.removeFromSuperlayer() }
         strokeLayers.removeAll()

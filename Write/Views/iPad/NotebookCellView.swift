@@ -53,6 +53,18 @@ final class NotebookCellView: UICollectionViewCell {
         rebuildReferenceLayers()
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+        // Border, crosshair, and reference layers hold resolved CGColors.
+        contentView.layer.borderColor = UIColor.systemGray4
+            .resolvedColor(with: traitCollection).cgColor
+        crosshairLayer.strokeColor = UIColor.systemGray4
+            .resolvedColor(with: traitCollection).cgColor
+        lastReferenceSize = .zero
+        rebuildReferenceLayers()
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
         removeCanvas()
