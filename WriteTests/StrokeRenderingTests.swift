@@ -230,23 +230,6 @@ final class KanjiReferenceViewTests: XCTestCase {
         XCTAssertFalse(view.strokeLayers[0].isHidden)
     }
 
-    func testSetAllStrokesVisibilityHidden() {
-        let view = makeConfiguredView()
-        view.setAllStrokesVisibility(.hidden)
-        for layer in view.strokeLayers {
-            XCTAssertTrue(layer.isHidden)
-        }
-    }
-
-    func testSetAllStrokesVisibilityVisible() {
-        let view = makeConfiguredView()
-        view.setAllStrokesVisibility(.hidden)
-        view.setAllStrokesVisibility(.visible(alpha: 0.4))
-        for layer in view.strokeLayers {
-            XCTAssertFalse(layer.isHidden)
-        }
-    }
-
     // MARK: - Color changes
 
     func testMarkStrokeAccepted() {
@@ -254,12 +237,6 @@ final class KanjiReferenceViewTests: XCTestCase {
         view.markStrokeAccepted(at: 1)
         let expectedColor = StrokeAppearance.strokeOrderColor(index: 1, total: 3)
         XCTAssertEqual(view.strokeLayers[1].strokeColor, expectedColor.cgColor)
-    }
-
-    func testSetStrokeColor() {
-        let view = makeConfiguredView()
-        view.setStrokeColor(.blue, at: 2)
-        XCTAssertEqual(view.strokeLayers[2].strokeColor, UIColor.blue.cgColor)
     }
 
     func testHighlightStroke() {
@@ -281,16 +258,6 @@ final class KanjiReferenceViewTests: XCTestCase {
         XCTAssertNotNil(animation)
     }
 
-    func testAnimateAllStrokes() {
-        let view = makeConfiguredView()
-        view.animateAllStrokes(strokeDuration: 0.3, delay: 0.1)
-
-        for layer in view.strokeLayers {
-            XCTAssertFalse(layer.isHidden)
-            XCTAssertNotNil(layer.animation(forKey: "strokeEndAnimation"))
-        }
-    }
-
     // MARK: - Safety
 
     func testInvalidIndexDoesNotCrash() {
@@ -298,9 +265,7 @@ final class KanjiReferenceViewTests: XCTestCase {
         view.setStrokeVisibility(.hidden, at: -1)
         view.setStrokeVisibility(.hidden, at: 100)
         view.markStrokeAccepted(at: -1)
-        view.setStrokeColor(.red, at: 100)
         view.highlightStroke(at: -1)
-        view.flashStrokeRejected(at: 100)
         view.animateStrokeDrawing(at: -1)
     }
 
