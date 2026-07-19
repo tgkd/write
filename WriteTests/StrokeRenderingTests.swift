@@ -258,6 +258,41 @@ final class KanjiReferenceViewTests: XCTestCase {
         XCTAssertNotNil(animation)
     }
 
+    // MARK: - State preservation across rebuilds
+
+    func testResizePreservesStrokeDisplayState() {
+        let view = makeConfiguredView()
+        view.setStrokeVisibility(.hidden, at: 0)
+        view.markStrokeAccepted(at: 1)
+
+        view.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+
+        XCTAssertTrue(view.strokeLayers[0].isHidden,
+            "Hidden state must survive the resize rebuild synchronously")
+        XCTAssertFalse(view.strokeLayers[1].isHidden)
+        XCTAssertEqual(
+            view.strokeLayers[1].strokeColor,
+            StrokeAppearance.strokeOrderColor(index: 1, total: 3).cgColor,
+            "Accepted color must survive the resize rebuild"
+        )
+    }
+
+    func testReconfigureResetsDisplayState() {
+        let view = makeConfiguredView()
+        view.markStrokeAccepted(at: 0)
+
+        view.configure(with: makeTestKanjiData())
+
+        XCTAssertEqual(
+            view.strokeLayers[0].strokeColor,
+            StrokeAppearance.strokeOrderColor(index: 0, total: 3)
+                .withAlphaComponent(StrokeAppearance.ghost.alpha).cgColor,
+            "A new kanji must start with fresh ghost appearance"
+        )
+    }
+
     // MARK: - Safety
 
     func testInvalidIndexDoesNotCrash() {

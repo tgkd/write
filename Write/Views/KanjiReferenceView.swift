@@ -6,9 +6,19 @@ class KanjiReferenceView: UIView {
         case visible(alpha: CGFloat)
     }
 
+    /// Display state of one reference stroke. Kept outside the layers so a
+    /// layer rebuild (resize) can restore it synchronously instead of flashing
+    /// every stroke at default appearance until an async re-apply runs.
+    private enum StrokeDisplayState {
+        case hidden
+        case visible(alpha: CGFloat)
+        case accepted
+    }
+
     private(set) var strokeLayers: [CAShapeLayer] = []
     private var kanjiData: KanjiData?
     private var lastBuiltSize: CGSize = .zero
+    private var strokeStates: [Int: StrokeDisplayState] = [:]
     var onLayersRebuilt: (() -> Void)?
     var strokeLineWidth: CGFloat = 5.0
     var colorProvider: (Int, Int) -> UIColor = StrokeAppearance.strokeOrderColor
@@ -16,6 +26,7 @@ class KanjiReferenceView: UIView {
     func configure(with kanjiData: KanjiData) {
         self.kanjiData = kanjiData
         lastBuiltSize = .zero
+        strokeStates.removeAll()
         rebuildStrokeLayers()
     }
 
@@ -47,14 +58,19 @@ class KanjiReferenceView: UIView {
             }
         }
 
+        for index in strokeStates.keys {
+            applyDisplayState(at: index)
+        }
+
         onLayersRebuilt?()
     }
 
     func updateAppearance(lineWidth: CGFloat, colorProvider: @escaping (Int, Int) -> UIColor) {
         self.strokeLineWidth = lineWidth
         self.colorProvider = colorProvider
-        for layer in strokeLayers {
+        for (index, layer) in strokeLayers.enumerated() {
             layer.lineWidth = lineWidth
+            applyDisplayState(at: index)
         }
     }
 
@@ -62,32 +78,27 @@ class KanjiReferenceView: UIView {
 
     func setStrokeVisibility(_ visibility: StrokeVisibility, at index: Int) {
         guard strokeLayers.indices.contains(index) else { return }
-        let layer = strokeLayers[index]
-        let color = orderColor(at: index)
         switch visibility {
         case .hidden:
-            layer.isHidden = true
+            strokeStates[index] = .hidden
         case .visible(let alpha):
-            layer.isHidden = false
-            layer.strokeColor = color.withAlphaComponent(alpha).cgColor
+            strokeStates[index] = .visible(alpha: alpha)
         }
+        applyDisplayState(at: index)
     }
 
     // MARK: - Color changes
 
     func highlightStroke(at index: Int, alpha: CGFloat = 0.5) {
         guard strokeLayers.indices.contains(index) else { return }
-        let layer = strokeLayers[index]
-        let color = orderColor(at: index)
-        layer.isHidden = false
-        layer.strokeColor = color.withAlphaComponent(alpha).cgColor
+        strokeStates[index] = .visible(alpha: alpha)
+        applyDisplayState(at: index)
     }
 
     func markStrokeAccepted(at index: Int) {
         guard strokeLayers.indices.contains(index) else { return }
-        let color = orderColor(at: index)
-        strokeLayers[index].isHidden = false
-        strokeLayers[index].strokeColor = color.cgColor
+        strokeStates[index] = .accepted
+        applyDisplayState(at: index)
     }
 
     // MARK: - Stroke drawing animation
@@ -99,6 +110,25 @@ class KanjiReferenceView: UIView {
     }
 
     // MARK: - Private
+
+    private func applyDisplayState(at index: Int) {
+        guard strokeLayers.indices.contains(index) else { return }
+        let layer = strokeLayers[index]
+        let color = orderColor(at: index)
+        switch strokeStates[index] {
+        case .none:
+            layer.isHidden = false
+            layer.strokeColor = color.withAlphaComponent(StrokeAppearance.ghost.alpha).cgColor
+        case .hidden:
+            layer.isHidden = true
+        case .visible(let alpha):
+            layer.isHidden = false
+            layer.strokeColor = color.withAlphaComponent(alpha).cgColor
+        case .accepted:
+            layer.isHidden = false
+            layer.strokeColor = color.cgColor
+        }
+    }
 
     private func orderColor(at index: Int) -> UIColor {
         colorProvider(index, strokeLayers.count)
