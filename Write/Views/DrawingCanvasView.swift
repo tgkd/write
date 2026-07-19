@@ -177,14 +177,19 @@ final class DrawingCanvasView: UIView {
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = activeTouch, touches.contains(touch) else { return }
-        let rawPoint = location(of: touch)
-        let force = touch.type == .pencil ? touch.force : nil
-        let altitude = touch.type == .pencil ? touch.altitudeAngle : nil
-        let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
 
-        if point != currentSamples.last?.point {
-            currentSamples.append(BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude))
-            recordEstimationIndex(for: touch, sampleIndex: currentSamples.count - 1)
+        // The final event carries coalesced samples too — the stroke tail is
+        // where taper detail matters most.
+        let allTouches = event?.coalescedTouches(for: touch) ?? [touch]
+        for ct in allTouches {
+            let rawPoint = location(of: ct)
+            let cf = ct.type == .pencil ? ct.force : nil
+            let ca = ct.type == .pencil ? ct.altitudeAngle : nil
+            let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
+            if point != currentSamples.last?.point {
+                currentSamples.append(BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca))
+                recordEstimationIndex(for: ct, sampleIndex: currentSamples.count - 1)
+            }
         }
 
         clearPredicted()
