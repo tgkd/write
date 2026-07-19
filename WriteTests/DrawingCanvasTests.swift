@@ -314,6 +314,26 @@ final class NotebookCellViewTests: XCTestCase {
         XCTAssertEqual(canvas.allowedTouchTypes, [.pencil])
     }
 
+    func testClearGestureRequiresTwoFingerDoubleTap() {
+        let cell = NotebookCellView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        cell.configurePractice(
+            showCrosshair: true,
+            allowedTouchTypes: [.direct, .pencil],
+            pressureSensitivity: .off,
+            tiltSensitivity: .off,
+            smoothingStrength: .medium,
+            brushThickness: .medium
+        )
+
+        let taps = cell.canvasView?.gestureRecognizers?
+            .compactMap { $0 as? UITapGestureRecognizer } ?? []
+        XCTAssertEqual(taps.count, 1)
+        // Single-finger taps must never clear — they are indistinguishable from
+        // drawing consecutive dot strokes (点).
+        XCTAssertEqual(taps.first?.numberOfTapsRequired, 2)
+        XCTAssertEqual(taps.first?.numberOfTouchesRequired, 2)
+    }
+
     func testUpdatePracticeSettingsIgnoresReferenceCell() {
         let cell = NotebookCellView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         cell.configureReference(kanji: KanjiData(

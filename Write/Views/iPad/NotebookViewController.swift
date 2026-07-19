@@ -126,7 +126,7 @@ final class NotebookViewController: UIViewController {
         if let cell = collectionView.cellForItem(at: lastPracticeIndexPath) {
             let rect = cell.convert(cell.bounds, to: view)
             tips.append(NotebookTip(
-                text: "Double-tap a cell to clear it and start over",
+                text: "Double-tap with two fingers to clear a cell and start over",
                 sourceRect: rect,
                 arrowDirection: .up
             ))

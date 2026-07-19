@@ -207,8 +207,12 @@ final class NotebookCellView: UICollectionViewCell {
         contentView.addSubview(canvas)
         canvasView = canvas
 
+        // Two fingers so the gesture can never collide with drawing: two quick
+        // single-finger dot strokes (consecutive 点) used to register as a
+        // double-tap and wipe the cell.
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
         doubleTap.numberOfTapsRequired = 2
+        doubleTap.numberOfTouchesRequired = 2
         canvas.addGestureRecognizer(doubleTap)
     }
 
