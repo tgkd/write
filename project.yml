@@ -27,8 +27,8 @@ targets:
       base:
         INFOPLIST_FILE: Write/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.j.write
-        MARKETING_VERSION: "0.0.3"
-        CURRENT_PROJECT_VERSION: "4"
+        MARKETING_VERSION: "1.1.0"
+        CURRENT_PROJECT_VERSION: "51"
         GENERATE_INFOPLIST_FILE: false
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1,2"
