@@ -126,4 +126,9 @@ final class PracticeState: ObservableObject {
         referenceSampleCache = (canvasSize, sampleCount, samples)
         return samples
     }
+
+    func prewarmReferenceSamples(canvasSize: CGSize) {
+        guard canvasSize.width > 0, canvasSize.height > 0 else { return }
+        _ = referenceSamples(canvasSize: canvasSize)
+    }
 }

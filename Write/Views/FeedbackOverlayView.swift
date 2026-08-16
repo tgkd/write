@@ -34,6 +34,7 @@ final class FeedbackOverlayView: UIView {
 
     private func makeLayer(path: CGPath, color: UIColor) -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
+        shapeLayer.contentsScale = layer.contentsScale
         shapeLayer.path = path
         shapeLayer.strokeColor = color.cgColor
         shapeLayer.fillColor = nil

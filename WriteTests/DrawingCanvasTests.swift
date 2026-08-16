@@ -295,6 +295,71 @@ final class DrawingCanvasViewTests: XCTestCase {
         XCTAssertEqual(canvas.strokeCount, 1)
     }
 
+    func testSimultaneousPencilAndFingerSelectsPencil() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+
+        let finger = TestTouch(locationInView: CGPoint(x: 20, y: 20))
+        let pencil = TestTouch(locationInView: CGPoint(x: 100, y: 100))
+        pencil.touchType = .pencil
+
+        canvas.touchesBegan([finger, pencil], with: nil)
+
+        XCTAssertEqual(canvas.currentStrokePoints.first, CGPoint(x: 100, y: 100),
+            "A pencil arriving in the same event as a finger must always win")
+    }
+
+    // MARK: - Clear during an active stroke
+
+    func testClearAllDuringActiveStrokeLeavesNoPhantomStroke() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+
+        let touch = TestTouch(locationInView: CGPoint(x: 10, y: 10))
+        canvas.touchesBegan([touch], with: nil)
+        touch.updateLocation(CGPoint(x: 60, y: 60))
+        canvas.touchesMoved([touch], with: nil)
+
+        canvas.clearAll()
+
+        touch.updateLocation(CGPoint(x: 90, y: 90))
+        canvas.touchesEnded([touch], with: nil)
+
+        XCTAssertEqual(canvas.strokeCount, 0,
+            "A touch that ends after clearAll must not commit a phantom stroke")
+        XCTAssertEqual(canvas.layer.sublayers?.count ?? 0, 0,
+            "clearAll must leave no ink layers behind")
+    }
+
+    func testRemoveLastStrokeIsSafeAfterClearDuringActiveStroke() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+
+        let touch = TestTouch(locationInView: CGPoint(x: 10, y: 10))
+        canvas.touchesBegan([touch], with: nil)
+        touch.updateLocation(CGPoint(x: 60, y: 60))
+        canvas.touchesMoved([touch], with: nil)
+
+        canvas.clearAll()
+        canvas.touchesEnded([touch], with: nil)
+
+        canvas.removeLastStroke()
+
+        XCTAssertEqual(canvas.strokeCount, 0)
+    }
+
+    func testStrokeAfterClearDuringActiveStrokeCommitsNormally() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+
+        let interrupted = TestTouch(locationInView: CGPoint(x: 10, y: 10))
+        canvas.touchesBegan([interrupted], with: nil)
+        canvas.clearAll()
+        canvas.touchesEnded([interrupted], with: nil)
+
+        simulateStroke(on: canvas, points: [CGPoint(x: 100, y: 100), CGPoint(x: 150, y: 150)])
+
+        XCTAssertEqual(canvas.strokeCount, 1)
+        XCTAssertEqual(canvas.strokes[0].first, CGPoint(x: 100, y: 100))
+        XCTAssertEqual(canvas.layer.sublayers?.count ?? 0, 1)
+    }
+
     // MARK: - Estimated property refinement
 
     /// Draws a pencil stroke whose force values are estimates, then delivers

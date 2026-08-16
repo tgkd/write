@@ -64,6 +64,7 @@ class KanjiReferenceView: UIView {
                 canvasSize: bounds.size,
                 appearance: appearance
             ) {
+                layer.contentsScale = self.layer.contentsScale
                 self.layer.addSublayer(layer)
                 strokeLayers.append(layer)
             }

@@ -146,7 +146,10 @@ struct PracticeView: View {
             canvasView: $canvasView,
             referenceView: $referenceView,
             feedbackView: $feedbackView,
-            onReferenceReady: { applyGhostVisibility() }
+            onReferenceReady: {
+                applyGhostVisibility()
+                prewarmValidation()
+            }
         )
     }
 
@@ -220,5 +223,10 @@ struct PracticeView: View {
     private func applyGhostVisibility() {
         guard let referenceView else { return }
         practiceState.applyGhostVisibility(to: referenceView)
+    }
+
+    private func prewarmValidation() {
+        guard let size = canvasView?.bounds.size ?? referenceView?.bounds.size else { return }
+        practiceState.prewarmReferenceSamples(canvasSize: size)
     }
 }

@@ -200,7 +200,10 @@ struct iPadPracticeView: View {
             canvasView: $canvasView,
             referenceView: $referenceView,
             feedbackView: $feedbackView,
-            onReferenceReady: { applyGhostVisibility() }
+            onReferenceReady: {
+                applyGhostVisibility()
+                prewarmValidation()
+            }
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
@@ -255,5 +258,10 @@ struct iPadPracticeView: View {
     private func applyGhostVisibility() {
         guard let referenceView else { return }
         practiceState.applyGhostVisibility(to: referenceView)
+    }
+
+    private func prewarmValidation() {
+        guard let size = canvasView?.bounds.size ?? referenceView?.bounds.size else { return }
+        practiceState.prewarmReferenceSamples(canvasSize: size)
     }
 }

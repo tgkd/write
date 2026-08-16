@@ -45,11 +45,13 @@ final class DrawingCanvasView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        isMultipleTouchEnabled = true
         setupHoverGesture()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        isMultipleTouchEnabled = true
         setupHoverGesture()
     }
 
@@ -83,9 +85,7 @@ final class DrawingCanvasView: UIView {
         // filter's state and the live renderer stay in the old coordinate
         // space. Cancel the in-flight stroke instead of distorting it.
         if activeTouch != nil || activeLayer != nil {
-            clearPredicted()
             cancelCurrentStroke()
-            activeTouch = nil
         }
         // Pending refinement samples are in the old space too; the layer path
         // was rescaled above, so a late re-render would undo the rescale.
@@ -147,12 +147,10 @@ final class DrawingCanvasView: UIView {
             guard current.type == .direct,
                   allowedTouchTypes.contains(.pencil),
                   let pencil = touches.first(where: { $0.type == .pencil }) else { return }
-            clearPredicted()
             cancelCurrentStroke()
-            activeTouch = nil
             takeoverTouch = pencil
         }
-        guard let touch = takeoverTouch ?? touches.first(where: { allowedTouchTypes.contains($0.type) }) else { return }
+        guard let touch = takeoverTouch ?? preferredTouch(from: touches) else { return }
 
         activeTouch = touch
         let rawPoint = location(of: touch)
@@ -242,9 +240,7 @@ final class DrawingCanvasView: UIView {
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = activeTouch, touches.contains(touch) else { return }
-        clearPredicted()
         cancelCurrentStroke()
-        activeTouch = nil
     }
 
     /// Applies refined force/altitude values that UIKit delivers after the
@@ -302,6 +298,7 @@ final class DrawingCanvasView: UIView {
     private func showHover(at point: CGPoint) {
         if hoverLayer == nil {
             let dot = CAShapeLayer()
+            dot.contentsScale = layer.contentsScale
             dot.fillColor = UIColor.label.withAlphaComponent(0.15).cgColor
             dot.strokeColor = UIColor.label.withAlphaComponent(0.3).cgColor
             dot.lineWidth = 0.5
@@ -321,6 +318,14 @@ final class DrawingCanvasView: UIView {
     }
 
     // MARK: - Private
+
+    private func preferredTouch(from touches: Set<UITouch>) -> UITouch? {
+        if allowedTouchTypes.contains(.pencil),
+           let pencil = touches.first(where: { $0.type == .pencil }) {
+            return pencil
+        }
+        return touches.first(where: { allowedTouchTypes.contains($0.type) })
+    }
 
     /// Returns the most precise location available for a touch.
     /// Apple Pencil reports sub-point coordinates via `preciseLocation`, avoiding the
@@ -347,6 +352,7 @@ final class DrawingCanvasView: UIView {
 
     private func makeBrushLayer() -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
+        shapeLayer.contentsScale = layer.contentsScale
         shapeLayer.fillColor = strokeColor.cgColor
         shapeLayer.strokeColor = nil
         shapeLayer.actions = ["path": NSNull()]
@@ -397,6 +403,8 @@ final class DrawingCanvasView: UIView {
     }
 
     private func cancelCurrentStroke() {
+        activeTouch = nil
+        clearPredicted()
         activeLayer?.removeFromSuperlayer()
         activeLayer = nil
         currentSamples = []

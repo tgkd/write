@@ -47,6 +47,7 @@ final class NotebookCellView: UICollectionViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        crosshairLayer.contentsScale = contentView.layer.contentsScale
         crosshairLayer.frame = contentView.bounds
         crosshairLayer.updatePath(for: contentView.bounds.size)
         canvasView?.frame = contentView.bounds
@@ -158,6 +159,7 @@ final class NotebookCellView: UICollectionViewCell {
                 canvasSize: size,
                 appearance: StrokeAppearance(strokeColor: .label, alpha: 0.7, lineWidth: 3.0)
             ) {
+                layer.contentsScale = contentView.layer.contentsScale
                 contentView.layer.addSublayer(layer)
                 referenceLayers.append(layer)
             }
@@ -230,6 +232,7 @@ final class NotebookCellView: UICollectionViewCell {
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
         doubleTap.numberOfTapsRequired = 2
         doubleTap.numberOfTouchesRequired = 2
+        doubleTap.delaysTouchesEnded = false
         canvas.addGestureRecognizer(doubleTap)
     }
 
