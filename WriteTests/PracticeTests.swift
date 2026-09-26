@@ -7,7 +7,7 @@ final class PracticeModeTests: XCTestCase {
 
     func testTraceModeGhostVisibility() {
         let mode = PracticeMode.trace
-        XCTAssertEqual(mode.ghostStrokeAlpha, 0.3)
+        XCTAssertEqual(mode.ghostStrokeAlpha, 0.15)
         XCTAssertEqual(mode.currentStrokeAlpha, 0.5)
         XCTAssertFalse(mode.animateStrokeReveal)
         XCTAssertNil(mode.autoHintAfterMisses)

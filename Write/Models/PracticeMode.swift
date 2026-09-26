@@ -16,7 +16,7 @@ enum PracticeMode: String, CaseIterable, Sendable {
     /// Alpha for all non-current ghost strokes (nil = hidden).
     var ghostStrokeAlpha: CGFloat? {
         switch self {
-        case .trace: return 0.3
+        case .trace: return 0.15
         case .strokeByStroke: return nil
         case .freeDraw: return nil
         }
