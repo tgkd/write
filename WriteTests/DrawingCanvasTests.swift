@@ -308,6 +308,23 @@ final class DrawingCanvasViewTests: XCTestCase {
             "A pencil arriving in the same event as a finger must always win")
     }
 
+    func testPencilStrokeBeganFiresOnlyForPencil() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        var pencilStrokes = 0
+        canvas.onPencilStrokeBegan = { pencilStrokes += 1 }
+
+        let finger = TestTouch(locationInView: CGPoint(x: 20, y: 20))
+        canvas.touchesBegan([finger], with: nil)
+        canvas.touchesEnded([finger], with: nil)
+        XCTAssertEqual(pencilStrokes, 0)
+
+        let pencil = TestTouch(locationInView: CGPoint(x: 100, y: 100))
+        pencil.touchType = .pencil
+        canvas.touchesBegan([pencil], with: nil)
+        canvas.touchesEnded([pencil], with: nil)
+        XCTAssertEqual(pencilStrokes, 1)
+    }
+
     // MARK: - Clear during an active stroke
 
     func testClearAllDuringActiveStrokeLeavesNoPhantomStroke() {
@@ -519,6 +536,36 @@ final class NotebookCellViewTests: XCTestCase {
         // drawing consecutive dot strokes (点).
         XCTAssertEqual(taps.first?.numberOfTapsRequired, 2)
         XCTAssertEqual(taps.first?.numberOfTouchesRequired, 2)
+    }
+
+    func testOnlyPencilStrokesReportActivity() {
+        let cell = NotebookCellView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        cell.configurePractice(
+            showCrosshair: true,
+            allowedTouchTypes: [.direct, .pencil],
+            pressureSensitivity: .off,
+            tiltSensitivity: .off,
+            smoothingStrength: .medium,
+            brushThickness: .medium
+        )
+        var activity = 0
+        cell.onPencilActivity = { activity += 1 }
+
+        guard let canvas = cell.canvasView else {
+            XCTFail("Practice cell should have a canvas")
+            return
+        }
+
+        let palm = TestTouch(locationInView: CGPoint(x: 10, y: 10))
+        canvas.touchesBegan([palm], with: nil)
+        palm.updateLocation(CGPoint(x: 40, y: 40))
+        canvas.touchesEnded([palm], with: nil)
+        XCTAssertEqual(activity, 0, "A direct touch must not retarget the Pencil clear")
+
+        let pencil = TestTouch(locationInView: CGPoint(x: 20, y: 20))
+        pencil.touchType = .pencil
+        canvas.touchesBegan([pencil], with: nil)
+        XCTAssertEqual(activity, 1)
     }
 
     func testUpdatePracticeSettingsIgnoresReferenceCell() {

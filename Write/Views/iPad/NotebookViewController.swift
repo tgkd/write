@@ -97,6 +97,7 @@ final class NotebookViewController: UIViewController {
     }
 
     private let tipsOverlay = NotebookTipsOverlay()
+    private let navigationGestureGuard = NavigationGestureGuard()
 
     @objc private func showTips() {
         guard let state = notebookState, !state.rows.isEmpty else { return }
@@ -158,12 +159,12 @@ final class NotebookViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        navigationGestureGuard.engage(from: self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationGestureGuard.release()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -289,7 +290,7 @@ extension NotebookViewController: UICollectionViewDataSource {
             smoothingStrength: smoothingStrength,
             brushThickness: brushThickness
         )
-        cell.onDrawingActivity = { [weak self, weak cell] in
+        cell.onPencilActivity = { [weak self, weak cell] in
             self?.lastDrawnCanvas = cell?.canvasView
         }
         return cell

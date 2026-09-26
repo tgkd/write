@@ -14,6 +14,9 @@ extension BrushStroke.Config {
         let filterParams = smoothing.filterParams
         filterMinCutoff = filterParams.minCutoff
         filterBeta = filterParams.beta
+        let centerline = smoothing.centerlineParams
+        centerlineRadius = centerline.radius
+        centerlineMaxShift = centerline.maxShift
         let widthRange = thickness.widthRange
         minWidth = widthRange.min
         maxWidth = widthRange.max
@@ -90,6 +93,14 @@ enum SmoothingStrength: String, CaseIterable, Sendable {
         case .low: return (3.0, 0.8)
         case .medium: return (1.5, 0.5)
         case .high: return (0.8, 0.3)
+        }
+    }
+
+    var centerlineParams: (radius: Int, maxShift: CGFloat) {
+        switch self {
+        case .low: return (1, 0.75)
+        case .medium: return (2, 1.25)
+        case .high: return (3, 2.0)
         }
     }
 }

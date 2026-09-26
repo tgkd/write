@@ -65,12 +65,14 @@ struct ContentView: View {
             .navigationDestination(for: PracticeRoute.self) { route in
                 if let kanji = dataStore.lookup(codePoint: route.codePoint) {
                     iPadPracticeView(kanjiData: kanji)
+                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
                 }
             }
             .navigationDestination(for: NotebookRoute.self) { route in
                 let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
                 NotebookViewRepresentable(kanjiList: kanji)
                     .navigationBarBackButtonHidden(true)
+                    .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
             }
             .onChange(of: selectedCodePoint) { _ in
                 iPadNavigationPath = NavigationPath()

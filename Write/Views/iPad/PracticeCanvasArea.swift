@@ -22,6 +22,8 @@ struct PracticeCanvasArea: View {
 
     var body: some View {
         ZStack {
+            NavigationGestureGuardRepresentable()
+
             KanjiReferenceRepresentable(
                 kanjiData: kanjiData,
                 lineWidth: lineWidth,

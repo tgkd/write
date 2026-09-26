@@ -12,9 +12,9 @@ final class NotebookCellView: UICollectionViewCell {
     private let crosshairLayer = CrosshairGuideLayer()
     private(set) var canvasView: DrawingCanvasView?
 
-    /// Fired whenever the user draws in this cell, so the controller can track
-    /// the last-drawn canvas for Pencil hardware gestures.
-    var onDrawingActivity: (() -> Void)?
+    /// Fired whenever the user starts a Pencil stroke in this cell, so the
+    /// controller can track the last Pencil-drawn canvas for hardware gestures.
+    var onPencilActivity: (() -> Void)?
 
     // MARK: - Reference state
 
@@ -69,7 +69,7 @@ final class NotebookCellView: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         removeCanvas()
-        onDrawingActivity = nil
+        onPencilActivity = nil
         crosshairLayer.isHidden = false
         contentView.isUserInteractionEnabled = true
         contentView.backgroundColor = .clear
@@ -220,8 +220,8 @@ final class NotebookCellView: UICollectionViewCell {
             smoothing: smoothingStrength,
             thickness: brushThickness
         )
-        canvas.onPointAdded = { [weak self] _, _ in
-            self?.onDrawingActivity?()
+        canvas.onPencilStrokeBegan = { [weak self] in
+            self?.onPencilActivity?()
         }
         contentView.addSubview(canvas)
         canvasView = canvas

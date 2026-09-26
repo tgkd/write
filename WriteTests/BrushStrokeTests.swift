@@ -249,3 +249,105 @@ final class BrushStrokeTiltTests: XCTestCase {
             "Higher tilt sensitivity must produce a larger width delta between flat and vertical pencil")
     }
 }
+
+// MARK: - Centerline smoothing tests
+
+final class BrushStrokeCenterlineTests: XCTestCase {
+
+    private func samples(_ points: [CGPoint]) -> [BrushStroke.Sample] {
+        points.enumerated().map { i, point in
+            BrushStroke.Sample(point: point, timestamp: TimeInterval(i) * 0.01)
+        }
+    }
+
+    private func config(_ strength: SmoothingStrength) -> BrushStroke.Config {
+        BrushStroke.Config(pressure: .off, tilt: .off, smoothing: strength, thickness: .medium)
+    }
+
+    func testSharpCornerIsPreserved() {
+        let horizontal = (0..<6).map { CGPoint(x: CGFloat($0) * 4, y: 0) }
+        let vertical = (1..<6).map { CGPoint(x: 20, y: CGFloat($0) * 4) }
+        let input = samples(horizontal + vertical)
+
+        for strength in SmoothingStrength.allCases {
+            let smoothed = BrushStroke.smoothCenterline(
+                input, firstIndex: 0, totalCount: input.count, config: config(strength)
+            )
+            XCTAssertEqual(smoothed[5].x, 20, accuracy: 0.0001, "\(strength)")
+            XCTAssertEqual(smoothed[5].y, 0, accuracy: 0.0001, "\(strength)")
+        }
+    }
+
+    func testJitterIsReduced() {
+        let input = samples((0..<20).map { i in
+            CGPoint(x: CGFloat(i) * 6, y: i.isMultiple(of: 2) ? 0.6 : -0.6)
+        })
+        let smoothed = BrushStroke.smoothCenterline(
+            input, firstIndex: 0, totalCount: input.count, config: config(.medium)
+        )
+        let interior = 3..<17
+        let before = interior.map { abs(input[$0].point.y) }.max() ?? 0
+        let after = interior.map { abs(smoothed[$0].y) }.max() ?? 0
+        XCTAssertLessThan(after, before * 0.5)
+    }
+
+    func testEndpointsAreFixed() {
+        let input = samples((0..<10).map { i in
+            CGPoint(x: CGFloat(i) * 5, y: i.isMultiple(of: 2) ? 1 : -1)
+        })
+        let smoothed = BrushStroke.smoothCenterline(
+            input, firstIndex: 0, totalCount: input.count, config: config(.high)
+        )
+        XCTAssertEqual(smoothed.first, input.first?.point)
+        XCTAssertEqual(smoothed.last, input.last?.point)
+    }
+
+    func testShiftIsClampedToCap() {
+        let input = samples((0..<12).map { i in
+            CGPoint(x: CGFloat(i) * 20, y: i.isMultiple(of: 2) ? 4 : -4)
+        })
+        for strength in SmoothingStrength.allCases {
+            let cfg = config(strength)
+            let smoothed = BrushStroke.smoothCenterline(
+                input, firstIndex: 0, totalCount: input.count, config: cfg
+            )
+            for i in 3..<9 {
+                let original = input[i].point
+                let shift = hypot(smoothed[i].x - original.x, smoothed[i].y - original.y)
+                XCTAssertEqual(shift, cfg.centerlineMaxShift, accuracy: 0.0001, "\(strength) \(i)")
+            }
+        }
+    }
+
+    func testWindowWithContextMatchesWholeStroke() {
+        let points: [CGPoint] = (0..<60).map { i in
+            let wobble: CGFloat = i.isMultiple(of: 3) ? 0.8 : -0.4
+            if i < 30 {
+                return CGPoint(x: CGFloat(i) * 5, y: wobble)
+            }
+            return CGPoint(x: 150 + wobble, y: CGFloat(i - 30) * 5)
+        }
+        let input = samples(points)
+
+        for strength in SmoothingStrength.allCases {
+            let cfg = config(strength)
+            let whole = BrushStroke.smoothCenterline(
+                input, firstIndex: 0, totalCount: input.count, config: cfg
+            )
+            let context = cfg.centerlineRadius + 1
+            for start in stride(from: 0, to: 50, by: 7) {
+                let end = min(input.count, start + 10)
+                let contextStart = max(0, start - context)
+                let contextEnd = min(input.count, end + context)
+                let window = BrushStroke.smoothCenterline(
+                    Array(input[contextStart..<contextEnd]),
+                    firstIndex: contextStart, totalCount: input.count, config: cfg
+                )
+                for i in start..<end {
+                    XCTAssertEqual(window[i - contextStart].x, whole[i].x, accuracy: 0.0001, "\(strength) \(i)")
+                    XCTAssertEqual(window[i - contextStart].y, whole[i].y, accuracy: 0.0001, "\(strength) \(i)")
+                }
+            }
+        }
+    }
+}

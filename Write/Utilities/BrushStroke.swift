@@ -32,11 +32,62 @@ enum BrushStroke {
         var tiltSensitivity: TiltSensitivity = .off
         var filterMinCutoff: CGFloat = 1.5
         var filterBeta: CGFloat = 0.5
+        var centerlineRadius: Int = 2
+        var centerlineMaxShift: CGFloat = 1.25
     }
 
     /// Creates a filled CGPath with variable width from touch samples.
     static func createPath(from samples: [Sample], config: Config = Config()) -> CGPath {
-        path(fromFiltered: filterByDistance(samples), config: config, taperStart: true, taperEnd: true)
+        let filtered = filterByDistance(samples)
+        let centerline = smoothCenterline(filtered, firstIndex: 0, totalCount: filtered.count, config: config)
+        return path(fromFiltered: filtered, centerline: centerline, config: config, taperStart: true, taperEnd: true)
+    }
+
+    static func smoothCenterline(
+        _ samples: [Sample],
+        firstIndex: Int,
+        totalCount: Int,
+        config: Config
+    ) -> [CGPoint] {
+        let points = samples.map(\.point)
+        let radius = config.centerlineRadius
+        guard radius > 0, points.count > 2 else { return points }
+
+        let isCorner: [Bool] = points.indices.map { j in
+            guard j > 0, j < points.count - 1 else { return false }
+            return turnCosine(points[j - 1], points[j], points[j + 1]) < cornerCosine
+        }
+
+        let maxShiftSq = config.centerlineMaxShift * config.centerlineMaxShift
+        var result = points
+        for j in points.indices {
+            let global = firstIndex + j
+            var r = min(radius, global, totalCount - 1 - global, j, points.count - 1 - j)
+            while r > 0, (j - r...j + r).contains(where: { isCorner[$0] }) {
+                r -= 1
+            }
+            if r <= 0 { continue }
+
+            var sumX: CGFloat = 0
+            var sumY: CGFloat = 0
+            var weightSum: CGFloat = 0
+            for k in -r...r {
+                let weight = CGFloat(r + 1 - abs(k))
+                sumX += points[j + k].x * weight
+                sumY += points[j + k].y * weight
+                weightSum += weight
+            }
+            var dx = sumX / weightSum - points[j].x
+            var dy = sumY / weightSum - points[j].y
+            let shiftSq = dx * dx + dy * dy
+            if shiftSq > maxShiftSq {
+                let scale = config.centerlineMaxShift / sqrt(shiftSq)
+                dx *= scale
+                dy *= scale
+            }
+            result[j] = CGPoint(x: points[j].x + dx, y: points[j].y + dy)
+        }
+        return result
     }
 
     /// Builds the ribbon for samples that are ALREADY distance-filtered.
@@ -44,11 +95,12 @@ enum BrushStroke {
     /// must not thin out at their cut points.
     static func path(
         fromFiltered filtered: [Sample],
+        centerline: [CGPoint]? = nil,
         config: Config,
         taperStart: Bool,
         taperEnd: Bool
     ) -> CGPath {
-        let points = filtered.map(\.point)
+        let points = centerline ?? filtered.map(\.point)
         guard points.count >= 2 else {
             return dotPath(at: points.first ?? .zero, radius: config.maxWidth / 2)
         }
@@ -150,10 +202,17 @@ enum BrushStroke {
         /// The full live path: frozen prefix plus a freshly built tail.
         func currentPath() -> CGPath {
             let start = max(0, frozenKeptCount - Self.overlap)
-            var tail = Array(kept[start...])
-            if let prov = provisional { tail.append(prov) }
+            let contextStart = max(0, start - contextLength)
+            var window = Array(kept[contextStart...])
+            if let prov = provisional { window.append(prov) }
+            let smoothed = BrushStroke.smoothCenterline(
+                window, firstIndex: contextStart, totalCount: totalCount, config: config
+            )
+            let offset = start - contextStart
             let tailPath = BrushStroke.path(
-                fromFiltered: tail, config: config, taperStart: start == 0, taperEnd: true
+                fromFiltered: Array(window.dropFirst(offset)),
+                centerline: Array(smoothed.dropFirst(offset)),
+                config: config, taperStart: start == 0, taperEnd: true
             )
             if frozenPath.isEmpty { return tailPath }
             let combined = CGMutablePath()
@@ -165,12 +224,27 @@ enum BrushStroke {
         /// A short stub from the last committed samples plus the predictions —
         /// the predicted layer no longer redraws the whole stroke.
         func predictedPath(with predictedSamples: [Sample]) -> CGPath {
-            var stub = Array(kept.suffix(3))
-            if let prov = provisional { stub.append(prov) }
+            let stubLength = min(3, kept.count) + (provisional == nil ? 0 : 1)
+            let contextStart = max(0, kept.count - 3 - contextLength)
+            var window = Array(kept[contextStart...])
+            if let prov = provisional { window.append(prov) }
+            let smoothed = BrushStroke.smoothCenterline(
+                window, firstIndex: contextStart, totalCount: totalCount, config: config
+            )
             return BrushStroke.path(
-                fromFiltered: stub + predictedSamples, config: config,
+                fromFiltered: Array(window.suffix(stubLength)) + predictedSamples,
+                centerline: Array(smoothed.suffix(stubLength)) + predictedSamples.map(\.point),
+                config: config,
                 taperStart: false, taperEnd: true
             )
+        }
+
+        private var contextLength: Int {
+            config.centerlineRadius + 1
+        }
+
+        private var totalCount: Int {
+            kept.count + (provisional == nil ? 0 : 1)
         }
 
         private mutating func freezeIfNeeded() {
@@ -178,8 +252,17 @@ enum BrushStroke {
                 let chunkEnd = frozenKeptCount + Self.tailWindow
                 let start = max(0, frozenKeptCount - Self.overlap)
                 let end = min(kept.count, chunkEnd + Self.overlap)
+                let contextStart = max(0, start - contextLength)
+                let contextEnd = min(kept.count, end + contextLength)
+                let smoothed = BrushStroke.smoothCenterline(
+                    Array(kept[contextStart..<contextEnd]),
+                    firstIndex: contextStart, totalCount: totalCount, config: config
+                )
+                let chunkRange = (start - contextStart)..<(end - contextStart)
                 let chunk = BrushStroke.path(
-                    fromFiltered: Array(kept[start..<end]), config: config,
+                    fromFiltered: Array(kept[start..<end]),
+                    centerline: Array(smoothed[chunkRange]),
+                    config: config,
                     taperStart: start == 0, taperEnd: false
                 )
                 frozenPath.addPath(chunk)
@@ -202,6 +285,18 @@ enum BrushStroke {
     /// ~0.24 of maximumPossibleForce; a square root lifts it to mid-width so
     /// the pressure setting is perceptible at typical writing pressure.
     private static let forceGamma: CGFloat = 0.5
+
+    private static let cornerCosine: CGFloat = cos(.pi / 4)
+
+    private static func turnCosine(_ a: CGPoint, _ b: CGPoint, _ c: CGPoint) -> CGFloat {
+        let ux = b.x - a.x
+        let uy = b.y - a.y
+        let vx = c.x - b.x
+        let vy = c.y - b.y
+        let lengths = hypot(ux, uy) * hypot(vx, vy)
+        guard lengths > 0.0001 else { return 1 }
+        return (ux * vx + uy * vy) / lengths
+    }
 
     private static func filterByDistance(_ samples: [Sample], minDistance: CGFloat = 4.0) -> [Sample] {
         guard samples.count >= 2 else { return samples }

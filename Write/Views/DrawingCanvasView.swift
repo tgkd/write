@@ -17,6 +17,7 @@ final class DrawingCanvasView: UIView {
     // MARK: - Callbacks
 
     var onPointAdded: ((CGPoint, Int) -> Void)?
+    var onPencilStrokeBegan: (() -> Void)?
     var onStrokeCompleted: (([CGPoint], Int) -> Void)?
 
     // MARK: - State
@@ -176,6 +177,9 @@ final class DrawingCanvasView: UIView {
 
         updateActivePath()
         hideHover()
+        if touch.type == .pencil {
+            onPencilStrokeBegan?()
+        }
         onPointAdded?(point, strokes.count)
     }
 
@@ -197,9 +201,10 @@ final class DrawingCanvasView: UIView {
         updateActivePath()
 
         if let predicted = event?.predictedTouches(for: touch), !predicted.isEmpty {
+            var predictionFilter = inputFilter
             var predictedSamples: [BrushStroke.Sample] = []
             for pt in predicted {
-                let pp = location(of: pt)
+                let pp = predictionFilter.filter(point: location(of: pt), timestamp: pt.timestamp)
                 let pf = normalizedForce(of: pt)
                 let pa = pt.type == .pencil ? pt.altitudeAngle : nil
                 predictedSamples.append(BrushStroke.Sample(point: pp, timestamp: pt.timestamp, force: pf, altitude: pa))
@@ -236,6 +241,7 @@ final class DrawingCanvasView: UIView {
         clearPredicted()
         finalizeCurrentStroke()
         activeTouch = nil
+        hideHover()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -284,6 +290,10 @@ final class DrawingCanvasView: UIView {
     }
 
     @objc private func handleHover(_ gesture: UIHoverGestureRecognizer) {
+        if activeTouch != nil {
+            hideHover()
+            return
+        }
         switch gesture.state {
         case .began, .changed:
             let point = gesture.location(in: self)
@@ -404,6 +414,7 @@ final class DrawingCanvasView: UIView {
 
     private func cancelCurrentStroke() {
         activeTouch = nil
+        hideHover()
         clearPredicted()
         activeLayer?.removeFromSuperlayer()
         activeLayer = nil
