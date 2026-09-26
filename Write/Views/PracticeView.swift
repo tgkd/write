@@ -106,6 +106,11 @@ struct PracticeView: View {
         return VStack(alignment: .leading, spacing: 2) {
             Text(String(kanji.character))
                 .font(.system(size: 40))
+            if let romaji = kanji.romaji {
+                Text(romaji)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
             if let on = kanji.onYomi, !on.isEmpty {
                 Text(on.joined(separator: "、 "))
                     .font(.subheadline)

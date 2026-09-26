@@ -43,6 +43,9 @@ final class KanjiDataStore: Sendable {
     func search(query: String) -> [KanjiData] {
         let q = query.lowercased()
         return allCodePoints.compactMap { kanjiMap[$0] }.filter { kanji in
+            if kanji.romaji?.lowercased() == q {
+                return true
+            }
             if let meanings = kanji.meanings {
                 if meanings.contains(where: { $0.lowercased().contains(q) }) { return true }
             }
@@ -56,9 +59,9 @@ final class KanjiDataStore: Sendable {
         }
     }
 
-    func randomKanji(jlpt: Int?, count: Int) -> [KanjiData] {
+    func randomCharacters(matching filter: CharacterFilter, count: Int) -> [KanjiData] {
         let pool = allCodePoints.compactMap { kanjiMap[$0] }
-            .filter { jlpt == nil || $0.jlpt == jlpt }
+            .filter { filter.includes($0) }
         return Array(pool.shuffled().prefix(count))
     }
 

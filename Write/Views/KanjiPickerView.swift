@@ -4,13 +4,11 @@ struct KanjiPickerView: View {
     let dataStore: KanjiDataStore
     private let allKanji: [KanjiData]
 
-    private static let jlptLevels = [5, 4, 3, 2, 1]
-
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var searchText = ""
     @State private var showSettings = false
-    @State private var selectedJLPT: Int? = nil
+    @State private var selectedFilter: CharacterFilter = .all
 
     @Binding var selectedCodePoint: String?
     private let usesSelectionBinding: Bool
@@ -51,8 +49,7 @@ struct KanjiPickerView: View {
             base = results
         }
 
-        guard let level = selectedJLPT else { return base }
-        return base.filter { $0.jlpt == level }
+        return base.filter { selectedFilter.includes($0) }
     }
 
     var body: some View {
@@ -68,7 +65,7 @@ struct KanjiPickerView: View {
             }
             .padding()
         }
-        .searchable(text: $searchText, prompt: "Search kanji")
+        .searchable(text: $searchText, prompt: "Search kanji or kana")
         .navigationTitle("Write")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -122,7 +119,7 @@ struct KanjiPickerView: View {
     }
 
     private var sessionButton: some View {
-        let kanji = dataStore.randomKanji(jlpt: selectedJLPT, count: settings.sessionCount)
+        let kanji = dataStore.randomCharacters(matching: selectedFilter, count: settings.sessionCount)
         let route = SessionRoute(codePoints: kanji.map(\.codePoint))
         return NavigationLink(value: route) {
             Image(systemName: "play.fill")
@@ -133,22 +130,21 @@ struct KanjiPickerView: View {
     private var jlptFilterBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                filterPill(label: "All", level: nil)
-                ForEach(Self.jlptLevels, id: \.self) { level in
-                    filterPill(label: "N\(level)", level: level)
+                ForEach(CharacterFilter.pickerOrder, id: \.self) { filter in
+                    filterPill(filter)
                 }
             }
         }
     }
 
-    private func filterPill(label: String, level: Int?) -> some View {
-        let isSelected = selectedJLPT == level
+    private func filterPill(_ filter: CharacterFilter) -> some View {
+        let isSelected = selectedFilter == filter
         return Button {
             withAnimation(.easeInOut(duration: 0.15)) {
-                selectedJLPT = level
+                selectedFilter = filter
             }
         } label: {
-            Text(label)
+            Text(filter.label)
                 .font(.subheadline.weight(.medium))
                 .fixedSize()
                 .padding(.horizontal, 14)

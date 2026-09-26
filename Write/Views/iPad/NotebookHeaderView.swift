@@ -48,6 +48,9 @@ final class NotebookHeaderView: UICollectionReusableView {
         kanjiLabel.text = String(kanji.character)
 
         var parts: [String] = []
+        if let romaji = kanji.romaji {
+            parts.append(romaji)
+        }
         if let on = kanji.onYomi, !on.isEmpty {
             parts.append(on.joined(separator: "、"))
         }

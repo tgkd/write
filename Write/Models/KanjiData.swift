@@ -17,6 +17,11 @@ struct KanjiData: Codable, Equatable, Sendable {
     var grade: Int? = nil
     var jlpt: Int? = nil
     var freq: Int? = nil
+    var romaji: String? = nil
+
+    var script: WritingScript {
+        WritingScript(codePoint: codePoint)
+    }
 
     var character: Character {
         guard let scalar = UInt32(codePoint, radix: 16),

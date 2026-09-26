@@ -19,6 +19,26 @@ final class PreprocessingTests: XCTestCase {
             "Should contain over 6000 CJK kanji from KanjiVG")
     }
 
+    func testKanaCountsAndMetadata() {
+        let characters = store.allCodePoints.compactMap { store.lookup(codePoint: $0) }
+        let hiragana = characters.filter { $0.script == .hiragana }
+        let katakana = characters.filter { $0.script == .katakana }
+        XCTAssertEqual(hiragana.count, 71)
+        XCTAssertEqual(katakana.count, 71)
+        for kana in hiragana + katakana {
+            XCTAssertFalse(kana.romaji?.isEmpty ?? true)
+            XCTAssertNil(kana.jlpt)
+        }
+    }
+
+    func testKanaStrokesAndRomaji() {
+        let a = store.lookup(codePoint: "3042")
+        XCTAssertEqual(a?.strokes.count, 3)
+        XCTAssertEqual(a?.romaji, "a")
+        let katakanaA = store.lookup(codePoint: "30a2")
+        XCTAssertEqual(katakanaA?.strokes.count, 2)
+    }
+
     func testKariHas6Strokes() {
         let kari = store.lookup(codePoint: "4eee")
         XCTAssertNotNil(kari, "仮 (U+4EEE) should exist in preprocessed data")

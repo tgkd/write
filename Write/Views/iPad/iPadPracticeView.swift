@@ -108,6 +108,11 @@ struct iPadPracticeView: View {
 
     private var readingsBlock: some View {
         VStack(spacing: 4) {
+            if let romaji = practiceState.kanjiData.romaji {
+                Text(romaji)
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+            }
             if let on = practiceState.kanjiData.onYomi, !on.isEmpty {
                 Text(on.joined(separator: "、 "))
                     .font(.body)

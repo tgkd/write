@@ -26,7 +26,10 @@ struct SessionSummaryView: View {
                         .frame(width: 44)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        if let meanings = result.kanjiData.meanings, !meanings.isEmpty {
+                        if let romaji = result.kanjiData.romaji {
+                            Text(romaji)
+                                .font(.subheadline)
+                        } else if let meanings = result.kanjiData.meanings, !meanings.isEmpty {
                             Text(meanings.prefix(2).joined(separator: ", "))
                                 .font(.subheadline)
                         }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Preprocess KanjiVG XML and KANJIDIC2 XML into a bundled JSON file.
+Preprocess KanjiVG XML and KANJIDIC2 XML into a bundled kanji and kana JSON file.
 
 Usage:
     python3 Scripts/preprocess_kanjivg.py <kanjivg.xml> <kanjidic2.xml> <output.json>
@@ -141,6 +141,10 @@ def main():
         jlpt_map = json.load(f)
     print(f"Loaded {len(jlpt_map)} JLPT N5-N1 mappings")
 
+    kana_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kana_romaji.json")
+    with open(kana_path, encoding="utf-8") as f:
+        kana_map = json.load(f)
+
     kanjidic2 = load_kanjidic2(kanjidic2_path)
     print(f"Loaded {len(kanjidic2)} entries from KANJIDIC2")
 
@@ -157,25 +161,33 @@ def main():
         if data is None:
             skipped += 1
             continue
-        if not is_cjk_unified(data["codePoint"]):
+        code_point = data["codePoint"]
+        if code_point in kana_map:
+            data["romaji"] = kana_map[code_point]
+        elif is_cjk_unified(code_point):
+            metadata = kanjidic2.get(code_point, {})
+            if metadata:
+                data.update(metadata)
+                enriched += 1
+
+            jlpt_level = jlpt_map.get(code_point)
+            if jlpt_level is not None:
+                data["jlpt"] = jlpt_level
+        else:
             skipped += 1
             continue
 
-        metadata = kanjidic2.get(data["codePoint"], {})
-        if metadata:
-            data.update(metadata)
-            enriched += 1
+        result[code_point] = data
 
-        jlpt_level = jlpt_map.get(data["codePoint"])
-        if jlpt_level is not None:
-            data["jlpt"] = jlpt_level
-
-        result[data["codePoint"]] = data
+    missing = kana_map.keys() - result.keys()
+    if missing:
+        characters = ", ".join(chr(int(cp, 16)) for cp in sorted(missing))
+        sys.exit(f"Missing kana from KanjiVG: {characters}")
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, separators=(",", ":"))
 
-    print(f"Processed {total} entries, kept {len(result)} CJK kanji, skipped {skipped}")
+    print(f"Processed {total} entries, kept {len(result) - len(kana_map)} CJK kanji and {len(kana_map)} kana, skipped {skipped}")
     print(f"Enriched {enriched} entries with KANJIDIC2 metadata")
 
 

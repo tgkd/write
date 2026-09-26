@@ -41,6 +41,11 @@ struct KanjiDetailView: View {
 
     private var readingsBlock: some View {
         VStack(spacing: 4) {
+            if let romaji = kanji.romaji {
+                Text(romaji)
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+            }
             if let on = kanji.onYomi, !on.isEmpty {
                 Text(on.joined(separator: "、 "))
                     .font(.title3)
