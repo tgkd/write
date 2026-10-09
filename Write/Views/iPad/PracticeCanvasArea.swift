@@ -10,6 +10,7 @@ struct PracticeCanvasArea: View {
     let smoothingStrength: SmoothingStrength
     let brushThickness: BrushThickness
     let showCompletionCheck: Bool
+    let hidesReference: Bool
 
     var onStrokeCompleted: (([CGPoint]) -> Void)?
     var onPencilDoubleTap: (() -> Void)?
@@ -28,6 +29,7 @@ struct PracticeCanvasArea: View {
                 kanjiData: kanjiData,
                 lineWidth: lineWidth,
                 palette: palette,
+                isHidden: hidesReference,
                 referenceView: $referenceView,
                 onReady: { onReferenceReady?() }
             )
@@ -67,11 +69,14 @@ struct KanjiReferenceRepresentable: UIViewRepresentable {
     let kanjiData: KanjiData
     let lineWidth: CGFloat
     let palette: ColorPalette
+    let isHidden: Bool
     @Binding var referenceView: KanjiReferenceView?
     var onReady: (() -> Void)?
 
     func makeUIView(context: Context) -> KanjiReferenceView {
         let view = KanjiReferenceView()
+        view.accessibilityLabel = "Stroke guide"
+        applyVisibility(to: view)
         view.backgroundColor = .clear
         view.strokeLineWidth = lineWidth
         view.colorProvider = palette.strokeOrderColor
@@ -87,7 +92,14 @@ struct KanjiReferenceRepresentable: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: KanjiReferenceView, context: Context) {
+        applyVisibility(to: uiView)
         uiView.updateAppearance(lineWidth: lineWidth, colorProvider: palette.strokeOrderColor)
+    }
+
+    private func applyVisibility(to view: KanjiReferenceView) {
+        view.isHidden = isHidden
+        view.isAccessibilityElement = !isHidden
+        view.accessibilityIdentifier = isHidden ? nil : "strokeGuide"
     }
 }
 

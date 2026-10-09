@@ -64,7 +64,7 @@ extension PracticeState {
             }
 
             switch mode {
-            case .trace:
+            case .trace, .study:
                 if i == currentStrokeIndex {
                     reference.setStrokeVisibility(
                         .visible(alpha: mode.currentStrokeAlpha ?? 0.5), at: i

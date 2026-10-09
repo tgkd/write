@@ -3,6 +3,8 @@ import SwiftUI
 struct iPadPracticeView: View {
     @StateObject private var practiceState: PracticeState
     @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var history: PracticeHistoryStore
+    @Environment(\.studyEligibility) private var studyEligibility
     @State private var canvasView: DrawingCanvasView?
     @State private var referenceView: KanjiReferenceView?
     @State private var feedbackView: FeedbackOverlayView?
@@ -80,8 +82,21 @@ struct iPadPracticeView: View {
             feedbackView?.rejectedColor = settings.colorPalette.rejectedColor
             applyGhostVisibility()
         }
+        .onChange(of: practiceState.isRevealed) { _ in
+            applyGhostVisibility()
+        }
+        .onChange(of: practiceState.isCueAvailable) { _ in
+            applyGhostVisibility()
+        }
         .onAppear {
             practiceState.validationConfig = settings.validationConfig
+            practiceState.onRunCompleted = { record in
+                history.add(record)
+                onComplete?(record.misses)
+            }
+            if !studyEligibility.isEligible(practiceState.kanjiData) {
+                practiceState.markCueUnavailable()
+            }
         }
     }
 
@@ -91,8 +106,12 @@ struct iPadPracticeView: View {
         VStack(spacing: 20) {
             Spacer()
 
-            Text(String(practiceState.kanjiData.character))
-                .font(.system(size: 80))
+            AnswerGlyph(
+                kanji: practiceState.kanjiData,
+                isHidden: practiceState.hidesAnswer,
+                fontSize: 80,
+                onReveal: { practiceState.revealAnswer() }
+            )
 
             readingsBlock
 
@@ -196,6 +215,7 @@ struct iPadPracticeView: View {
             smoothingStrength: settings.smoothingStrength,
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
+            hidesReference: practiceState.hidesAnswer,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },
@@ -256,8 +276,6 @@ struct iPadPracticeView: View {
                 showCompletionCheck = false
             }
         }
-
-        onComplete?(practiceState.attemptCount)
     }
 
     private func applyGhostVisibility() {

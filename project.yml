@@ -120,7 +120,29 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: true
+  WriteUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - WriteUITests
+    dependencies:
+      - target: Write
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: true
+        TEST_TARGET_NAME: Write
+        DEVELOPMENT_TEAM: ULU867Y7LC
+        CODE_SIGN_STYLE: Automatic
 schemes:
+  WriteUITests:
+    build:
+      targets:
+        Write: all
+        WriteUITests: [test]
+    test:
+      config: Debug
+      targets:
+        - WriteUITests
   Write:
     build:
       targets:

@@ -2,12 +2,14 @@ import Foundation
 
 struct SessionRoute: Hashable {
     let codePoints: [String]
+    var mode: PracticeMode = .trace
 }
 
 @MainActor
 final class SessionState: ObservableObject {
 
     struct KanjiResult {
+        let slot: Int
         let kanjiData: KanjiData
         let attemptCount: Int
     }
@@ -27,13 +29,16 @@ final class SessionState: ObservableObject {
         (currentIndex + 1, kanjiQueue.count)
     }
 
-    init(kanjiQueue: [KanjiData]) {
+    init(kanjiQueue: [KanjiData], mode: PracticeMode = .trace) {
         self.kanjiQueue = kanjiQueue
+        self.mode = mode
     }
 
     func recordResult(attemptCount: Int) {
         guard currentIndex < kanjiQueue.count else { return }
+        results.removeAll { $0.slot == currentIndex }
         results.append(KanjiResult(
+            slot: currentIndex,
             kanjiData: kanjiQueue[currentIndex],
             attemptCount: attemptCount
         ))

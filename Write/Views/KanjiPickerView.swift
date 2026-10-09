@@ -70,6 +70,10 @@ struct KanjiPickerView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 16) {
+                    NavigationLink(value: ProgressRoute()) {
+                        Image(systemName: "chart.bar")
+                    }
+                    .accessibilityLabel("Progress")
                     sessionButton
                     Button {
                         showSettings = true

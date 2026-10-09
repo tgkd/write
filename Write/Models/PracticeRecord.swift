@@ -1,0 +1,17 @@
+import Foundation
+
+struct PracticeRecord: Codable, Equatable, Identifiable, Sendable {
+    let id: UUID
+    let codePoint: String
+    let mode: String
+    let revealed: Bool
+    let exposed: Bool
+    let misses: Int
+    let startedAt: Date
+    let completedAt: Date
+    let leniency: Double
+
+    var practiceMode: PracticeMode? {
+        PracticeMode(rawValue: mode)
+    }
+}

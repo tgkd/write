@@ -12,6 +12,7 @@ struct ContentView: View {
                 iPhoneLayout
             }
         }
+        .environment(\.studyEligibility, dataStore.studyEligibility)
         .onOpenURL { openPracticeLink($0) }
     }
 
@@ -44,7 +45,10 @@ struct ContentView: View {
                 }
                 .navigationDestination(for: SessionRoute.self) { route in
                     let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
-                    SessionPracticeView(kanji: kanji)
+                    SessionPracticeView(kanji: kanji, mode: route.mode)
+                }
+                .navigationDestination(for: ProgressRoute.self) { _ in
+                    PracticeProgressView(dataStore: dataStore)
                 }
         }
     }
@@ -72,7 +76,10 @@ struct ContentView: View {
             KanjiPickerView(dataStore: dataStore, selectedCodePoint: sidebarSelection)
                 .navigationDestination(for: SessionRoute.self) { route in
                     let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
-                    SessionPracticeView(kanji: kanji)
+                    SessionPracticeView(kanji: kanji, mode: route.mode)
+                }
+                .navigationDestination(for: ProgressRoute.self) { _ in
+                    PracticeProgressView(dataStore: dataStore)
                 }
         } detail: {
             NavigationStack(path: $iPadNavigationPath) {
@@ -118,3 +125,5 @@ struct PracticeRoute: Hashable {
 struct NotebookRoute: Hashable {
     let codePoints: [String]
 }
+
+struct ProgressRoute: Hashable {}

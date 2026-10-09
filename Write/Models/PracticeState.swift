@@ -1,5 +1,6 @@
 import Combine
 import CoreGraphics
+import Foundation
 
 @MainActor
 final class PracticeState: ObservableObject {
@@ -24,9 +25,17 @@ final class PracticeState: ObservableObject {
     @Published private(set) var consecutiveMisses: Int = 0
     @Published private(set) var isComplete: Bool = false
     @Published var mode: PracticeMode
+    @Published private(set) var isRevealed: Bool = false
+    @Published private(set) var isCueAvailable: Bool = true
+    private(set) var isExposed: Bool
 
     let kanjiData: KanjiData
     var validationConfig: ValidationConfig
+    var now: () -> Date = Date.init
+    var onRunCompleted: ((PracticeRecord) -> Void)?
+
+    private var runStartedAt: Date?
+    private var runRecorded = false
 
     private var referenceSampleCache: (canvasSize: CGSize, sampleCount: Int, samples: [[CGPoint]])?
 
@@ -34,6 +43,10 @@ final class PracticeState: ObservableObject {
 
     var unmatchedIndices: Set<Int> {
         Set(kanjiData.strokes.indices).subtracting(matchedStrokeIndices)
+    }
+
+    var hidesAnswer: Bool {
+        mode.hidesAnswer && isCueAvailable && !isRevealed
     }
 
     var shouldShowAutoHint: Bool {
@@ -45,6 +58,7 @@ final class PracticeState: ObservableObject {
         self.kanjiData = kanjiData
         self.mode = mode
         self.validationConfig = config
+        self.isExposed = !mode.hidesAnswer
     }
 
     func beginDrawing() {
@@ -60,6 +74,10 @@ final class PracticeState: ObservableObject {
     func processValidationResult(_ result: StrokeValidationResult) {
         guard phase == .validating else { return }
 
+        if runStartedAt == nil {
+            runStartedAt = now()
+        }
+
         let orderOk = result.correctOrder || mode == .freeDraw
         if result.accepted, let matchedIndex = result.matchedStrokeIndex, orderOk {
             matchedStrokeIndices.insert(matchedIndex)
@@ -69,6 +87,7 @@ final class PracticeState: ObservableObject {
 
             if matchedStrokeIndices.count == totalStrokes {
                 isComplete = true
+                recordRunCompletion()
             }
 
             phase = .strokeAccepted(strokeIndex: matchedIndex)
@@ -105,11 +124,43 @@ final class PracticeState: ObservableObject {
         attemptCount = 0
         consecutiveMisses = 0
         isComplete = false
+        runStartedAt = nil
+        runRecorded = false
+    }
+
+    func revealAnswer() {
+        isRevealed = true
+    }
+
+    func markCueUnavailable() {
+        isCueAvailable = false
+        isExposed = true
     }
 
     func changeMode(_ newMode: PracticeMode) {
         mode = newMode
+        if !newMode.hidesAnswer {
+            isExposed = true
+        }
         reset()
+    }
+
+    private func recordRunCompletion() {
+        guard !runRecorded else { return }
+        runRecorded = true
+        let completedAt = now()
+        let record = PracticeRecord(
+            id: UUID(),
+            codePoint: kanjiData.codePoint,
+            mode: mode.rawValue,
+            revealed: isRevealed,
+            exposed: isExposed,
+            misses: attemptCount,
+            startedAt: runStartedAt ?? completedAt,
+            completedAt: completedAt,
+            leniency: Double(validationConfig.leniency)
+        )
+        onRunCompleted?(record)
     }
 
     /// Reference strokes parsed/scaled/sampled for a canvas size, cached so

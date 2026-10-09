@@ -4,12 +4,14 @@ enum PracticeMode: String, CaseIterable, Sendable {
     case trace
     case strokeByStroke
     case freeDraw
+    case study
 
     var displayName: String {
         switch self {
         case .trace: return "Trace"
         case .strokeByStroke: return "Guided"
         case .freeDraw: return "Free"
+        case .study: return "Study"
         }
     }
 
@@ -19,6 +21,7 @@ enum PracticeMode: String, CaseIterable, Sendable {
         case .trace: return 0.15
         case .strokeByStroke: return nil
         case .freeDraw: return nil
+        case .study: return 0.15
         }
     }
 
@@ -28,6 +31,7 @@ enum PracticeMode: String, CaseIterable, Sendable {
         case .trace: return 0.5
         case .strokeByStroke: return 0.5
         case .freeDraw: return nil
+        case .study: return 0.5
         }
     }
 
@@ -45,5 +49,9 @@ enum PracticeMode: String, CaseIterable, Sendable {
         case .strokeByStroke: return 3
         default: return nil
         }
+    }
+
+    var hidesAnswer: Bool {
+        self == .study
     }
 }

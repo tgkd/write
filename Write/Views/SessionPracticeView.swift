@@ -5,8 +5,8 @@ struct SessionPracticeView: View {
     @State private var showNextButton = false
     @Environment(\.dismiss) private var dismiss
 
-    init(kanji: [KanjiData]) {
-        _sessionState = StateObject(wrappedValue: SessionState(kanjiQueue: kanji))
+    init(kanji: [KanjiData], mode: PracticeMode = .trace) {
+        _sessionState = StateObject(wrappedValue: SessionState(kanjiQueue: kanji, mode: mode))
     }
 
     var body: some View {

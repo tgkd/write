@@ -27,6 +27,10 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         view.allowedTouchTypes = allowedTouchTypes
         applyBrushSettings(to: view)
         view.backgroundColor = .clear
+        view.isAccessibilityElement = true
+        view.accessibilityIdentifier = "drawingCanvas"
+        view.accessibilityLabel = "Drawing canvas"
+        view.accessibilityTraits = .allowsDirectInteraction
 
         let interaction = UIPencilInteraction()
         interaction.delegate = context.coordinator

@@ -18,6 +18,9 @@ xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iO
 # Run a single test class
 xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:WriteTests/StrokeValidationTests
 
+# UI tests live in their own scheme so the unit-test command stays fast
+xcodebuild test -project Write.xcodeproj -scheme WriteUITests -destination 'platform=iOS Simulator,name=iPhone 16'
+
 # Preprocess KanjiVG + KANJIDIC2 data (only needed when updating the dataset)
 python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Data/kanjidic2.xml Write/Resources/kanji_strokes.json
 ```
@@ -48,6 +51,14 @@ python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWid
    - **Shared/** (top level) is compiled into both the app and the extension: the daily kanji model, catalog and picker, and `PracticeLink`
    - Tapping the widget opens `kakijun://practice?cp=<codePoint>`, which `ContentView` handles in `onOpenURL` on iPhone and iPad
    - On iPad the sidebar writes its selection through `ContentView.sidebarSelection`, which also clears the detail path; any other writer of the selection must set the detail path itself
+
+### Study mode and practice history
+
+- Study is a `PracticeMode` that hides the answer: the header glyph is replaced by Reveal, and the whole `KanjiReferenceView` is hidden rather than individual strokes, because accepted-stroke marking, the initial ghost and auto-hint would each leak it
+- `PracticeState` emits one `PracticeRecord` per run through `onRunCompleted`; undo/recomplete never emits again, reset or a mode change starts a new run. Session results hang off the same event
+- `revealed` (an explicit tap) and `exposed` (the answer was shown in this encounter, or the character has no unambiguous cue) are separate on purpose; "Practice again" only reads unexposed Study runs
+- `PracticeHistoryStore` writes monthly versioned JSON files under Application Support; a file it can't decode is moved aside, and a month it can't move aside is never written to. UI tests pass `-uiTestingFreshHistory` for a throwaway store
+- Cue ambiguity (identical readings, meanings and stroke count) is computed by `StudyEligibility` in `KanjiDataStore` and injected through the environment
 
 ### Validation pipeline
 

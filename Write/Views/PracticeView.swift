@@ -3,6 +3,8 @@ import SwiftUI
 struct PracticeView: View {
     @StateObject private var practiceState: PracticeState
     @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var history: PracticeHistoryStore
+    @Environment(\.studyEligibility) private var studyEligibility
     @State private var canvasView: DrawingCanvasView?
     @State private var referenceView: KanjiReferenceView?
     @State private var feedbackView: FeedbackOverlayView?
@@ -90,8 +92,21 @@ struct PracticeView: View {
             feedbackView?.rejectedColor = settings.colorPalette.rejectedColor
             applyGhostVisibility()
         }
+        .onChange(of: practiceState.isRevealed) { _ in
+            applyGhostVisibility()
+        }
+        .onChange(of: practiceState.isCueAvailable) { _ in
+            applyGhostVisibility()
+        }
         .onAppear {
             practiceState.validationConfig = settings.validationConfig
+            practiceState.onRunCompleted = { record in
+                history.add(record)
+                onComplete?(record.misses)
+            }
+            if !studyEligibility.isEligible(practiceState.kanjiData) {
+                practiceState.markCueUnavailable()
+            }
         }
     }
 
@@ -104,8 +119,12 @@ struct PracticeView: View {
     private var kanjiHeader: some View {
         let kanji = practiceState.kanjiData
         return VStack(alignment: .leading, spacing: 2) {
-            Text(String(kanji.character))
-                .font(.system(size: 40))
+            AnswerGlyph(
+                kanji: kanji,
+                isHidden: practiceState.hidesAnswer,
+                fontSize: 40,
+                onReveal: { practiceState.revealAnswer() }
+            )
             if let romaji = kanji.romaji {
                 Text(romaji)
                     .font(.subheadline)
@@ -142,6 +161,7 @@ struct PracticeView: View {
             smoothingStrength: settings.smoothingStrength,
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
+            hidesReference: practiceState.hidesAnswer,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },
@@ -221,8 +241,6 @@ struct PracticeView: View {
                 showCompletionCheck = false
             }
         }
-
-        onComplete?(practiceState.attemptCount)
     }
 
     private func applyGhostVisibility() {

@@ -1,4 +1,4 @@
-enum WritingScript: Sendable {
+enum WritingScript: Hashable, Sendable {
     case kanji
     case hiragana
     case katakana
@@ -11,6 +11,14 @@ enum WritingScript: Sendable {
             self = .katakana
         } else {
             self = .kanji
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .kanji: return "Kanji"
+        case .hiragana: return "Hiragana"
+        case .katakana: return "Katakana"
         }
     }
 }

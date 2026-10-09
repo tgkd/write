@@ -29,17 +29,27 @@ final class PracticeModeTests: XCTestCase {
         XCTAssertNil(mode.autoHintAfterMisses)
     }
 
+    func testStudyModeHidesAnswerWithoutAutoHint() {
+        let mode = PracticeMode.study
+        XCTAssertTrue(mode.hidesAnswer)
+        XCTAssertNil(mode.autoHintAfterMisses)
+        XCTAssertFalse(mode.animateStrokeReveal)
+        XCTAssertFalse(PracticeMode.freeDraw.hidesAnswer)
+    }
+
     func testAllCasesIncludesAllModes() {
-        XCTAssertEqual(PracticeMode.allCases.count, 3)
+        XCTAssertEqual(PracticeMode.allCases.count, 4)
         XCTAssertTrue(PracticeMode.allCases.contains(.trace))
         XCTAssertTrue(PracticeMode.allCases.contains(.strokeByStroke))
         XCTAssertTrue(PracticeMode.allCases.contains(.freeDraw))
+        XCTAssertTrue(PracticeMode.allCases.contains(.study))
     }
 
     func testDisplayNames() {
         XCTAssertEqual(PracticeMode.trace.displayName, "Trace")
         XCTAssertEqual(PracticeMode.strokeByStroke.displayName, "Guided")
         XCTAssertEqual(PracticeMode.freeDraw.displayName, "Free")
+        XCTAssertEqual(PracticeMode.study.displayName, "Study")
     }
 }
 
