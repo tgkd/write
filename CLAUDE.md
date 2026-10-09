@@ -22,6 +22,12 @@ xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iO
 python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Data/kanjidic2.xml Write/Resources/kanji_strokes.json
 ```
 
+Whenever `kanji_strokes.json` changes, regenerate the widget's kanji list and commit it:
+
+```sh
+python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWidget/Resources/daily_kanji.json
+```
+
 ## Architecture
 
 - SwiftUI app shell with UIKit drawing views via UIViewRepresentable
@@ -38,6 +44,10 @@ python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Data/kanjidic2.xml Write/
 5. **Views/** - UIKit views (DrawingCanvasView, KanjiReferenceView) wrapped in SwiftUI via UIViewRepresentable
    - StrokeRenderer (in Views/) is also used by StrokeValidator to parse SVG paths and apply the KanjiVG-to-canvas scale transform; it's a shared dependency, not purely a view concern
    - **Views/iPad/** - iPad-specific views: NotebookViewController (UIKit notebook grid), iPadPracticeView, crosshair guides, notebook cells
+6. **WriteWidget/** - WidgetKit extension showing a daily kanji on the Home and Lock Screen. It bundles only the generated `daily_kanji.json`, never `kanji_strokes.json` or `KanjiDataStore` (which decodes the whole dataset eagerly)
+   - **Shared/** (top level) is compiled into both the app and the extension: the daily kanji model, catalog and picker, and `PracticeLink`
+   - Tapping the widget opens `kakijun://practice?cp=<codePoint>`, which `ContentView` handles in `onOpenURL` on iPhone and iPad
+   - On iPad the sidebar writes its selection through `ContentView.sidebarSelection`, which also clears the detail path; any other writer of the selection must set the detail path itself
 
 ### Validation pipeline
 

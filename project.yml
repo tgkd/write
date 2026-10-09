@@ -9,6 +9,8 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    MARKETING_VERSION: "1.5"
+    CURRENT_PROJECT_VERSION: "51"
 packages:
   SVGPath:
     url: https://github.com/nicklockwood/SVGPath
@@ -19,6 +21,7 @@ targets:
     platform: iOS
     sources:
       - Write
+      - Shared
     resources:
       - path: Write/Resources
         excludes:
@@ -27,8 +30,6 @@ targets:
       base:
         INFOPLIST_FILE: Write/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.j.write
-        MARKETING_VERSION: "1.5"
-        CURRENT_PROJECT_VERSION: "51"
         GENERATE_INFOPLIST_FILE: false
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1,2"
@@ -41,6 +42,7 @@ targets:
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: false
     dependencies:
       - package: SVGPath
+      - target: WriteWidget
     info:
       path: Write/Info.plist
       properties:
@@ -66,11 +68,51 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         UILaunchScreen: {}
+        CFBundleURLTypes:
+          - CFBundleURLName: com.j.write
+            CFBundleURLSchemes:
+              - kakijun
+  WriteWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - WriteWidget
+      - Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.j.write.widget
+        INFOPLIST_FILE: WriteWidget/Info.plist
+        GENERATE_INFOPLIST_FILE: false
+        TARGETED_DEVICE_FAMILY: "1,2"
+        DEVELOPMENT_TEAM: ULU867Y7LC
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "Apple Development"
+        SKIP_INSTALL: YES
+        SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+        SUPPORTS_MACCATALYST: false
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: false
+    info:
+      path: WriteWidget/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: en
+        CFBundleDisplayName: Write
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
   WriteTests:
     type: bundle.unit-test
     platform: iOS
     sources:
       - WriteTests
+      - path: WriteWidget/Resources/daily_kanji.json
+        buildPhase: resources
     resources:
       - path: Write/Resources/kanji_strokes.json
     dependencies:

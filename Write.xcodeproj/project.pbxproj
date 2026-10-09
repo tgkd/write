@@ -9,25 +9,36 @@
 /* Begin PBXBuildFile section */
 		013FE94AD914E50DD46A8286 /* PracticeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27A0064549BCC4192A32E45 /* PracticeState.swift */; };
 		028D2CD45EACE89EA13418F4 /* NotebookState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2831D7F7EA0D4F8AFDFE0A /* NotebookState.swift */; };
+		0373FBB035107F1EF91BF8EC /* PracticeLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3744C25E92B668CB94F6BFAA /* PracticeLink.swift */; };
+		0456EDB001D77916FC7D3628 /* RectangularDailyKanjiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE6330595F9BD713815571A /* RectangularDailyKanjiView.swift */; };
 		06ED2FD32F9E763D4E1F483C /* KanjiDataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */; };
 		0B56AA0894FC0939DE713946 /* PointSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CCAD6A2FD879ACF245B117 /* PointSampler.swift */; };
 		0B90B5789BF02FDAC1F392BF /* KanjiPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5298C48D4E8206737F9A1C0B /* KanjiPickerView.swift */; };
+		0BD9943270368A7F86111E55 /* DailyKanjiCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41398576631CF20005AABB /* DailyKanjiCatalog.swift */; };
 		1149E4FC127AC902C2BDD55C /* FrechetDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE816A45A5022B69DCC5ADCA /* FrechetDistance.swift */; };
 		13805E5DF596D2D770066B07 /* WriteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1837E06356F61F94BAA0150 /* WriteApp.swift */; };
+		158C089A378FB4553CB38A0F /* CircularDailyKanjiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726FF41DE0192AE24EBF3B42 /* CircularDailyKanjiView.swift */; };
 		19275A8022373AC020789EDD /* SidebarToggleToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C548959ED7801CF3AAB211 /* SidebarToggleToolbar.swift */; };
+		1A7A2E8BE7A6329A870E97C9 /* DailyKanjiWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F816E5E552D47AFF0C9E02 /* DailyKanjiWidget.swift */; };
+		27F9F845DE36767BE4F43208 /* DailyKanjiCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41398576631CF20005AABB /* DailyKanjiCatalog.swift */; };
 		28975F97AAC63CD86AE2072B /* KanjiData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D3EA225B25052BFBC34F84 /* KanjiData.swift */; };
 		29FCD16567BB62EEE606C520 /* DrawingCanvasRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465DCAF6696204E7C3D85D5 /* DrawingCanvasRepresentable.swift */; };
+		2A73DC68A45B4CFAD4D623C0 /* MediumDailyKanjiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE65E91097550CA97C936AFC /* MediumDailyKanjiView.swift */; };
 		2CE8603ECFE626A50B41BC45 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE1B0BE867D120C7B58025A /* SessionState.swift */; };
 		30CCFD7614AB420B6D3825DB /* NotebookViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C89F5B131A72BBA8176DDC /* NotebookViewRepresentable.swift */; };
 		324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BE9563E3884403974EFDDA /* ContentView.swift */; };
 		33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */; };
 		39ECD52B8B08B574C3074A3D /* NotebookCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD320AB71FFAF63D74985CC /* NotebookCellView.swift */; };
 		3E13794820A9F2D53A2AA677 /* SessionPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB30AA618797898AC069C94E /* SessionPracticeView.swift */; };
+		3EAF97A7B4099067582D078A /* SmallDailyKanjiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F14EE12B192559C5C1D80B4 /* SmallDailyKanjiView.swift */; };
 		42A4EC0BA54B8DF2FE3D25E9 /* KanjiReferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */; };
 		45EA541A8AE474627E14726C /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B138A055F1450C9C03D9543 /* ColorPalette.swift */; };
+		4BBF3286EDEAA868B6552611 /* DailyKanjiDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF1EE613AE96A2AA1E74A13 /* DailyKanjiDataTests.swift */; };
 		503286B1C7B9044CEB698754 /* SessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA098E08F2A4A327E0D81283 /* SessionSummaryView.swift */; };
 		5272AF7CD2F1F2BA028E887E /* OneEuroFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07296BCD0F4677A61F19D871 /* OneEuroFilterTests.swift */; };
 		527CE900711B6897827483D1 /* PracticeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6D64264C7D7504993129BC /* PracticeTests.swift */; };
+		55653B92EB36BA7A7396D504 /* DailyKanjiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D7A60DC5381E68C2AEEF80 /* DailyKanjiProvider.swift */; };
+		565BC9D14BF6E9AB3EB57615 /* PracticeLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3744C25E92B668CB94F6BFAA /* PracticeLink.swift */; };
 		57FD5A159505ECDB5FE4E51E /* BrushStrokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557D1B9D499A8C2ED26666D7 /* BrushStrokeTests.swift */; };
 		58B3E6FB68562DEBB49C55E0 /* KanjiDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92038E6935D91F956A09DDB9 /* KanjiDetailView.swift */; };
 		5B44846DBEA1792BA3DA966E /* PracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A5A9E84315E390CECEC817 /* PracticeView.swift */; };
@@ -41,7 +52,10 @@
 		7A7256E4B35872AE7EE73CCF /* FeedbackOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DEE31691318124C4601AF7 /* FeedbackOverlayView.swift */; };
 		7C92CC4ABC30580AF8D4269A /* KanjiStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */; };
 		7FF78868F525B2AB470DEF46 /* NavigationGestureGuardRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E6ED38AA97D0CF33DA08F8 /* NavigationGestureGuardRepresentable.swift */; };
+		841679918215FF69857FDC24 /* DailyKanjiEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669D0A99680E7EBFA69BFA9 /* DailyKanjiEntry.swift */; };
+		86CB1B5872ACDDA4A1D93B5F /* DailyKanji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CBBCB68667372609A4A51E /* DailyKanji.swift */; };
 		8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */; };
+		8D494BFBFA0EAA7E14BC5C90 /* DailyKanji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CBBCB68667372609A4A51E /* DailyKanji.swift */; };
 		931539011E1B5DE53D8C52E3 /* kanji_strokes.json in Resources */ = {isa = PBXBuildFile; fileRef = C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */; };
 		998FCA762B4EEDEDFCDE2EC1 /* DrawingCanvasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */; };
 		9DA403F28AAB60A0F95271A9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2839C39B854D958B7C59CF /* SettingsView.swift */; };
@@ -52,23 +66,39 @@
 		B78475BE7EA8CECEEEE3D241 /* PracticeSessionActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */; };
 		B91198FA842033EEFEBB4BD6 /* PracticeCanvasArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AA9B63CD622B139D3F46A7 /* PracticeCanvasArea.swift */; };
 		B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */; };
+		B97472E9ECF32984FECB1971 /* WriteWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7B37186D09ACE811FF4E4A27 /* WriteWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C2092910EEFC045C62FDBA6A /* CatmullRomSpline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */; };
 		C7720D4B2FB8B039A59FCD9C /* PencilSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C63D0EA4D3CD0F61D0FCE6 /* PencilSettings.swift */; };
 		C97338CC8DDF48D66C991762 /* NotebookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71A065B609837DC66E2821B /* NotebookViewController.swift */; };
+		CAD114AB1498C178D7317F7D /* daily_kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 52B34A7BFC7845171A47B3CA /* daily_kanji.json */; };
+		CEADEAA852F55A16314A8B37 /* DailyKanjiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B35D196D26E753E1C2EB181 /* DailyKanjiPicker.swift */; };
+		D116A62C895C23D7A5FB7A80 /* WidgetBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE431F7DE5A6676AF007796E /* WidgetBackground.swift */; };
+		D2B3187CD5017554B94AD3E8 /* DailyKanjiEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E45E5FE7D550294AB9C7E3 /* DailyKanjiEntryView.swift */; };
 		D2D61E0D2D8B7AE6A0AEFE32 /* DeviceContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCDF2D84EC554E13B5DBD09 /* DeviceContext.swift */; };
 		D8F590153A99714D63DB1421 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1218FC775663C580B435BC2E /* AppSettings.swift */; };
 		D929EB0B1EF8579EA8287EBA /* CrosshairGuideLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C302B2757CE396E280A4F2A /* CrosshairGuideLayer.swift */; };
 		E06F60CC74BA13B9FCC60278 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1061A3078D31136BA4CE4C66 /* DrawingCanvasView.swift */; };
 		E14C89F541D2BFDC109DD0B6 /* WritingScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC9BCA8EE2B0A9725C6403E /* WritingScript.swift */; };
 		E1AD8F7E1D0D638F003925C1 /* BrushStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919D2510E02A64F8DC10620F /* BrushStroke.swift */; };
+		E380FB8B64EB2FA012DB205A /* DailyKanjiPickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFE38DE1DDAD1B3F3EBE131 /* DailyKanjiPickerTests.swift */; };
 		EC7C3881B10617C17516A549 /* CharacterFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F193A4EB55122496F990982B /* CharacterFilter.swift */; };
 		F0E3647DC6161023D81E8180 /* PreprocessingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */; };
+		F13AC6AE7FC4CC248E97DA9F /* daily_kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 52B34A7BFC7845171A47B3CA /* daily_kanji.json */; };
+		F16C55ED89FAF273E07ADEAF /* PracticeLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BF101F0465C66B4CE01F75 /* PracticeLinkTests.swift */; };
 		F1F35D17B3F20D014FD06C0E /* NavigationGestureGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A55B5A3382E587D6C4B51B2 /* NavigationGestureGuard.swift */; };
 		F6A2FE7FAD40C6585935356A /* StrokeValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */; };
 		FB17898AA4CFCE1E2611A35B /* CharacterFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F12DD54E7482308F5E56E5 /* CharacterFilterTests.swift */; };
+		FD903222566FCEC1F11F3060 /* DailyKanjiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B35D196D26E753E1C2EB181 /* DailyKanjiPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		03561F0609972FCB8A58A0CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9E2DC57C1470CB64B3F07413 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 737486FBDFED2457C84F32FA;
+			remoteInfo = WriteWidget;
+		};
 		8252E3AD17DD445D3CC769D6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9E2DC57C1470CB64B3F07413 /* Project object */;
@@ -77,6 +107,20 @@
 			remoteInfo = Write;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8D1FD298E5E02CC485791AAC /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B97472E9ECF32984FECB1971 /* WriteWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		07296BCD0F4677A61F19D871 /* OneEuroFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneEuroFilterTests.swift; sourceTree = "<group>"; };
@@ -89,42 +133,59 @@
 		112DFDA96E143651A19DDCE5 /* NotebookTipsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookTipsOverlay.swift; sourceTree = "<group>"; };
 		1218FC775663C580B435BC2E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatmullRomSpline.swift; sourceTree = "<group>"; };
+		1DE6330595F9BD713815571A /* RectangularDailyKanjiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularDailyKanjiView.swift; sourceTree = "<group>"; };
+		1F14EE12B192559C5C1D80B4 /* SmallDailyKanjiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallDailyKanjiView.swift; sourceTree = "<group>"; };
+		25CBBCB68667372609A4A51E /* DailyKanji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanji.swift; sourceTree = "<group>"; };
 		2A2831D7F7EA0D4F8AFDFE0A /* NotebookState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookState.swift; sourceTree = "<group>"; };
 		2B138A055F1450C9C03D9543 /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
+		2B35D196D26E753E1C2EB181 /* DailyKanjiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiPicker.swift; sourceTree = "<group>"; };
 		2C302B2757CE396E280A4F2A /* CrosshairGuideLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrosshairGuideLayer.swift; sourceTree = "<group>"; };
 		2C922C626F86D525633E5506 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2DBBD44BE4A42882EE1B8AF0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2DBBD44BE4A42882EE1B8AF0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeValidationTests.swift; sourceTree = "<group>"; };
 		35E6ED38AA97D0CF33DA08F8 /* NavigationGestureGuardRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationGestureGuardRepresentable.swift; sourceTree = "<group>"; };
+		3744C25E92B668CB94F6BFAA /* PracticeLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLink.swift; sourceTree = "<group>"; };
 		3CA7AEFF588DE8BA39EAA351 /* PracticeMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeMode.swift; sourceTree = "<group>"; };
 		3DDCCDE40E98E78252A0FD0E /* StrokeProgressDots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeProgressDots.swift; sourceTree = "<group>"; };
 		41BE9563E3884403974EFDDA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		41C548959ED7801CF3AAB211 /* SidebarToggleToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarToggleToolbar.swift; sourceTree = "<group>"; };
 		44A5A9E84315E390CECEC817 /* PracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeView.swift; sourceTree = "<group>"; };
+		460058D6F6A0A6A5B94228BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		47CCAD6A2FD879ACF245B117 /* PointSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointSampler.swift; sourceTree = "<group>"; };
 		4CD320AB71FFAF63D74985CC /* NotebookCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookCellView.swift; sourceTree = "<group>"; };
 		51D3EA225B25052BFBC34F84 /* KanjiData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiData.swift; sourceTree = "<group>"; };
 		5298C48D4E8206737F9A1C0B /* KanjiPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiPickerView.swift; sourceTree = "<group>"; };
+		52B34A7BFC7845171A47B3CA /* daily_kanji.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = daily_kanji.json; sourceTree = "<group>"; };
+		52E45E5FE7D550294AB9C7E3 /* DailyKanjiEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiEntryView.swift; sourceTree = "<group>"; };
 		557D1B9D499A8C2ED26666D7 /* BrushStrokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushStrokeTests.swift; sourceTree = "<group>"; };
 		5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasTests.swift; sourceTree = "<group>"; };
 		69E91D1D521520E6868119AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6A55B5A3382E587D6C4B51B2 /* NavigationGestureGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationGestureGuard.swift; sourceTree = "<group>"; };
 		6BCDF2D84EC554E13B5DBD09 /* DeviceContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceContext.swift; sourceTree = "<group>"; };
+		6CF1EE613AE96A2AA1E74A13 /* DailyKanjiDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiDataTests.swift; sourceTree = "<group>"; };
+		726FF41DE0192AE24EBF3B42 /* CircularDailyKanjiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularDailyKanjiView.swift; sourceTree = "<group>"; };
 		76A573E07580005FA275E101 /* KanjiDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStore.swift; sourceTree = "<group>"; };
+		7B37186D09ACE811FF4E4A27 /* WriteWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = WriteWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		80BF101F0465C66B4CE01F75 /* PracticeLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLinkTests.swift; sourceTree = "<group>"; };
 		81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRenderingTests.swift; sourceTree = "<group>"; };
 		88B587A13BCDF864D27A86F0 /* iPadPracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iPadPracticeView.swift; sourceTree = "<group>"; };
+		8A41398576631CF20005AABB /* DailyKanjiCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiCatalog.swift; sourceTree = "<group>"; };
+		8CFE38DE1DDAD1B3F3EBE131 /* DailyKanjiPickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiPickerTests.swift; sourceTree = "<group>"; };
 		8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStoreTests.swift; sourceTree = "<group>"; };
 		919D2510E02A64F8DC10620F /* BrushStroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushStroke.swift; sourceTree = "<group>"; };
 		92038E6935D91F956A09DDB9 /* KanjiDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDetailView.swift; sourceTree = "<group>"; };
 		94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeValidator.swift; sourceTree = "<group>"; };
+		95D7A60DC5381E68C2AEEF80 /* DailyKanjiProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiProvider.swift; sourceTree = "<group>"; };
 		9AF92521D279F5641C0A0668 /* ProcrustesNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcrustesNormalizer.swift; sourceTree = "<group>"; };
 		9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreprocessingTests.swift; sourceTree = "<group>"; };
 		A38E5D0257B76A3C0E3F76E1 /* WriteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WriteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9C4444928FFE24B6BBA78EF /* OneEuroFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneEuroFilter.swift; sourceTree = "<group>"; };
 		B1837E06356F61F94BAA0150 /* WriteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteApp.swift; sourceTree = "<group>"; };
 		B7F12DD54E7482308F5E56E5 /* CharacterFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFilterTests.swift; sourceTree = "<group>"; };
+		B8F816E5E552D47AFF0C9E02 /* DailyKanjiWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiWidget.swift; sourceTree = "<group>"; };
 		BA6D64264C7D7504993129BC /* PracticeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeTests.swift; sourceTree = "<group>"; };
 		BB30AA618797898AC069C94E /* SessionPracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPracticeView.swift; sourceTree = "<group>"; };
+		BE65E91097550CA97C936AFC /* MediumDailyKanjiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediumDailyKanjiView.swift; sourceTree = "<group>"; };
 		C2D15C8C8ADEE5C47903061F /* NotebookHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookHeaderView.swift; sourceTree = "<group>"; };
 		C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = kanji_strokes.json; sourceTree = "<group>"; };
 		CF2839C39B854D958B7C59CF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -137,9 +198,11 @@
 		F29AA3B6A1227A3707D69319 /* Write.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Write.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F465DCAF6696204E7C3D85D5 /* DrawingCanvasRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasRepresentable.swift; sourceTree = "<group>"; };
 		F5DEE31691318124C4601AF7 /* FeedbackOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackOverlayView.swift; sourceTree = "<group>"; };
+		F669D0A99680E7EBFA69BFA9 /* DailyKanjiEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiEntry.swift; sourceTree = "<group>"; };
 		F71A065B609837DC66E2821B /* NotebookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookViewController.swift; sourceTree = "<group>"; };
 		FA098E08F2A4A327E0D81283 /* SessionSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSummaryView.swift; sourceTree = "<group>"; };
 		FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiReferenceView.swift; sourceTree = "<group>"; };
+		FE431F7DE5A6676AF007796E /* WidgetBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,9 +248,12 @@
 			children = (
 				557D1B9D499A8C2ED26666D7 /* BrushStrokeTests.swift */,
 				B7F12DD54E7482308F5E56E5 /* CharacterFilterTests.swift */,
+				6CF1EE613AE96A2AA1E74A13 /* DailyKanjiDataTests.swift */,
+				8CFE38DE1DDAD1B3F3EBE131 /* DailyKanjiPickerTests.swift */,
 				5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */,
 				8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */,
 				07296BCD0F4677A61F19D871 /* OneEuroFilterTests.swift */,
+				80BF101F0465C66B4CE01F75 /* PracticeLinkTests.swift */,
 				BA6D64264C7D7504993129BC /* PracticeTests.swift */,
 				9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */,
 				81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */,
@@ -212,6 +278,7 @@
 			children = (
 				F29AA3B6A1227A3707D69319 /* Write.app */,
 				A38E5D0257B76A3C0E3F76E1 /* WriteTests.xctest */,
+				7B37186D09ACE811FF4E4A27 /* WriteWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -255,11 +322,39 @@
 			path = Write;
 			sourceTree = "<group>";
 		};
+		81939074E15B2EC4FFC292F3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				52B34A7BFC7845171A47B3CA /* daily_kanji.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8627281435645B2ED402B0F0 /* WriteWidget */ = {
+			isa = PBXGroup;
+			children = (
+				726FF41DE0192AE24EBF3B42 /* CircularDailyKanjiView.swift */,
+				F669D0A99680E7EBFA69BFA9 /* DailyKanjiEntry.swift */,
+				52E45E5FE7D550294AB9C7E3 /* DailyKanjiEntryView.swift */,
+				95D7A60DC5381E68C2AEEF80 /* DailyKanjiProvider.swift */,
+				B8F816E5E552D47AFF0C9E02 /* DailyKanjiWidget.swift */,
+				460058D6F6A0A6A5B94228BD /* Info.plist */,
+				BE65E91097550CA97C936AFC /* MediumDailyKanjiView.swift */,
+				1DE6330595F9BD713815571A /* RectangularDailyKanjiView.swift */,
+				1F14EE12B192559C5C1D80B4 /* SmallDailyKanjiView.swift */,
+				FE431F7DE5A6676AF007796E /* WidgetBackground.swift */,
+				81939074E15B2EC4FFC292F3 /* Resources */,
+			);
+			path = WriteWidget;
+			sourceTree = "<group>";
+		};
 		8688F304D4EF131A29D98471 = {
 			isa = PBXGroup;
 			children = (
+				BE0217DCEDBEF61D45F334F4 /* Shared */,
 				5E60320E56CD1A2EBE393D5C /* Write */,
 				155B6A705408D0F6048DBBA7 /* WriteTests */,
+				8627281435645B2ED402B0F0 /* WriteWidget */,
 				47BC05A99297E90E9B29A1DE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -279,6 +374,17 @@
 				C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		BE0217DCEDBEF61D45F334F4 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				25CBBCB68667372609A4A51E /* DailyKanji.swift */,
+				8A41398576631CF20005AABB /* DailyKanjiCatalog.swift */,
+				2B35D196D26E753E1C2EB181 /* DailyKanjiPicker.swift */,
+				3744C25E92B668CB94F6BFAA /* PracticeLink.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		EBB1CDDF4CB777E1E6FABE08 /* Utilities */ = {
@@ -312,11 +418,30 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		737486FBDFED2457C84F32FA /* WriteWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0E7E5A09D8C39C4A686A7B4C /* Build configuration list for PBXNativeTarget "WriteWidget" */;
+			buildPhases = (
+				C43F81FCC773537B4FBFFA7D /* Sources */,
+				E985D50728F87B228732CB7B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WriteWidget;
+			packageProductDependencies = (
+			);
+			productName = WriteWidget;
+			productReference = 7B37186D09ACE811FF4E4A27 /* WriteWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		CFBDD8C0D3646F5DE0AF926E /* WriteTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2910B5359DC5B148F74DA758 /* Build configuration list for PBXNativeTarget "WriteTests" */;
 			buildPhases = (
 				3ECA25DE77C2FB6B0259CD5B /* Sources */,
+				AA84840CAA32990BCB1A33DE /* Resources */,
 			);
 			buildRules = (
 			);
@@ -337,10 +462,12 @@
 				9D10FD53C2D39726B302F6F6 /* Sources */,
 				4F76405BCDE3E95F2C73D5A0 /* Resources */,
 				2BF98CED2F5ACF130C7026F3 /* Frameworks */,
+				8D1FD298E5E02CC485791AAC /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				412AE47C70E4B9F76BA4091C /* PBXTargetDependency */,
 			);
 			name = Write;
 			packageProductDependencies = (
@@ -359,6 +486,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					737486FBDFED2457C84F32FA = {
+						DevelopmentTeam = ULU867Y7LC;
+						ProvisioningStyle = Automatic;
+					};
 					D6B56C43201E6C8BE747879F = {
 						DevelopmentTeam = ULU867Y7LC;
 						ProvisioningStyle = Automatic;
@@ -383,6 +514,7 @@
 			projectRoot = "";
 			targets = (
 				D6B56C43201E6C8BE747879F /* Write */,
+				737486FBDFED2457C84F32FA /* WriteWidget */,
 				CFBDD8C0D3646F5DE0AF926E /* WriteTests */,
 			);
 		};
@@ -399,6 +531,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA84840CAA32990BCB1A33DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CAD114AB1498C178D7317F7D /* daily_kanji.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E985D50728F87B228732CB7B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F13AC6AE7FC4CC248E97DA9F /* daily_kanji.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -408,9 +556,12 @@
 			files = (
 				57FD5A159505ECDB5FE4E51E /* BrushStrokeTests.swift in Sources */,
 				FB17898AA4CFCE1E2611A35B /* CharacterFilterTests.swift in Sources */,
+				4BBF3286EDEAA868B6552611 /* DailyKanjiDataTests.swift in Sources */,
+				E380FB8B64EB2FA012DB205A /* DailyKanjiPickerTests.swift in Sources */,
 				998FCA762B4EEDEDFCDE2EC1 /* DrawingCanvasTests.swift in Sources */,
 				06ED2FD32F9E763D4E1F483C /* KanjiDataStoreTests.swift in Sources */,
 				5272AF7CD2F1F2BA028E887E /* OneEuroFilterTests.swift in Sources */,
+				F16C55ED89FAF273E07ADEAF /* PracticeLinkTests.swift in Sources */,
 				527CE900711B6897827483D1 /* PracticeTests.swift in Sources */,
 				F0E3647DC6161023D81E8180 /* PreprocessingTests.swift in Sources */,
 				B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */,
@@ -429,6 +580,9 @@
 				45EA541A8AE474627E14726C /* ColorPalette.swift in Sources */,
 				324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */,
 				D929EB0B1EF8579EA8287EBA /* CrosshairGuideLayer.swift in Sources */,
+				8D494BFBFA0EAA7E14BC5C90 /* DailyKanji.swift in Sources */,
+				27F9F845DE36767BE4F43208 /* DailyKanjiCatalog.swift in Sources */,
+				CEADEAA852F55A16314A8B37 /* DailyKanjiPicker.swift in Sources */,
 				D2D61E0D2D8B7AE6A0AEFE32 /* DeviceContext.swift in Sources */,
 				29FCD16567BB62EEE606C520 /* DrawingCanvasRepresentable.swift in Sources */,
 				E06F60CC74BA13B9FCC60278 /* DrawingCanvasView.swift in Sources */,
@@ -452,6 +606,7 @@
 				C7720D4B2FB8B039A59FCD9C /* PencilSettings.swift in Sources */,
 				0B56AA0894FC0939DE713946 /* PointSampler.swift in Sources */,
 				B91198FA842033EEFEBB4BD6 /* PracticeCanvasArea.swift in Sources */,
+				565BC9D14BF6E9AB3EB57615 /* PracticeLink.swift in Sources */,
 				5BB76FC40A8EAE79D4EFD86F /* PracticeMode.swift in Sources */,
 				B78475BE7EA8CECEEEE3D241 /* PracticeSessionActions.swift in Sources */,
 				013FE94AD914E50DD46A8286 /* PracticeState.swift in Sources */,
@@ -471,6 +626,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C43F81FCC773537B4FBFFA7D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				158C089A378FB4553CB38A0F /* CircularDailyKanjiView.swift in Sources */,
+				86CB1B5872ACDDA4A1D93B5F /* DailyKanji.swift in Sources */,
+				0BD9943270368A7F86111E55 /* DailyKanjiCatalog.swift in Sources */,
+				841679918215FF69857FDC24 /* DailyKanjiEntry.swift in Sources */,
+				D2B3187CD5017554B94AD3E8 /* DailyKanjiEntryView.swift in Sources */,
+				FD903222566FCEC1F11F3060 /* DailyKanjiPicker.swift in Sources */,
+				55653B92EB36BA7A7396D504 /* DailyKanjiProvider.swift in Sources */,
+				1A7A2E8BE7A6329A870E97C9 /* DailyKanjiWidget.swift in Sources */,
+				2A73DC68A45B4CFAD4D623C0 /* MediumDailyKanjiView.swift in Sources */,
+				0373FBB035107F1EF91BF8EC /* PracticeLink.swift in Sources */,
+				0456EDB001D77916FC7D3628 /* RectangularDailyKanjiView.swift in Sources */,
+				3EAF97A7B4099067582D078A /* SmallDailyKanjiView.swift in Sources */,
+				D116A62C895C23D7A5FB7A80 /* WidgetBackground.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -478,6 +653,11 @@
 			isa = PBXTargetDependency;
 			target = D6B56C43201E6C8BE747879F /* Write */;
 			targetProxy = 8252E3AD17DD445D3CC769D6 /* PBXContainerItemProxy */;
+		};
+		412AE47C70E4B9F76BA4091C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 737486FBDFED2457C84F32FA /* WriteWidget */;
+			targetProxy = 03561F0609972FCB8A58A0CC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -488,7 +668,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = ULU867Y7LC;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Write/Info.plist;
@@ -496,7 +675,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.j.write;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -541,6 +719,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 51;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -553,6 +732,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -562,6 +742,30 @@
 				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
+		};
+		6355A67D3BC606063359AA3D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ULU867Y7LC;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WriteWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.j.write.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		9479BD8B7B838B08F040A5FC /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -577,6 +781,30 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Write.app/Write";
+			};
+			name = Release;
+		};
+		9FA4B652A7A676234C4BC171 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = ULU867Y7LC;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WriteWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.j.write.widget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -603,7 +831,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = ULU867Y7LC;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Write/Info.plist;
@@ -611,7 +838,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.j.write;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -656,6 +882,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 51;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -674,6 +901,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -688,6 +916,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0E7E5A09D8C39C4A686A7B4C /* Build configuration list for PBXNativeTarget "WriteWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6355A67D3BC606063359AA3D /* Debug */,
+				9FA4B652A7A676234C4BC171 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		2910B5359DC5B148F74DA758 /* Build configuration list for PBXNativeTarget "WriteTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
