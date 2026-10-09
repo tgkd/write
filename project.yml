@@ -10,7 +10,7 @@ settings:
     SWIFT_VERSION: "6.0"
     IPHONEOS_DEPLOYMENT_TARGET: "16.0"
     MARKETING_VERSION: "1.6"
-    CURRENT_PROJECT_VERSION: "52"
+    CURRENT_PROJECT_VERSION: "53"
 packages:
   SVGPath:
     url: https://github.com/nicklockwood/SVGPath
