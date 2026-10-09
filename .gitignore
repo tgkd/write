@@ -30,4 +30,5 @@ docs/
 .pi/
 
 # Duck threads
+.claude/notes/
 .claude/duck/
