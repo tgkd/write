@@ -308,6 +308,57 @@ final class PracticeStateTests: XCTestCase {
         XCTAssertNil(state.lastRejection)
     }
 
+    func testAcceptedStrokesBecomeAnchorsAndUndoRemovesThem() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2), mode: .copy)
+        XCTAssertTrue(state.usesRelativePlacement)
+        state.beginDrawing()
+        state.beginValidation()
+        var result = makeAcceptedResult(matchedIndex: 0, expectedIndex: 0)
+        result.userCentroid = CGPoint(x: 40, y: 50)
+        state.processValidationResult(result)
+
+        XCTAssertEqual(state.anchors, [StrokeAnchor(referenceIndex: 0, userCentroid: CGPoint(x: 40, y: 50))])
+
+        _ = state.undoLastStroke()
+        XCTAssertTrue(state.anchors.isEmpty)
+    }
+
+    func testRecallKeepsRelativePlacementAfterHints() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2), isRecall: true)
+        XCTAssertTrue(state.usesRelativePlacement)
+        state.showNextHint()
+        state.showNextHint()
+        XCTAssertTrue(state.usesRelativePlacement)
+    }
+
+    func testStartMarkerShowsUntilTheFirstStrokeInCopy() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2), mode: .copy)
+        XCTAssertNotNil(state.startMarker)
+        state.beginDrawing()
+        state.beginValidation()
+        state.processValidationResult(makeAcceptedResult(matchedIndex: 0, expectedIndex: 0))
+        XCTAssertNil(state.startMarker)
+    }
+
+    func testStartMarkerHidesOnceRecallShowsTheGuide() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2), isRecall: true)
+        XCTAssertNotNil(state.startMarker)
+        state.showNextHint()
+        XCTAssertNotNil(state.startMarker)
+        state.showNextHint()
+        XCTAssertNil(state.startMarker)
+    }
+
+    func testNoStartMarkerWhenTheGuideIsDrawn() {
+        XCTAssertNil(PracticeState(kanjiData: makeKanjiData(strokeCount: 2), mode: .trace).startMarker)
+        XCTAssertNil(PracticeState(kanjiData: makeKanjiData(strokeCount: 2), mode: .strokeByStroke).startMarker)
+    }
+
+    func testGuidedModesUseAbsolutePlacement() {
+        XCTAssertFalse(PracticeState(kanjiData: makeKanjiData(strokeCount: 1), mode: .trace).usesRelativePlacement)
+        XCTAssertFalse(PracticeState(kanjiData: makeKanjiData(strokeCount: 1), mode: .strokeByStroke).usesRelativePlacement)
+    }
+
     func testResetClearsTheRejection() {
         let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2))
         state.beginDrawing()

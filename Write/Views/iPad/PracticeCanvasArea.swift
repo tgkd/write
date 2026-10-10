@@ -12,6 +12,7 @@ struct PracticeCanvasArea: View {
     let showCompletionCheck: Bool
     let hidesReference: Bool
     var notice: String?
+    var startMarker: CGPoint?
 
     var onStrokeCompleted: (([CGPoint]) -> Void)?
     var onPencilDoubleTap: (() -> Void)?
@@ -34,6 +35,21 @@ struct PracticeCanvasArea: View {
                 referenceView: $referenceView,
                 onReady: { onReferenceReady?() }
             )
+
+            if let startMarker {
+                GeometryReader { geo in
+                    Circle()
+                        .fill(Color.accentColor.opacity(0.2))
+                        .overlay(Circle().stroke(Color.accentColor, lineWidth: 2))
+                        .frame(width: 18, height: 18)
+                        .position(startMarker.applying(StrokeRenderer.scaleTransform(to: geo.size)))
+                }
+                .allowsHitTesting(false)
+                .accessibilityElement()
+                .accessibilityLabel("Start of the first stroke")
+                .accessibilityIdentifier("startMarker")
+                .transition(.opacity)
+            }
 
             DrawingCanvasRepresentable(
                 onStrokeCompleted: { points, _ in

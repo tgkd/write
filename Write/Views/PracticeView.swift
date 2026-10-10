@@ -138,6 +138,7 @@ struct PracticeView: View {
             showCompletionCheck: showCompletionCheck,
             hidesReference: practiceState.hidesGuide,
             notice: practiceState.lastRejection?.notice,
+            startMarker: practiceState.startMarker,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },
@@ -196,7 +197,7 @@ struct PracticeView: View {
         switch practiceState.hint {
         case .unused: return "Write it from memory."
         case .character: return "Character shown. Counts as a hint."
-        case .strokes: return "Strokes shown. Counts as a hint."
+        case .strokes: return "Next stroke shown. Counts as a hint."
         }
     }
 

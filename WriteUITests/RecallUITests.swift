@@ -73,7 +73,7 @@ final class RecallUITests: XCTestCase {
         XCTAssertTrue(answerGlyph.waitForExistence(timeout: 5))
         XCTAssertFalse(strokeGuide.exists)
 
-        app.buttons["Show strokes"].tap()
+        app.buttons["Show next stroke"].tap()
 
         XCTAssertTrue(strokeGuide.waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["No more hints"].isEnabled)

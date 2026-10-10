@@ -17,6 +17,10 @@ struct ValidationConfig: Sendable {
     /// Tighter than centroidTolerance — strokes must be near the correct location.
     var positionTolerance: CGFloat = 0.03
 
+    var guidelessFirstStrokeTolerance: CGFloat = 0.10
+
+    var guidelessPositionTolerance: CGFloat = 0.07
+
     /// Number of sample points for comparison.
     var sampleCount: Int = 50
 
@@ -39,6 +43,8 @@ struct StrokeValidationResult: Sendable {
 
     /// Raw Frechet distance (normalized).
     let frechetDistance: CGFloat
+
+    var userCentroid: CGPoint?
 }
 
 /// Orchestrates the stroke validation pipeline: sample -> normalize -> compare -> score.
@@ -68,6 +74,7 @@ enum StrokeValidator {
             referencePoints: refPoints,
             canvasSize: canvasSize,
             config: config,
+            positionTolerance: config.positionTolerance,
             matchedIndex: nil,
             expectedIndex: nil
         )
@@ -121,6 +128,7 @@ enum StrokeValidator {
         unmatchedIndices: Set<Int>,
         canvasSize: CGSize,
         expectedStrokeIndex: Int,
+        anchors: [StrokeAnchor]? = nil,
         config: ValidationConfig = .standard
     ) -> StrokeValidationResult {
         let userSampled = PointSampler.sample(points: userPoints, count: config.sampleCount)
@@ -130,13 +138,22 @@ enum StrokeValidator {
             canvasSize.width * canvasSize.width + canvasSize.height * canvasSize.height
         )
         let centroidMaxDist = canvasDiagonal * config.centroidTolerance * config.leniency
+        let placement = anchors.map { placementOffset(anchors: $0, referenceSamples: referenceSamples, canvasSize: canvasSize) }
+        let positionTolerance: CGFloat
+        if let anchors {
+            positionTolerance = anchors.isEmpty
+                ? config.guidelessFirstStrokeTolerance
+                : config.guidelessPositionTolerance
+        } else {
+            positionTolerance = config.positionTolerance
+        }
 
         var bestResult: StrokeValidationResult?
 
         for idx in unmatchedIndices.sorted() {
             guard referenceSamples.indices.contains(idx) else { continue }
-            let refPoints = referenceSamples[idx]
-            guard !refPoints.isEmpty else { continue }
+            guard !referenceSamples[idx].isEmpty else { continue }
+            let refPoints = shifted(referenceSamples[idx], by: placement ?? .zero)
 
             let refCentroid = ProcrustesNormalizer.centroid(of: refPoints)
 
@@ -151,10 +168,15 @@ enum StrokeValidator {
                 referencePoints: refPoints,
                 canvasSize: canvasSize,
                 config: config,
+                positionTolerance: positionTolerance,
                 matchedIndex: idx,
                 expectedIndex: expectedStrokeIndex
             )
 
+            if result.accepted && result.correctOrder {
+                bestResult = result
+                break
+            }
             if let best = bestResult {
                 if result.score > best.score {
                     bestResult = result
@@ -164,13 +186,55 @@ enum StrokeValidator {
             }
         }
 
-        return bestResult ?? StrokeValidationResult(
+        var result = bestResult ?? StrokeValidationResult(
             score: 0,
             accepted: false,
             matchedStrokeIndex: nil,
             correctOrder: false,
             frechetDistance: .infinity
         )
+        result.userCentroid = userCentroid
+        return result
+    }
+
+    static func placementOffset(
+        anchors: [StrokeAnchor],
+        referenceSamples: [[CGPoint]],
+        canvasSize: CGSize
+    ) -> CGVector {
+        let offsets = anchors.compactMap { anchor -> CGVector? in
+            guard referenceSamples.indices.contains(anchor.referenceIndex),
+                  !referenceSamples[anchor.referenceIndex].isEmpty else {
+                return nil
+            }
+            let refCentroid = ProcrustesNormalizer.centroid(of: referenceSamples[anchor.referenceIndex])
+            return CGVector(dx: anchor.userCentroid.x - refCentroid.x, dy: anchor.userCentroid.y - refCentroid.y)
+        }
+        guard !offsets.isEmpty else { return .zero }
+        let count = CGFloat(offsets.count)
+        let mean = CGVector(
+            dx: offsets.map(\.dx).reduce(0, +) / count,
+            dy: offsets.map(\.dy).reduce(0, +) / count
+        )
+        let points = referenceSamples.flatMap { $0 }
+        guard let minX = points.map(\.x).min(), let maxX = points.map(\.x).max(),
+              let minY = points.map(\.y).min(), let maxY = points.map(\.y).max() else {
+            return mean
+        }
+        return CGVector(
+            dx: clamp(mean.dx, lower: -minX, upper: canvasSize.width - maxX),
+            dy: clamp(mean.dy, lower: -minY, upper: canvasSize.height - maxY)
+        )
+    }
+
+    private static func clamp(_ value: CGFloat, lower: CGFloat, upper: CGFloat) -> CGFloat {
+        guard lower <= upper else { return 0 }
+        return min(max(value, lower), upper)
+    }
+
+    private static func shifted(_ points: [CGPoint], by offset: CGVector) -> [CGPoint] {
+        guard offset != .zero else { return points }
+        return points.map { CGPoint(x: $0.x + offset.dx, y: $0.y + offset.dy) }
     }
 
     // MARK: - Private
@@ -180,6 +244,7 @@ enum StrokeValidator {
         referencePoints: [CGPoint],
         canvasSize: CGSize,
         config: ValidationConfig,
+        positionTolerance: CGFloat,
         matchedIndex: Int?,
         expectedIndex: Int?
     ) -> StrokeValidationResult {
@@ -189,7 +254,7 @@ enum StrokeValidator {
         let centroidDist = hypot(userCentroid.x - refCentroid.x, userCentroid.y - refCentroid.y)
         let canvasDiagonal = hypot(canvasSize.width, canvasSize.height)
         let normalizedPosition = centroidDist / canvasDiagonal
-        let positionThreshold = config.positionTolerance * config.leniency
+        let positionThreshold = positionTolerance * config.leniency
         let positionPassed = normalizedPosition <= positionThreshold
 
         // Shape check: Procrustes normalize then Frechet distance

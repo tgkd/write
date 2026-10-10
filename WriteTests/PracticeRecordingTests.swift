@@ -103,11 +103,11 @@ final class PracticeRecordingTests: XCTestCase {
         XCTAssertEqual(record?.revealed, false)
     }
 
-    func testRecallStartsHiddenWithTraceGuide() {
+    func testRecallStartsHiddenWithGuidedGuide() {
         let (state, _) = makeState(strokeCount: 1, mode: .copy)
         XCTAssertTrue(state.hidesCharacter)
         XCTAssertTrue(state.hidesGuide)
-        XCTAssertEqual(state.mode, .trace)
+        XCTAssertEqual(state.mode, .strokeByStroke)
         XCTAssertEqual(state.nextHint, .character)
     }
 
@@ -116,7 +116,7 @@ final class PracticeRecordingTests: XCTestCase {
         submit(state, matchedIndex: 0)
         state.changeMode(.copy)
 
-        XCTAssertEqual(state.mode, .trace)
+        XCTAssertEqual(state.mode, .strokeByStroke)
         XCTAssertEqual(state.matchedStrokeIndices, [0])
     }
 

@@ -23,6 +23,7 @@ extension PracticeState {
             unmatchedIndices: unmatchedIndices,
             canvasSize: canvas.bounds.size,
             expectedStrokeIndex: currentStrokeIndex,
+            anchors: usesRelativePlacement ? anchors : nil,
             config: validationConfig
         )
 
@@ -57,6 +58,7 @@ extension PracticeState {
 
     /// Applies the mode-dependent visibility of every reference ghost stroke.
     func applyGhostVisibility(to reference: KanjiReferenceView) {
+        applyPlacement(to: reference)
         for i in 0..<totalStrokes {
             if matchedStrokeIndices.contains(i) {
                 reference.markStrokeAccepted(at: i)
@@ -91,5 +93,18 @@ extension PracticeState {
                 reference.setStrokeVisibility(.hidden, at: i)
             }
         }
+    }
+
+    func applyPlacement(to reference: KanjiReferenceView) {
+        guard usesRelativePlacement, !anchors.isEmpty else {
+            reference.setPlacementOffset(.zero)
+            return
+        }
+        let offset = StrokeValidator.placementOffset(
+            anchors: anchors,
+            referenceSamples: referenceSamples(canvasSize: reference.bounds.size),
+            canvasSize: reference.bounds.size
+        )
+        reference.setPlacementOffset(offset)
     }
 }

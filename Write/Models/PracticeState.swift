@@ -20,6 +20,7 @@ final class PracticeState: ObservableObject {
     /// Matched reference indices in the order the user drew them. Undo must
     /// remove the last-drawn acceptance, not `matchedStrokeIndices.max()`.
     private(set) var acceptanceOrder: [Int] = []
+    private(set) var anchors: [StrokeAnchor] = []
     @Published private(set) var attemptCount: Int = 0
     @Published private(set) var consecutiveMisses: Int = 0
     @Published private(set) var isComplete: Bool = false
@@ -29,6 +30,7 @@ final class PracticeState: ObservableObject {
 
     let kanjiData: KanjiData
     let isRecall: Bool
+    let firstStrokeStart: CGPoint?
     var validationConfig: ValidationConfig
     var now: () -> Date = Date.init
     var onRunCompleted: ((PracticeRecord) -> Void)?
@@ -52,6 +54,17 @@ final class PracticeState: ObservableObject {
         isRecall && hint < .strokes
     }
 
+    var usesRelativePlacement: Bool {
+        isRecall || mode == .copy
+    }
+
+    var startMarker: CGPoint? {
+        guard usesRelativePlacement, mode == .copy || hidesGuide, matchedStrokeIndices.isEmpty else {
+            return nil
+        }
+        return firstStrokeStart
+    }
+
     var nextHint: RecallHint? {
         isRecall ? hint.next : nil
     }
@@ -64,8 +77,11 @@ final class PracticeState: ObservableObject {
     init(kanjiData: KanjiData, mode: PracticeMode = .trace, isRecall: Bool = false, config: ValidationConfig = .standard) {
         self.kanjiData = kanjiData
         self.isRecall = isRecall
-        self.mode = isRecall ? .trace : mode
+        self.mode = isRecall ? .strokeByStroke : mode
         self.validationConfig = config
+        self.firstStrokeStart = kanjiData.strokes.first
+            .flatMap { try? StrokeRenderer.createPath(from: $0.pathData) }
+            .flatMap { PointSampler.sample(path: $0, count: 2).first }
     }
 
     func beginDrawing() {
@@ -88,6 +104,9 @@ final class PracticeState: ObservableObject {
         if result.accepted, let matchedIndex = result.matchedStrokeIndex, result.correctOrder {
             matchedStrokeIndices.insert(matchedIndex)
             acceptanceOrder.append(matchedIndex)
+            if let userCentroid = result.userCentroid {
+                anchors.append(StrokeAnchor(referenceIndex: matchedIndex, userCentroid: userCentroid))
+            }
             consecutiveMisses = 0
             lastRejection = nil
             currentStrokeIndex = matchedIndex + 1
@@ -118,6 +137,7 @@ final class PracticeState: ObservableObject {
     func undoLastStroke() -> Int? {
         guard let lastDrawn = acceptanceOrder.popLast() else { return nil }
         matchedStrokeIndices.remove(lastDrawn)
+        anchors.removeAll { $0.referenceIndex == lastDrawn }
         currentStrokeIndex = lastDrawn
         isComplete = false
         lastRejection = nil
@@ -130,6 +150,7 @@ final class PracticeState: ObservableObject {
         currentStrokeIndex = 0
         matchedStrokeIndices = []
         acceptanceOrder = []
+        anchors = []
         attemptCount = 0
         consecutiveMisses = 0
         isComplete = false

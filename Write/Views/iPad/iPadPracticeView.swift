@@ -198,6 +198,7 @@ struct iPadPracticeView: View {
             showCompletionCheck: showCompletionCheck,
             hidesReference: false,
             notice: practiceState.lastRejection?.notice,
+            startMarker: practiceState.startMarker,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

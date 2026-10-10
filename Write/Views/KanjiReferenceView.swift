@@ -107,6 +107,13 @@ class KanjiReferenceView: UIView {
         applyDisplayState(at: index)
     }
 
+    func setPlacementOffset(_ offset: CGVector) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        layer.sublayerTransform = CATransform3DMakeTranslation(offset.dx, offset.dy, 0)
+        CATransaction.commit()
+    }
+
     func markStrokeAccepted(at index: Int) {
         guard strokeLayers.indices.contains(index) else { return }
         strokeStates[index] = .accepted

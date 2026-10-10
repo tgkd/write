@@ -443,4 +443,106 @@ final class StrokeValidatorTests: XCTestCase {
         XCTAssertEqual(result.score, 0)
         XCTAssertNil(result.matchedStrokeIndex)
     }
+
+    private var guidelessStrokes: [KanjiStroke] {
+        [
+            KanjiStroke(strokeNumber: 1, pathData: "M18,30 L90,30", strokeType: nil),
+            KanjiStroke(strokeNumber: 2, pathData: "M18,80 L90,80", strokeType: nil),
+        ]
+    }
+
+    private func horizontal(atY y: CGFloat, shift: CGVector) -> [CGPoint] {
+        let scale = min(canvasSize.width, canvasSize.height) / 109.0
+        return [
+            CGPoint(x: 18 * scale + shift.dx, y: y * scale + shift.dy),
+            CGPoint(x: 90 * scale + shift.dx, y: y * scale + shift.dy),
+        ]
+    }
+
+    private func identify(
+        _ points: [CGPoint],
+        strokes: [KanjiStroke],
+        unmatched: Set<Int>,
+        expected: Int,
+        anchors: [StrokeAnchor]?
+    ) -> StrokeValidationResult {
+        StrokeValidator.identifyStroke(
+            userPoints: points,
+            referenceSamples: StrokeValidator.sampleReferenceStrokes(
+                strokes, canvasSize: canvasSize, sampleCount: ValidationConfig.standard.sampleCount
+            ),
+            unmatchedIndices: unmatched,
+            canvasSize: canvasSize,
+            expectedStrokeIndex: expected,
+            anchors: anchors
+        )
+    }
+
+    func testShiftedStrokeIsRejectedWhenGuideIsShown() {
+        let points = horizontal(atY: 30, shift: CGVector(dx: 30, dy: 25))
+        let result = identify(points, strokes: guidelessStrokes, unmatched: [0, 1], expected: 0, anchors: nil)
+        XCTAssertFalse(result.accepted)
+    }
+
+    func testShiftedFirstStrokeIsAcceptedWithoutGuide() {
+        let points = horizontal(atY: 30, shift: CGVector(dx: 30, dy: 25))
+        let result = identify(points, strokes: guidelessStrokes, unmatched: [0, 1], expected: 0, anchors: [])
+        XCTAssertTrue(result.accepted)
+        XCTAssertEqual(result.matchedStrokeIndex, 0)
+        XCTAssertNotNil(result.userCentroid)
+    }
+
+    func testLaterStrokesAreCheckedAgainstTheUsersPlacement() {
+        let shift = CGVector(dx: 30, dy: 25)
+        let first = identify(
+            horizontal(atY: 30, shift: shift), strokes: guidelessStrokes, unmatched: [0, 1], expected: 0, anchors: []
+        )
+        let anchors = [StrokeAnchor(referenceIndex: 0, userCentroid: first.userCentroid!)]
+
+        let followsPlacement = identify(
+            horizontal(atY: 80, shift: shift), strokes: guidelessStrokes, unmatched: [1], expected: 1, anchors: anchors
+        )
+        XCTAssertTrue(followsPlacement.accepted)
+
+        let ignoresPlacement = identify(
+            horizontal(atY: 80, shift: CGVector(dx: -10, dy: -15)),
+            strokes: guidelessStrokes, unmatched: [1], expected: 1, anchors: anchors
+        )
+        XCTAssertFalse(ignoresPlacement.accepted)
+    }
+
+    func testAcceptableExpectedStrokeWinsOverACloserLookalike() {
+        let strokes = [
+            KanjiStroke(strokeNumber: 1, pathData: "M18,18 L90,18", strokeType: nil),
+            KanjiStroke(strokeNumber: 2, pathData: "M18,34 L90,34", strokeType: nil),
+        ]
+        let points = horizontal(atY: 30, shift: .zero)
+        let result = identify(points, strokes: strokes, unmatched: [0, 1], expected: 0, anchors: [])
+        XCTAssertTrue(result.accepted)
+        XCTAssertEqual(result.matchedStrokeIndex, 0)
+        XCTAssertTrue(result.correctOrder)
+    }
+
+    func testPlacementOffsetAveragesAnchors() {
+        let samples = [[CGPoint(x: 0, y: 0), CGPoint(x: 10, y: 0)], [CGPoint(x: 0, y: 20), CGPoint(x: 10, y: 20)]]
+        let anchors = [
+            StrokeAnchor(referenceIndex: 0, userCentroid: CGPoint(x: 15, y: 10)),
+            StrokeAnchor(referenceIndex: 1, userCentroid: CGPoint(x: 25, y: 20)),
+        ]
+        let offset = StrokeValidator.placementOffset(
+            anchors: anchors, referenceSamples: samples, canvasSize: CGSize(width: 100, height: 100)
+        )
+        XCTAssertEqual(offset.dx, 15, accuracy: 0.001)
+        XCTAssertEqual(offset.dy, 5, accuracy: 0.001)
+    }
+
+    func testPlacementOffsetKeepsTheCharacterInsideTheCanvas() {
+        let samples = [[CGPoint(x: 20, y: 20), CGPoint(x: 80, y: 20)], [CGPoint(x: 20, y: 70), CGPoint(x: 80, y: 70)]]
+        let anchors = [StrokeAnchor(referenceIndex: 0, userCentroid: CGPoint(x: 90, y: 60))]
+        let offset = StrokeValidator.placementOffset(
+            anchors: anchors, referenceSamples: samples, canvasSize: CGSize(width: 100, height: 100)
+        )
+        XCTAssertEqual(offset.dx, 20, accuracy: 0.001)
+        XCTAssertEqual(offset.dy, 30, accuracy: 0.001)
+    }
 }

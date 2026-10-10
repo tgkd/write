@@ -103,6 +103,7 @@
 		F13AC6AE7FC4CC248E97DA9F /* daily_kanji.json in Resources */ = {isa = PBXBuildFile; fileRef = 52B34A7BFC7845171A47B3CA /* daily_kanji.json */; };
 		F16C55ED89FAF273E07ADEAF /* PracticeLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80BF101F0465C66B4CE01F75 /* PracticeLinkTests.swift */; };
 		F1F35D17B3F20D014FD06C0E /* NavigationGestureGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A55B5A3382E587D6C4B51B2 /* NavigationGestureGuard.swift */; };
+		F559626C8A958E8FF148A068 /* StrokeAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E0E8906C4E2FD0A0CD7886 /* StrokeAnchor.swift */; };
 		F6A2FE7FAD40C6585935356A /* StrokeValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */; };
 		FB17898AA4CFCE1E2611A35B /* CharacterFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F12DD54E7482308F5E56E5 /* CharacterFilterTests.swift */; };
 		FD903222566FCEC1F11F3060 /* DailyKanjiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B35D196D26E753E1C2EB181 /* DailyKanjiPicker.swift */; };
@@ -186,6 +187,7 @@
 		51D3EA225B25052BFBC34F84 /* KanjiData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiData.swift; sourceTree = "<group>"; };
 		5298C48D4E8206737F9A1C0B /* KanjiPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiPickerView.swift; sourceTree = "<group>"; };
 		52B34A7BFC7845171A47B3CA /* daily_kanji.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = daily_kanji.json; sourceTree = "<group>"; };
+		52E0E8906C4E2FD0A0CD7886 /* StrokeAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeAnchor.swift; sourceTree = "<group>"; };
 		52E45E5FE7D550294AB9C7E3 /* DailyKanjiEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiEntryView.swift; sourceTree = "<group>"; };
 		557D1B9D499A8C2ED26666D7 /* BrushStrokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrushStrokeTests.swift; sourceTree = "<group>"; };
 		5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasTests.swift; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 				DE816A45A5022B69DCC5ADCA /* FrechetDistance.swift */,
 				47CCAD6A2FD879ACF245B117 /* PointSampler.swift */,
 				9AF92521D279F5641C0A0668 /* ProcrustesNormalizer.swift */,
+				52E0E8906C4E2FD0A0CD7886 /* StrokeAnchor.swift */,
 				94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */,
 			);
 			path = Engine;
@@ -724,6 +727,7 @@
 				503286B1C7B9044CEB698754 /* SessionSummaryView.swift in Sources */,
 				9DA403F28AAB60A0F95271A9 /* SettingsView.swift in Sources */,
 				19275A8022373AC020789EDD /* SidebarToggleToolbar.swift in Sources */,
+				F559626C8A958E8FF148A068 /* StrokeAnchor.swift in Sources */,
 				686299C8F3EAA5E06F5F4B64 /* StrokeProgressDots.swift in Sources */,
 				84EDCD6B8E55DD180AEC6B65 /* StrokeRejection.swift in Sources */,
 				8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */,

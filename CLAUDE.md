@@ -56,7 +56,7 @@ python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWid
 
 - The Home screen (`KanjiPickerView`) starts three session kinds for the current filter: Practice, Recall and Review (a Recall session over `PracticeStats.reviewItems`). Tapping a character in the grid, a widget link and the iPad detail view always open plain practice
 - `PracticeMode` is only the guide level (Trace, Guided, Copy). The picker writes `AppSettings.practiceMode`, which every new practice screen and the next session character start from. `copy` keeps the raw value `freeDraw` so old history and settings still decode
-- Recall is not a mode: `PracticeState(isRecall: true)` pins the mode to Trace and hides the answer until hints. `hint` steps through `RecallHint` (character, then strokes); `hidesCharacter` swaps the header glyph for a placeholder and `hidesGuide` hides the whole `KanjiReferenceView` rather than individual strokes, because accepted-stroke marking and the initial ghost would each leak it
+- Recall is not a mode: `PracticeState(isRecall: true)` pins the mode to Guided, so the strokes hint reveals one stroke at a time, and hides the answer until hints. `hint` steps through `RecallHint` (character, then strokes); `hidesCharacter` swaps the header glyph for a placeholder and `hidesGuide` hides the whole `KanjiReferenceView` rather than individual strokes, because accepted-stroke marking and the initial ghost would each leak it
 - Recall only exists inside sessions, so a character the user just tapped in the grid is never treated as unseen. Recall queues contain only `RecallEligibility`-eligible characters (`KanjiDataStore.randomCharacters(forRecall:)` and `queue(for:)`); ineligible ones (identical readings, meanings and stroke count, or no cue) are dropped, never shown with the answer
 - Stroke order is enforced in every mode
 - `PracticeState` emits one `PracticeRecord` per run through `onRunCompleted`; undo/recomplete never emits again, reset or a mode change starts a new run. Session results hang off the same event
@@ -68,6 +68,8 @@ python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWid
 User stroke -> sample N points -> Procrustes normalize (center + scale, no rotation) -> Frechet distance against reference -> score (0-1)
 
 Stroke identification uses centroid distance as a fast rejection filter before running the full Frechet comparison.
+
+Position is checked in canvas coordinates only while a guide is drawn (Trace, Guided). In Copy and Recall it is checked relative to the user's own accepted strokes (`StrokeAnchor`, `StrokeValidator.placementOffset`), with a start marker for stroke 1 (`PracticeState.startMarker`) and a looser first-stroke tolerance. The offset is clamped so the shifted reference stays inside the canvas, and `applyPlacement` shifts the reference layer by the same offset so accepted strokes and later hints line up with the user's ink. An expected stroke that passes always wins over a better-scoring lookalike.
 
 ### KanjiVG coordinate space
 

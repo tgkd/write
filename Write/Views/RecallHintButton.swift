@@ -18,7 +18,7 @@ struct RecallHintButton: View {
     private var title: String {
         switch practiceState.nextHint {
         case .character?: return "Show character"
-        case .strokes?: return "Show strokes"
+        case .strokes?: return "Show next stroke"
         default: return "No more hints"
         }
     }
