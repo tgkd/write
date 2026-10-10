@@ -137,6 +137,7 @@ struct PracticeView: View {
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
             hidesReference: practiceState.hidesGuide,
+            notice: practiceState.lastRejection?.notice,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

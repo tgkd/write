@@ -11,6 +11,7 @@ struct PracticeCanvasArea: View {
     let brushThickness: BrushThickness
     let showCompletionCheck: Bool
     let hidesReference: Bool
+    var notice: String?
 
     var onStrokeCompleted: (([CGPoint]) -> Void)?
     var onPencilDoubleTap: (() -> Void)?
@@ -60,6 +61,22 @@ struct PracticeCanvasArea: View {
                     .transition(.scale(scale: 0.5).combined(with: .opacity))
             }
         }
+        .overlay(alignment: .top) {
+            if let notice {
+                Text(notice)
+                    .font(.footnote.weight(.medium))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(.regularMaterial, in: Capsule())
+                    .padding(.top, 8)
+                    .padding(.horizontal, 8)
+                    .allowsHitTesting(false)
+                    .transition(.opacity)
+                    .accessibilityIdentifier("strokeNotice")
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: notice)
     }
 }
 

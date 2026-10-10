@@ -197,6 +197,7 @@ struct iPadPracticeView: View {
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
             hidesReference: false,
+            notice: practiceState.lastRejection?.notice,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

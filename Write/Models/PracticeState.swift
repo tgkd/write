@@ -25,6 +25,7 @@ final class PracticeState: ObservableObject {
     @Published private(set) var isComplete: Bool = false
     @Published private(set) var mode: PracticeMode
     @Published private(set) var hint: RecallHint = .unused
+    @Published private(set) var lastRejection: StrokeRejection?
 
     let kanjiData: KanjiData
     let isRecall: Bool
@@ -88,6 +89,7 @@ final class PracticeState: ObservableObject {
             matchedStrokeIndices.insert(matchedIndex)
             acceptanceOrder.append(matchedIndex)
             consecutiveMisses = 0
+            lastRejection = nil
             currentStrokeIndex = matchedIndex + 1
 
             if matchedStrokeIndices.count == totalStrokes {
@@ -99,6 +101,7 @@ final class PracticeState: ObservableObject {
         } else {
             attemptCount += 1
             consecutiveMisses += 1
+            lastRejection = rejection(for: result)
             phase = .strokeRejected
         }
     }
@@ -117,6 +120,7 @@ final class PracticeState: ObservableObject {
         matchedStrokeIndices.remove(lastDrawn)
         currentStrokeIndex = lastDrawn
         isComplete = false
+        lastRejection = nil
         phase = .waitingForInput
         return lastDrawn
     }
@@ -129,8 +133,16 @@ final class PracticeState: ObservableObject {
         attemptCount = 0
         consecutiveMisses = 0
         isComplete = false
+        lastRejection = nil
         runStartedAt = nil
         runRecorded = false
+    }
+
+    private func rejection(for result: StrokeValidationResult) -> StrokeRejection {
+        guard result.accepted, let drawn = result.matchedStrokeIndex, !result.correctOrder else {
+            return .shape
+        }
+        return .wrongOrder(drawnStroke: drawn, expectedStroke: currentStrokeIndex)
     }
 
     func showNextHint() {

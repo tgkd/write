@@ -261,6 +261,63 @@ final class PracticeStateTests: XCTestCase {
 
         XCTAssertEqual(state.phase, .strokeRejected)
         XCTAssertTrue(state.matchedStrokeIndices.isEmpty)
+        XCTAssertEqual(state.lastRejection, .wrongOrder(drawnStroke: 2, expectedStroke: 0))
+    }
+
+    func testWrongOrderNoticeNamesBothStrokes() {
+        let rejection = StrokeRejection.wrongOrder(drawnStroke: 2, expectedStroke: 0)
+        XCTAssertEqual(rejection.notice, "Right shape, wrong order: that was stroke 3. Draw stroke 1 first.")
+        XCTAssertNil(StrokeRejection.shape.notice)
+    }
+
+    func testBadShapeIsNotReportedAsWrongOrder() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3), mode: .copy)
+        state.beginDrawing()
+        state.beginValidation()
+
+        let result = StrokeValidationResult(
+            score: 0.1,
+            accepted: false,
+            matchedStrokeIndex: 2,
+            correctOrder: false,
+            frechetDistance: 0.9
+        )
+        state.processValidationResult(result)
+
+        XCTAssertEqual(state.lastRejection, .shape)
+    }
+
+    func testWrongOrderClearsOnTheNextAcceptedStroke() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3), mode: .copy)
+        state.beginDrawing()
+        state.beginValidation()
+        state.processValidationResult(StrokeValidationResult(
+            score: 0.9,
+            accepted: true,
+            matchedStrokeIndex: 1,
+            correctOrder: false,
+            frechetDistance: 0.1
+        ))
+        state.acknowledgeResult()
+        XCTAssertNotNil(state.lastRejection)
+
+        state.beginDrawing()
+        state.beginValidation()
+        state.processValidationResult(makeAcceptedResult(matchedIndex: 0, expectedIndex: 0))
+
+        XCTAssertNil(state.lastRejection)
+    }
+
+    func testResetClearsTheRejection() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2))
+        state.beginDrawing()
+        state.beginValidation()
+        state.processValidationResult(makeRejectedResult())
+        XCTAssertNotNil(state.lastRejection)
+
+        state.reset()
+
+        XCTAssertNil(state.lastRejection)
     }
 
     // MARK: - Completion
