@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     private let dataStore = KanjiDataStore()
+    @EnvironmentObject private var settings: AppSettings
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     var body: some View {
@@ -12,7 +13,6 @@ struct ContentView: View {
                 iPhoneLayout
             }
         }
-        .environment(\.studyEligibility, dataStore.studyEligibility)
         .onOpenURL { openPracticeLink($0) }
     }
 
@@ -39,13 +39,12 @@ struct ContentView: View {
             KanjiPickerView(dataStore: dataStore)
                 .navigationDestination(for: String.self) { codePoint in
                     if let kanji = dataStore.lookup(codePoint: codePoint) {
-                        PracticeView(kanjiData: kanji)
+                        PracticeView(kanjiData: kanji, mode: settings.practiceMode)
                             .id(codePoint)
                     }
                 }
                 .navigationDestination(for: SessionRoute.self) { route in
-                    let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
-                    SessionPracticeView(kanji: kanji, mode: route.mode)
+                    SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind)
                 }
                 .navigationDestination(for: ProgressRoute.self) { _ in
                     PracticeProgressView(dataStore: dataStore)
@@ -75,8 +74,7 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             KanjiPickerView(dataStore: dataStore, selectedCodePoint: sidebarSelection)
                 .navigationDestination(for: SessionRoute.self) { route in
-                    let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
-                    SessionPracticeView(kanji: kanji, mode: route.mode)
+                    SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind)
                 }
                 .navigationDestination(for: ProgressRoute.self) { _ in
                     PracticeProgressView(dataStore: dataStore)
@@ -103,7 +101,7 @@ struct ContentView: View {
             }
             .navigationDestination(for: PracticeRoute.self) { route in
                 if let kanji = dataStore.lookup(codePoint: route.codePoint) {
-                    iPadPracticeView(kanjiData: kanji)
+                    iPadPracticeView(kanjiData: kanji, mode: settings.practiceMode)
                         .id(route.codePoint)
                         .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
                 }

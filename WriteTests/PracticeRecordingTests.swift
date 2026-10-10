@@ -11,8 +11,8 @@ final class PracticeRecordingTests: XCTestCase {
         return KanjiData(codePoint: "4e00", element: nil, strokes: strokes, components: [])
     }
 
-    private func makeState(strokeCount: Int, mode: PracticeMode = .study) -> (PracticeState, Recorder) {
-        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: strokeCount), mode: mode)
+    private func makeState(strokeCount: Int, mode: PracticeMode = .trace, isRecall: Bool = true) -> (PracticeState, Recorder) {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: strokeCount), mode: mode, isRecall: isRecall)
         let recorder = Recorder()
         state.onRunCompleted = { recorder.records.append($0) }
         return (state, recorder)
@@ -49,7 +49,8 @@ final class PracticeRecordingTests: XCTestCase {
         XCTAssertEqual(recorder.records.count, 1)
         let record = recorder.records[0]
         XCTAssertEqual(record.codePoint, "4e00")
-        XCTAssertEqual(record.practiceMode, .study)
+        XCTAssertEqual(record.mode, PracticeRecord.recallMode)
+        XCTAssertTrue(record.isRecall)
         XCTAssertEqual(record.misses, 1)
         XCTAssertFalse(record.revealed)
         XCTAssertFalse(record.exposed)
@@ -78,71 +79,82 @@ final class PracticeRecordingTests: XCTestCase {
     }
 
     func testModeChangeStartsANewRun() {
-        let (state, recorder) = makeState(strokeCount: 1)
+        let (state, recorder) = makeState(strokeCount: 1, isRecall: false)
         complete(state)
-        state.changeMode(.trace)
+        state.changeMode(.copy)
         complete(state)
 
-        XCTAssertEqual(recorder.records.map(\.practiceMode), [.study, .trace])
+        XCTAssertEqual(recorder.records.map(\.mode), ["trace", "freeDraw"])
     }
 
-    func testRevealIsRecordedAndSurvivesReset() {
+    func testPracticeRunsShowEverythingAndAreExposed() {
+        let (state, recorder) = makeState(strokeCount: 1, mode: .copy, isRecall: false)
+        XCTAssertFalse(state.hidesCharacter)
+        XCTAssertFalse(state.hidesGuide)
+        XCTAssertNil(state.nextHint)
+        state.showNextHint()
+        XCTAssertEqual(state.hint, .unused)
+        complete(state)
+
+        let record = recorder.records.first
+        XCTAssertEqual(record?.mode, "freeDraw")
+        XCTAssertEqual(record?.isRecall, false)
+        XCTAssertEqual(record?.exposed, true)
+        XCTAssertEqual(record?.revealed, false)
+    }
+
+    func testRecallStartsHiddenWithTraceGuide() {
+        let (state, _) = makeState(strokeCount: 1, mode: .copy)
+        XCTAssertTrue(state.hidesCharacter)
+        XCTAssertTrue(state.hidesGuide)
+        XCTAssertEqual(state.mode, .trace)
+        XCTAssertEqual(state.nextHint, .character)
+    }
+
+    func testRecallIgnoresModeChanges() {
+        let (state, _) = makeState(strokeCount: 2)
+        submit(state, matchedIndex: 0)
+        state.changeMode(.copy)
+
+        XCTAssertEqual(state.mode, .trace)
+        XCTAssertEqual(state.matchedStrokeIndices, [0])
+    }
+
+    func testHintsShowCharacterThenStrokes() {
+        let (state, _) = makeState(strokeCount: 1)
+        state.showNextHint()
+        XCTAssertEqual(state.hint, .character)
+        XCTAssertFalse(state.hidesCharacter)
+        XCTAssertTrue(state.hidesGuide)
+        XCTAssertEqual(state.nextHint, .strokes)
+
+        state.showNextHint()
+        XCTAssertEqual(state.hint, .strokes)
+        XCTAssertFalse(state.hidesGuide)
+        XCTAssertNil(state.nextHint)
+
+        state.showNextHint()
+        XCTAssertEqual(state.hint, .strokes)
+    }
+
+    func testHintIsRecordedAndSurvivesReset() {
         let (state, recorder) = makeState(strokeCount: 1)
-        XCTAssertTrue(state.hidesAnswer)
-        state.revealAnswer()
-        XCTAssertFalse(state.hidesAnswer)
+        state.showNextHint()
         state.reset()
         complete(state)
 
-        XCTAssertFalse(state.hidesAnswer)
+        XCTAssertFalse(state.hidesCharacter)
         XCTAssertEqual(recorder.records.first?.revealed, true)
         XCTAssertEqual(recorder.records.first?.exposed, false)
     }
 
-    func testSwitchingFromACopyingModeMarksExposure() {
-        let (state, recorder) = makeState(strokeCount: 1, mode: .trace)
-        state.changeMode(.study)
-        XCTAssertTrue(state.hidesAnswer)
-        complete(state)
-
-        XCTAssertEqual(recorder.records.first?.exposed, true)
-        XCTAssertEqual(recorder.records.first?.revealed, false)
-    }
-
-    func testExposureSurvivesSwitchingBackToStudy() {
-        let (state, recorder) = makeState(strokeCount: 1)
-        state.changeMode(.freeDraw)
-        state.changeMode(.study)
-        state.reset()
-        complete(state)
-
-        XCTAssertEqual(recorder.records.first?.exposed, true)
-    }
-
-    func testMissingCueShowsAnswerAndMarksExposure() {
-        let (state, recorder) = makeState(strokeCount: 1)
-        state.markCueUnavailable()
-        XCTAssertFalse(state.hidesAnswer)
-        complete(state)
-
-        XCTAssertEqual(recorder.records.first?.exposed, true)
-        XCTAssertEqual(recorder.records.first?.revealed, false)
-    }
-
-    func testStudyEnforcesStrokeOrder() {
+    func testRecallEnforcesStrokeOrder() {
         let (state, recorder) = makeState(strokeCount: 2)
         submit(state, matchedIndex: 1, correctOrder: false)
 
         XCTAssertTrue(state.matchedStrokeIndices.isEmpty)
         XCTAssertEqual(state.attemptCount, 1)
         XCTAssertTrue(recorder.records.isEmpty)
-    }
-
-    func testOnlyStudyHidesAnswer() {
-        let (state, _) = makeState(strokeCount: 1, mode: .freeDraw)
-        XCTAssertFalse(state.hidesAnswer)
-        state.changeMode(.study)
-        XCTAssertTrue(state.hidesAnswer)
     }
 }
 

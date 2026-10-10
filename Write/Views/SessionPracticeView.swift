@@ -2,17 +2,18 @@ import SwiftUI
 
 struct SessionPracticeView: View {
     @StateObject private var sessionState: SessionState
+    @EnvironmentObject private var settings: AppSettings
     @State private var showNextButton = false
     @Environment(\.dismiss) private var dismiss
 
-    init(kanji: [KanjiData], mode: PracticeMode = .trace) {
-        _sessionState = StateObject(wrappedValue: SessionState(kanjiQueue: kanji, mode: mode))
+    init(kanji: [KanjiData], kind: SessionKind = .practice) {
+        _sessionState = StateObject(wrappedValue: SessionState(kanjiQueue: kanji, kind: kind))
     }
 
     var body: some View {
         Group {
             if sessionState.isSessionComplete {
-                SessionSummaryView(results: sessionState.results)
+                SessionSummaryView(results: sessionState.results, kind: sessionState.kind)
             } else if let kanji = sessionState.currentKanji {
                 practiceContent(kanji: kanji)
             }
@@ -28,7 +29,7 @@ struct SessionPracticeView: View {
             ToolbarItem(placement: .principal) {
                 if !sessionState.isSessionComplete {
                     let p = sessionState.progress
-                    Text("\(p.current) / \(p.total)")
+                    Text("\(title) · \(p.current) / \(p.total)")
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
@@ -36,21 +37,28 @@ struct SessionPracticeView: View {
         }
     }
 
+    private var title: String {
+        switch sessionState.kind {
+        case .practice: return "Practice"
+        case .recall: return "Recall"
+        }
+    }
+
     private func practiceContent(kanji: KanjiData) -> some View {
         ZStack(alignment: .bottom) {
             PracticeView(
                 kanjiData: kanji,
-                mode: sessionState.mode,
+                mode: settings.practiceMode,
+                isRecall: sessionState.kind == .recall,
                 showToolbar: false,
-                onComplete: { attempts in
-                    sessionState.recordResult(attemptCount: attempts)
+                onComplete: { record in
+                    sessionState.recordResult(attemptCount: record.misses, usedHint: record.revealed)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
                         withAnimation(.easeInOut(duration: 0.3)) {
                             showNextButton = true
                         }
                     }
-                },
-                onModeChange: { sessionState.mode = $0 }
+                }
             )
             .id(sessionState.currentIndex)
 

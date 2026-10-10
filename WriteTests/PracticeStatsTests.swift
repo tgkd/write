@@ -13,7 +13,7 @@ final class PracticeStatsTests: XCTestCase {
     private func record(
         _ codePoint: String,
         daysAgo: Int,
-        mode: PracticeMode = .study,
+        mode: String = PracticeRecord.recallMode,
         revealed: Bool = false,
         exposed: Bool = false,
         misses: Int = 0,
@@ -23,7 +23,7 @@ final class PracticeStatsTests: XCTestCase {
         return PracticeRecord(
             id: UUID(),
             codePoint: codePoint,
-            mode: mode.rawValue,
+            mode: mode,
             revealed: revealed,
             exposed: exposed,
             misses: misses,
@@ -38,7 +38,7 @@ final class PracticeStatsTests: XCTestCase {
             records: [
                 record("4e00", daysAgo: 0),
                 record("4e00", daysAgo: 0, minutes: 5),
-                record("4e8c", daysAgo: 2, mode: .trace),
+                record("4e8c", daysAgo: 2, mode: PracticeMode.trace.rawValue),
             ],
             today: today,
             calendar: calendar,
@@ -52,22 +52,23 @@ final class PracticeStatsTests: XCTestCase {
         XCTAssertEqual(stats.recentDays.last?.day, calendar.startOfDay(for: today))
     }
 
-    func testPracticeAgainUsesLatestStudyRunPerCharacter() {
+    func testReviewUsesLatestRecallRunPerCharacter() {
         let stats = PracticeStats(
             records: [
                 record("4e00", daysAgo: 3, revealed: true),
                 record("4e00", daysAgo: 1),
                 record("4e8c", daysAgo: 2, misses: 2),
                 record("4e09", daysAgo: 1, revealed: true),
-                record("56db", daysAgo: 0, mode: .trace, misses: 5),
+                record("56db", daysAgo: 0, mode: PracticeMode.trace.rawValue, misses: 5),
             ],
             today: today,
             calendar: calendar,
             dayCount: 7
         )
 
-        XCTAssertEqual(stats.practiceAgain.map(\.codePoint), ["4e09", "4e8c"])
-        XCTAssertEqual(stats.practiceAgain.map(\.reason), [.usedReveal, .neededRetries(2)])
+        XCTAssertEqual(stats.review.map(\.codePoint), ["4e09", "4e8c"])
+        XCTAssertEqual(stats.review.map(\.reason), [.usedHint, .neededRetries(2)])
+        XCTAssertEqual(PracticeStats.reviewItems(from: []), [])
     }
 
     func testExposedRunsNeitherNominateNorClear() {
@@ -82,8 +83,8 @@ final class PracticeStatsTests: XCTestCase {
             dayCount: 7
         )
 
-        XCTAssertEqual(stats.practiceAgain.map(\.codePoint), ["4e00"])
-        XCTAssertEqual(stats.practiceAgain.map(\.reason), [.neededRetries(3)])
+        XCTAssertEqual(stats.review.map(\.codePoint), ["4e00"])
+        XCTAssertEqual(stats.review.map(\.reason), [.neededRetries(3)])
         XCTAssertEqual(stats.completedRuns, 3)
     }
 
@@ -92,6 +93,12 @@ final class PracticeStatsTests: XCTestCase {
 
         XCTAssertEqual(stats.practicedDays, 0)
         XCTAssertEqual(stats.recentDays.count, 35)
-        XCTAssertTrue(stats.practiceAgain.isEmpty)
+        XCTAssertTrue(stats.review.isEmpty)
+    }
+
+    func testRecallRunsKeepTheStoredStudyMode() {
+        XCTAssertEqual(PracticeRecord.recallMode, "study")
+        XCTAssertTrue(record("4e00", daysAgo: 0).isRecall)
+        XCTAssertFalse(record("4e00", daysAgo: 0, mode: PracticeMode.copy.rawValue).isRecall)
     }
 }

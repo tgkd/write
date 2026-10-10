@@ -7,11 +7,11 @@ struct PracticeStats: Equatable {
     }
 
     enum Reason: Equatable {
-        case usedReveal
+        case usedHint
         case neededRetries(Int)
     }
 
-    struct PracticeAgainItem: Equatable {
+    struct ReviewItem: Equatable {
         let codePoint: String
         let reason: Reason
         let lastPracticed: Date
@@ -21,7 +21,7 @@ struct PracticeStats: Equatable {
     let completedRuns: Int
     let distinctKanji: Int
     let recentDays: [DayActivity]
-    let practiceAgain: [PracticeAgainItem]
+    let review: [ReviewItem]
 
     init(records: [PracticeRecord], today: Date, calendar: Calendar, dayCount: Int) {
         let countsByDay = Dictionary(grouping: records) { calendar.startOfDay(for: $0.completedAt) }
@@ -36,23 +36,27 @@ struct PracticeStats: Equatable {
             return DayActivity(day: day, completions: countsByDay[day] ?? 0)
         }
 
-        let hiddenStudyRuns = records.filter { $0.practiceMode == .study && !$0.exposed }
-        let latestStudyRuns = Dictionary(grouping: hiddenStudyRuns, by: \.codePoint)
+        review = Self.reviewItems(from: records)
+    }
+
+    static func reviewItems(from records: [PracticeRecord]) -> [ReviewItem] {
+        let hiddenRecallRuns = records.filter { $0.isRecall && !$0.exposed }
+        let latestRecallRuns = Dictionary(grouping: hiddenRecallRuns, by: \.codePoint)
             .compactMapValues { runs in runs.max { $0.completedAt < $1.completedAt } }
-        practiceAgain = latestStudyRuns.values
-            .compactMap(Self.practiceAgainItem)
+        return latestRecallRuns.values
+            .compactMap(Self.reviewItem)
             .sorted { $0.lastPracticed > $1.lastPracticed }
     }
 
-    private static func practiceAgainItem(for run: PracticeRecord) -> PracticeAgainItem? {
+    private static func reviewItem(for run: PracticeRecord) -> ReviewItem? {
         let reason: Reason
         if run.revealed {
-            reason = .usedReveal
+            reason = .usedHint
         } else if run.misses > 0 {
             reason = .neededRetries(run.misses)
         } else {
             return nil
         }
-        return PracticeAgainItem(codePoint: run.codePoint, reason: reason, lastPracticed: run.completedAt)
+        return ReviewItem(codePoint: run.codePoint, reason: reason, lastPracticed: run.completedAt)
     }
 }

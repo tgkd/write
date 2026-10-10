@@ -4,7 +4,6 @@ struct iPadPracticeView: View {
     @StateObject private var practiceState: PracticeState
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var history: PracticeHistoryStore
-    @Environment(\.studyEligibility) private var studyEligibility
     @State private var canvasView: DrawingCanvasView?
     @State private var referenceView: KanjiReferenceView?
     @State private var feedbackView: FeedbackOverlayView?
@@ -63,6 +62,7 @@ struct iPadPracticeView: View {
         .onChange(of: practiceState.mode) { _ in
             canvasView?.clearAll()
             feedbackView?.clearAll()
+            showCompletionCheck = false
             applyGhostVisibility()
         }
         .onChange(of: settings.maskPathWidth) { _ in
@@ -82,20 +82,11 @@ struct iPadPracticeView: View {
             feedbackView?.rejectedColor = settings.colorPalette.rejectedColor
             applyGhostVisibility()
         }
-        .onChange(of: practiceState.isRevealed) { _ in
-            applyGhostVisibility()
-        }
-        .onChange(of: practiceState.isCueAvailable) { _ in
-            applyGhostVisibility()
-        }
         .onAppear {
             practiceState.validationConfig = settings.validationConfig
             practiceState.onRunCompleted = { record in
                 history.add(record)
                 onComplete?(record.misses)
-            }
-            if !studyEligibility.isEligible(practiceState.kanjiData) {
-                practiceState.markCueUnavailable()
             }
         }
     }
@@ -106,18 +97,20 @@ struct iPadPracticeView: View {
         VStack(spacing: 20) {
             Spacer()
 
-            AnswerGlyph(
-                kanji: practiceState.kanjiData,
-                isHidden: practiceState.hidesAnswer,
-                fontSize: 80,
-                onReveal: { practiceState.revealAnswer() }
-            )
+            Text(String(practiceState.kanjiData.character))
+                .font(.system(size: 80))
+                .accessibilityIdentifier("answerGlyph")
 
             readingsBlock
 
             strokeProgressDots
 
-            modePicker
+            VStack(spacing: 8) {
+                PracticeModePicker(practiceState: practiceState)
+                Text(practiceState.mode.summary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
 
             controls
 
@@ -153,18 +146,6 @@ struct iPadPracticeView: View {
 
     private var strokeProgressDots: some View {
         StrokeProgressDots(practiceState: practiceState, palette: settings.colorPalette)
-    }
-
-    private var modePicker: some View {
-        Picker("Mode", selection: Binding(
-            get: { practiceState.mode },
-            set: { practiceState.changeMode($0) }
-        )) {
-            ForEach(PracticeMode.allCases, id: \.self) { mode in
-                Text(mode.displayName).tag(mode)
-            }
-        }
-        .pickerStyle(.segmented)
     }
 
     private var controls: some View {
@@ -215,7 +196,7 @@ struct iPadPracticeView: View {
             smoothingStrength: settings.smoothingStrength,
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
-            hidesReference: practiceState.hidesAnswer,
+            hidesReference: false,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

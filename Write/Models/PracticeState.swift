@@ -18,18 +18,16 @@ final class PracticeState: ObservableObject {
     @Published private(set) var matchedStrokeIndices: Set<Int> = []
 
     /// Matched reference indices in the order the user drew them. Undo must
-    /// remove the last-drawn acceptance — in freeDraw, strokes are accepted
-    /// out of order, so this is not `matchedStrokeIndices.max()`.
+    /// remove the last-drawn acceptance, not `matchedStrokeIndices.max()`.
     private(set) var acceptanceOrder: [Int] = []
     @Published private(set) var attemptCount: Int = 0
     @Published private(set) var consecutiveMisses: Int = 0
     @Published private(set) var isComplete: Bool = false
-    @Published var mode: PracticeMode
-    @Published private(set) var isRevealed: Bool = false
-    @Published private(set) var isCueAvailable: Bool = true
-    private(set) var isExposed: Bool
+    @Published private(set) var mode: PracticeMode
+    @Published private(set) var hint: RecallHint = .unused
 
     let kanjiData: KanjiData
+    let isRecall: Bool
     var validationConfig: ValidationConfig
     var now: () -> Date = Date.init
     var onRunCompleted: ((PracticeRecord) -> Void)?
@@ -45,8 +43,16 @@ final class PracticeState: ObservableObject {
         Set(kanjiData.strokes.indices).subtracting(matchedStrokeIndices)
     }
 
-    var hidesAnswer: Bool {
-        mode.hidesAnswer && isCueAvailable && !isRevealed
+    var hidesCharacter: Bool {
+        isRecall && hint < .character
+    }
+
+    var hidesGuide: Bool {
+        isRecall && hint < .strokes
+    }
+
+    var nextHint: RecallHint? {
+        isRecall ? hint.next : nil
     }
 
     var shouldShowAutoHint: Bool {
@@ -54,11 +60,11 @@ final class PracticeState: ObservableObject {
         return consecutiveMisses >= threshold
     }
 
-    init(kanjiData: KanjiData, mode: PracticeMode = .trace, config: ValidationConfig = .standard) {
+    init(kanjiData: KanjiData, mode: PracticeMode = .trace, isRecall: Bool = false, config: ValidationConfig = .standard) {
         self.kanjiData = kanjiData
-        self.mode = mode
+        self.isRecall = isRecall
+        self.mode = isRecall ? .trace : mode
         self.validationConfig = config
-        self.isExposed = !mode.hidesAnswer
     }
 
     func beginDrawing() {
@@ -78,8 +84,7 @@ final class PracticeState: ObservableObject {
             runStartedAt = now()
         }
 
-        let orderOk = result.correctOrder || mode == .freeDraw
-        if result.accepted, let matchedIndex = result.matchedStrokeIndex, orderOk {
+        if result.accepted, let matchedIndex = result.matchedStrokeIndex, result.correctOrder {
             matchedStrokeIndices.insert(matchedIndex)
             acceptanceOrder.append(matchedIndex)
             consecutiveMisses = 0
@@ -128,20 +133,14 @@ final class PracticeState: ObservableObject {
         runRecorded = false
     }
 
-    func revealAnswer() {
-        isRevealed = true
-    }
-
-    func markCueUnavailable() {
-        isCueAvailable = false
-        isExposed = true
+    func showNextHint() {
+        guard let next = nextHint else { return }
+        hint = next
     }
 
     func changeMode(_ newMode: PracticeMode) {
+        guard !isRecall else { return }
         mode = newMode
-        if !newMode.hidesAnswer {
-            isExposed = true
-        }
         reset()
     }
 
@@ -152,9 +151,9 @@ final class PracticeState: ObservableObject {
         let record = PracticeRecord(
             id: UUID(),
             codePoint: kanjiData.codePoint,
-            mode: mode.rawValue,
-            revealed: isRevealed,
-            exposed: isExposed,
+            mode: isRecall ? PracticeRecord.recallMode : mode.rawValue,
+            revealed: hint != .unused,
+            exposed: !isRecall,
             misses: attemptCount,
             startedAt: runStartedAt ?? completedAt,
             completedAt: completedAt,

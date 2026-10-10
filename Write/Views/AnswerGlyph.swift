@@ -4,26 +4,20 @@ struct AnswerGlyph: View {
     let kanji: KanjiData
     let isHidden: Bool
     let fontSize: CGFloat
-    let onReveal: () -> Void
 
     var body: some View {
         if isHidden {
             VStack(spacing: 4) {
-                Button(action: onReveal) {
-                    VStack(spacing: 2) {
-                        Image(systemName: "eye")
-                            .font(.system(size: fontSize * 0.35))
-                        Text("Reveal")
-                            .font(.caption2)
-                    }
+                Text("?")
+                    .font(.system(size: fontSize * 0.6, weight: .medium))
+                    .foregroundStyle(.secondary)
                     .frame(width: fontSize * 1.25, height: fontSize * 1.25)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color(.secondarySystemBackground))
                     )
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Reveal answer")
+                    .accessibilityLabel("Hidden character")
+                    .accessibilityIdentifier("hiddenGlyph")
                 if kanji.script != .kanji {
                     Text(kanji.script.displayName)
                         .font(.caption2)

@@ -5,6 +5,7 @@ struct KanjiPickerView: View {
     private let allKanji: [KanjiData]
 
     @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var history: PracticeHistoryStore
     @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var searchText = ""
     @State private var showSettings = false
@@ -58,6 +59,12 @@ struct KanjiPickerView: View {
                 .padding(.horizontal)
                 .padding(.top, 4)
 
+            if searchText.isEmpty {
+                sessionStarters
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+            }
+
             LazyVGrid(columns: columns, spacing: 8) {
                 ForEach(displayedKanji, id: \.codePoint) { kanji in
                     kanjiCell(kanji)
@@ -74,7 +81,6 @@ struct KanjiPickerView: View {
                         Image(systemName: "chart.bar")
                     }
                     .accessibilityLabel("Progress")
-                    sessionButton
                     Button {
                         showSettings = true
                     } label: {
@@ -122,13 +128,84 @@ struct KanjiPickerView: View {
             .cornerRadius(8)
     }
 
-    private var sessionButton: some View {
-        let kanji = dataStore.randomCharacters(matching: selectedFilter, count: settings.sessionCount)
-        let route = SessionRoute(codePoints: kanji.map(\.codePoint))
-        return NavigationLink(value: route) {
-            Image(systemName: "play.fill")
+    private var sessionStarters: some View {
+        let practice = dataStore.randomCharacters(matching: selectedFilter, count: settings.sessionCount)
+        let recall = dataStore.randomCharacters(matching: selectedFilter, count: settings.sessionCount, forRecall: true)
+        let review = PracticeStats.reviewItems(from: history.records)
+        return VStack(spacing: 8) {
+            HStack(spacing: 8) {
+                sessionCard(
+                    title: "Practice",
+                    subtitle: "\(practice.count) random · \(settings.practiceMode.displayName)",
+                    systemImage: "pencil.tip",
+                    route: SessionRoute(codePoints: practice.map(\.codePoint), kind: .practice),
+                    identifier: "session.practice"
+                )
+                sessionCard(
+                    title: "Recall",
+                    subtitle: "\(recall.count) random · from memory",
+                    systemImage: "brain.head.profile",
+                    route: SessionRoute(codePoints: recall.map(\.codePoint), kind: .recall),
+                    identifier: "session.recall"
+                )
+            }
+            if !review.isEmpty {
+                reviewCard(review)
+            }
         }
-        .disabled(kanji.isEmpty)
+    }
+
+    private func sessionCard(
+        title: String,
+        subtitle: String,
+        systemImage: String,
+        route: SessionRoute,
+        identifier: String
+    ) -> some View {
+        NavigationLink(value: route) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
+                    Image(systemName: systemImage)
+                        .foregroundStyle(Color.accentColor)
+                    Text(title)
+                }
+                .font(.headline)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(12)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .disabled(route.codePoints.isEmpty)
+        .accessibilityIdentifier(identifier)
+    }
+
+    private func reviewCard(_ review: [PracticeStats.ReviewItem]) -> some View {
+        NavigationLink(value: SessionRoute.review(review, count: settings.sessionCount)) {
+            HStack(spacing: 6) {
+                Image(systemName: "repeat")
+                    .foregroundStyle(Color.accentColor)
+                Text("Review")
+                    .font(.headline)
+                Text("\(review.count) to recall again")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(12)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("session.review")
     }
 
     private var jlptFilterBar: some View {

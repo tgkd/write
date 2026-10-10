@@ -1,13 +1,13 @@
 import XCTest
 
 @MainActor
-final class StudyModeUITests: XCTestCase {
+final class RecallUITests: XCTestCase {
     private var app: XCUIApplication!
 
     override func setUp() async throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-uiTestingFreshHistory"]
+        app.launchArguments = ["-uiTestingFreshHistory", "-practiceMode", "trace"]
         app.launch()
     }
 
@@ -21,15 +21,6 @@ final class StudyModeUITests: XCTestCase {
         cell.tap()
     }
 
-    private func switchMode(from current: String, to target: String) {
-        let menu = app.buttons[current].firstMatch
-        XCTAssertTrue(menu.waitForExistence(timeout: 5))
-        menu.tap()
-        let option = app.buttons[target].firstMatch
-        XCTAssertTrue(option.waitForExistence(timeout: 5))
-        option.tap()
-    }
-
     private func dismissSearch() {
         for label in ["close", "Cancel"] where app.buttons[label].exists {
             app.buttons[label].tap()
@@ -37,45 +28,73 @@ final class StudyModeUITests: XCTestCase {
         }
     }
 
-    private var revealButton: XCUIElement { app.buttons["Reveal answer"] }
+    private func goBack() {
+        app.buttons["Back"].firstMatch.tap()
+    }
+
+    private var hiddenGlyph: XCUIElement { app.staticTexts["hiddenGlyph"] }
     private var answerGlyph: XCUIElement { app.staticTexts["answerGlyph"] }
     private var strokeGuide: XCUIElement { app.otherElements["strokeGuide"] }
 
-    func testStudyHidesAnswerUntilRevealAndStaysRevealedAfterReset() {
+    func testCharacterFromGridOffersGuideModesAndRemembersTheChoice() {
         openCharacter("一")
         XCTAssertTrue(answerGlyph.waitForExistence(timeout: 5))
         XCTAssertTrue(strokeGuide.exists)
+        XCTAssertFalse(hiddenGlyph.exists)
+        XCTAssertFalse(app.buttons["Show character"].exists)
 
-        switchMode(from: "Trace", to: "Study")
+        let copy = app.buttons["Copy"].firstMatch
+        XCTAssertTrue(app.buttons["Trace"].firstMatch.isSelected)
+        XCTAssertTrue(app.buttons["Guided"].firstMatch.exists)
+        copy.tap()
+        XCTAssertTrue(copy.isSelected)
+        XCTAssertTrue(answerGlyph.exists)
+        XCTAssertTrue(app.staticTexts["Copy the character without a guide."].exists)
 
-        XCTAssertTrue(revealButton.waitForExistence(timeout: 5))
+        goBack()
+        openCharacter("二")
+
+        XCTAssertTrue(app.buttons["Copy"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Copy"].firstMatch.isSelected)
+    }
+
+    func testRecallSessionHidesTheAnswerUntilHints() {
+        let recall = app.buttons["session.recall"]
+        XCTAssertTrue(recall.waitForExistence(timeout: 5))
+        recall.tap()
+
+        XCTAssertTrue(hiddenGlyph.waitForExistence(timeout: 5))
         XCTAssertFalse(answerGlyph.exists)
         XCTAssertFalse(strokeGuide.exists)
-        XCTAssertTrue(app.staticTexts["one, one radical (no.1)"].exists)
+        XCTAssertFalse(app.buttons["Trace"].exists)
 
-        revealButton.tap()
+        app.buttons["Show character"].tap()
 
         XCTAssertTrue(answerGlyph.waitForExistence(timeout: 5))
-        XCTAssertTrue(strokeGuide.exists)
+        XCTAssertFalse(strokeGuide.exists)
+
+        app.buttons["Show strokes"].tap()
+
+        XCTAssertTrue(strokeGuide.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["No more hints"].isEnabled)
 
         app.buttons["arrow.counterclockwise"].tap()
 
         XCTAssertTrue(answerGlyph.exists)
-        XCTAssertFalse(revealButton.exists)
+        XCTAssertTrue(strokeGuide.exists)
     }
 
-    func testAcceptedStrokeInStudyKeepsGuideHiddenAndIsRecorded() {
+    func testCompletedPracticeIsRecordedButNotSentToReview() {
         let progressButton = app.buttons["Progress"]
         XCTAssertTrue(progressButton.waitForExistence(timeout: 5))
         progressButton.tap()
-        XCTAssertTrue(app.staticTexts["Completed Study runs where you used Reveal or needed retries appear here."]
+        XCTAssertTrue(app.staticTexts["Characters you needed a hint or retries for in Recall appear here."]
             .waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["count.Completed"].label, "0, Completed")
         app.navigationBars.buttons.firstMatch.tap()
 
         openCharacter("一")
-        switchMode(from: "Trace", to: "Study")
-        XCTAssertTrue(revealButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(answerGlyph.waitForExistence(timeout: 5))
 
         let canvas = app.otherElements["drawingCanvas"]
         XCTAssertTrue(canvas.exists)
@@ -83,18 +102,16 @@ final class StudyModeUITests: XCTestCase {
         let end = canvas.coordinate(withNormalizedOffset: CGVector(dx: 0.88, dy: 0.46))
         start.press(forDuration: 0.05, thenDragTo: end, withVelocity: 600, thenHoldForDuration: 0.05)
 
-        XCTAssertFalse(strokeGuide.exists)
-        XCTAssertTrue(revealButton.exists)
-
-        app.buttons["Back"].firstMatch.tap()
+        goBack()
         dismissSearch()
         XCTAssertTrue(progressButton.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["session.review"].exists)
         progressButton.tap()
 
         let completed = app.staticTexts["count.Completed"]
         XCTAssertTrue(completed.waitForExistence(timeout: 5))
         XCTAssertEqual(completed.label, "1, Completed")
         XCTAssertEqual(app.staticTexts["count.Characters"].label, "1, Characters")
-        XCTAssertTrue(app.staticTexts["Completed Study runs where you used Reveal or needed retries appear here."].exists)
+        XCTAssertTrue(app.staticTexts["Characters you needed a hint or retries for in Recall appear here."].exists)
     }
 }

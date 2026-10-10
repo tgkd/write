@@ -4,10 +4,16 @@ An iOS app for practicing kanji handwriting using stroke-level validation. The a
 
 ## Features
 
-- Three practice modes:
+- Three guide levels when practicing a character you picked, remembered between sessions:
   - **Trace** - all ghost strokes visible, draw over them with per-stroke validation
   - **Guided** - only the next expected stroke is shown, auto-hint after 3 misses
-  - **Free** - no guides, validates stroke shape from memory (any stroke order accepted)
+  - **Copy** - no guide; the character stays visible in the header
+- Sessions from the Home screen:
+  - **Practice** - random characters from the current filter, with your guide level
+  - **Recall** - the character is hidden and only its readings and meanings are shown; write it from memory, with optional hints (show character, then show strokes)
+  - **Review** - a Recall session over characters that needed a hint or retries
+- Stroke order is enforced in every mode
+- Progress screen with practice history
 - Real-time stroke validation using discrete Frechet distance and Procrustes normalization
 - Catmull-Rom spline smoothing for natural-feeling input
 - KanjiVG-based stroke data for CJK Unified Ideographs

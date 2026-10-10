@@ -22,7 +22,7 @@ struct PracticeProgressView: View {
                 }
                 countsRow(stats)
                 recentSection(stats)
-                practiceAgainSection(stats)
+                reviewSection(stats)
             }
             .padding()
         }
@@ -80,26 +80,26 @@ struct PracticeProgressView: View {
         }
     }
 
-    private func practiceAgainSection(_ stats: PracticeStats) -> some View {
+    private func reviewSection(_ stats: PracticeStats) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                sectionTitle("Practice again")
+                sectionTitle("Review")
                 Spacer()
-                if !stats.practiceAgain.isEmpty {
-                    NavigationLink(value: studyRoute(stats)) {
-                        Label("Study these", systemImage: "play.fill")
+                if !stats.review.isEmpty {
+                    NavigationLink(value: SessionRoute.review(stats.review, count: settings.sessionCount)) {
+                        Label("Recall these", systemImage: "play.fill")
                             .font(.subheadline.weight(.medium))
                     }
                 }
             }
-            if stats.practiceAgain.isEmpty {
-                Text("Completed Study runs where you used Reveal or needed retries appear here.")
+            if stats.review.isEmpty {
+                Text("Characters you needed a hint or retries for in Recall appear here.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {
                 VStack(spacing: 0) {
-                    ForEach(stats.practiceAgain, id: \.codePoint) { item in
-                        practiceAgainRow(item)
+                    ForEach(stats.review, id: \.codePoint) { item in
+                        reviewRow(item)
                         Divider()
                     }
                 }
@@ -107,7 +107,7 @@ struct PracticeProgressView: View {
         }
     }
 
-    private func practiceAgainRow(_ item: PracticeStats.PracticeAgainItem) -> some View {
+    private func reviewRow(_ item: PracticeStats.ReviewItem) -> some View {
         let kanji = dataStore.lookup(codePoint: item.codePoint)
         return HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
@@ -131,7 +131,7 @@ struct PracticeProgressView: View {
         case .hiragana, .katakana:
             return "\(kanji.romaji ?? "") · \(kanji.script.displayName)"
         case .kanji:
-            let meanings = (kanji.meanings ?? []).prefix(StudyEligibility.meaningsShown)
+            let meanings = (kanji.meanings ?? []).prefix(RecallEligibility.meaningsShown)
             if !meanings.isEmpty {
                 return meanings.joined(separator: ", ")
             }
@@ -148,15 +148,10 @@ struct PracticeProgressView: View {
 
     private func reasonText(_ reason: PracticeStats.Reason) -> String {
         switch reason {
-        case .usedReveal:
-            return "Used Reveal"
+        case .usedHint:
+            return "Used a hint"
         case .neededRetries(let count):
             return "\(count) retr\(count == 1 ? "y" : "ies")"
         }
-    }
-
-    private func studyRoute(_ stats: PracticeStats) -> SessionRoute {
-        let codePoints = stats.practiceAgain.prefix(settings.sessionCount).map(\.codePoint)
-        return SessionRoute(codePoints: Array(codePoints), mode: .study)
     }
 }

@@ -19,7 +19,7 @@ final class PracticeHistoryStoreTests: XCTestCase {
         PracticeRecord(
             id: UUID(),
             codePoint: codePoint,
-            mode: PracticeMode.study.rawValue,
+            mode: PracticeRecord.recallMode,
             revealed: false,
             exposed: false,
             misses: 0,
