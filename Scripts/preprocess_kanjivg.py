@@ -17,6 +17,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 NS = {"kvg": "http://kanjivg.tagaini.net"}
+EXCLUDED_CODE_POINTS = {"534d"}
 
 
 def extract_strokes(group_el):
@@ -162,6 +163,9 @@ def main():
             skipped += 1
             continue
         code_point = data["codePoint"]
+        if code_point in EXCLUDED_CODE_POINTS:
+            skipped += 1
+            continue
         if code_point in kana_map:
             data["romaji"] = kana_map[code_point]
         elif is_cjk_unified(code_point):

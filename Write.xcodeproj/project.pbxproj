@@ -165,7 +165,7 @@
 		2B35D196D26E753E1C2EB181 /* DailyKanjiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiPicker.swift; sourceTree = "<group>"; };
 		2C302B2757CE396E280A4F2A /* CrosshairGuideLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrosshairGuideLayer.swift; sourceTree = "<group>"; };
 		2C922C626F86D525633E5506 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2DBBD44BE4A42882EE1B8AF0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2DBBD44BE4A42882EE1B8AF0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		305CB7F2A902C2CA345E11B8 /* PracticeStatsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeStatsTests.swift; sourceTree = "<group>"; };
 		32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeValidationTests.swift; sourceTree = "<group>"; };
 		35E6ED38AA97D0CF33DA08F8 /* NavigationGestureGuardRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationGestureGuardRepresentable.swift; sourceTree = "<group>"; };
