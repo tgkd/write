@@ -1,7 +1,7 @@
 import XCTest
 @testable import Write
 
-final class StudyEligibilityTests: XCTestCase {
+final class RecallEligibilityTests: XCTestCase {
 
     private func kanji(
         _ codePoint: String,
@@ -28,7 +28,7 @@ final class StudyEligibilityTests: XCTestCase {
         let a = kanji("51db", strokes: 15, on: ["リン"], meanings: ["cold"])
         let b = kanji("51dc", strokes: 15, on: ["リン"], meanings: ["cold"])
         let c = kanji("5c71", strokes: 3, on: ["サン"], meanings: ["mountain"])
-        let eligibility = StudyEligibility(kanji: [a, b, c])
+        let eligibility = RecallEligibility(kanji: [a, b, c])
 
         XCTAssertFalse(eligibility.isEligible(a))
         XCTAssertFalse(eligibility.isEligible(b))
@@ -38,7 +38,7 @@ final class StudyEligibilityTests: XCTestCase {
     func testDifferentStrokeCountKeepsCuesDistinct() {
         let a = kanji("51db", strokes: 15, on: ["リン"], meanings: ["cold"])
         let b = kanji("51dc", strokes: 14, on: ["リン"], meanings: ["cold"])
-        let eligibility = StudyEligibility(kanji: [a, b])
+        let eligibility = RecallEligibility(kanji: [a, b])
 
         XCTAssertTrue(eligibility.isEligible(a))
         XCTAssertTrue(eligibility.isEligible(b))
@@ -47,7 +47,7 @@ final class StudyEligibilityTests: XCTestCase {
     func testKanaWithSameRomajiInDifferentScriptsStayEligible() {
         let hiragana = kanji("3078", strokes: 1, romaji: "he")
         let katakana = kanji("30d8", strokes: 1, romaji: "he")
-        let eligibility = StudyEligibility(kanji: [hiragana, katakana])
+        let eligibility = RecallEligibility(kanji: [hiragana, katakana])
 
         XCTAssertTrue(eligibility.isEligible(hiragana))
         XCTAssertTrue(eligibility.isEligible(katakana))
@@ -55,7 +55,7 @@ final class StudyEligibilityTests: XCTestCase {
 
     func testCharacterWithoutCueIsIneligible() {
         let bare = kanji("4e00", strokes: 1)
-        XCTAssertFalse(StudyEligibility(kanji: [bare]).isEligible(bare))
+        XCTAssertFalse(RecallEligibility(kanji: [bare]).isEligible(bare))
     }
 
     func testBundledVariantPairIsIneligible() {
@@ -64,7 +64,31 @@ final class StudyEligibilityTests: XCTestCase {
         let mountain = store.lookup(character: "山")
 
         XCTAssertNotNil(rin)
-        XCTAssertFalse(rin.map(store.studyEligibility.isEligible) ?? true)
-        XCTAssertTrue(mountain.map(store.studyEligibility.isEligible) ?? false)
+        XCTAssertFalse(rin.map(store.recallEligibility.isEligible) ?? true)
+        XCTAssertTrue(mountain.map(store.recallEligibility.isEligible) ?? false)
+    }
+
+    func testRecallQueueDropsIneligibleCharacters() throws {
+        let store = KanjiDataStore()
+        let rin = try XCTUnwrap(store.lookup(character: "凛"))
+        let mountain = try XCTUnwrap(store.lookup(character: "山"))
+        let codePoints = [rin.codePoint, mountain.codePoint]
+
+        XCTAssertEqual(
+            store.queue(for: SessionRoute(codePoints: codePoints, kind: .recall)).map(\.codePoint),
+            [mountain.codePoint]
+        )
+        XCTAssertEqual(
+            store.queue(for: SessionRoute(codePoints: codePoints, kind: .practice)).map(\.codePoint),
+            codePoints
+        )
+    }
+
+    func testRandomRecallCharactersAreEligible() {
+        let store = KanjiDataStore()
+        let picked = store.randomCharacters(matching: .all, count: 200, forRecall: true)
+
+        XCTAssertEqual(picked.count, 200)
+        XCTAssertTrue(picked.allSatisfy(store.recallEligibility.isEligible))
     }
 }

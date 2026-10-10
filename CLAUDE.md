@@ -52,13 +52,16 @@ python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWid
    - Tapping the widget opens `kakijun://practice?cp=<codePoint>`, which `ContentView` handles in `onOpenURL` on iPhone and iPad
    - On iPad the sidebar writes its selection through `ContentView.sidebarSelection`, which also clears the detail path; any other writer of the selection must set the detail path itself
 
-### Study mode and practice history
+### Practice, Recall and practice history
 
-- Study is a `PracticeMode` that hides the answer: the header glyph is replaced by Reveal, and the whole `KanjiReferenceView` is hidden rather than individual strokes, because accepted-stroke marking, the initial ghost and auto-hint would each leak it
+- The Home screen (`KanjiPickerView`) starts three session kinds for the current filter: Practice, Recall and Review (a Recall session over `PracticeStats.reviewItems`). Tapping a character in the grid, a widget link and the iPad detail view always open plain practice
+- `PracticeMode` is only the guide level (Trace, Guided, Copy). The picker writes `AppSettings.practiceMode`, which every new practice screen and the next session character start from. `copy` keeps the raw value `freeDraw` so old history and settings still decode
+- Recall is not a mode: `PracticeState(isRecall: true)` pins the mode to Trace and hides the answer until hints. `hint` steps through `RecallHint` (character, then strokes); `hidesCharacter` swaps the header glyph for a placeholder and `hidesGuide` hides the whole `KanjiReferenceView` rather than individual strokes, because accepted-stroke marking and the initial ghost would each leak it
+- Recall only exists inside sessions, so a character the user just tapped in the grid is never treated as unseen. Recall queues contain only `RecallEligibility`-eligible characters (`KanjiDataStore.randomCharacters(forRecall:)` and `queue(for:)`); ineligible ones (identical readings, meanings and stroke count, or no cue) are dropped, never shown with the answer
+- Stroke order is enforced in every mode
 - `PracticeState` emits one `PracticeRecord` per run through `onRunCompleted`; undo/recomplete never emits again, reset or a mode change starts a new run. Session results hang off the same event
-- `revealed` (an explicit tap) and `exposed` (the answer was shown in this encounter, or the character has no unambiguous cue) are separate on purpose; "Practice again" only reads unexposed Study runs
-- `PracticeHistoryStore` writes monthly versioned JSON files under Application Support; a file it can't decode is moved aside, and a month it can't move aside is never written to. UI tests pass `-uiTestingFreshHistory` for a throwaway store
-- Cue ambiguity (identical readings, meanings and stroke count) is computed by `StudyEligibility` in `KanjiDataStore` and injected through the environment
+- Recall runs are stored with `mode` set to `PracticeRecord.recallMode` (`"study"`, the pre-rename value). `revealed` means a hint was used; `exposed` is false only for Recall runs and stays in the format because older Study runs could be exposed. Review only reads unexposed Recall runs
+- `PracticeHistoryStore` writes monthly versioned JSON files under Application Support; a file it can't decode is moved aside, and a month it can't move aside is never written to. UI tests pass `-uiTestingFreshHistory` for a throwaway store and `-practiceMode trace` so a saved guide level from an earlier run doesn't leak in
 
 ### Validation pipeline
 

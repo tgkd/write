@@ -32,7 +32,31 @@ final class SessionStateTests: XCTestCase {
         XCTAssertEqual(session.results.map(\.attemptCount), [1, 3])
     }
 
-    func testSessionStartsInRequestedMode() {
-        XCTAssertEqual(SessionState(kanjiQueue: [kanji("4e00")], mode: .study).mode, .study)
+    func testSessionKeepsItsKind() {
+        XCTAssertEqual(SessionState(kanjiQueue: [kanji("4e00")]).kind, .practice)
+        XCTAssertEqual(SessionState(kanjiQueue: [kanji("4e00")], kind: .recall).kind, .recall)
+    }
+
+    func testResultKeepsHintUse() {
+        let session = SessionState(kanjiQueue: [kanji("4e00")], kind: .recall)
+        session.recordResult(attemptCount: 0, usedHint: true)
+
+        XCTAssertEqual(session.results.first?.usedHint, true)
+    }
+
+    func testEmptyQueueIsAlreadyComplete() {
+        XCTAssertTrue(SessionState(kanjiQueue: [], kind: .recall).isSessionComplete)
+        XCTAssertFalse(SessionState(kanjiQueue: [kanji("4e00")]).isSessionComplete)
+    }
+
+    func testReviewRouteIsARecallOfTheFirstItems() {
+        let day = Date(timeIntervalSince1970: 0)
+        let items = ["4e00", "4e8c", "4e09"].map {
+            PracticeStats.ReviewItem(codePoint: $0, reason: .usedHint, lastPracticed: day)
+        }
+        let route = SessionRoute.review(items, count: 2)
+
+        XCTAssertEqual(route.codePoints, ["4e00", "4e8c"])
+        XCTAssertEqual(route.kind, .recall)
     }
 }

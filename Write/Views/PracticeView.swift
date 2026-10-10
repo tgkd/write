@@ -4,22 +4,19 @@ struct PracticeView: View {
     @StateObject private var practiceState: PracticeState
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var history: PracticeHistoryStore
-    @Environment(\.studyEligibility) private var studyEligibility
     @State private var canvasView: DrawingCanvasView?
     @State private var referenceView: KanjiReferenceView?
     @State private var feedbackView: FeedbackOverlayView?
     @State private var showCompletionCheck = false
     @Environment(\.dismiss) private var dismiss
 
-    let onComplete: ((Int) -> Void)?
-    let onModeChange: ((PracticeMode) -> Void)?
+    let onComplete: ((PracticeRecord) -> Void)?
     let showToolbar: Bool
 
-    init(kanjiData: KanjiData, mode: PracticeMode = .trace, showToolbar: Bool = true, onComplete: ((Int) -> Void)? = nil, onModeChange: ((PracticeMode) -> Void)? = nil) {
-        _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode))
+    init(kanjiData: KanjiData, mode: PracticeMode = .trace, isRecall: Bool = false, showToolbar: Bool = true, onComplete: ((PracticeRecord) -> Void)? = nil) {
+        _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode, isRecall: isRecall))
         self.showToolbar = showToolbar
         self.onComplete = onComplete
-        self.onModeChange = onModeChange
     }
 
     var body: some View {
@@ -53,27 +50,12 @@ struct PracticeView: View {
                     }
                 }
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Picker("Mode", selection: Binding(
-                        get: { practiceState.mode },
-                        set: { practiceState.changeMode($0) }
-                    )) {
-                        ForEach(PracticeMode.allCases, id: \.self) { mode in
-                            Text(mode.displayName).tag(mode)
-                        }
-                    }
-                } label: {
-                    Text(practiceState.mode.displayName)
-                        .font(.subheadline)
-                }
-            }
         }
         .onChange(of: practiceState.mode) { _ in
             canvasView?.clearAll()
             feedbackView?.clearAll()
+            showCompletionCheck = false
             applyGhostVisibility()
-            onModeChange?(practiceState.mode)
         }
         .onChange(of: settings.maskPathWidth) { _ in
             practiceState.validationConfig = settings.validationConfig
@@ -92,20 +74,14 @@ struct PracticeView: View {
             feedbackView?.rejectedColor = settings.colorPalette.rejectedColor
             applyGhostVisibility()
         }
-        .onChange(of: practiceState.isRevealed) { _ in
-            applyGhostVisibility()
-        }
-        .onChange(of: practiceState.isCueAvailable) { _ in
+        .onChange(of: practiceState.hint) { _ in
             applyGhostVisibility()
         }
         .onAppear {
             practiceState.validationConfig = settings.validationConfig
             practiceState.onRunCompleted = { record in
                 history.add(record)
-                onComplete?(record.misses)
-            }
-            if !studyEligibility.isEligible(practiceState.kanjiData) {
-                practiceState.markCueUnavailable()
+                onComplete?(record)
             }
         }
     }
@@ -121,9 +97,8 @@ struct PracticeView: View {
         return VStack(alignment: .leading, spacing: 2) {
             AnswerGlyph(
                 kanji: kanji,
-                isHidden: practiceState.hidesAnswer,
-                fontSize: 40,
-                onReveal: { practiceState.revealAnswer() }
+                isHidden: practiceState.hidesCharacter,
+                fontSize: 40
             )
             if let romaji = kanji.romaji {
                 Text(romaji)
@@ -161,7 +136,7 @@ struct PracticeView: View {
             smoothingStrength: settings.smoothingStrength,
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
-            hidesReference: practiceState.hidesAnswer,
+            hidesReference: practiceState.hidesGuide,
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },
@@ -179,27 +154,49 @@ struct PracticeView: View {
     }
 
     private var controls: some View {
-        HStack(spacing: 32) {
-            Button {
-                handleUndo()
-            } label: {
-                Image(systemName: "arrow.uturn.backward")
-                    .font(.title3)
-            }
-            .disabled(practiceState.matchedStrokeIndices.isEmpty)
+        VStack(spacing: 8) {
+            HStack(spacing: 16) {
+                Button {
+                    handleUndo()
+                } label: {
+                    Image(systemName: "arrow.uturn.backward")
+                        .font(.title3)
+                }
+                .disabled(practiceState.matchedStrokeIndices.isEmpty)
 
-            Button {
-                practiceState.reset()
-                canvasView?.clearAll()
-                feedbackView?.clearAll()
-                showCompletionCheck = false
-                applyGhostVisibility()
-            } label: {
-                Image(systemName: "arrow.counterclockwise")
-                    .font(.title3)
+                if practiceState.isRecall {
+                    RecallHintButton(practiceState: practiceState)
+                } else {
+                    PracticeModePicker(practiceState: practiceState)
+                }
+
+                Button {
+                    practiceState.reset()
+                    canvasView?.clearAll()
+                    feedbackView?.clearAll()
+                    showCompletionCheck = false
+                    applyGhostVisibility()
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.title3)
+                }
             }
+
+            Text(controlsCaption)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
+        .padding(.horizontal, 16)
         .padding(.bottom, 4)
+    }
+
+    private var controlsCaption: String {
+        guard practiceState.isRecall else { return practiceState.mode.summary }
+        switch practiceState.hint {
+        case .unused: return "Write it from memory."
+        case .character: return "Character shown. Counts as a hint."
+        case .strokes: return "Strokes shown. Counts as a hint."
+        }
     }
 
     // MARK: - Logic

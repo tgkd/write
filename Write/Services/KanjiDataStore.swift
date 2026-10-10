@@ -3,14 +3,14 @@ import Foundation
 final class KanjiDataStore: Sendable {
     private let kanjiMap: [String: KanjiData]
     let allCodePoints: [String]
-    let studyEligibility: StudyEligibility
+    let recallEligibility: RecallEligibility
 
     init(bundle: Bundle = .main) {
         guard let url = bundle.url(forResource: "kanji_strokes", withExtension: "json") else {
             assertionFailure("kanji_strokes.json not found in bundle")
             kanjiMap = [:]
             allCodePoints = []
-            studyEligibility = StudyEligibility()
+            recallEligibility = RecallEligibility()
             return
         }
         do {
@@ -18,12 +18,12 @@ final class KanjiDataStore: Sendable {
             let decoded = try JSONDecoder().decode([String: KanjiData].self, from: data)
             kanjiMap = decoded
             allCodePoints = decoded.keys.sorted()
-            studyEligibility = StudyEligibility(kanji: Array(decoded.values))
+            recallEligibility = RecallEligibility(kanji: Array(decoded.values))
         } catch {
             assertionFailure("Failed to load kanji data: \(error)")
             kanjiMap = [:]
             allCodePoints = []
-            studyEligibility = StudyEligibility()
+            recallEligibility = RecallEligibility()
         }
     }
 
@@ -31,7 +31,7 @@ final class KanjiDataStore: Sendable {
         let decoded = try JSONDecoder().decode([String: KanjiData].self, from: data)
         kanjiMap = decoded
         allCodePoints = decoded.keys.sorted()
-        studyEligibility = StudyEligibility(kanji: Array(decoded.values))
+        recallEligibility = RecallEligibility(kanji: Array(decoded.values))
     }
 
     func lookup(codePoint: String) -> KanjiData? {
@@ -64,10 +64,16 @@ final class KanjiDataStore: Sendable {
         }
     }
 
-    func randomCharacters(matching filter: CharacterFilter, count: Int) -> [KanjiData] {
+    func randomCharacters(matching filter: CharacterFilter, count: Int, forRecall: Bool = false) -> [KanjiData] {
         let pool = allCodePoints.compactMap { kanjiMap[$0] }
-            .filter { filter.includes($0) }
+            .filter { filter.includes($0) && (!forRecall || recallEligibility.isEligible($0)) }
         return Array(pool.shuffled().prefix(count))
+    }
+
+    func queue(for route: SessionRoute) -> [KanjiData] {
+        let kanji = route.codePoints.compactMap { lookup(codePoint: $0) }
+        guard route.kind == .recall else { return kanji }
+        return kanji.filter { recallEligibility.isEligible($0) }
     }
 
     var count: Int {

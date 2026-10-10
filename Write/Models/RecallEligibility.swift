@@ -1,6 +1,6 @@
 import Foundation
 
-struct StudyEligibility: Sendable {
+struct RecallEligibility: Sendable {
     private struct Cue: Hashable {
         let script: WritingScript
         let romaji: String?

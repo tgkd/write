@@ -21,35 +21,28 @@ final class PracticeModeTests: XCTestCase {
         XCTAssertEqual(mode.autoHintAfterMisses, 3)
     }
 
-    func testFreeDrawModeGhostVisibility() {
-        let mode = PracticeMode.freeDraw
+    func testCopyModeGhostVisibility() {
+        let mode = PracticeMode.copy
         XCTAssertNil(mode.ghostStrokeAlpha)
         XCTAssertNil(mode.currentStrokeAlpha)
         XCTAssertFalse(mode.animateStrokeReveal)
         XCTAssertNil(mode.autoHintAfterMisses)
     }
 
-    func testStudyModeHidesAnswerWithoutAutoHint() {
-        let mode = PracticeMode.study
-        XCTAssertTrue(mode.hidesAnswer)
-        XCTAssertNil(mode.autoHintAfterMisses)
-        XCTAssertFalse(mode.animateStrokeReveal)
-        XCTAssertFalse(PracticeMode.freeDraw.hidesAnswer)
+    func testCopyKeepsTheStoredRawValue() {
+        XCTAssertEqual(PracticeMode.copy.rawValue, "freeDraw")
+        XCTAssertEqual(PracticeMode(rawValue: "freeDraw"), .copy)
+        XCTAssertNil(PracticeMode(rawValue: "study"))
     }
 
-    func testAllCasesIncludesAllModes() {
-        XCTAssertEqual(PracticeMode.allCases.count, 4)
-        XCTAssertTrue(PracticeMode.allCases.contains(.trace))
-        XCTAssertTrue(PracticeMode.allCases.contains(.strokeByStroke))
-        XCTAssertTrue(PracticeMode.allCases.contains(.freeDraw))
-        XCTAssertTrue(PracticeMode.allCases.contains(.study))
+    func testAllCasesAreOrderedByAssistance() {
+        XCTAssertEqual(PracticeMode.allCases, [.trace, .strokeByStroke, .copy])
     }
 
     func testDisplayNames() {
         XCTAssertEqual(PracticeMode.trace.displayName, "Trace")
         XCTAssertEqual(PracticeMode.strokeByStroke.displayName, "Guided")
-        XCTAssertEqual(PracticeMode.freeDraw.displayName, "Free")
-        XCTAssertEqual(PracticeMode.study.displayName, "Study")
+        XCTAssertEqual(PracticeMode.copy.displayName, "Copy")
     }
 }
 
@@ -116,10 +109,8 @@ final class PracticeStateTests: XCTestCase {
         XCTAssertEqual(state.currentStrokeIndex, 1)
     }
 
-    func testUndoInFreeDrawRemovesLastDrawnNotHighestIndex() {
-        // In freeDraw, strokes are accepted out of order. Undo must remove the
-        // LAST-DRAWN acceptance — the same stroke whose ink layer the views pop.
-        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 6), mode: .freeDraw)
+    func testUndoRemovesLastDrawnNotHighestIndex() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 6))
         acceptStroke(state, matchedIndex: 5)
         acceptStroke(state, matchedIndex: 2)
 
@@ -254,8 +245,8 @@ final class PracticeStateTests: XCTestCase {
         XCTAssertTrue(state.matchedStrokeIndices.isEmpty)
     }
 
-    func testOutOfOrderStrokeAcceptedInFreeDrawMode() {
-        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3), mode: .freeDraw)
+    func testOutOfOrderStrokeRejectedInCopyMode() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3), mode: .copy)
         state.beginDrawing()
         state.beginValidation()
 
@@ -268,8 +259,8 @@ final class PracticeStateTests: XCTestCase {
         )
         state.processValidationResult(result)
 
-        XCTAssertEqual(state.phase, .strokeAccepted(strokeIndex: 2))
-        XCTAssertEqual(state.matchedStrokeIndices, [2])
+        XCTAssertEqual(state.phase, .strokeRejected)
+        XCTAssertTrue(state.matchedStrokeIndices.isEmpty)
     }
 
     // MARK: - Completion
@@ -395,9 +386,9 @@ final class PracticeStateTests: XCTestCase {
         state.processValidationResult(makeAcceptedResult(matchedIndex: 0, expectedIndex: 0))
         state.acknowledgeResult()
 
-        state.changeMode(.freeDraw)
+        state.changeMode(.copy)
 
-        XCTAssertEqual(state.mode, .freeDraw)
+        XCTAssertEqual(state.mode, .copy)
         XCTAssertEqual(state.phase, .waitingForInput)
         XCTAssertEqual(state.currentStrokeIndex, 0)
         XCTAssertTrue(state.matchedStrokeIndices.isEmpty)

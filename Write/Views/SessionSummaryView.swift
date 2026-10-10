@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SessionSummaryView: View {
     let results: [SessionState.KanjiResult]
+    let kind: SessionKind
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -12,7 +13,7 @@ struct SessionSummaryView: View {
                     .foregroundStyle(.green)
                 Text("Session Complete")
                     .font(.title2.weight(.semibold))
-                Text("\(results.count) kanji practiced")
+                Text(subtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -40,18 +41,26 @@ struct SessionSummaryView: View {
 
                     Spacer()
 
-                    if result.attemptCount == 0 {
+                    if result.attemptCount == 0 && !result.usedHint {
                         Image(systemName: "star.fill")
                             .foregroundStyle(.orange)
                             .font(.caption)
                     } else {
-                        Text("\(result.attemptCount) miss\(result.attemptCount == 1 ? "" : "es")")
+                        Text(detail(for: result))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
             }
             .listStyle(.plain)
+
+            if kind == .recall && results.contains(where: needsReview) {
+                Text("Characters you needed a hint or retries for are waiting in Review.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 16)
+            }
 
             Button {
                 dismiss()
@@ -67,5 +76,28 @@ struct SessionSummaryView: View {
             }
             .padding(.bottom, 16)
         }
+    }
+
+    private var subtitle: String {
+        let noun = results.count == 1 ? "character" : "characters"
+        switch kind {
+        case .practice: return "\(results.count) \(noun) practiced"
+        case .recall: return "\(results.count) \(noun) recalled"
+        }
+    }
+
+    private func needsReview(_ result: SessionState.KanjiResult) -> Bool {
+        result.usedHint || result.attemptCount > 0
+    }
+
+    private func detail(for result: SessionState.KanjiResult) -> String {
+        var parts: [String] = []
+        if result.usedHint {
+            parts.append("hint")
+        }
+        if result.attemptCount > 0 {
+            parts.append("\(result.attemptCount) miss\(result.attemptCount == 1 ? "" : "es")")
+        }
+        return parts.joined(separator: " · ")
     }
 }

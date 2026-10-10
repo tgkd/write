@@ -18,6 +18,10 @@ final class AppSettings: ObservableObject {
         didSet { UserDefaults.standard.set(sessionCount, forKey: "sessionCount") }
     }
 
+    @Published var practiceMode: PracticeMode {
+        didSet { UserDefaults.standard.set(practiceMode.rawValue, forKey: "practiceMode") }
+    }
+
     // MARK: - iPad Settings
 
     @Published var pressureSensitivity: PressureSensitivity {
@@ -68,6 +72,9 @@ final class AppSettings: ObservableObject {
 
         let storedCount = UserDefaults.standard.integer(forKey: "sessionCount")
         self.sessionCount = storedCount > 0 ? storedCount : 10
+
+        let storedMode = UserDefaults.standard.string(forKey: "practiceMode") ?? ""
+        self.practiceMode = PracticeMode(rawValue: storedMode) ?? .trace
 
         let storedSensitivity = UserDefaults.standard.string(forKey: "pressureSensitivity") ?? ""
         self.pressureSensitivity = PressureSensitivity(rawValue: storedSensitivity) ?? .medium

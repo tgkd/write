@@ -1,6 +1,8 @@
 import Foundation
 
 struct PracticeRecord: Codable, Equatable, Identifiable, Sendable {
+    static let recallMode = "study"
+
     let id: UUID
     let codePoint: String
     let mode: String
@@ -11,7 +13,7 @@ struct PracticeRecord: Codable, Equatable, Identifiable, Sendable {
     let completedAt: Date
     let leniency: Double
 
-    var practiceMode: PracticeMode? {
-        PracticeMode(rawValue: mode)
+    var isRecall: Bool {
+        mode == Self.recallMode
     }
 }

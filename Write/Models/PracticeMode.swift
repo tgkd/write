@@ -3,15 +3,21 @@ import Foundation
 enum PracticeMode: String, CaseIterable, Sendable {
     case trace
     case strokeByStroke
-    case freeDraw
-    case study
+    case copy = "freeDraw"
 
     var displayName: String {
         switch self {
         case .trace: return "Trace"
         case .strokeByStroke: return "Guided"
-        case .freeDraw: return "Free"
-        case .study: return "Study"
+        case .copy: return "Copy"
+        }
+    }
+
+    var summary: String {
+        switch self {
+        case .trace: return "Write over the full guide."
+        case .strokeByStroke: return "Follow one stroke at a time."
+        case .copy: return "Copy the character without a guide."
         }
     }
 
@@ -20,8 +26,7 @@ enum PracticeMode: String, CaseIterable, Sendable {
         switch self {
         case .trace: return 0.15
         case .strokeByStroke: return nil
-        case .freeDraw: return nil
-        case .study: return 0.15
+        case .copy: return nil
         }
     }
 
@@ -30,8 +35,7 @@ enum PracticeMode: String, CaseIterable, Sendable {
         switch self {
         case .trace: return 0.5
         case .strokeByStroke: return 0.5
-        case .freeDraw: return nil
-        case .study: return 0.5
+        case .copy: return nil
         }
     }
 
@@ -49,9 +53,5 @@ enum PracticeMode: String, CaseIterable, Sendable {
         case .strokeByStroke: return 3
         default: return nil
         }
-    }
-
-    var hidesAnswer: Bool {
-        self == .study
     }
 }
