@@ -82,6 +82,12 @@ struct SettingsView: View {
                                 detail: "Readings & meanings — CC BY-SA 4.0",
                                 url: "https://www.edrdg.org/wiki/index.php/KANJIDIC_Project"
                             )
+                            Divider()
+                            acknowledgmentRow(
+                                title: "Tatoeba",
+                                detail: "Example sentences — CC BY 2.0 FR",
+                                url: "https://tatoeba.org/"
+                            )
                         }
                         .padding(16)
                         .background(Color(.secondarySystemBackground))

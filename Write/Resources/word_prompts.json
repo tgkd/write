@@ -1,39 +1,39 @@
 [
   {
     "id": "w01",
-    "before": "のどが かわいたので、",
+    "before": "",
     "reading": "みず",
-    "after": "を のみました。",
+    "after": "が のみたい。",
     "gloss": "water",
     "segments": [{ "kanji": "水" }],
-    "notes": "Only spelling: 水. のみました makes the drink reading clear; no everyday homophone."
+    "notes": "Tatoeba #143825 (CC BY 2.0 FR): 水が飲みたい。 “I want to drink some water.” Kana from the Tatoeba furigana transcription. Only spelling: 水."
   },
   {
     "id": "w02",
-    "before": "にわに きれいな ",
+    "before": "にわの ",
     "reading": "はな",
-    "after": "が さいています。",
+    "after": "は うつくしい。",
     "gloss": "flower",
     "segments": [{ "kanji": "花" }],
-    "notes": "Answer 花. Homophone 鼻 (nose) is ruled out by さいています and the gloss. 華 is a literary variant and is not accepted."
+    "notes": "Tatoeba #125498 (CC BY 2.0 FR): 庭の花は美しい。 “The flowers in the garden are beautiful.” Kana from the Tatoeba furigana transcription. Answer 花; 鼻 (nose) is ruled out by にわの and the gloss; 華 is a literary variant and is not accepted."
   },
   {
     "id": "w03",
-    "before": "そとは ",
+    "before": "",
     "reading": "あめ",
-    "after": "が ふっているので、かさを もって いきます。",
+    "after": "が ふるそうだ。",
     "gloss": "rain",
     "segments": [{ "kanji": "雨" }],
-    "notes": "Answer 雨. Homophone 飴 (candy) is ruled out by ふっている, かさ and the gloss."
+    "notes": "Tatoeba #189727 (CC BY 2.0 FR): 雨が降るそうだ。 “They say it will rain.” Kana from the Tatoeba furigana transcription. Answer 雨; 飴 (candy) is ruled out by ふる and the gloss."
   },
   {
     "id": "w04",
-    "before": "ちちと かわで ",
+    "before": "かれは ",
     "reading": "さかな",
-    "after": "を つりました。",
+    "after": "を さんびき つった。",
     "gloss": "fish",
     "segments": [{ "kanji": "魚" }],
-    "notes": "Answer 魚. 肴 (food served with drinks) is a different word and is excluded; つりました fixes the meaning."
+    "notes": "Tatoeba #108413 (CC BY 2.0 FR): 彼は魚を３匹釣った。 “He caught three fish.” Kana from the Tatoeba furigana transcription. Answer 魚; 肴 is a different word; つった fixes the meaning."
   },
   {
     "id": "w05",
@@ -42,177 +42,177 @@
     "after": "で おります。",
     "gloss": "(train) station",
     "segments": [{ "kanji": "駅" }],
-    "notes": "Answer 駅. Homophones 液 (liquid) and 益 (profit) are ruled out by つぎの〜で おります and the gloss."
+    "notes": "Tatoeba #150316 (CC BY 2.0 FR): 次の駅で降ります。 “I am getting off at the next station.” Kana from the Tatoeba furigana transcription. Answer 駅; 液 and 益 are ruled out by つぎの〜で おります and the gloss."
   },
   {
     "id": "w06",
-    "before": "ねつが あるので、あしたは しごとを ",
+    "before": "かれは がっこうを よく ",
     "reading": "やすむ",
-    "after": " ことに しました。",
-    "gloss": "to take a day off, to rest",
+    "after": "。",
+    "gloss": "to be absent, to take time off",
     "segments": [{ "kanji": "休" }, { "kana": "む" }],
-    "notes": "Answer 休む, okurigana む shown. No competing everyday spelling."
+    "notes": "Tatoeba #108870 (CC BY 2.0 FR): 彼は学校をよく休む。 “He often absents himself from school.” Kana from the Tatoeba furigana transcription. Answer 休む, okurigana む shown. No competing everyday spelling."
   },
   {
     "id": "w07",
-    "before": "ふじさんは にほんで いちばん ",
+    "before": "",
     "reading": "たかい",
-    "after": " やまです。",
-    "gloss": "high",
+    "after": " たてものですね。",
+    "gloss": "high, tall (building)",
     "segments": [{ "kanji": "高" }, { "kana": "い" }],
-    "notes": "Answer 高い, okurigana い shown. The expensive sense is spelled the same; the mountain context makes high the intended meaning."
+    "notes": "Tatoeba #229710 (CC BY 2.0 FR): 高い建物ですね。 “That is a high building, is it not?” Kana from the Tatoeba furigana transcription. Answer 高い, okurigana い shown; たてもの makes the height sense clear."
   },
   {
     "id": "w08",
-    "before": "この いぬは とても ",
+    "before": "あの いぬは ",
     "reading": "おおきい",
-    "after": "です。",
+    "after": "。",
     "gloss": "big",
     "segments": [{ "kanji": "大" }, { "kana": "きい" }],
-    "notes": "Answer 大きい as a predicate after とても, okurigana きい shown, so the adnominal 大きな is not the target. No competing kanji spelling."
+    "notes": "Tatoeba #231367 (CC BY 2.0 FR): あの犬は大きい。 “That dog is big.” Kana from the Tatoeba furigana transcription. Answer 大きい as a predicate, okurigana きい shown, so 大きな is not the target."
   },
   {
     "id": "w09",
-    "before": "ばんごはんを ",
+    "before": "ひつじは くさを ",
     "reading": "たべる",
-    "after": " まえに、てを あらいましょう。",
+    "after": "。",
     "gloss": "to eat",
     "segments": [{ "kanji": "食" }, { "kana": "べる" }],
-    "notes": "Answer 食べる, okurigana べる shown. No competing everyday spelling."
+    "notes": "Tatoeba #78845 (CC BY 2.0 FR): 羊は草を食べる。 “Sheep feed on grass.” Kana from the Tatoeba furigana transcription. Answer 食べる, okurigana べる shown. No competing everyday spelling."
   },
   {
     "id": "w10",
-    "before": "スーパーで ぎゅうにゅうを ",
-    "reading": "かう",
-    "after": " つもりです。",
-    "gloss": "to buy",
-    "segments": [{ "kanji": "買" }, { "kana": "う" }],
-    "notes": "Answer 買う, okurigana う shown. Homophone 飼う (to keep an animal) is ruled out by スーパー, ぎゅうにゅう and the gloss."
+    "before": "かれは しんしゃを ",
+    "reading": "かった",
+    "after": "。",
+    "gloss": "bought",
+    "segments": [{ "kanji": "買" }, { "kana": "った" }],
+    "notes": "Tatoeba #103766 (CC BY 2.0 FR): 彼は新車を買った。 “He bought a new car.” Kana from the Tatoeba furigana transcription. Answer 買った (買う), okurigana った shown; 勝った and 飼った are ruled out by しんしゃを and the gloss."
   },
   {
     "id": "w11",
-    "before": "バスを ",
+    "before": "",
     "reading": "まつ",
-    "after": " あいだ、ほんを よみました。",
+    "after": "しかない。",
     "gloss": "to wait",
     "segments": [{ "kanji": "待" }, { "kana": "つ" }],
-    "notes": "Answer 待つ, okurigana つ shown. The noun 松 (pine) is ruled out by バスを and the gloss."
+    "notes": "Tatoeba #4849 (CC BY 2.0 FR): 待つしかない。 “I can only wait.” Kana from the Tatoeba furigana transcription. Answer 待つ, okurigana つ shown; 松 is ruled out by しかない and the gloss."
   },
   {
     "id": "w12",
-    "before": "わたしは プールで ",
-    "reading": "およぐ",
-    "after": "のが すきです。",
-    "gloss": "to swim",
-    "segments": [{ "kanji": "泳" }, { "kana": "ぐ" }],
-    "notes": "Answer 泳ぐ, okurigana ぐ shown. No competing everyday spelling."
+    "before": "わたしは はやく ",
+    "reading": "およげる",
+    "after": "。",
+    "gloss": "can swim",
+    "segments": [{ "kanji": "泳" }, { "kana": "げる" }],
+    "notes": "Tatoeba #155294 (CC BY 2.0 FR): 私は速く泳げる。 “I can swim fast.” Kana from the Tatoeba furigana transcription. Answer 泳げる (泳ぐ), okurigana げる shown. No competing everyday spelling."
   },
   {
     "id": "w13",
-    "before": "まいあさ あるいて ",
+    "before": "",
     "reading": "がっこう",
-    "after": "に いきます。",
+    "after": "に いく じかんよ。",
     "gloss": "school",
     "segments": [{ "kanji": "学" }, { "kanji": "校" }],
-    "notes": "Answer 学校. No everyday homophone."
+    "notes": "Tatoeba #184467 (CC BY 2.0 FR): 学校に行く時間よ。 “It's time to go to school.” Kana from the Tatoeba furigana transcription. Answer 学校. No everyday homophone."
   },
   {
     "id": "w14",
-    "before": "わからない ことが あったら、",
+    "before": "かれは わたしの ",
     "reading": "せんせい",
-    "after": "に きいて ください。",
+    "after": "です。",
     "gloss": "teacher",
     "segments": [{ "kanji": "先" }, { "kanji": "生" }],
-    "notes": "Answer 先生. Homophones 先制 (preemption), 宣誓 (oath) and 専制 (despotism) are ruled out by the context and the gloss."
+    "notes": "Tatoeba #105758 (CC BY 2.0 FR): 彼は私の先生です。 “He is my teacher.” Kana from the Tatoeba furigana transcription. Answer 先生; 先制, 宣誓 and 専制 are ruled out by わたしの and the gloss."
   },
   {
     "id": "w15",
-    "before": "あさの ",
+    "before": "",
     "reading": "でんしゃ",
-    "after": "は とても こんでいます。",
+    "after": "に かさを わすれた。",
     "gloss": "train",
     "segments": [{ "kanji": "電" }, { "kanji": "車" }],
-    "notes": "Answer 電車. No everyday homophone; 列車 is a different word."
+    "notes": "Tatoeba #124806 (CC BY 2.0 FR): 電車に傘を忘れた。 “I left my umbrella on the train.” Kana from the Tatoeba furigana transcription. Answer 電車; 列車 is a different word."
   },
   {
     "id": "w16",
-    "before": "きょうは ",
+    "before": "いい ",
     "reading": "てんき",
-    "after": "が いいので、さんぽに いきましょう。",
+    "after": "ですね。",
     "gloss": "weather",
     "segments": [{ "kanji": "天" }, { "kanji": "気" }],
-    "notes": "Answer 天気. Homophone 転機 (turning point) is ruled out by the context and the gloss."
+    "notes": "Tatoeba #229331 (CC BY 2.0 FR): いい天気ですね。 “It is a nice day, isn't it?” Kana from the Tatoeba furigana transcription. Answer 天気; 転機 is ruled out by いい〜ですね and the gloss."
   },
   {
     "id": "w17",
-    "before": "こどもたちが ",
+    "before": "",
     "reading": "こうえん",
-    "after": "で あそんでいます。",
+    "after": "を さんぽしましょう。",
     "gloss": "park",
     "segments": [{ "kanji": "公" }, { "kanji": "園" }],
-    "notes": "Answer 公園. Homophones 講演 (lecture), 公演 (performance) and 後援 (sponsorship) are ruled out by あそんでいます and the gloss."
+    "notes": "Tatoeba #174014 (CC BY 2.0 FR): 公園を散歩しましょう。 “Let's take a walk in the park.” Kana from the Tatoeba furigana transcription. Answer 公園; 講演, 公演 and 後援 are ruled out by さんぽ and the gloss."
   },
   {
     "id": "w18",
-    "before": "かぜを ひいたので、",
+    "before": "ちかくに ",
     "reading": "びょういん",
-    "after": "へ いきました。",
+    "after": "が ある。",
     "gloss": "hospital",
     "segments": [{ "kanji": "病" }, { "kanji": "院" }],
-    "notes": "Answer 病院. 美容院 is read びよういん, a different word; かぜを ひいた makes the meaning clear."
+    "notes": "Tatoeba #179875 (CC BY 2.0 FR): 近くに病院がある。 “There is a hospital nearby.” Kana from the Tatoeba furigana transcription. Answer 病院; 美容院 is read びよういん, a different word."
   },
   {
     "id": "w19",
-    "before": "あそぶ まえに ",
+    "before": "わたしは ",
     "reading": "しゅくだい",
-    "after": "を します。",
+    "after": "を おえた。",
     "gloss": "homework",
     "segments": [{ "kanji": "宿" }, { "kanji": "題" }],
-    "notes": "Answer 宿題. No everyday homophone."
+    "notes": "Tatoeba #155984 (CC BY 2.0 FR): 私は宿題を終えた。 “I've finished my homework.” Kana from the Tatoeba furigana transcription. Answer 宿題. No everyday homophone."
   },
   {
     "id": "w20",
-    "before": "おばあちゃんに ",
+    "before": "かれは ",
     "reading": "てがみ",
-    "after": "を かきました。",
+    "after": "を かいた。",
     "gloss": "letter (mail)",
     "segments": [{ "kanji": "手" }, { "kanji": "紙" }],
-    "notes": "Answer 手紙. No everyday homophone."
+    "notes": "Tatoeba #104466 (CC BY 2.0 FR): 彼は手紙を書いた。 “He wrote a letter.” Kana from the Tatoeba furigana transcription. Answer 手紙. No everyday homophone."
   },
   {
     "id": "w21",
-    "before": "",
+    "before": "もうすぐ ",
     "reading": "なつやすみ",
-    "after": "に かぞくで うみへ いきました。",
+    "after": "です。",
     "gloss": "summer vacation",
     "segments": [{ "kanji": "夏" }, { "kanji": "休" }, { "kana": "み" }],
-    "notes": "Answer 夏休み, okurigana み shown. The bare 夏休 is not accepted."
+    "notes": "Tatoeba #194438 (CC BY 2.0 FR): もうすぐ夏休みです。 “Soon there will be summer vacation.” Kana from the Tatoeba furigana transcription. Answer 夏休み, okurigana み shown."
   },
   {
     "id": "w22",
-    "before": "きのう ",
+    "before": "",
     "reading": "としょかん",
-    "after": "で ほんを かりました。",
+    "after": "に ほんを かえした。",
     "gloss": "library",
     "segments": [{ "kanji": "図" }, { "kanji": "書" }, { "kanji": "館" }],
-    "notes": "Answer 図書館. No everyday homophone; 図書室 (school library room) is a different word."
+    "notes": "Tatoeba #143874 (CC BY 2.0 FR): 図書館に本を返した。 “She took the book back to the library.” Kana from the Tatoeba furigana transcription. Answer 図書館; 図書室 is a different word."
   },
   {
     "id": "w23",
-    "before": "にちようびに ",
+    "before": "わたしは ",
     "reading": "どうぶつえん",
-    "after": "で パンダを みました。",
+    "after": "へ いった。",
     "gloss": "zoo",
     "segments": [{ "kanji": "動" }, { "kanji": "物" }, { "kanji": "園" }],
-    "notes": "Answer 動物園. No everyday homophone."
+    "notes": "Tatoeba #154827 (CC BY 2.0 FR): 私は動物園へ行った。 “I went to the zoo.” Kana from the Tatoeba furigana transcription. Answer 動物園. No everyday homophone."
   },
   {
     "id": "w24",
-    "before": "あたらしい ",
+    "before": "かれは ",
     "reading": "じてんしゃ",
-    "after": "を かって もらいました。",
+    "after": "で つうがくする。",
     "gloss": "bicycle",
     "segments": [{ "kanji": "自" }, { "kanji": "転" }, { "kanji": "車" }],
-    "notes": "Answer 自転車. No everyday homophone."
+    "notes": "Tatoeba #105211 (CC BY 2.0 FR): 彼は自転車で通学する。 “He goes to school by bicycle.” Kana from the Tatoeba furigana transcription. Answer 自転車. No everyday homophone."
   }
 ]
