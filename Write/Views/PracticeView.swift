@@ -203,9 +203,9 @@ struct PracticeView: View {
     private var controlsCaption: String {
         guard practiceState.isRecall else { return practiceState.mode.summary }
         switch practiceState.hint {
-        case .unused: return "Write it from memory."
-        case .character: return "Character shown. Counts as a hint."
-        case .strokes: return "Next stroke shown. Counts as a hint."
+        case .unused: return String(localized: "Write it from memory.")
+        case .character: return String(localized: "Character shown. Counts as a hint.")
+        case .strokes: return String(localized: "Next stroke shown. Counts as a hint.")
         }
     }
 

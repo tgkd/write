@@ -7,17 +7,17 @@ enum PracticeMode: String, CaseIterable, Sendable {
 
     var displayName: String {
         switch self {
-        case .trace: return "Trace"
-        case .strokeByStroke: return "Guided"
-        case .copy: return "Copy"
+        case .trace: return String(localized: "Trace")
+        case .strokeByStroke: return String(localized: "Guided")
+        case .copy: return String(localized: "Copy")
         }
     }
 
     var summary: String {
         switch self {
-        case .trace: return "Write over the full guide."
-        case .strokeByStroke: return "Follow one stroke at a time."
-        case .copy: return "Copy the character without a guide."
+        case .trace: return String(localized: "Write over the full guide.")
+        case .strokeByStroke: return String(localized: "Follow one stroke at a time.")
+        case .copy: return String(localized: "Copy the character without a guide.")
         }
     }
 

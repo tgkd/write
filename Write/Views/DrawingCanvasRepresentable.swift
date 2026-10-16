@@ -31,7 +31,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         view.backgroundColor = .clear
         view.isAccessibilityElement = true
         view.accessibilityIdentifier = "drawingCanvas"
-        view.accessibilityLabel = "Drawing canvas"
+        view.accessibilityLabel = String(localized: "Drawing canvas")
         view.accessibilityTraits = .allowsDirectInteraction
 
         let interaction = UIPencilInteraction()

@@ -1,0 +1,1226 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ · %lld needed a hint" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld語でヒントを使用"
+          }
+        }
+      }
+    },
+    "%@: %lld completed" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@：%2$lld回完了"
+          }
+        }
+      }
+    },
+    "%lld / %lld  — tap anywhere" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld / %2$lld — タップして次へ"
+          }
+        }
+      }
+    },
+    "%lld character practiced" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld字を練習しました"
+          }
+        }
+      }
+    },
+    "%lld character recalled" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld字を思い出して書きました"
+          }
+        }
+      }
+    },
+    "%lld characters practiced" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld字を練習しました"
+          }
+        }
+      }
+    },
+    "%lld characters recalled" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld字を思い出して書きました"
+          }
+        }
+      }
+    },
+    "%lld hints" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒント%lld回"
+          }
+        }
+      }
+    },
+    "%lld miss" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ミス%lld回"
+          }
+        }
+      }
+    },
+    "%lld misses" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ミス%lld回"
+          }
+        }
+      }
+    },
+    "%lld random · %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld字 · %@"
+          }
+        }
+      }
+    },
+    "%lld random · from memory" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld字 · 見ないで書く"
+          }
+        }
+      }
+    },
+    "%lld retries" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "やり直し%lld回"
+          }
+        }
+      }
+    },
+    "%lld retry" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "やり直し%lld回"
+          }
+        }
+      }
+    },
+    "%lld strokes" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld画"
+          }
+        }
+      }
+    },
+    "%lld to recall again" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld字をもう一度"
+          }
+        }
+      }
+    },
+    "%lld word written" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld語を書きました"
+          }
+        }
+      }
+    },
+    "%lld words written" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld語を書きました"
+          }
+        }
+      }
+    },
+    "1 hint" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒント1回"
+          }
+        }
+      }
+    },
+    "1 stroke" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1画"
+          }
+        }
+      }
+    },
+    "Acknowledgments" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "謝辞"
+          }
+        }
+      }
+    },
+    "All" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべて"
+          }
+        }
+      }
+    },
+    "Allow Finger Drawing" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指での入力を許可"
+          }
+        }
+      }
+    },
+    "Auto" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動"
+          }
+        }
+      }
+    },
+    "Brush Thickness" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線の太さ"
+          }
+        }
+      }
+    },
+    "Cells per Row" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1行のマス数"
+          }
+        }
+      }
+    },
+    "Character shown. Counts as a hint." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文字を表示しました。ヒントを使ったことになります。"
+          }
+        }
+      }
+    },
+    "Characters" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文字数"
+          }
+        }
+      }
+    },
+    "Characters you needed a hint or retries for are waiting in Review." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒントを使ったり書き直したりした文字は「復習」に追加されました。"
+          }
+        }
+      }
+    },
+    "Characters you needed a hint or retries for in Recall appear here." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "「思い出して書く」でヒントを使ったり書き直したりした文字が、ここに表示されます。"
+          }
+        }
+      }
+    },
+    "Color Palette" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カラーパレット"
+          }
+        }
+      }
+    },
+    "Completed" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了回数"
+          }
+        }
+      }
+    },
+    "Completed practice only. Notebook writing isn't counted." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了した練習だけを数えます。ノートでの練習は含まれません。"
+          }
+        }
+      }
+    },
+    "Cool" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "寒色"
+          }
+        }
+      }
+    },
+    "Copy" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "見て書く"
+          }
+        }
+      }
+    },
+    "Copy the character without a guide." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ガイドなしで、文字を見て書きます。"
+          }
+        }
+      }
+    },
+    "Crosshair Guidelines" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "十字の補助線"
+          }
+        }
+      }
+    },
+    "Current kanji slot" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今書く漢字のマス"
+          }
+        }
+      }
+    },
+    "Days" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日数"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了"
+          }
+        }
+      }
+    },
+    "Double-tap with two fingers to clear a cell and start over" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2本指でダブルタップすると、マスを消して書き直せます"
+          }
+        }
+      }
+    },
+    "Draw in any cell to practice — no rules, just write" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "どのマスにも自由に書いて練習できます。判定はありません"
+          }
+        }
+      }
+    },
+    "Drawing" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "描画"
+          }
+        }
+      }
+    },
+    "Drawing canvas" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手書きキャンバス"
+          }
+        }
+      }
+    },
+    "Empty kanji slot" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空いている漢字のマス"
+          }
+        }
+      }
+    },
+    "Example sentences — CC BY 2.0 FR" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "例文 — CC BY 2.0 FR"
+          }
+        }
+      }
+    },
+    "Finish" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了"
+          }
+        }
+      }
+    },
+    "Follow one stroke at a time." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一画ずつガイドに沿って書きます。"
+          }
+        }
+      }
+    },
+    "Freq" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "頻度"
+          }
+        }
+      }
+    },
+    "Grade" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "学年"
+          }
+        }
+      }
+    },
+    "Grade %lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld年生"
+          }
+        }
+      }
+    },
+    "Grading" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "判定の厳しさ"
+          }
+        }
+      }
+    },
+    "Guide Width" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "お手本の太さ"
+          }
+        }
+      }
+    },
+    "Guided" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ガイド付き"
+          }
+        }
+      }
+    },
+    "Handedness" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "利き手"
+          }
+        }
+      }
+    },
+    "Hidden character" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隠れた文字"
+          }
+        }
+      }
+    },
+    "High" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "強"
+          }
+        }
+      }
+    },
+    "Hiragana" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ひらがな"
+          }
+        }
+      }
+    },
+    "How closely strokes must match. Strict also checks stroke length." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線がお手本にどれだけ近ければ正解になるかを決めます。「きびしめ」では線の長さも確認します。"
+          }
+        }
+      }
+    },
+    "I wrote it right" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正しく書けた"
+          }
+        }
+      }
+    },
+    "Ink" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "墨"
+          }
+        }
+      }
+    },
+    "Kanji" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "漢字"
+          }
+        }
+      }
+    },
+    "Kanji per session" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1セッションの文字数"
+          }
+        }
+      }
+    },
+    "Katakana" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カタカナ"
+          }
+        }
+      }
+    },
+    "Last %lld weeks" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直近%lld週間"
+          }
+        }
+      }
+    },
+    "Layout" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レイアウト"
+          }
+        }
+      }
+    },
+    "Left" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "左利き"
+          }
+        }
+      }
+    },
+    "Lenient" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ゆるめ"
+          }
+        }
+      }
+    },
+    "Levels" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レベル"
+          }
+        }
+      }
+    },
+    "Low" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "弱"
+          }
+        }
+      }
+    },
+    "Medium" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中"
+          }
+        }
+      }
+    },
+    "Mode" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "モード"
+          }
+        }
+      }
+    },
+    "Next" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "次へ"
+          }
+        }
+      }
+    },
+    "Next stroke shown. Counts as a hint." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "次の一画を表示しました。ヒントを使ったことになります。"
+          }
+        }
+      }
+    },
+    "No more hints" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "もうヒントはありません"
+          }
+        }
+      }
+    },
+    "Normal" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ふつう"
+          }
+        }
+      }
+    },
+    "Notebook" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ノート"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフ"
+          }
+        }
+      }
+    },
+    "Other Jōyō" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "その他の常用漢字"
+          }
+        }
+      }
+    },
+    "Pen Pressure" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "筆圧"
+          }
+        }
+      }
+    },
+    "Pen Tilt" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ペンの傾き"
+          }
+        }
+      }
+    },
+    "Practice" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "練習"
+          }
+        }
+      }
+    },
+    "Progress" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記録"
+          }
+        }
+      }
+    },
+    "Readings & meanings — CC BY-SA 4.0" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読みと意味 — CC BY-SA 4.0"
+          }
+        }
+      }
+    },
+    "Recall" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "思い出して書く"
+          }
+        }
+      }
+    },
+    "Recall these" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "復習する"
+          }
+        }
+      }
+    },
+    "Restart word" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ことばをやり直す"
+          }
+        }
+      }
+    },
+    "Retry" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "再試行"
+          }
+        }
+      }
+    },
+    "Review" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "復習"
+          }
+        }
+      }
+    },
+    "Right" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "右利き"
+          }
+        }
+      }
+    },
+    "Right shape, wrong order: that was stroke %lld. Draw stroke %lld first." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "形は合っていますが、書き順が違います。今のは%1$lld画目です。先に%2$lld画目を書いてください。"
+          }
+        }
+      }
+    },
+    "School" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "学年"
+          }
+        }
+      }
+    },
+    "Search kanji or kana" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "漢字・かなを検索"
+          }
+        }
+      }
+    },
+    "Select a kanji" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "漢字を選んでください"
+          }
+        }
+      }
+    },
+    "Session" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "セッション"
+          }
+        }
+      }
+    },
+    "Session Complete" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "セッション完了"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
+        }
+      }
+    },
+    "Show character" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文字を表示"
+          }
+        }
+      }
+    },
+    "Show next stroke" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "次の一画を表示"
+          }
+        }
+      }
+    },
+    "Smoothing" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手ぶれ補正"
+          }
+        }
+      }
+    },
+    "Some completed practice hasn't been saved." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完了した練習の一部が保存されていません。"
+          }
+        }
+      }
+    },
+    "Start of the first stroke" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一画目の書き始め"
+          }
+        }
+      }
+    },
+    "Strict" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "きびしめ"
+          }
+        }
+      }
+    },
+    "Stroke data — CC BY-SA 3.0" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書き順データ — CC BY-SA 3.0"
+          }
+        }
+      }
+    },
+    "Stroke guide" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書き順ガイド"
+          }
+        }
+      }
+    },
+    "Strokes" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画数"
+          }
+        }
+      }
+    },
+    "Tap the reference kanji to see stroke order animation" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "お手本の漢字をタップすると、書き順のアニメーションが見られます"
+          }
+        }
+      }
+    },
+    "Thick" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "太"
+          }
+        }
+      }
+    },
+    "Thin" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "細"
+          }
+        }
+      }
+    },
+    "Toggle Sidebar" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サイドバーの表示を切り替え"
+          }
+        }
+      }
+    },
+    "Trace" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "なぞり書き"
+          }
+        }
+      }
+    },
+    "Undo stroke" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一画戻す"
+          }
+        }
+      }
+    },
+    "Use the sidebar to pick a different kanji" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "サイドバーから別の漢字を選べます"
+          }
+        }
+      }
+    },
+    "Used a hint" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒントを使用"
+          }
+        }
+      }
+    },
+    "Warm" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暖色"
+          }
+        }
+      }
+    },
+    "Words" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ことば"
+          }
+        }
+      }
+    },
+    "Words · %lld / %lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ことば · %lld / %lld"
+          }
+        }
+      }
+    },
+    "Write it from memory." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "何も見ずに書いてください。"
+          }
+        }
+      }
+    },
+    "Write over the full guide." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "お手本全体をなぞって書きます。"
+          }
+        }
+      }
+    },
+    "Write the kanji for the highlighted box." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "色のついたマスの漢字を書いてください。"
+          }
+        }
+      }
+    },
+    "hint" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒント"
+          }
+        }
+      }
+    },
+    "write the missing kanji" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空欄の漢字を書く"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

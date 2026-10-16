@@ -57,6 +57,6 @@ struct WordSlotsRow: View {
         if isRevealed {
             return text
         }
-        return isCurrent ? "Current kanji slot" : "Empty kanji slot"
+        return isCurrent ? String(localized: "Current kanji slot") : String(localized: "Empty kanji slot")
     }
 }

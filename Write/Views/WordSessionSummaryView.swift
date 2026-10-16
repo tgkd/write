@@ -70,22 +70,23 @@ struct WordSessionSummaryView: View {
     }
 
     private var subtitle: String {
-        let noun = results.count == 1 ? "word" : "words"
-        let written = "\(results.count) \(noun) written"
+        let count = results.count
+        let written = count == 1 ? String(localized: "\(count) word written") : String(localized: "\(count) words written")
         let hinted = results.filter { $0.hintsUsed > 0 }.count
         guard hinted > 0 else {
             return written
         }
-        return "\(written) · \(hinted) needed a hint"
+        return String(localized: "\(written) · \(hinted) needed a hint")
     }
 
     private func detail(for result: WordPracticeState.WordResult) -> String {
         var parts: [String] = []
         if result.hintsUsed > 0 {
-            parts.append(result.hintsUsed == 1 ? "1 hint" : "\(result.hintsUsed) hints")
+            parts.append(result.hintsUsed == 1 ? String(localized: "1 hint") : String(localized: "\(result.hintsUsed) hints"))
         }
         if result.misses > 0 {
-            parts.append("\(result.misses) miss\(result.misses == 1 ? "" : "es")")
+            let count = result.misses
+            parts.append(count == 1 ? String(localized: "\(count) miss") : String(localized: "\(count) misses"))
         }
         return parts.joined(separator: " · ")
     }

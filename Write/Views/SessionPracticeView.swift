@@ -39,8 +39,8 @@ struct SessionPracticeView: View {
 
     private var title: String {
         switch sessionState.kind {
-        case .practice: return "Practice"
-        case .recall: return "Recall"
+        case .practice: return String(localized: "Practice")
+        case .recall: return String(localized: "Recall")
         }
     }
 

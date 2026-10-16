@@ -14,6 +14,6 @@ struct DailyKanji: Codable, Equatable, Hashable, Sendable {
     }
 
     var strokeCountLabel: String {
-        strokeCount == 1 ? "1 stroke" : "\(strokeCount) strokes"
+        strokeCount == 1 ? String(localized: "1 stroke") : String(localized: "\(strokeCount) strokes")
     }
 }

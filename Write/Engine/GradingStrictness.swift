@@ -1,3 +1,4 @@
+import Foundation
 import CoreGraphics
 
 enum GradingStrictness: String, CaseIterable, Codable, Sendable {
@@ -15,9 +16,9 @@ enum GradingStrictness: String, CaseIterable, Codable, Sendable {
 
     var displayName: String {
         switch self {
-        case .lenient: return "Lenient"
-        case .normal: return "Normal"
-        case .strict: return "Strict"
+        case .lenient: return String(localized: "Lenient")
+        case .normal: return String(localized: "Normal")
+        case .strict: return String(localized: "Strict")
         }
     }
 

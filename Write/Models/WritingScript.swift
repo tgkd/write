@@ -1,3 +1,5 @@
+import Foundation
+
 enum WritingScript: Hashable, Sendable {
     case kanji
     case hiragana
@@ -16,9 +18,9 @@ enum WritingScript: Hashable, Sendable {
 
     var displayName: String {
         switch self {
-        case .kanji: return "Kanji"
-        case .hiragana: return "Hiragana"
-        case .katakana: return "Katakana"
+        case .kanji: return String(localized: "Kanji")
+        case .hiragana: return String(localized: "Hiragana")
+        case .katakana: return String(localized: "Katakana")
         }
     }
 }

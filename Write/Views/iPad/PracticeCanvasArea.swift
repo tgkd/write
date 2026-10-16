@@ -130,7 +130,7 @@ struct KanjiReferenceRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> KanjiReferenceView {
         let view = KanjiReferenceView()
-        view.accessibilityLabel = "Stroke guide"
+        view.accessibilityLabel = String(localized: "Stroke guide")
         applyVisibility(to: view)
         view.backgroundColor = .clear
         view.strokeLineWidth = lineWidth

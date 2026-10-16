@@ -82,7 +82,7 @@ struct KanjiDetailView: View {
         .foregroundStyle(.secondary)
     }
 
-    private func metadataItem(label: String, value: String) -> some View {
+    private func metadataItem(label: LocalizedStringKey, value: String) -> some View {
         VStack(spacing: 2) {
             Text(value)
                 .font(.subheadline.weight(.medium))

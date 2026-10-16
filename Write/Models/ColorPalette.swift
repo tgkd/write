@@ -7,9 +7,9 @@ enum ColorPalette: String, CaseIterable, Sendable {
 
     var displayName: String {
         switch self {
-        case .warm: return "Warm"
-        case .cool: return "Cool"
-        case .ink: return "Ink"
+        case .warm: return String(localized: "Warm")
+        case .cool: return String(localized: "Cool")
+        case .ink: return String(localized: "Ink")
         }
     }
 
