@@ -1,1 +1,218 @@
-[]
+[
+  {
+    "id": "w01",
+    "before": "のどが かわいたので、",
+    "reading": "みず",
+    "after": "を のみました。",
+    "gloss": "water",
+    "segments": [{ "kanji": "水" }],
+    "notes": "Only spelling: 水. のみました makes the drink reading clear; no everyday homophone."
+  },
+  {
+    "id": "w02",
+    "before": "にわに きれいな ",
+    "reading": "はな",
+    "after": "が さいています。",
+    "gloss": "flower",
+    "segments": [{ "kanji": "花" }],
+    "notes": "Answer 花. Homophone 鼻 (nose) is ruled out by さいています and the gloss. 華 is a literary variant and is not accepted."
+  },
+  {
+    "id": "w03",
+    "before": "そとは ",
+    "reading": "あめ",
+    "after": "が ふっているので、かさを もって いきます。",
+    "gloss": "rain",
+    "segments": [{ "kanji": "雨" }],
+    "notes": "Answer 雨. Homophone 飴 (candy) is ruled out by ふっている, かさ and the gloss."
+  },
+  {
+    "id": "w04",
+    "before": "ちちと かわで ",
+    "reading": "さかな",
+    "after": "を つりました。",
+    "gloss": "fish",
+    "segments": [{ "kanji": "魚" }],
+    "notes": "Answer 魚. 肴 (food served with drinks) is a different word and is excluded; つりました fixes the meaning."
+  },
+  {
+    "id": "w05",
+    "before": "つぎの ",
+    "reading": "えき",
+    "after": "で おります。",
+    "gloss": "(train) station",
+    "segments": [{ "kanji": "駅" }],
+    "notes": "Answer 駅. Homophones 液 (liquid) and 益 (profit) are ruled out by つぎの〜で おります and the gloss."
+  },
+  {
+    "id": "w06",
+    "before": "ねつが あるので、あしたは しごとを ",
+    "reading": "やすむ",
+    "after": " ことに しました。",
+    "gloss": "to take a day off, to rest",
+    "segments": [{ "kanji": "休" }, { "kana": "む" }],
+    "notes": "Answer 休む, okurigana む shown. No competing everyday spelling."
+  },
+  {
+    "id": "w07",
+    "before": "ふじさんは にほんで いちばん ",
+    "reading": "たかい",
+    "after": " やまです。",
+    "gloss": "high, tall",
+    "segments": [{ "kanji": "高" }, { "kana": "い" }],
+    "notes": "Answer 高い, okurigana い shown. The expensive sense is spelled the same; the mountain context makes high the intended meaning."
+  },
+  {
+    "id": "w08",
+    "before": "あの いえには ",
+    "reading": "おおきい",
+    "after": " いぬが います。",
+    "gloss": "big",
+    "segments": [{ "kanji": "大" }, { "kana": "きい" }],
+    "notes": "Answer 大きい, okurigana きい shown. The adnominal 大きな is a different form and is not this prompt."
+  },
+  {
+    "id": "w09",
+    "before": "ばんごはんを ",
+    "reading": "たべる",
+    "after": " まえに、てを あらいましょう。",
+    "gloss": "to eat",
+    "segments": [{ "kanji": "食" }, { "kana": "べる" }],
+    "notes": "Answer 食べる, okurigana べる shown. No competing everyday spelling."
+  },
+  {
+    "id": "w10",
+    "before": "スーパーで ぎゅうにゅうを ",
+    "reading": "かう",
+    "after": " つもりです。",
+    "gloss": "to buy",
+    "segments": [{ "kanji": "買" }, { "kana": "う" }],
+    "notes": "Answer 買う, okurigana う shown. Homophone 飼う (to keep an animal) is ruled out by スーパー, ぎゅうにゅう and the gloss."
+  },
+  {
+    "id": "w11",
+    "before": "バスを ",
+    "reading": "まつ",
+    "after": " あいだ、ほんを よみました。",
+    "gloss": "to wait",
+    "segments": [{ "kanji": "待" }, { "kana": "つ" }],
+    "notes": "Answer 待つ, okurigana つ shown. The noun 松 (pine) is ruled out by バスを and the gloss."
+  },
+  {
+    "id": "w12",
+    "before": "わたしは プールで ",
+    "reading": "およぐ",
+    "after": "のが すきです。",
+    "gloss": "to swim",
+    "segments": [{ "kanji": "泳" }, { "kana": "ぐ" }],
+    "notes": "Answer 泳ぐ, okurigana ぐ shown. No competing everyday spelling."
+  },
+  {
+    "id": "w13",
+    "before": "まいあさ あるいて ",
+    "reading": "がっこう",
+    "after": "に いきます。",
+    "gloss": "school",
+    "segments": [{ "kanji": "学" }, { "kanji": "校" }],
+    "notes": "Answer 学校. No everyday homophone."
+  },
+  {
+    "id": "w14",
+    "before": "わからない ことが あったら、",
+    "reading": "せんせい",
+    "after": "に きいて ください。",
+    "gloss": "teacher",
+    "segments": [{ "kanji": "先" }, { "kanji": "生" }],
+    "notes": "Answer 先生. Homophones 先制 (preemption), 宣誓 (oath) and 専制 (despotism) are ruled out by the context and the gloss."
+  },
+  {
+    "id": "w15",
+    "before": "あさの ",
+    "reading": "でんしゃ",
+    "after": "は とても こんでいます。",
+    "gloss": "train",
+    "segments": [{ "kanji": "電" }, { "kanji": "車" }],
+    "notes": "Answer 電車. No everyday homophone; 列車 is a different word."
+  },
+  {
+    "id": "w16",
+    "before": "きょうは ",
+    "reading": "てんき",
+    "after": "が いいので、さんぽに いきましょう。",
+    "gloss": "weather",
+    "segments": [{ "kanji": "天" }, { "kanji": "気" }],
+    "notes": "Answer 天気. Homophone 転機 (turning point) is ruled out by the context and the gloss."
+  },
+  {
+    "id": "w17",
+    "before": "こどもたちが ",
+    "reading": "こうえん",
+    "after": "で あそんでいます。",
+    "gloss": "park",
+    "segments": [{ "kanji": "公" }, { "kanji": "園" }],
+    "notes": "Answer 公園. Homophones 講演 (lecture), 公演 (performance) and 後援 (sponsorship) are ruled out by あそんでいます and the gloss."
+  },
+  {
+    "id": "w18",
+    "before": "かぜを ひいたので、",
+    "reading": "びょういん",
+    "after": "へ いきました。",
+    "gloss": "hospital, clinic",
+    "segments": [{ "kanji": "病" }, { "kanji": "院" }],
+    "notes": "Answer 病院. 美容院 is read びよういん, a different word; かぜを ひいた makes the meaning clear."
+  },
+  {
+    "id": "w19",
+    "before": "あそぶ まえに ",
+    "reading": "しゅくだい",
+    "after": "を します。",
+    "gloss": "homework",
+    "segments": [{ "kanji": "宿" }, { "kanji": "題" }],
+    "notes": "Answer 宿題. No everyday homophone."
+  },
+  {
+    "id": "w20",
+    "before": "おばあちゃんに ",
+    "reading": "てがみ",
+    "after": "を かきました。",
+    "gloss": "letter (mail)",
+    "segments": [{ "kanji": "手" }, { "kanji": "紙" }],
+    "notes": "Answer 手紙. No everyday homophone."
+  },
+  {
+    "id": "w21",
+    "before": "",
+    "reading": "なつやすみ",
+    "after": "に かぞくで うみへ いきました。",
+    "gloss": "summer vacation",
+    "segments": [{ "kanji": "夏" }, { "kanji": "休" }, { "kana": "み" }],
+    "notes": "Answer 夏休み, okurigana み shown. The bare 夏休 is not accepted."
+  },
+  {
+    "id": "w22",
+    "before": "きのう ",
+    "reading": "としょかん",
+    "after": "で ほんを かりました。",
+    "gloss": "library",
+    "segments": [{ "kanji": "図" }, { "kanji": "書" }, { "kanji": "館" }],
+    "notes": "Answer 図書館. No everyday homophone; 図書室 (school library room) is a different word."
+  },
+  {
+    "id": "w23",
+    "before": "にちようびに ",
+    "reading": "どうぶつえん",
+    "after": "で パンダを みました。",
+    "gloss": "zoo",
+    "segments": [{ "kanji": "動" }, { "kanji": "物" }, { "kanji": "園" }],
+    "notes": "Answer 動物園. No everyday homophone."
+  },
+  {
+    "id": "w24",
+    "before": "あたらしい ",
+    "reading": "じてんしゃ",
+    "after": "を かって もらいました。",
+    "gloss": "bicycle",
+    "segments": [{ "kanji": "自" }, { "kanji": "転" }, { "kanji": "車" }],
+    "notes": "Answer 自転車. No everyday homophone."
+  }
+]
