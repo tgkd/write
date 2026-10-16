@@ -11,15 +11,29 @@ extension BrushStroke.Config {
         self.init()
         pressureSensitivity = pressure
         tiltSensitivity = tilt
+        self.smoothing = smoothing
+        applySmoothingParameters(of: smoothing)
+        let widthRange = thickness.widthRange
+        minWidth = widthRange.min
+        maxWidth = widthRange.max
+    }
+
+    func resolved(forPencil isPencil: Bool) -> BrushStroke.Config {
+        var config = self
+        config.widthModel = isPencil ? .speed : .finger
+        if smoothing == .auto {
+            config.applySmoothingParameters(of: smoothing.effective(forPencil: isPencil))
+        }
+        return config
+    }
+
+    private mutating func applySmoothingParameters(of smoothing: SmoothingStrength) {
         let filterParams = smoothing.filterParams
         filterMinCutoff = filterParams.minCutoff
         filterBeta = filterParams.beta
         let centerline = smoothing.centerlineParams
         centerlineRadius = centerline.radius
         centerlineMaxShift = centerline.maxShift
-        let widthRange = thickness.widthRange
-        minWidth = widthRange.min
-        maxWidth = widthRange.max
     }
 }
 
@@ -74,22 +88,34 @@ enum TiltSensitivity: String, CaseIterable, Sendable {
 }
 
 enum SmoothingStrength: String, CaseIterable, Sendable {
+    case auto
     case low
     case medium
     case high
 
+    static let validation: SmoothingStrength = .medium
+
     var displayName: String {
         switch self {
+        case .auto: return "Auto"
         case .low: return "Low"
         case .medium: return "Medium"
         case .high: return "High"
         }
     }
 
+    func effective(forPencil isPencil: Bool) -> SmoothingStrength {
+        guard self == .auto else {
+            return self
+        }
+        return isPencil ? .medium : .high
+    }
+
     /// (minCutoff, beta) for OneEuroFilter. dCutoff stays at 10.
     /// Lower minCutoff/beta = heavier filtering, so "high" smoothing maps to the LOW tuple.
     var filterParams: (minCutoff: CGFloat, beta: CGFloat) {
         switch self {
+        case .auto: return SmoothingStrength.medium.filterParams
         case .low: return (3.0, 0.8)
         case .medium: return (1.5, 0.5)
         case .high: return (0.8, 0.3)
@@ -98,6 +124,7 @@ enum SmoothingStrength: String, CaseIterable, Sendable {
 
     var centerlineParams: (radius: Int, maxShift: CGFloat) {
         switch self {
+        case .auto: return SmoothingStrength.medium.centerlineParams
         case .low: return (1, 0.75)
         case .medium: return (2, 1.25)
         case .high: return (3, 2.0)

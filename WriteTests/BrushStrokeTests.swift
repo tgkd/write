@@ -351,3 +351,188 @@ final class BrushStrokeCenterlineTests: XCTestCase {
         }
     }
 }
+
+// MARK: - Finger width profile tests
+
+final class BrushStrokeFingerProfileTests: XCTestCase {
+
+    private let startX: CGFloat = 50
+    private let endX: CGFloat = 350
+    private let y: CGFloat = 100
+
+    private func horizontalStroke(force: CGFloat? = nil) -> [BrushStroke.Sample] {
+        (0...60).map { i in
+            BrushStroke.Sample(
+                point: CGPoint(x: startX + CGFloat(i) * 5, y: y),
+                timestamp: TimeInterval(i) * 0.016,
+                force: force
+            )
+        }
+    }
+
+    private func fingerConfig() -> BrushStroke.Config {
+        BrushStroke.Config().resolved(forPencil: false)
+    }
+
+    private func halfWidth(of path: CGPath, atX x: CGFloat) -> CGFloat {
+        var offset: CGFloat = 0
+        while offset < 20, path.contains(CGPoint(x: x, y: y + offset + 0.01)) {
+            offset += 0.01
+        }
+        return offset
+    }
+
+    func testFingerResolvesToFingerWidthModel() {
+        XCTAssertEqual(BrushStroke.Config().resolved(forPencil: false).widthModel, .finger)
+        XCTAssertEqual(BrushStroke.Config().resolved(forPencil: true).widthModel, .speed)
+    }
+
+    func testFingerStrokeThinsTowardTheEnd() {
+        let path = BrushStroke.createPath(from: horizontalStroke(), config: fingerConfig())
+        let early = halfWidth(of: path, atX: startX + 60)
+        let late = halfWidth(of: path, atX: endX - 30)
+
+        XCTAssertLessThan(late, early * 0.9)
+        XCTAssertGreaterThan(late, early * 0.6)
+    }
+
+    func testFingerStrokePressesInAtTheStart() {
+        let path = BrushStroke.createPath(from: horizontalStroke(), config: fingerConfig())
+
+        XCTAssertLessThan(halfWidth(of: path, atX: startX + 0.5), halfWidth(of: path, atX: startX + 30) * 0.6)
+    }
+
+    func testFingerTipsAreNarrowerThanSpeedModelTips() {
+        let finger = BrushStroke.createPath(from: horizontalStroke(), config: fingerConfig())
+        let speed = BrushStroke.createPath(from: horizontalStroke(), config: BrushStroke.Config())
+        let maxWidth = BrushStroke.Config().maxWidth
+
+        let fingerTip = halfWidth(of: finger, atX: endX - 1)
+        XCTAssertLessThan(fingerTip, halfWidth(of: speed, atX: endX - 1) * 0.6)
+        XCTAssertLessThan(fingerTip, maxWidth * 0.15)
+    }
+
+    func testFingerEndsAreRoundCapsNoWiderThanHalfTheTip() {
+        let path = BrushStroke.createPath(from: horizontalStroke(), config: fingerConfig())
+        let box = path.boundingBoxOfPath
+        let maxWidth = BrushStroke.Config().maxWidth
+
+        let endOvershoot = box.maxX - endX
+        let startOvershoot = startX - box.minX
+        XCTAssertGreaterThan(endOvershoot, 0.05)
+        XCTAssertLessThanOrEqual(endOvershoot, maxWidth * 0.1)
+        XCTAssertGreaterThan(startOvershoot, 0.05)
+        XCTAssertLessThanOrEqual(startOvershoot, maxWidth * 0.1)
+    }
+
+    func testSpeedModelEndsAreRoundCapped() {
+        let path = BrushStroke.createPath(from: horizontalStroke(), config: BrushStroke.Config())
+        let box = path.boundingBoxOfPath
+        let maxWidth = BrushStroke.Config().maxWidth
+
+        XCTAssertGreaterThan(box.maxX - endX, 0.05)
+        XCTAssertLessThanOrEqual(box.maxX - endX, maxWidth / 2)
+    }
+
+    func testFingerLivePathTracksFullRebuild() {
+        let config = fingerConfig()
+        let samples = (0..<120).map { i in
+            BrushStroke.Sample(
+                point: CGPoint(x: CGFloat(i) * 6, y: 200 + 40 * sin(CGFloat(i) * 0.2)),
+                timestamp: TimeInterval(i) * 0.016
+            )
+        }
+        var renderer = BrushStroke.LiveRenderer(config: config)
+
+        for (i, sample) in samples.enumerated() {
+            renderer.append(sample)
+            guard [20, 50, 80, 119].contains(i) else {
+                continue
+            }
+            let live = renderer.currentPath().boundingBoxOfPath
+            let full = BrushStroke.createPath(from: Array(samples[0...i]), config: config).boundingBoxOfPath
+
+            XCTAssertEqual(live.minX, full.minX, accuracy: 1.0, "minX at sample \(i)")
+            XCTAssertEqual(live.minY, full.minY, accuracy: 1.0, "minY at sample \(i)")
+            XCTAssertEqual(live.maxX, full.maxX, accuracy: 1.0, "maxX at sample \(i)")
+            XCTAssertEqual(live.maxY, full.maxY, accuracy: 1.0, "maxY at sample \(i)")
+        }
+    }
+
+    func testPencilPressureStillDrivesWidth() {
+        var config = BrushStroke.Config().resolved(forPencil: true)
+        config.pressureSensitivity = .high
+        let light = BrushStroke.createPath(from: horizontalStroke(force: 0.1), config: config)
+        let heavy = BrushStroke.createPath(from: horizontalStroke(force: 0.9), config: config)
+
+        XCTAssertGreaterThan(heavy.boundingBoxOfPath.height, light.boundingBoxOfPath.height + 1)
+    }
+}
+
+// MARK: - Auto smoothing tests
+
+final class AutoSmoothingTests: XCTestCase {
+
+    private func config(_ smoothing: SmoothingStrength) -> BrushStroke.Config {
+        BrushStroke.Config(pressure: .off, tilt: .off, smoothing: smoothing, thickness: .medium)
+    }
+
+    func testAutoIsTheFirstPickerOption() {
+        XCTAssertEqual(SmoothingStrength.allCases.first, .auto)
+        XCTAssertEqual(SmoothingStrength.auto.displayName, "Auto")
+    }
+
+    func testAutoUsesHighSmoothingForFingers() {
+        let finger = config(.auto).resolved(forPencil: false)
+        let high = config(.high)
+
+        XCTAssertEqual(finger.filterMinCutoff, high.filterMinCutoff)
+        XCTAssertEqual(finger.filterBeta, high.filterBeta)
+        XCTAssertEqual(finger.centerlineRadius, high.centerlineRadius)
+        XCTAssertEqual(finger.centerlineMaxShift, high.centerlineMaxShift)
+    }
+
+    func testAutoUsesMediumSmoothingForPencil() {
+        let pencil = config(.auto).resolved(forPencil: true)
+        let medium = config(.medium)
+
+        XCTAssertEqual(pencil.filterMinCutoff, medium.filterMinCutoff)
+        XCTAssertEqual(pencil.filterBeta, medium.filterBeta)
+        XCTAssertEqual(pencil.centerlineRadius, medium.centerlineRadius)
+        XCTAssertEqual(pencil.centerlineMaxShift, medium.centerlineMaxShift)
+    }
+
+    func testExplicitSmoothingIsKeptForEveryTouchType() {
+        for strength in [SmoothingStrength.low, .medium, .high] {
+            for isPencil in [false, true] {
+                let resolved = config(strength).resolved(forPencil: isPencil)
+                XCTAssertEqual(resolved.filterMinCutoff, strength.filterParams.minCutoff)
+                XCTAssertEqual(resolved.centerlineRadius, strength.centerlineParams.radius)
+            }
+        }
+    }
+}
+
+@MainActor
+final class SmoothingSettingDefaultTests: XCTestCase {
+    private var suiteName: String!
+    private var defaults: UserDefaults!
+
+    override func setUp() async throws {
+        suiteName = "SmoothingSettingDefaultTests-\(UUID().uuidString)"
+        defaults = UserDefaults(suiteName: suiteName)
+    }
+
+    override func tearDown() async throws {
+        defaults.removePersistentDomain(forName: suiteName)
+    }
+
+    func testAbsentSmoothingDefaultsToAuto() {
+        XCTAssertEqual(AppSettings(defaults: defaults).smoothingStrength, .auto)
+    }
+
+    func testStoredSmoothingIsKept() {
+        defaults.set("low", forKey: "smoothingStrength")
+        XCTAssertEqual(AppSettings(defaults: defaults).smoothingStrength, .low)
+    }
+}
