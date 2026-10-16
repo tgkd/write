@@ -49,6 +49,7 @@ final class DrawingCanvasView: UIView {
         let canvasSize: CGSize
         var samples: [BrushStroke.Sample]
         var outstanding: [NSNumber: Int]
+        let handler: (CanvasStrokeCapture) -> Void
         var didRefine = false
 
         var capture: CanvasStrokeCapture {
@@ -421,7 +422,7 @@ final class DrawingCanvasView: UIView {
         }
         if pending.outstanding.isEmpty {
             pendingCapture = nil
-            onStrokeCaptured?(pending.capture)
+            pending.handler(pending.capture)
         } else {
             pendingCapture = pending
         }
@@ -437,7 +438,7 @@ final class DrawingCanvasView: UIView {
         }
         pendingCapture = nil
         if pending.didRefine {
-            onStrokeCaptured?(pending.capture)
+            pending.handler(pending.capture)
         }
     }
 
@@ -454,7 +455,8 @@ final class DrawingCanvasView: UIView {
             touchType: touchType,
             canvasSize: bounds.size,
             samples: captureSamples,
-            outstanding: captureOutstanding
+            outstanding: captureOutstanding,
+            handler: onStrokeCaptured
         )
         if !pending.outstanding.isEmpty {
             pendingCapture = pending
