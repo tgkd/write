@@ -24,6 +24,30 @@ struct ValidationConfig: Sendable {
     /// Number of sample points for comparison.
     var sampleCount: Int = 50
 
+    var fitsScale = true
+
+    var minimumScale: CGFloat = 0.6
+
+    var maximumScale: CGFloat = 1.6
+
+    var scaleSpreadFloor: CGFloat = 0.04
+
+    var scaleSpreadForFullConfidence: CGFloat = 0.10
+
+    var scaleAnchorsForFullConfidence = 3
+
+    var enforcesProportion = true
+
+    var proportionTolerance: CGFloat = 1.6
+
+    var proportionMinimumReferenceExtent: CGFloat = 0.03
+
+    var rejectsDisproportion: Bool {
+        enforcesProportion && leniency <= GradingStrictness.strict.leniency + 0.001
+    }
+
+    static let translationOnly = ValidationConfig(fitsScale: false, enforcesProportion: false)
+
     static let standard = ValidationConfig()
 
     static let gradingVersion = 2
@@ -78,6 +102,9 @@ enum StrokeValidator {
         return compareStrokes(
             userPoints: userSampled,
             referencePoints: refPoints,
+            referenceExtent: extent(of: refPoints),
+            proportionScale: 1,
+            rejectsDisproportion: false,
             canvasSize: canvasSize,
             config: config,
             positionTolerance: config.positionTolerance,
@@ -144,7 +171,17 @@ enum StrokeValidator {
             canvasSize.width * canvasSize.width + canvasSize.height * canvasSize.height
         )
         let centroidMaxDist = canvasDiagonal * config.centroidTolerance * config.leniency
-        let placement = anchors.map { placementOffset(anchors: $0, referenceSamples: referenceSamples, canvasSize: canvasSize) }
+        let placement = anchors.map {
+            self.placement(anchors: $0, referenceSamples: referenceSamples, canvasSize: canvasSize, config: config)
+        } ?? .identity
+        let proportionScale: CGFloat?
+        if let anchors {
+            proportionScale = self.proportionScale(
+                anchors: anchors, referenceSamples: referenceSamples, canvasSize: canvasSize, config: config
+            )
+        } else {
+            proportionScale = 1
+        }
         let positionTolerance: CGFloat
         if let anchors {
             positionTolerance = anchors.isEmpty
@@ -159,7 +196,7 @@ enum StrokeValidator {
         for idx in unmatchedIndices.sorted() {
             guard referenceSamples.indices.contains(idx) else { continue }
             guard !referenceSamples[idx].isEmpty else { continue }
-            let refPoints = shifted(referenceSamples[idx], by: placement ?? .zero)
+            let refPoints = transformed(referenceSamples[idx], by: placement)
 
             let refCentroid = ProcrustesNormalizer.centroid(of: refPoints)
 
@@ -172,6 +209,9 @@ enum StrokeValidator {
             let result = compareStrokes(
                 userPoints: userSampled,
                 referencePoints: refPoints,
+                referenceExtent: extent(of: referenceSamples[idx]),
+                proportionScale: proportionScale,
+                rejectsDisproportion: anchors != nil && config.rejectsDisproportion,
                 canvasSize: canvasSize,
                 config: config,
                 positionTolerance: positionTolerance,
@@ -201,7 +241,11 @@ enum StrokeValidator {
         )
         result.userCentroid = userCentroid
         if let matched = result.matchedStrokeIndex {
-            result.anchor = StrokeAnchor(referenceIndex: matched, userCentroid: userCentroid)
+            result.anchor = StrokeAnchor(
+                referenceIndex: matched,
+                userCentroid: userCentroid,
+                userExtent: extent(of: userSampled)
+            )
         }
         return result
     }
@@ -211,9 +255,57 @@ enum StrokeValidator {
         referenceSamples: [[CGPoint]],
         canvasSize: CGSize
     ) -> StrokePlacement {
-        StrokePlacement(
-            scale: 1,
-            offset: placementOffset(anchors: anchors, referenceSamples: referenceSamples, canvasSize: canvasSize)
+        placement(anchors: anchors, referenceSamples: referenceSamples, canvasSize: canvasSize, config: .standard)
+    }
+
+    static func placement(
+        anchors: [StrokeAnchor],
+        referenceSamples: [[CGPoint]],
+        canvasSize: CGSize,
+        config: ValidationConfig
+    ) -> StrokePlacement {
+        let pairs = anchors.compactMap { anchor -> (reference: CGPoint, user: CGPoint)? in
+            guard referenceSamples.indices.contains(anchor.referenceIndex),
+                  !referenceSamples[anchor.referenceIndex].isEmpty else {
+                return nil
+            }
+            let refCentroid = ProcrustesNormalizer.centroid(of: referenceSamples[anchor.referenceIndex])
+            return (refCentroid, anchor.userCentroid)
+        }
+        guard !pairs.isEmpty else {
+            return .identity
+        }
+        let referenceMean = ProcrustesNormalizer.centroid(of: pairs.map(\.reference))
+        let userMean = ProcrustesNormalizer.centroid(of: pairs.map(\.user))
+        let points = referenceSamples.flatMap { $0 }
+        guard let minX = points.map(\.x).min(), let maxX = points.map(\.x).max(),
+              let minY = points.map(\.y).min(), let maxY = points.map(\.y).max() else {
+            return StrokePlacement(
+                scale: 1,
+                offset: CGVector(dx: userMean.x - referenceMean.x, dy: userMean.y - referenceMean.y)
+            )
+        }
+
+        var scale: CGFloat = 1
+        if config.fitsScale {
+            scale = fittedScale(pairs: pairs, canvasSize: canvasSize, config: config)
+            let fittingScale = min(
+                (maxX - minX) > 0 ? canvasSize.width / (maxX - minX) : scale,
+                (maxY - minY) > 0 ? canvasSize.height / (maxY - minY) : scale
+            )
+            scale = min(scale, fittingScale)
+        }
+
+        let offset = CGVector(
+            dx: userMean.x - scale * referenceMean.x,
+            dy: userMean.y - scale * referenceMean.y
+        )
+        return StrokePlacement(
+            scale: scale,
+            offset: CGVector(
+                dx: clamp(offset.dx, lower: -scale * minX, upper: canvasSize.width - scale * maxX),
+                dy: clamp(offset.dy, lower: -scale * minY, upper: canvasSize.height - scale * maxY)
+            )
         )
     }
 
@@ -222,39 +314,92 @@ enum StrokeValidator {
         referenceSamples: [[CGPoint]],
         canvasSize: CGSize
     ) -> CGVector {
-        let offsets = anchors.compactMap { anchor -> CGVector? in
-            guard referenceSamples.indices.contains(anchor.referenceIndex),
-                  !referenceSamples[anchor.referenceIndex].isEmpty else {
+        placement(
+            anchors: anchors,
+            referenceSamples: referenceSamples,
+            canvasSize: canvasSize,
+            config: .translationOnly
+        ).offset
+    }
+
+    static func proportionScale(
+        anchors: [StrokeAnchor],
+        referenceSamples: [[CGPoint]],
+        canvasSize: CGSize,
+        config: ValidationConfig
+    ) -> CGFloat? {
+        let minimumExtent = config.proportionMinimumReferenceExtent * min(canvasSize.width, canvasSize.height)
+        let ratios = anchors.compactMap { anchor -> CGFloat? in
+            guard anchor.userExtent > 0,
+                  referenceSamples.indices.contains(anchor.referenceIndex) else {
                 return nil
             }
-            let refCentroid = ProcrustesNormalizer.centroid(of: referenceSamples[anchor.referenceIndex])
-            return CGVector(dx: anchor.userCentroid.x - refCentroid.x, dy: anchor.userCentroid.y - refCentroid.y)
+            let referenceExtent = extent(of: referenceSamples[anchor.referenceIndex])
+            guard referenceExtent >= minimumExtent else {
+                return nil
+            }
+            return anchor.userExtent / referenceExtent
+        }.sorted()
+        guard !ratios.isEmpty else {
+            return nil
         }
-        guard !offsets.isEmpty else { return .zero }
-        let count = CGFloat(offsets.count)
-        let mean = CGVector(
-            dx: offsets.map(\.dx).reduce(0, +) / count,
-            dy: offsets.map(\.dy).reduce(0, +) / count
-        )
-        let points = referenceSamples.flatMap { $0 }
-        guard let minX = points.map(\.x).min(), let maxX = points.map(\.x).max(),
-              let minY = points.map(\.y).min(), let maxY = points.map(\.y).max() else {
-            return mean
+        let middle = ratios.count / 2
+        if ratios.count % 2 == 0 {
+            return (ratios[middle - 1] + ratios[middle]) / 2
         }
-        return CGVector(
-            dx: clamp(mean.dx, lower: -minX, upper: canvasSize.width - maxX),
-            dy: clamp(mean.dy, lower: -minY, upper: canvasSize.height - maxY)
-        )
+        return ratios[middle]
+    }
+
+    static func extent(of points: [CGPoint]) -> CGFloat {
+        ProcrustesNormalizer.rmsSize(of: ProcrustesNormalizer.translateToOrigin(points))
+    }
+
+    private static func fittedScale(
+        pairs: [(reference: CGPoint, user: CGPoint)],
+        canvasSize: CGSize,
+        config: ValidationConfig
+    ) -> CGFloat {
+        guard pairs.count >= 2 else {
+            return 1
+        }
+        let referenceMean = ProcrustesNormalizer.centroid(of: pairs.map(\.reference))
+        let userMean = ProcrustesNormalizer.centroid(of: pairs.map(\.user))
+        var covariance: CGFloat = 0
+        var variance: CGFloat = 0
+        for pair in pairs {
+            let dr = CGVector(dx: pair.reference.x - referenceMean.x, dy: pair.reference.y - referenceMean.y)
+            let du = CGVector(dx: pair.user.x - userMean.x, dy: pair.user.y - userMean.y)
+            covariance += dr.dx * du.dx + dr.dy * du.dy
+            variance += dr.dx * dr.dx + dr.dy * dr.dy
+        }
+        let canvasDiagonal = hypot(canvasSize.width, canvasSize.height)
+        guard variance > 0, canvasDiagonal > 0 else {
+            return 1
+        }
+        let spread = sqrt(variance / CGFloat(pairs.count)) / canvasDiagonal
+        guard spread > config.scaleSpreadFloor else {
+            return 1
+        }
+        let raw = min(max(covariance / variance, config.minimumScale), config.maximumScale)
+        let spreadRange = max(config.scaleSpreadForFullConfidence - config.scaleSpreadFloor, .ulpOfOne)
+        let spreadConfidence = min(1, (spread - config.scaleSpreadFloor) / spreadRange)
+        let countRange = CGFloat(max(config.scaleAnchorsForFullConfidence - 1, 1))
+        let countConfidence = min(1, CGFloat(pairs.count - 1) / countRange)
+        return 1 + spreadConfidence * countConfidence * (raw - 1)
     }
 
     private static func clamp(_ value: CGFloat, lower: CGFloat, upper: CGFloat) -> CGFloat {
-        guard lower <= upper else { return 0 }
+        guard lower <= upper else {
+            return (lower + upper) / 2
+        }
         return min(max(value, lower), upper)
     }
 
-    private static func shifted(_ points: [CGPoint], by offset: CGVector) -> [CGPoint] {
-        guard offset != .zero else { return points }
-        return points.map { CGPoint(x: $0.x + offset.dx, y: $0.y + offset.dy) }
+    private static func transformed(_ points: [CGPoint], by placement: StrokePlacement) -> [CGPoint] {
+        guard placement != .identity else {
+            return points
+        }
+        return points.map { placement.apply(to: $0) }
     }
 
     // MARK: - Private
@@ -262,6 +407,9 @@ enum StrokeValidator {
     private static func compareStrokes(
         userPoints: [CGPoint],
         referencePoints: [CGPoint],
+        referenceExtent: CGFloat,
+        proportionScale: CGFloat?,
+        rejectsDisproportion: Bool,
         canvasSize: CGSize,
         config: ValidationConfig,
         positionTolerance: CGFloat,
@@ -291,7 +439,15 @@ enum StrokeValidator {
 
         let shapeThreshold = config.shapeThreshold * config.leniency
         let shapePassed = frechet <= shapeThreshold
-        let accepted = shapePassed && positionPassed
+        let proportionPassed = proportionCheck(
+            userExtent: normUser.scale,
+            referenceExtent: referenceExtent,
+            proportionScale: proportionScale,
+            canvasSize: canvasSize,
+            config: config
+        )
+        let proportionRejects = rejectsDisproportion && proportionPassed == false
+        let accepted = shapePassed && positionPassed && !proportionRejects
 
         let shapeScore: CGFloat
         if frechet <= 0 {
@@ -312,12 +468,33 @@ enum StrokeValidator {
             correctOrder = true
         }
 
-        return StrokeValidationResult(
+        var result = StrokeValidationResult(
             score: score,
             accepted: accepted,
             matchedStrokeIndex: matchedIndex,
             correctOrder: correctOrder,
             frechetDistance: frechet
         )
+        result.evidence = StrokeEvidence(
+            shapePassed: shapePassed,
+            positionPassed: positionPassed,
+            proportionPassed: proportionPassed
+        )
+        return result
+    }
+
+    private static func proportionCheck(
+        userExtent: CGFloat,
+        referenceExtent: CGFloat,
+        proportionScale: CGFloat?,
+        canvasSize: CGSize,
+        config: ValidationConfig
+    ) -> Bool? {
+        let minimumExtent = config.proportionMinimumReferenceExtent * min(canvasSize.width, canvasSize.height)
+        guard let proportionScale, proportionScale > 0, referenceExtent >= minimumExtent else {
+            return nil
+        }
+        let ratio = userExtent / (referenceExtent * proportionScale)
+        return ratio >= 1 / config.proportionTolerance && ratio <= config.proportionTolerance
     }
 }

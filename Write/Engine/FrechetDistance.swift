@@ -14,30 +14,50 @@ enum FrechetDistance {
         let m = q.count
         guard n > 0, m > 0 else { return .infinity }
 
-        var dp = [[CGFloat]](repeating: [CGFloat](repeating: 0, count: m), count: n)
+        let rows = UnsafeMutablePointer<CGFloat>.allocate(capacity: 2 * m)
+        defer { rows.deallocate() }
+        var previous = rows
+        var current = rows + m
 
-        func dist(_ i: Int, _ j: Int) -> CGFloat {
-            let dx = p[i].x - q[j].x
-            let dy = p[i].y - q[j].y
-            return sqrt(dx * dx + dy * dy)
-        }
-
-        for i in 0..<n {
-            for j in 0..<m {
-                let d = dist(i, j)
-                if i == 0 && j == 0 {
-                    dp[i][j] = d
-                } else if i == 0 {
-                    dp[i][j] = max(dp[0][j - 1], d)
-                } else if j == 0 {
-                    dp[i][j] = max(dp[i - 1][0], d)
-                } else {
-                    let prev = min(dp[i - 1][j], dp[i - 1][j - 1], dp[i][j - 1])
-                    dp[i][j] = max(prev, d)
+        p.withUnsafeBufferPointer { pBuffer in
+            q.withUnsafeBufferPointer { qBuffer in
+                guard let pBase = pBuffer.baseAddress, let qBase = qBuffer.baseAddress else {
+                    return
+                }
+                var i = 0
+                while i < n {
+                    let pi = pBase[i]
+                    var j = 0
+                    while j < m {
+                        let qj = qBase[j]
+                        let dx = pi.x - qj.x
+                        let dy = pi.y - qj.y
+                        let d = (dx * dx + dy * dy).squareRoot()
+                        var reach: CGFloat
+                        if i == 0 && j == 0 {
+                            reach = d
+                        } else if i == 0 {
+                            reach = current[j - 1]
+                        } else if j == 0 {
+                            reach = previous[0]
+                        } else {
+                            reach = previous[j]
+                            if previous[j - 1] < reach {
+                                reach = previous[j - 1]
+                            }
+                            if current[j - 1] < reach {
+                                reach = current[j - 1]
+                            }
+                        }
+                        current[j] = reach > d ? reach : d
+                        j += 1
+                    }
+                    swap(&previous, &current)
+                    i += 1
                 }
             }
         }
 
-        return dp[n - 1][m - 1]
+        return previous[m - 1]
     }
 }

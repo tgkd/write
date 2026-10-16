@@ -321,4 +321,57 @@ final class KanjiReferenceViewTests: XCTestCase {
         view.configure(with: twoStrokeData)
         XCTAssertEqual(view.strokeLayers.count, 1)
     }
+
+    func testPlacementTransformMatchesStrokePlacementAboutTheLayerAnchor() {
+        let view = makeConfiguredView()
+        let placement = StrokePlacement(scale: 0.7, offset: CGVector(dx: 20, dy: -10))
+        view.setPlacement(placement)
+        let layer = view.layer
+        let pivot = CGPoint(
+            x: layer.bounds.minX + layer.bounds.width * layer.anchorPoint.x,
+            y: layer.bounds.minY + layer.bounds.height * layer.anchorPoint.y
+        )
+        let affine = CATransform3DGetAffineTransform(layer.sublayerTransform)
+        for point in [CGPoint(x: 0, y: 0), CGPoint(x: 100, y: 40), CGPoint(x: 300, y: 300)] {
+            let relative = CGPoint(x: point.x - pivot.x, y: point.y - pivot.y).applying(affine)
+            let expected = placement.apply(to: point)
+            XCTAssertEqual(pivot.x + relative.x, expected.x, accuracy: 0.001)
+            XCTAssertEqual(pivot.y + relative.y, expected.y, accuracy: 0.001)
+        }
+        XCTAssertEqual(view.placement, placement)
+    }
+
+    func testRenderedPlacementMovesSublayersLikeStrokePlacement() {
+        let view = KanjiReferenceView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        let marker = CALayer()
+        marker.frame = CGRect(x: 100, y: 100, width: 2, height: 2)
+        marker.backgroundColor = UIColor.red.cgColor
+        view.layer.addSublayer(marker)
+        view.setPlacement(StrokePlacement(scale: 2, offset: CGVector(dx: 10, dy: 20)))
+
+        let context = CGContext(
+            data: nil, width: 300, height: 300, bitsPerComponent: 8, bytesPerRow: 1200,
+            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        )!
+        view.layer.render(in: context)
+        let pixels = context.data!.assumingMemoryBound(to: UInt8.self)
+        var columns: [Int] = []
+        for row in 0..<300 {
+            for column in 0..<300 where pixels[(row * 300 + column) * 4] > 128 {
+                columns.append(column)
+            }
+        }
+        XCTAssertEqual(columns.min(), 210)
+        XCTAssertEqual(columns.max(), 213)
+    }
+
+    func testPlacementOffsetKeepsTheScaleAtOne() {
+        let view = makeConfiguredView()
+        view.setPlacementOffset(CGVector(dx: 5, dy: 6))
+        XCTAssertEqual(view.placement, StrokePlacement(scale: 1, offset: CGVector(dx: 5, dy: 6)))
+        let affine = CATransform3DGetAffineTransform(view.layer.sublayerTransform)
+        XCTAssertEqual(affine.tx, 5, accuracy: 0.001)
+        XCTAssertEqual(affine.ty, 6, accuracy: 0.001)
+        XCTAssertEqual(affine.a, 1, accuracy: 0.001)
+    }
 }

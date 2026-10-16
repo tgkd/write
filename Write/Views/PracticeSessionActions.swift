@@ -103,7 +103,8 @@ extension PracticeState {
         let placement = StrokeValidator.placement(
             anchors: anchors,
             referenceSamples: referenceSamples(canvasSize: reference.bounds.size),
-            canvasSize: reference.bounds.size
+            canvasSize: reference.bounds.size,
+            config: validationConfig
         )
         reference.setPlacement(placement)
     }

@@ -19,6 +19,7 @@ class KanjiReferenceView: UIView {
     private var kanjiData: KanjiData?
     private var lastBuiltSize: CGSize = .zero
     private var strokeStates: [Int: StrokeDisplayState] = [:]
+    private(set) var placement: StrokePlacement = .identity
     var onLayersRebuilt: (() -> Void)?
     var strokeLineWidth: CGFloat = 5.0
     var colorProvider: (Int, Int) -> UIColor = StrokeAppearance.strokeOrderColor
@@ -65,6 +66,7 @@ class KanjiReferenceView: UIView {
                 appearance: appearance
             ) {
                 layer.contentsScale = self.layer.contentsScale
+                layer.lineWidth = placedLineWidth
                 self.layer.addSublayer(layer)
                 strokeLayers.append(layer)
             }
@@ -74,6 +76,7 @@ class KanjiReferenceView: UIView {
             applyDisplayState(at: index)
         }
 
+        applyPlacementTransform()
         onLayersRebuilt?()
     }
 
@@ -81,7 +84,7 @@ class KanjiReferenceView: UIView {
         self.strokeLineWidth = lineWidth
         self.colorProvider = colorProvider
         for (index, layer) in strokeLayers.enumerated() {
-            layer.lineWidth = lineWidth
+            layer.lineWidth = placedLineWidth
             applyDisplayState(at: index)
         }
     }
@@ -108,13 +111,39 @@ class KanjiReferenceView: UIView {
     }
 
     func setPlacement(_ placement: StrokePlacement) {
-        setPlacementOffset(placement.offset)
+        self.placement = placement
+        applyPlacementTransform()
     }
 
     func setPlacementOffset(_ offset: CGVector) {
+        setPlacement(StrokePlacement(scale: 1, offset: offset))
+    }
+
+    static func sublayerTransform(for placement: StrokePlacement, pivot: CGPoint) -> CATransform3D {
+        let scale = placement.scale
+        let affine = CGAffineTransform(
+            a: scale, b: 0, c: 0, d: scale,
+            tx: placement.offset.dx + (scale - 1) * pivot.x,
+            ty: placement.offset.dy + (scale - 1) * pivot.y
+        )
+        return CATransform3DMakeAffineTransform(affine)
+    }
+
+    private var placedLineWidth: CGFloat {
+        placement.scale > 0 ? strokeLineWidth / placement.scale : strokeLineWidth
+    }
+
+    private func applyPlacementTransform() {
+        let pivot = CGPoint(
+            x: layer.bounds.minX + layer.bounds.width * layer.anchorPoint.x,
+            y: layer.bounds.minY + layer.bounds.height * layer.anchorPoint.y
+        )
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        layer.sublayerTransform = CATransform3DMakeTranslation(offset.dx, offset.dy, 0)
+        layer.sublayerTransform = Self.sublayerTransform(for: placement, pivot: pivot)
+        for strokeLayer in strokeLayers {
+            strokeLayer.lineWidth = placedLineWidth
+        }
         CATransaction.commit()
     }
 
