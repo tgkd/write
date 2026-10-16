@@ -34,6 +34,7 @@
 		324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BE9563E3884403974EFDDA /* ContentView.swift */; };
 		33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */; };
 		35443E333F00D1C5ECBDD34B /* RecentActivityGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D84FDA72BA84ADF1FAE1AFE /* RecentActivityGrid.swift */; };
+		35C1CF52DE493FF323296CC8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 15B2E0FA0B6EFB1FF0964DF5 /* Localizable.xcstrings */; };
 		39ECD52B8B08B574C3074A3D /* NotebookCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD320AB71FFAF63D74985CC /* NotebookCellView.swift */; };
 		3BAA6CBE17A0743D7B11CDD3 /* PracticeProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09467A3890CD8C766D06E7A1 /* PracticeProgressView.swift */; };
 		3E13794820A9F2D53A2AA677 /* SessionPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB30AA618797898AC069C94E /* SessionPracticeView.swift */; };
@@ -75,6 +76,7 @@
 		841679918215FF69857FDC24 /* DailyKanjiEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F669D0A99680E7EBFA69BFA9 /* DailyKanjiEntry.swift */; };
 		84CD36670FEAB9C92F9FF17D /* RecallHint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D169FBF0B8A86837BD3CD663 /* RecallHint.swift */; };
 		84EDCD6B8E55DD180AEC6B65 /* StrokeRejection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A745F198732D30DE5AC76A8D /* StrokeRejection.swift */; };
+		85668091B7D0AF7532201FEF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9E3C929748166DAA68DD742A /* Localizable.xcstrings */; };
 		86C8948B8C9E249C64E4C272 /* GradingStrictness.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BC641AA0445077E6C38776 /* GradingStrictness.swift */; };
 		86CB1B5872ACDDA4A1D93B5F /* DailyKanji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CBBCB68667372609A4A51E /* DailyKanji.swift */; };
 		87636BFB0601EDE433A0945B /* StrokeHookTrimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA7E9B059436EA492095336 /* StrokeHookTrimmer.swift */; };
@@ -191,6 +193,7 @@
 		112DFDA96E143651A19DDCE5 /* NotebookTipsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookTipsOverlay.swift; sourceTree = "<group>"; };
 		1218FC775663C580B435BC2E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		12323F75478344DC11AB0C5D /* MissEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissEvidence.swift; sourceTree = "<group>"; };
+		15B2E0FA0B6EFB1FF0964DF5 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatmullRomSpline.swift; sourceTree = "<group>"; };
 		1C62491A18554F4E6C150034 /* StrokeCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeCapture.swift; sourceTree = "<group>"; };
 		1DE6330595F9BD713815571A /* RectangularDailyKanjiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularDailyKanjiView.swift; sourceTree = "<group>"; };
@@ -264,6 +267,7 @@
 		9AF92521D279F5641C0A0668 /* ProcrustesNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcrustesNormalizer.swift; sourceTree = "<group>"; };
 		9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreprocessingTests.swift; sourceTree = "<group>"; };
 		9DDBFDF4EC8C00E45285CDED /* PracticeRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeRecord.swift; sourceTree = "<group>"; };
+		9E3C929748166DAA68DD742A /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		A38E5D0257B76A3C0E3F76E1 /* WriteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WriteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A745F198732D30DE5AC76A8D /* StrokeRejection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRejection.swift; sourceTree = "<group>"; };
 		A9C4444928FFE24B6BBA78EF /* OneEuroFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneEuroFilter.swift; sourceTree = "<group>"; };
@@ -494,6 +498,7 @@
 				95D7A60DC5381E68C2AEEF80 /* DailyKanjiProvider.swift */,
 				B8F816E5E552D47AFF0C9E02 /* DailyKanjiWidget.swift */,
 				460058D6F6A0A6A5B94228BD /* Info.plist */,
+				15B2E0FA0B6EFB1FF0964DF5 /* Localizable.xcstrings */,
 				BE65E91097550CA97C936AFC /* MediumDailyKanjiView.swift */,
 				1DE6330595F9BD713815571A /* RectangularDailyKanjiView.swift */,
 				1F14EE12B192559C5C1D80B4 /* SmallDailyKanjiView.swift */,
@@ -528,6 +533,7 @@
 			isa = PBXGroup;
 			children = (
 				C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */,
+				9E3C929748166DAA68DD742A /* Localizable.xcstrings */,
 				F5F70C273FAFA8FFC96EB33C /* word_prompts.json */,
 			);
 			path = Resources;
@@ -683,6 +689,7 @@
 			knownRegions = (
 				Base,
 				en,
+				ja,
 			);
 			mainGroup = 8688F304D4EF131A29D98471;
 			minimizedProjectReferenceProxies = 1;
@@ -708,6 +715,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A21F66443E84A863FCF86A82 /* Assets.xcassets in Resources */,
+				85668091B7D0AF7532201FEF /* Localizable.xcstrings in Resources */,
 				755988C696FFBA3B1AA9F255 /* PrivacyInfo.xcprivacy in Resources */,
 				931539011E1B5DE53D8C52E3 /* kanji_strokes.json in Resources */,
 				B23EF2A18FC4C7ECBB096EED /* word_prompts.json in Resources */,
@@ -726,6 +734,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35C1CF52DE493FF323296CC8 /* Localizable.xcstrings in Resources */,
 				F13AC6AE7FC4CC248E97DA9F /* daily_kanji.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
