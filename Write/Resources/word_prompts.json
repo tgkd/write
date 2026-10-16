@@ -58,18 +58,18 @@
     "before": "ふじさんは にほんで いちばん ",
     "reading": "たかい",
     "after": " やまです。",
-    "gloss": "high, tall",
+    "gloss": "high",
     "segments": [{ "kanji": "高" }, { "kana": "い" }],
     "notes": "Answer 高い, okurigana い shown. The expensive sense is spelled the same; the mountain context makes high the intended meaning."
   },
   {
     "id": "w08",
-    "before": "あの いえには ",
+    "before": "この いぬは とても ",
     "reading": "おおきい",
-    "after": " いぬが います。",
+    "after": "です。",
     "gloss": "big",
     "segments": [{ "kanji": "大" }, { "kana": "きい" }],
-    "notes": "Answer 大きい, okurigana きい shown. The adnominal 大きな is a different form and is not this prompt."
+    "notes": "Answer 大きい as a predicate after とても, okurigana きい shown, so the adnominal 大きな is not the target. No competing kanji spelling."
   },
   {
     "id": "w09",
@@ -157,7 +157,7 @@
     "before": "かぜを ひいたので、",
     "reading": "びょういん",
     "after": "へ いきました。",
-    "gloss": "hospital, clinic",
+    "gloss": "hospital",
     "segments": [{ "kanji": "病" }, { "kanji": "院" }],
     "notes": "Answer 病院. 美容院 is read びよういん, a different word; かぜを ひいた makes the meaning clear."
   },
