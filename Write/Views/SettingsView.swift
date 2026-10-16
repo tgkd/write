@@ -14,6 +14,8 @@ struct SettingsView: View {
                         onChanged: { settings.maskPathWidth = $0 }
                     )
 
+                    gradingSection
+
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Session")
                             .font(.subheadline)
@@ -96,6 +98,33 @@ struct SettingsView: View {
                     Button("Done") { dismiss() }
                 }
             }
+        }
+    }
+
+    private var gradingSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Grading")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+                .padding(.leading, 4)
+
+            VStack(alignment: .leading, spacing: 10) {
+                Picker("Grading", selection: $settings.gradingStrictness) {
+                    ForEach(GradingStrictness.allCases, id: \.self) { strictness in
+                        Text(strictness.displayName).tag(strictness)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("gradingStrictness")
+
+                Text("How closely strokes must match. Strict also checks stroke length.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(16)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
 

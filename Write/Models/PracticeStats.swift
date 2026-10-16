@@ -48,12 +48,17 @@ struct PracticeStats: Equatable {
             .sorted { $0.lastPracticed > $1.lastPracticed }
     }
 
+    static func effectiveMisses(of run: PracticeRecord) -> Int {
+        max(0, run.misses - (run.evidence?.disputed ?? 0))
+    }
+
     private static func reviewItem(for run: PracticeRecord) -> ReviewItem? {
         let reason: Reason
+        let misses = effectiveMisses(of: run)
         if run.revealed {
             reason = .usedHint
-        } else if run.misses > 0 {
-            reason = .neededRetries(run.misses)
+        } else if misses > 0 {
+            reason = .neededRetries(misses)
         } else {
             return nil
         }

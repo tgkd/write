@@ -115,4 +115,33 @@ final class PracticeHistoryStoreTests: XCTestCase {
         let aside = try XCTUnwrap(names.first { $0.hasPrefix("2026-10.corrupt-") })
         XCTAssertEqual(try Data(contentsOf: directory.appendingPathComponent(aside)), corrupt)
     }
+
+    func testGradingFieldsSurviveReload() {
+        var record = makeRecord(completedAt: date("2026-10-09T01:00:00Z"))
+        record.strictness = .strict
+        record.gradingVersion = 2
+        record.evidence = MissEvidence(shape: 1, position: 2, proportion: 1, order: 1, notEvaluated: 1, disputed: 1)
+        PracticeHistoryStore(directory: directory, timeZone: tokyo).add(record)
+
+        let reloaded = PracticeHistoryStore(directory: directory, timeZone: tokyo)
+        XCTAssertEqual(reloaded.records, [record])
+    }
+
+    func testFileWrittenBeforeGradingFieldsStillLoads() throws {
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let json = """
+        {"records":[{"codePoint":"4e00","completedAt":"2026-10-09T01:00:00Z","exposed":false,\
+        "id":"7C9E6679-7425-40DE-944B-E07FC1F90AE7","leniency":1,"misses":3,"mode":"study",\
+        "revealed":false,"startedAt":"2026-10-09T00:59:00Z"}],"version":1}
+        """
+        try Data(json.utf8).write(to: directory.appendingPathComponent("2026-10.json"))
+
+        let store = PracticeHistoryStore(directory: directory, timeZone: tokyo)
+
+        XCTAssertEqual(store.records.count, 1)
+        XCTAssertEqual(store.records.first?.misses, 3)
+        XCTAssertNil(store.records.first?.evidence)
+        XCTAssertNil(store.records.first?.strictness)
+        XCTAssertEqual(try fileNames(), ["2026-10.json"])
+    }
 }
