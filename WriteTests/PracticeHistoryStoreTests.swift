@@ -118,7 +118,7 @@ final class PracticeHistoryStoreTests: XCTestCase {
 
     func testGradingFieldsSurviveReload() {
         var record = makeRecord(completedAt: date("2026-10-09T01:00:00Z"))
-        record.strictness = .strict
+        record.strictness = GradingStrictness.strict.rawValue
         record.gradingVersion = 2
         record.evidence = MissEvidence(shape: 1, position: 2, proportion: 1, order: 1, notEvaluated: 1, disputed: 1)
         PracticeHistoryStore(directory: directory, timeZone: tokyo).add(record)

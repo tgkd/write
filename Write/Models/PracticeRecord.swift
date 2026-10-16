@@ -12,7 +12,7 @@ struct PracticeRecord: Codable, Equatable, Identifiable, Sendable {
     let startedAt: Date
     let completedAt: Date
     let leniency: Double
-    var strictness: GradingStrictness?
+    var strictness: String?
     var gradingVersion: Int?
     var evidence: MissEvidence?
 

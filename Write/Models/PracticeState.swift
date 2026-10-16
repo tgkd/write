@@ -231,7 +231,7 @@ final class PracticeState: ObservableObject {
             startedAt: runStartedAt ?? completedAt,
             completedAt: completedAt,
             leniency: Double(validationConfig.leniency),
-            strictness: GradingStrictness.nearest(toLeniency: validationConfig.leniency),
+            strictness: GradingStrictness.nearest(toLeniency: validationConfig.leniency).rawValue,
             gradingVersion: ValidationConfig.gradingVersion,
             evidence: missEvidence
         )

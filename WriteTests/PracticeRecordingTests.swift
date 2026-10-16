@@ -167,7 +167,7 @@ final class PracticeRecordingTests: XCTestCase {
         let record = recorder.records[0]
         XCTAssertEqual(record.misses, 2)
         XCTAssertEqual(record.evidence, MissEvidence(order: 1, notEvaluated: 1, disputed: 1))
-        XCTAssertEqual(record.strictness, .normal)
+        XCTAssertEqual(record.strictness, GradingStrictness.normal.rawValue)
         XCTAssertEqual(record.gradingVersion, ValidationConfig.gradingVersion)
     }
 
@@ -179,7 +179,7 @@ final class PracticeRecordingTests: XCTestCase {
         state.onRunCompleted = { recorder.records.append($0) }
         complete(state)
 
-        XCTAssertEqual(recorder.records.first?.strictness, .strict)
+        XCTAssertEqual(recorder.records.first?.strictness, GradingStrictness.strict.rawValue)
         XCTAssertEqual(recorder.records.first?.leniency, Double(GradingStrictness.strict.leniency))
     }
 
