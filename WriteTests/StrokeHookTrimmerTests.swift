@@ -130,7 +130,7 @@ final class StrokeHookTrimmerTests: XCTestCase {
         let small = StrokeHookTrimmer.Parameters(canvasSize: CGSize(width: 80, height: 80))
         let large = StrokeHookTrimmer.Parameters(canvasSize: CGSize(width: 2000, height: 2000))
 
-        XCTAssertEqual(small.maxHookLength, 4, accuracy: 0.0001)
-        XCTAssertEqual(large.maxHookLength, 8, accuracy: 0.0001)
+        XCTAssertEqual(small.maxHookLength, 5, accuracy: 0.0001)
+        XCTAssertEqual(large.maxHookLength, 12, accuracy: 0.0001)
     }
 }

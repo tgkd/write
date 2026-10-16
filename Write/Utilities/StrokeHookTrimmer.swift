@@ -14,7 +14,7 @@ enum StrokeHookTrimmer {
 
         init(canvasSize: CGSize) {
             let shortSide = min(canvasSize.width, canvasSize.height)
-            let hookLength = min(8, max(4, shortSide * 0.02))
+            let hookLength = min(12, max(5, shortSide * 0.035))
             maxHookLength = hookLength
             minStrokeLength = hookLength * 4
         }
