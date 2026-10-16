@@ -456,7 +456,108 @@ final class DrawingCanvasViewTests: XCTestCase {
         canvas.touchesEnded([touch], with: nil)
     }
 
+    func testFinalizedStrokeEmitsExactlyOneCapture() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
+        var captures: [CanvasStrokeCapture] = []
+        canvas.onStrokeCaptured = { captures.append($0) }
+
+        simulateStroke(on: canvas, points: [
+            CGPoint(x: 10, y: 10),
+            CGPoint(x: 50, y: 50),
+            CGPoint(x: 100, y: 100)
+        ])
+
+        XCTAssertEqual(captures.count, 1)
+        XCTAssertEqual(captures.first?.touchType, .direct)
+        XCTAssertEqual(captures.first?.canvasSize, CGSize(width: 300, height: 200))
+        XCTAssertEqual(captures.first?.samples.count, canvas.strokes[0].count)
+        XCTAssertEqual(captures.first?.samples.first?.point, CGPoint(x: 10, y: 10))
+    }
+
+    func testCancelledStrokeIsNeverCaptured() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        var captures: [CanvasStrokeCapture] = []
+        canvas.onStrokeCaptured = { captures.append($0) }
+
+        let touch = TestTouch(locationInView: CGPoint(x: 10, y: 10))
+        canvas.touchesBegan([touch], with: nil)
+        touch.updateLocation(CGPoint(x: 80, y: 80))
+        canvas.touchesMoved([touch], with: nil)
+        canvas.touchesCancelled([touch], with: nil)
+
+        XCTAssertTrue(captures.isEmpty)
+    }
+
+    func testCapturedPencilStrokeIsReemittedOnceRefinementsComplete() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        var captures: [CanvasStrokeCapture] = []
+        canvas.onStrokeCaptured = { captures.append($0) }
+
+        let touch = drawPencilStroke(on: canvas, firstKey: 1, y: 100)
+
+        guard captures.count == 1 else {
+            return XCTFail("Expected one capture at stroke end, got \(captures.count)")
+        }
+        XCTAssertEqual(captures[0].touchType, .pencil)
+        XCTAssertEqual(Double(captures[0].samples.first?.force ?? 0), 0.1 / 4.17, accuracy: 0.0001)
+
+        touch.testForce = 3.9
+        touch.expectingUpdates = []
+        for key in 1...6 {
+            touch.estimationIndex = NSNumber(value: key)
+            canvas.touchesEstimatedPropertiesUpdated([touch])
+        }
+
+        guard captures.count == 2 else {
+            return XCTFail("Expected one refined re-emission, got \(captures.count) captures")
+        }
+        XCTAssertEqual(captures[1].id, captures[0].id)
+        XCTAssertEqual(captures[1].samples.count, captures[0].samples.count)
+        for sample in captures[1].samples {
+            XCTAssertEqual(Double(sample.force ?? 0), 3.9 / 4.17, accuracy: 0.0001)
+        }
+    }
+
+    func testUnfinishedRefinementIsFlushedWhenNextStrokeBegins() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        var captures: [CanvasStrokeCapture] = []
+        canvas.onStrokeCaptured = { captures.append($0) }
+
+        let touch = drawPencilStroke(on: canvas, firstKey: 1, y: 100)
+        touch.testForce = 3.9
+        touch.estimationIndex = NSNumber(value: 1)
+        canvas.touchesEstimatedPropertiesUpdated([touch])
+        XCTAssertEqual(captures.count, 1)
+
+        _ = drawPencilStroke(on: canvas, firstKey: 20, y: 200)
+
+        guard captures.count == 3 else {
+            return XCTFail("Expected flush plus the next stroke, got \(captures.count) captures")
+        }
+        XCTAssertEqual(captures[1].id, captures[0].id)
+        XCTAssertEqual(Double(captures[1].samples[0].force ?? 0), 3.9 / 4.17, accuracy: 0.0001)
+        XCTAssertNotEqual(captures[2].id, captures[0].id)
+    }
+
     // MARK: - Helpers
+
+    private func drawPencilStroke(on canvas: DrawingCanvasView, firstKey: Int, y: CGFloat) -> TestTouch {
+        let touch = TestTouch(locationInView: CGPoint(x: 20, y: y))
+        touch.touchType = .pencil
+        touch.testForce = 0.1
+        touch.expectingUpdates = [.force]
+        touch.estimationIndex = NSNumber(value: firstKey)
+        canvas.touchesBegan([touch], with: nil)
+        for (i, x) in [60, 100, 140, 180].enumerated() {
+            touch.updateLocation(CGPoint(x: CGFloat(x), y: y))
+            touch.estimationIndex = NSNumber(value: firstKey + i + 1)
+            canvas.touchesMoved([touch], with: nil)
+        }
+        touch.updateLocation(CGPoint(x: 220, y: y))
+        touch.estimationIndex = NSNumber(value: firstKey + 5)
+        canvas.touchesEnded([touch], with: nil)
+        return touch
+    }
 
     private func simulateStroke(on canvas: DrawingCanvasView, points: [CGPoint]) {
         guard let first = points.first else { return }
