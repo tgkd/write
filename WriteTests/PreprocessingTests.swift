@@ -39,6 +39,32 @@ final class PreprocessingTests: XCTestCase {
         XCTAssertEqual(katakanaA?.strokes.count, 2)
     }
 
+    func testSchoolGradeCountsMatchCurriculum() {
+        let grades = store.allCodePoints.compactMap { store.lookup(codePoint: $0)?.grade }
+        let counts = Dictionary(grouping: grades, by: { $0 }).mapValues(\.count)
+        XCTAssertEqual(counts[1], 80)
+        XCTAssertEqual(counts[2], 160)
+        XCTAssertEqual(counts[3], 200)
+        XCTAssertEqual(counts[4], 202)
+        XCTAssertEqual(counts[5], 193)
+        XCTAssertEqual(counts[6], 191)
+        XCTAssertEqual(counts[8], 1110)
+    }
+
+    func testGradedSupplementaryPlaneKanjiIsIncluded() {
+        let shikaru = store.lookup(character: "𠮟")
+        XCTAssertEqual(shikaru?.codePoint, "20b9f")
+        XCTAssertEqual(shikaru?.grade, 8)
+        XCTAssertEqual(shikaru?.strokes.count, 5)
+        XCTAssertEqual(shikaru?.script, .kanji)
+    }
+
+    func testUngradedNonCoreCodePointsStayExcluded() {
+        XCTAssertNil(store.lookup(codePoint: "2008a"))
+        XCTAssertNil(store.lookup(codePoint: "f92e"))
+        XCTAssertNil(store.lookup(codePoint: "ff01"))
+    }
+
     func testKariHas6Strokes() {
         let kari = store.lookup(codePoint: "4eee")
         XCTAssertNotNil(kari, "仮 (U+4EEE) should exist in preprocessed data")

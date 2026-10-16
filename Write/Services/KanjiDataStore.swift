@@ -17,7 +17,7 @@ final class KanjiDataStore: Sendable {
             let data = try Data(contentsOf: url)
             let decoded = try JSONDecoder().decode([String: KanjiData].self, from: data)
             kanjiMap = decoded
-            allCodePoints = decoded.keys.sorted()
+            allCodePoints = Self.sortedByCodePoint(decoded.keys)
             recallEligibility = RecallEligibility(kanji: Array(decoded.values))
         } catch {
             assertionFailure("Failed to load kanji data: \(error)")
@@ -30,8 +30,19 @@ final class KanjiDataStore: Sendable {
     init(data: Data) throws {
         let decoded = try JSONDecoder().decode([String: KanjiData].self, from: data)
         kanjiMap = decoded
-        allCodePoints = decoded.keys.sorted()
+        allCodePoints = Self.sortedByCodePoint(decoded.keys)
         recallEligibility = RecallEligibility(kanji: Array(decoded.values))
+    }
+
+    private static func sortedByCodePoint(_ codePoints: Dictionary<String, KanjiData>.Keys) -> [String] {
+        codePoints.sorted { lhs, rhs in
+            let left = UInt32(lhs, radix: 16) ?? 0
+            let right = UInt32(rhs, radix: 16) ?? 0
+            if left != right {
+                return left < right
+            }
+            return lhs < rhs
+        }
     }
 
     func lookup(codePoint: String) -> KanjiData? {

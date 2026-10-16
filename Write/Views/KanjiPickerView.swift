@@ -10,6 +10,7 @@ struct KanjiPickerView: View {
     @State private var searchText = ""
     @State private var showSettings = false
     @State private var selectedFilter: CharacterFilter = .all
+    @State private var levelScheme: CharacterFilter.Scheme = .jlpt
 
     @Binding var selectedCodePoint: String?
     private let usesSelectionBinding: Bool
@@ -55,7 +56,7 @@ struct KanjiPickerView: View {
 
     var body: some View {
         ScrollView {
-            jlptFilterBar
+            filterBar
                 .padding(.horizontal)
                 .padding(.top, 4)
 
@@ -208,11 +209,54 @@ struct KanjiPickerView: View {
         .accessibilityIdentifier("session.review")
     }
 
-    private var jlptFilterBar: some View {
+    private var filterBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                ForEach(CharacterFilter.pickerOrder, id: \.self) { filter in
+                ForEach(CharacterFilter.scriptFilters, id: \.self) { filter in
                     filterPill(filter)
+                }
+                schemeMenu
+                ForEach(levelScheme.levels, id: \.self) { filter in
+                    filterPill(filter)
+                }
+            }
+        }
+    }
+
+    private var schemeMenu: some View {
+        Menu {
+            Picker("Levels", selection: schemeSelection) {
+                ForEach(CharacterFilter.Scheme.allCases, id: \.self) { scheme in
+                    Text(scheme.label).tag(scheme)
+                }
+            }
+        } label: {
+            HStack(spacing: 4) {
+                Text(levelScheme.label)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.caption2)
+            }
+            .font(.subheadline.weight(.medium))
+            .fixedSize()
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .overlay(Capsule().stroke(Color(.separator)))
+        }
+        .tint(.primary)
+        .accessibilityIdentifier("filter.scheme")
+    }
+
+    private var schemeSelection: Binding<CharacterFilter.Scheme> {
+        Binding {
+            levelScheme
+        } set: { scheme in
+            guard scheme != levelScheme else {
+                return
+            }
+            withAnimation(.easeInOut(duration: 0.15)) {
+                levelScheme = scheme
+                if selectedFilter.scheme != nil, let first = scheme.levels.first {
+                    selectedFilter = first
                 }
             }
         }

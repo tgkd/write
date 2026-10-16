@@ -168,7 +168,7 @@ def main():
             continue
         if code_point in kana_map:
             data["romaji"] = kana_map[code_point]
-        elif is_cjk_unified(code_point):
+        elif is_cjk_unified(code_point) or "grade" in kanjidic2.get(code_point, {}):
             metadata = kanjidic2.get(code_point, {})
             if metadata:
                 data.update(metadata)
