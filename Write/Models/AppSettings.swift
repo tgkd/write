@@ -5,111 +5,128 @@ final class AppSettings: ObservableObject {
 
     static let defaultMaskPathWidth: CGFloat = 5.0
     static let maskPathWidthRange: ClosedRange<CGFloat> = 3...14
+    static let gradingStrictnessKey = "gradingStrictness"
 
-    @Published var gradingStrictness: GradingStrictness = .normal
+    private let defaults: UserDefaults
+
+    @Published var gradingStrictness: GradingStrictness {
+        didSet { defaults.set(gradingStrictness.rawValue, forKey: Self.gradingStrictnessKey) }
+    }
 
     @Published var maskPathWidth: CGFloat {
-        didSet { UserDefaults.standard.set(Double(maskPathWidth), forKey: "maskPathWidth") }
+        didSet { defaults.set(Double(maskPathWidth), forKey: "maskPathWidth") }
     }
 
     @Published var colorPalette: ColorPalette {
-        didSet { UserDefaults.standard.set(colorPalette.rawValue, forKey: "colorPalette") }
+        didSet { defaults.set(colorPalette.rawValue, forKey: "colorPalette") }
     }
 
     @Published var sessionCount: Int {
-        didSet { UserDefaults.standard.set(sessionCount, forKey: "sessionCount") }
+        didSet { defaults.set(sessionCount, forKey: "sessionCount") }
     }
 
     @Published var practiceMode: PracticeMode {
-        didSet { UserDefaults.standard.set(practiceMode.rawValue, forKey: "practiceMode") }
+        didSet { defaults.set(practiceMode.rawValue, forKey: "practiceMode") }
     }
 
     // MARK: - iPad Settings
 
     @Published var pressureSensitivity: PressureSensitivity {
-        didSet { UserDefaults.standard.set(pressureSensitivity.rawValue, forKey: "pressureSensitivity") }
+        didSet { defaults.set(pressureSensitivity.rawValue, forKey: "pressureSensitivity") }
     }
 
     @Published var tiltSensitivity: TiltSensitivity {
-        didSet { UserDefaults.standard.set(tiltSensitivity.rawValue, forKey: "tiltSensitivity") }
+        didSet { defaults.set(tiltSensitivity.rawValue, forKey: "tiltSensitivity") }
     }
 
     @Published var smoothingStrength: SmoothingStrength {
-        didSet { UserDefaults.standard.set(smoothingStrength.rawValue, forKey: "smoothingStrength") }
+        didSet { defaults.set(smoothingStrength.rawValue, forKey: "smoothingStrength") }
     }
 
     @Published var brushThickness: BrushThickness {
-        didSet { UserDefaults.standard.set(brushThickness.rawValue, forKey: "brushThickness") }
+        didSet { defaults.set(brushThickness.rawValue, forKey: "brushThickness") }
     }
 
     @Published var allowFingerDrawing: Bool {
-        didSet { UserDefaults.standard.set(allowFingerDrawing, forKey: "allowFingerDrawing") }
+        didSet { defaults.set(allowFingerDrawing, forKey: "allowFingerDrawing") }
     }
 
     @Published var handedness: Handedness {
-        didSet { UserDefaults.standard.set(handedness.rawValue, forKey: "handedness") }
+        didSet { defaults.set(handedness.rawValue, forKey: "handedness") }
     }
 
     @Published var showCrosshairGuidelines: Bool {
-        didSet { UserDefaults.standard.set(showCrosshairGuidelines, forKey: "showCrosshairGuidelines") }
+        didSet { defaults.set(showCrosshairGuidelines, forKey: "showCrosshairGuidelines") }
     }
 
     @Published var cellsPerRow: Int {
-        didSet { UserDefaults.standard.set(cellsPerRow, forKey: "cellsPerRow") }
+        didSet { defaults.set(cellsPerRow, forKey: "cellsPerRow") }
     }
 
     static let canvasScaleRange: ClosedRange<CGFloat> = 0.4...1.0
     static let canvasScaleStep: CGFloat = 0.1
 
     @Published var practiceCanvasScale: CGFloat {
-        didSet { UserDefaults.standard.set(Double(practiceCanvasScale), forKey: "practiceCanvasScale") }
+        didSet { defaults.set(Double(practiceCanvasScale), forKey: "practiceCanvasScale") }
     }
 
-    init() {
-        let storedWidth = UserDefaults.standard.double(forKey: "maskPathWidth")
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        self.gradingStrictness = Self.storedStrictness(in: defaults)
+
+        let storedWidth = defaults.double(forKey: "maskPathWidth")
         self.maskPathWidth = storedWidth > 0 ? CGFloat(storedWidth) : Self.defaultMaskPathWidth
 
-        let storedPalette = UserDefaults.standard.string(forKey: "colorPalette") ?? ""
+        let storedPalette = defaults.string(forKey: "colorPalette") ?? ""
         self.colorPalette = ColorPalette(rawValue: storedPalette) ?? .warm
 
-        let storedCount = UserDefaults.standard.integer(forKey: "sessionCount")
+        let storedCount = defaults.integer(forKey: "sessionCount")
         self.sessionCount = storedCount > 0 ? storedCount : 10
 
-        let storedMode = UserDefaults.standard.string(forKey: "practiceMode") ?? ""
+        let storedMode = defaults.string(forKey: "practiceMode") ?? ""
         self.practiceMode = PracticeMode(rawValue: storedMode) ?? .trace
 
-        let storedSensitivity = UserDefaults.standard.string(forKey: "pressureSensitivity") ?? ""
+        let storedSensitivity = defaults.string(forKey: "pressureSensitivity") ?? ""
         self.pressureSensitivity = PressureSensitivity(rawValue: storedSensitivity) ?? .medium
 
-        let storedTilt = UserDefaults.standard.string(forKey: "tiltSensitivity") ?? ""
+        let storedTilt = defaults.string(forKey: "tiltSensitivity") ?? ""
         self.tiltSensitivity = TiltSensitivity(rawValue: storedTilt) ?? .low
 
-        let storedSmoothing = UserDefaults.standard.string(forKey: "smoothingStrength") ?? ""
+        let storedSmoothing = defaults.string(forKey: "smoothingStrength") ?? ""
         self.smoothingStrength = SmoothingStrength(rawValue: storedSmoothing) ?? .medium
 
-        let storedThickness = UserDefaults.standard.string(forKey: "brushThickness") ?? ""
+        let storedThickness = defaults.string(forKey: "brushThickness") ?? ""
         self.brushThickness = BrushThickness(rawValue: storedThickness) ?? .medium
 
-        self.allowFingerDrawing = UserDefaults.standard.object(forKey: "allowFingerDrawing") == nil
+        self.allowFingerDrawing = defaults.object(forKey: "allowFingerDrawing") == nil
             ? true
-            : UserDefaults.standard.bool(forKey: "allowFingerDrawing")
+            : defaults.bool(forKey: "allowFingerDrawing")
 
-        let storedHandedness = UserDefaults.standard.string(forKey: "handedness") ?? ""
+        let storedHandedness = defaults.string(forKey: "handedness") ?? ""
         self.handedness = Handedness(rawValue: storedHandedness) ?? .right
 
-        self.showCrosshairGuidelines = UserDefaults.standard.object(forKey: "showCrosshairGuidelines") == nil
+        self.showCrosshairGuidelines = defaults.object(forKey: "showCrosshairGuidelines") == nil
             ? true
-            : UserDefaults.standard.bool(forKey: "showCrosshairGuidelines")
+            : defaults.bool(forKey: "showCrosshairGuidelines")
 
-        let storedCells = UserDefaults.standard.integer(forKey: "cellsPerRow")
+        let storedCells = defaults.integer(forKey: "cellsPerRow")
         self.cellsPerRow = storedCells > 0 ? storedCells : 8
 
-        let storedScale = UserDefaults.standard.double(forKey: "practiceCanvasScale")
+        let storedScale = defaults.double(forKey: "practiceCanvasScale")
         self.practiceCanvasScale = storedScale > 0 ? CGFloat(storedScale) : 0.7
     }
 
-    var derivedLeniency: CGFloat {
-        sqrt(maskPathWidth / Self.defaultMaskPathWidth)
+    static func storedStrictness(in defaults: UserDefaults) -> GradingStrictness {
+        if let raw = defaults.string(forKey: gradingStrictnessKey),
+           let stored = GradingStrictness(rawValue: raw) {
+            return stored
+        }
+        let width = CGFloat(defaults.double(forKey: "maskPathWidth"))
+        let migrated = width > 0
+            ? GradingStrictness.nearest(toLeniency: sqrt(width / defaultMaskPathWidth))
+            : .normal
+        defaults.set(migrated.rawValue, forKey: gradingStrictnessKey)
+        return migrated
     }
 
     var validationConfig: ValidationConfig {

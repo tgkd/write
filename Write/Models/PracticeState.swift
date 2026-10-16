@@ -28,6 +28,7 @@ final class PracticeState: ObservableObject {
     @Published private(set) var hint: RecallHint = .unused
     @Published private(set) var lastRejection: StrokeRejection?
     @Published private(set) var missEvidence = MissEvidence()
+    @Published private var isLastRejectionDisputed = false
 
     let kanjiData: KanjiData
     let isRecall: Bool
@@ -121,7 +122,10 @@ final class PracticeState: ObservableObject {
         } else {
             attemptCount += 1
             consecutiveMisses += 1
-            lastRejection = rejection(for: result)
+            let rejection = rejection(for: result)
+            recordMiss(rejection, evidence: result.evidence)
+            lastRejection = rejection
+            isLastRejectionDisputed = false
             phase = .strokeRejected
         }
     }
@@ -156,6 +160,8 @@ final class PracticeState: ObservableObject {
         consecutiveMisses = 0
         isComplete = false
         lastRejection = nil
+        isLastRejectionDisputed = false
+        missEvidence = MissEvidence()
         runStartedAt = nil
         runRecorded = false
     }
@@ -167,11 +173,38 @@ final class PracticeState: ObservableObject {
         return .wrongOrder(drawnStroke: drawn, expectedStroke: currentStrokeIndex)
     }
 
-    var canDisputeLastRejection: Bool {
-        false
+    private func recordMiss(_ rejection: StrokeRejection, evidence: StrokeEvidence) {
+        if case .wrongOrder = rejection {
+            missEvidence.order += 1
+            return
+        }
+        let flags = [evidence.shapePassed, evidence.positionPassed, evidence.proportionPassed]
+        if flags.allSatisfy({ $0 == nil }) {
+            missEvidence.notEvaluated += 1
+            return
+        }
+        if evidence.shapePassed == false {
+            missEvidence.shape += 1
+        }
+        if evidence.positionPassed == false {
+            missEvidence.position += 1
+        }
+        if evidence.proportionPassed == false {
+            missEvidence.proportion += 1
+        }
     }
 
-    func disputeLastRejection() {}
+    var canDisputeLastRejection: Bool {
+        lastRejection != nil && !isComplete && !isLastRejectionDisputed
+    }
+
+    func disputeLastRejection() {
+        guard canDisputeLastRejection else {
+            return
+        }
+        missEvidence.disputed += 1
+        isLastRejectionDisputed = true
+    }
 
     func showNextHint() {
         guard let next = nextHint else { return }

@@ -17,7 +17,8 @@ final class PracticeStatsTests: XCTestCase {
         revealed: Bool = false,
         exposed: Bool = false,
         misses: Int = 0,
-        minutes: Int = 0
+        minutes: Int = 0,
+        evidence: MissEvidence? = nil
     ) -> PracticeRecord {
         let completedAt = today.addingTimeInterval(Double(-daysAgo * 86_400 + minutes * 60))
         return PracticeRecord(
@@ -29,7 +30,8 @@ final class PracticeStatsTests: XCTestCase {
             misses: misses,
             startedAt: completedAt,
             completedAt: completedAt,
-            leniency: 1
+            leniency: 1,
+            evidence: evidence
         )
     }
 
@@ -100,5 +102,76 @@ final class PracticeStatsTests: XCTestCase {
         XCTAssertEqual(PracticeRecord.recallMode, "study")
         XCTAssertTrue(record("4e00", daysAgo: 0).isRecall)
         XCTAssertFalse(record("4e00", daysAgo: 0, mode: PracticeMode.copy.rawValue).isRecall)
+    }
+
+    func testDisputedMissesDoNotNominate() {
+        let review = PracticeStats.reviewItems(from: [
+            record("4e00", daysAgo: 1, misses: 1, evidence: MissEvidence(shape: 1, disputed: 1)),
+            record("4e8c", daysAgo: 2, misses: 3, evidence: MissEvidence(shape: 3, disputed: 1)),
+        ])
+
+        XCTAssertEqual(review.map(\.codePoint), ["4e8c"])
+        XCTAssertEqual(review.map(\.reason), [.neededRetries(2)])
+    }
+
+    func testDisputesNeverMakeMissesNegative() {
+        let run = record("4e00", daysAgo: 1, misses: 1, evidence: MissEvidence(disputed: 3))
+
+        XCTAssertEqual(PracticeStats.effectiveMisses(of: run), 0)
+        XCTAssertTrue(PracticeStats.reviewItems(from: [run]).isEmpty)
+    }
+
+    func testPositionOnlyMissesStillNominate() {
+        let review = PracticeStats.reviewItems(from: [
+            record("4e00", daysAgo: 1, misses: 2, evidence: MissEvidence(position: 2)),
+        ])
+
+        XCTAssertEqual(review.map(\.reason), [.neededRetries(2)])
+    }
+
+    func testHintStillNominatesWhenMissesAreDisputed() {
+        let review = PracticeStats.reviewItems(from: [
+            record("4e00", daysAgo: 1, revealed: true, misses: 1, evidence: MissEvidence(shape: 1, disputed: 1)),
+        ])
+
+        XCTAssertEqual(review.map(\.reason), [.usedHint])
+    }
+
+    func testRecordsWithoutEvidenceKeepTheirMisses() {
+        let review = PracticeStats.reviewItems(from: [
+            record("4e00", daysAgo: 1, misses: 2),
+        ])
+
+        XCTAssertEqual(review.map(\.reason), [.neededRetries(2)])
+    }
+
+    func testOldRecordWithoutGradingFieldsDecodesAndNominates() throws {
+        let json = """
+        {
+            "id": "7C9E6679-7425-40DE-944B-E07FC1F90AE7",
+            "codePoint": "4e00",
+            "mode": "study",
+            "revealed": false,
+            "exposed": false,
+            "misses": 2,
+            "startedAt": "2026-10-08T01:00:00Z",
+            "completedAt": "2026-10-08T01:01:00Z",
+            "leniency": 1.2649110640673518
+        }
+        """
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let old = try decoder.decode(PracticeRecord.self, from: Data(json.utf8))
+
+        XCTAssertNil(old.strictness)
+        XCTAssertNil(old.gradingVersion)
+        XCTAssertNil(old.evidence)
+        XCTAssertEqual(old.leniency, 1.2649110640673518)
+        XCTAssertEqual(PracticeStats.reviewItems(from: [old]).map(\.reason), [.neededRetries(2)])
+    }
+
+    func testEvidenceMissingNewerCountsStillDecodes() throws {
+        let decoded = try JSONDecoder().decode(MissEvidence.self, from: Data(#"{"shape": 2}"#.utf8))
+        XCTAssertEqual(decoded, MissEvidence(shape: 2))
     }
 }

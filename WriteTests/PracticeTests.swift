@@ -531,6 +531,118 @@ final class PracticeStateTests: XCTestCase {
         state.processValidationResult(makeAcceptedResult(matchedIndex: 0, expectedIndex: 0))
         XCTAssertEqual(state.unmatchedIndices, [1, 2])
     }
+
+    private func reject(_ state: PracticeState, evidence: StrokeEvidence) {
+        var result = makeRejectedResult()
+        result.evidence = evidence
+        state.beginDrawing()
+        state.beginValidation()
+        state.processValidationResult(result)
+        state.acknowledgeResult()
+    }
+
+    private func rejectOutOfOrder(_ state: PracticeState, drawn: Int) {
+        state.beginDrawing()
+        state.beginValidation()
+        state.processValidationResult(makeAcceptedResult(matchedIndex: drawn, expectedIndex: state.currentStrokeIndex))
+        state.acknowledgeResult()
+    }
+
+    func testWrongOrderCountsAsAnOrderMiss() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3))
+        rejectOutOfOrder(state, drawn: 2)
+
+        XCTAssertEqual(state.missEvidence, MissEvidence(order: 1))
+        XCTAssertEqual(state.attemptCount, 1)
+    }
+
+    func testRejectionWithoutFlagsCountsAsNotEvaluated() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2))
+        reject(state, evidence: .notEvaluated)
+
+        XCTAssertEqual(state.missEvidence, MissEvidence(notEvaluated: 1))
+    }
+
+    func testOneRejectionCanAddToSeveralCategories() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2))
+        reject(state, evidence: StrokeEvidence(shapePassed: false, positionPassed: false, proportionPassed: nil))
+        reject(state, evidence: StrokeEvidence(shapePassed: true, positionPassed: false, proportionPassed: true))
+        reject(state, evidence: StrokeEvidence(shapePassed: true, positionPassed: true, proportionPassed: false))
+
+        XCTAssertEqual(state.missEvidence, MissEvidence(shape: 1, position: 2, proportion: 1))
+        XCTAssertEqual(state.attemptCount, 3)
+    }
+
+    func testUndoKeepsMissEvidenceAndResetClearsIt() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3))
+        reject(state, evidence: StrokeEvidence(shapePassed: false))
+        acceptStroke(state, matchedIndex: 0)
+        _ = state.undoLastStroke()
+
+        XCTAssertEqual(state.missEvidence, MissEvidence(shape: 1))
+
+        state.reset()
+        XCTAssertEqual(state.missEvidence, MissEvidence())
+    }
+
+    func testNoDisputeWithoutARejection() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2))
+        XCTAssertFalse(state.canDisputeLastRejection)
+
+        state.disputeLastRejection()
+        XCTAssertEqual(state.missEvidence.disputed, 0)
+    }
+
+    func testDisputeCountsOncePerRejection() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2))
+        reject(state, evidence: StrokeEvidence(positionPassed: false))
+        XCTAssertTrue(state.canDisputeLastRejection)
+
+        state.disputeLastRejection()
+        state.disputeLastRejection()
+
+        XCTAssertEqual(state.missEvidence.disputed, 1)
+        XCTAssertFalse(state.canDisputeLastRejection)
+        XCTAssertEqual(state.attemptCount, 1)
+    }
+
+    func testDisputeDoesNotAcceptTheStroke() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2))
+        reject(state, evidence: StrokeEvidence(shapePassed: false))
+        state.disputeLastRejection()
+
+        XCTAssertTrue(state.matchedStrokeIndices.isEmpty)
+        XCTAssertTrue(state.anchors.isEmpty)
+        XCTAssertEqual(state.currentStrokeIndex, 0)
+        XCTAssertFalse(state.isComplete)
+        XCTAssertEqual(state.phase, .waitingForInput)
+    }
+
+    func testANewRejectionCanBeDisputedAgain() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3))
+        reject(state, evidence: StrokeEvidence(shapePassed: false))
+        state.disputeLastRejection()
+        rejectOutOfOrder(state, drawn: 1)
+
+        XCTAssertTrue(state.canDisputeLastRejection)
+        state.disputeLastRejection()
+        XCTAssertEqual(state.missEvidence, MissEvidence(shape: 1, order: 1, disputed: 2))
+    }
+
+    func testAcceptanceUndoAndResetEndTheDispute() {
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 3))
+        reject(state, evidence: .notEvaluated)
+        acceptStroke(state, matchedIndex: 0)
+        XCTAssertFalse(state.canDisputeLastRejection)
+
+        reject(state, evidence: .notEvaluated)
+        _ = state.undoLastStroke()
+        XCTAssertFalse(state.canDisputeLastRejection)
+
+        reject(state, evidence: .notEvaluated)
+        state.reset()
+        XCTAssertFalse(state.canDisputeLastRejection)
+    }
 }
 
 // MARK: - FeedbackOverlayView Tests

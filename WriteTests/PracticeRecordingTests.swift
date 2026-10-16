@@ -156,6 +156,42 @@ final class PracticeRecordingTests: XCTestCase {
         XCTAssertEqual(state.attemptCount, 1)
         XCTAssertTrue(recorder.records.isEmpty)
     }
+
+    func testRecordCarriesGradingConfigAndMissEvidence() {
+        let (state, recorder) = makeState(strokeCount: 2)
+        submit(state, matchedIndex: nil)
+        state.disputeLastRejection()
+        submit(state, matchedIndex: 1, correctOrder: false)
+        complete(state)
+
+        let record = recorder.records[0]
+        XCTAssertEqual(record.misses, 2)
+        XCTAssertEqual(record.evidence, MissEvidence(order: 1, notEvaluated: 1, disputed: 1))
+        XCTAssertEqual(record.strictness, .normal)
+        XCTAssertEqual(record.gradingVersion, ValidationConfig.gradingVersion)
+    }
+
+    func testRecordStoresTheStrictnessInUse() {
+        var config = ValidationConfig.standard
+        config.leniency = GradingStrictness.strict.leniency
+        let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 1), config: config)
+        let recorder = Recorder()
+        state.onRunCompleted = { recorder.records.append($0) }
+        complete(state)
+
+        XCTAssertEqual(recorder.records.first?.strictness, .strict)
+        XCTAssertEqual(recorder.records.first?.leniency, Double(GradingStrictness.strict.leniency))
+    }
+
+    func testResetStartsANewRunWithFreshEvidence() {
+        let (state, recorder) = makeState(strokeCount: 1)
+        submit(state, matchedIndex: nil)
+        state.reset()
+        complete(state)
+
+        XCTAssertEqual(recorder.records.first?.evidence, MissEvidence())
+        XCTAssertEqual(recorder.records.first?.misses, 0)
+    }
 }
 
 @MainActor
