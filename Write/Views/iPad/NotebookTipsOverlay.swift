@@ -98,7 +98,7 @@ final class NotebookTipsOverlay: UIView {
     private func showCurrentTip() {
         let tip = tips[currentIndex]
         label.text = tip.text
-        pageLabel.text = "\(currentIndex + 1) / \(tips.count)  — tap anywhere"
+        pageLabel.text = String(localized: "\(currentIndex + 1) / \(tips.count)  — tap anywhere")
 
         updateSpotlight(rect: tip.sourceRect)
         layoutBubble(tip: tip)

@@ -1,3 +1,5 @@
+import Foundation
+
 enum CharacterFilter: Hashable, Sendable {
     case all
     case hiragana
@@ -13,7 +15,7 @@ enum CharacterFilter: Hashable, Sendable {
         var label: String {
             switch self {
             case .jlpt: return "JLPT"
-            case .school: return "School"
+            case .school: return String(localized: "School")
             }
         }
 
@@ -29,12 +31,12 @@ enum CharacterFilter: Hashable, Sendable {
 
     var label: String {
         switch self {
-        case .all: return "All"
-        case .hiragana: return "Hiragana"
-        case .katakana: return "Katakana"
+        case .all: return String(localized: "All")
+        case .hiragana: return String(localized: "Hiragana")
+        case .katakana: return String(localized: "Katakana")
         case .jlpt(let level): return "N\(level)"
-        case .schoolGrade(let grade): return "Grade \(grade)"
-        case .otherJoyo: return "Other Jōyō"
+        case .schoolGrade(let grade): return String(localized: "Grade \(grade)")
+        case .otherJoyo: return String(localized: "Other Jōyō")
         }
     }
 

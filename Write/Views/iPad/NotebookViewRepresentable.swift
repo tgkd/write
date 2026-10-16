@@ -19,7 +19,7 @@ struct NotebookViewRepresentable: UIViewControllerRepresentable {
         vc.smoothingStrength = settingsObj.smoothingStrength
         vc.brushThickness = settingsObj.brushThickness
         vc.handedness = settingsObj.handedness
-        vc.title = "Notebook"
+        vc.title = String(localized: "Notebook")
 
         context.coordinator.viewController = vc
 

@@ -45,10 +45,10 @@ enum PressureSensitivity: String, CaseIterable, Sendable {
 
     var displayName: String {
         switch self {
-        case .off: return "Off"
-        case .low: return "Low"
-        case .medium: return "Medium"
-        case .high: return "High"
+        case .off: return String(localized: "Off")
+        case .low: return String(localized: "Low")
+        case .medium: return String(localized: "Medium")
+        case .high: return String(localized: "High")
         }
     }
 
@@ -70,10 +70,10 @@ enum TiltSensitivity: String, CaseIterable, Sendable {
 
     var displayName: String {
         switch self {
-        case .off: return "Off"
-        case .low: return "Low"
-        case .medium: return "Medium"
-        case .high: return "High"
+        case .off: return String(localized: "Off")
+        case .low: return String(localized: "Low")
+        case .medium: return String(localized: "Medium")
+        case .high: return String(localized: "High")
         }
     }
 
@@ -97,10 +97,10 @@ enum SmoothingStrength: String, CaseIterable, Sendable {
 
     var displayName: String {
         switch self {
-        case .auto: return "Auto"
-        case .low: return "Low"
-        case .medium: return "Medium"
-        case .high: return "High"
+        case .auto: return String(localized: "Auto")
+        case .low: return String(localized: "Low")
+        case .medium: return String(localized: "Medium")
+        case .high: return String(localized: "High")
         }
     }
 
@@ -138,8 +138,8 @@ enum Handedness: String, CaseIterable, Sendable {
 
     var displayName: String {
         switch self {
-        case .right: return "Right"
-        case .left: return "Left"
+        case .right: return String(localized: "Right")
+        case .left: return String(localized: "Left")
         }
     }
 }
@@ -151,9 +151,9 @@ enum BrushThickness: String, CaseIterable, Sendable {
 
     var displayName: String {
         switch self {
-        case .thin: return "Thin"
-        case .medium: return "Medium"
-        case .thick: return "Thick"
+        case .thin: return String(localized: "Thin")
+        case .medium: return String(localized: "Medium")
+        case .thick: return String(localized: "Thick")
         }
     }
 

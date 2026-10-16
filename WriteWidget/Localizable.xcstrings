@@ -1,0 +1,46 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%lld strokes" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld画"
+          }
+        }
+      }
+    },
+    "1 stroke" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1画"
+          }
+        }
+      }
+    },
+    "A new kanji to practice every day." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "毎日1つ、新しい漢字を練習できます。"
+          }
+        }
+      }
+    },
+    "Daily Kanji" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の漢字"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

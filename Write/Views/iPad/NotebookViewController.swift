@@ -113,7 +113,7 @@ final class NotebookViewController: UIViewController {
         if let refCell = collectionView.cellForItem(at: refIndexPath) {
             let rect = refCell.convert(refCell.bounds, to: view)
             tips.append(NotebookTip(
-                text: "Tap the reference kanji to see stroke order animation",
+                text: String(localized: "Tap the reference kanji to see stroke order animation"),
                 sourceRect: rect,
                 arrowDirection: .up
             ))
@@ -123,7 +123,7 @@ final class NotebookViewController: UIViewController {
         if let practiceCell = collectionView.cellForItem(at: practiceIndexPath) {
             let rect = practiceCell.convert(practiceCell.bounds, to: view)
             tips.append(NotebookTip(
-                text: "Draw in any cell to practice — no rules, just write",
+                text: String(localized: "Draw in any cell to practice — no rules, just write"),
                 sourceRect: rect,
                 arrowDirection: .up
             ))
@@ -133,7 +133,7 @@ final class NotebookViewController: UIViewController {
         if let cell = collectionView.cellForItem(at: lastPracticeIndexPath) {
             let rect = cell.convert(cell.bounds, to: view)
             tips.append(NotebookTip(
-                text: "Double-tap with two fingers to clear a cell and start over",
+                text: String(localized: "Double-tap with two fingers to clear a cell and start over"),
                 sourceRect: rect,
                 arrowDirection: .up
             ))
@@ -143,7 +143,7 @@ final class NotebookViewController: UIViewController {
            let barView = barButton.value(forKey: "view") as? UIView {
             let rect = barView.convert(barView.bounds, to: view)
             tips.append(NotebookTip(
-                text: "Use the sidebar to pick a different kanji",
+                text: String(localized: "Use the sidebar to pick a different kanji"),
                 sourceRect: rect,
                 arrowDirection: .up
             ))

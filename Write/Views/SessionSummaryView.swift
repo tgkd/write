@@ -79,10 +79,18 @@ struct SessionSummaryView: View {
     }
 
     private var subtitle: String {
-        let noun = results.count == 1 ? "character" : "characters"
+        let count = results.count
         switch kind {
-        case .practice: return "\(results.count) \(noun) practiced"
-        case .recall: return "\(results.count) \(noun) recalled"
+        case .practice:
+            if count == 1 {
+                return String(localized: "\(count) character practiced")
+            }
+            return String(localized: "\(count) characters practiced")
+        case .recall:
+            if count == 1 {
+                return String(localized: "\(count) character recalled")
+            }
+            return String(localized: "\(count) characters recalled")
         }
     }
 
@@ -93,10 +101,11 @@ struct SessionSummaryView: View {
     private func detail(for result: SessionState.KanjiResult) -> String {
         var parts: [String] = []
         if result.usedHint {
-            parts.append("hint")
+            parts.append(String(localized: "hint"))
         }
         if result.attemptCount > 0 {
-            parts.append("\(result.attemptCount) miss\(result.attemptCount == 1 ? "" : "es")")
+            let count = result.attemptCount
+            parts.append(count == 1 ? String(localized: "\(count) miss") : String(localized: "\(count) misses"))
         }
         return parts.joined(separator: " · ")
     }

@@ -279,7 +279,7 @@ struct SettingsView: View {
         }
     }
 
-    private func acknowledgmentRow(title: String, detail: String, url: String) -> some View {
+    private func acknowledgmentRow(title: String, detail: LocalizedStringKey, url: String) -> some View {
         Link(destination: URL(string: url)!) {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {

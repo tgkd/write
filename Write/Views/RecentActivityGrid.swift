@@ -25,6 +25,6 @@ struct RecentActivityGrid: View {
 
     private func label(for day: PracticeStats.DayActivity) -> String {
         let date = day.day.formatted(date: .abbreviated, time: .omitted)
-        return "\(date): \(day.completions) completed"
+        return String(localized: "\(date): \(day.completions) completed")
     }
 }

@@ -123,11 +123,11 @@ struct WordSlotCanvas: View {
     private var caption: String {
         switch slotState.hint {
         case .unused:
-            return "Write the kanji for the highlighted box."
+            return String(localized: "Write the kanji for the highlighted box.")
         case .character:
-            return "Character shown. Counts as a hint."
+            return String(localized: "Character shown. Counts as a hint.")
         case .strokes:
-            return "Next stroke shown. Counts as a hint."
+            return String(localized: "Next stroke shown. Counts as a hint.")
         }
     }
 

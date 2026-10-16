@@ -185,8 +185,8 @@ struct KanjiPickerView: View {
     }
 
     private func sessionCard(
-        title: String,
-        subtitle: String,
+        title: LocalizedStringKey,
+        subtitle: LocalizedStringKey,
         systemImage: String,
         route: SessionRoute,
         identifier: String

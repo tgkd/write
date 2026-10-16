@@ -46,9 +46,9 @@ struct PracticeProgressView: View {
     private func countsRow(_ stats: PracticeStats) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
-                countTile(value: stats.practicedDays, label: "Days")
-                countTile(value: stats.completedRuns, label: "Completed")
-                countTile(value: stats.distinctKanji, label: "Characters")
+                countTile(value: stats.practicedDays, label: "Days", identifier: "Days")
+                countTile(value: stats.completedRuns, label: "Completed", identifier: "Completed")
+                countTile(value: stats.distinctKanji, label: "Characters", identifier: "Characters")
             }
             Text("Completed practice only. Notebook writing isn't counted.")
                 .font(.caption)
@@ -56,7 +56,7 @@ struct PracticeProgressView: View {
         }
     }
 
-    private func countTile(value: Int, label: String) -> some View {
+    private func countTile(value: Int, label: LocalizedStringKey, identifier: String) -> some View {
         VStack(spacing: 2) {
             Text("\(value)")
                 .font(.title2.weight(.semibold))
@@ -67,7 +67,7 @@ struct PracticeProgressView: View {
         }
         .frame(maxWidth: .infinity)
         .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("count.\(label)")
+        .accessibilityIdentifier("count.\(identifier)")
         .padding(.vertical, 12)
         .background(Color(.secondarySystemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -139,7 +139,7 @@ struct PracticeProgressView: View {
         }
     }
 
-    private func sectionTitle(_ title: String) -> some View {
+    private func sectionTitle(_ title: LocalizedStringKey) -> some View {
         Text(title)
             .font(.subheadline)
             .foregroundStyle(.secondary)
@@ -149,9 +149,12 @@ struct PracticeProgressView: View {
     private func reasonText(_ reason: PracticeStats.Reason) -> String {
         switch reason {
         case .usedHint:
-            return "Used a hint"
+            return String(localized: "Used a hint")
         case .neededRetries(let count):
-            return "\(count) retr\(count == 1 ? "y" : "ies")"
+            if count == 1 {
+                return String(localized: "\(count) retry")
+            }
+            return String(localized: "\(count) retries")
         }
     }
 }
