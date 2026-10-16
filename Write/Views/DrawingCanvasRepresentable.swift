@@ -25,6 +25,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         let view = DrawingCanvasView()
         view.onPointAdded = onPointAdded
         view.onStrokeCompleted = onStrokeCompleted
+        view.onStrokeCaptured = strokeCaptureHandler()
         view.allowedTouchTypes = allowedTouchTypes
         applyBrushSettings(to: view)
         view.backgroundColor = .clear
@@ -47,9 +48,19 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: DrawingCanvasView, context: Context) {
         uiView.onPointAdded = onPointAdded
         uiView.onStrokeCompleted = onStrokeCompleted
+        uiView.onStrokeCaptured = strokeCaptureHandler()
         uiView.allowedTouchTypes = allowedTouchTypes
         context.coordinator.onPencilDoubleTap = onPencilDoubleTap
         applyBrushSettings(to: uiView)
+    }
+
+    private func strokeCaptureHandler() -> ((CanvasStrokeCapture) -> Void)? {
+        guard let captureContext, StrokeCaptureRecorder.shared.isEnabled else {
+            return nil
+        }
+        return { capture in
+            StrokeCaptureRecorder.shared.record(CapturedStroke(capture: capture, context: captureContext))
+        }
     }
 
     private func applyBrushSettings(to view: DrawingCanvasView) {

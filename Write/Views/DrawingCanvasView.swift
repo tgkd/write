@@ -19,6 +19,7 @@ final class DrawingCanvasView: UIView {
     var onPointAdded: ((CGPoint, Int) -> Void)?
     var onPencilStrokeBegan: (() -> Void)?
     var onStrokeCompleted: (([CGPoint], Int) -> Void)?
+    var onStrokeCaptured: ((CanvasStrokeCapture) -> Void)?
 
     // MARK: - State
 
@@ -41,6 +42,23 @@ final class DrawingCanvasView: UIView {
     /// Refinements for the most recently finalized stroke, which can still
     /// arrive after touchesEnded. Dropped when the next stroke begins.
     private var pendingRefinement: (samples: [BrushStroke.Sample], layer: CAShapeLayer, indexMap: [NSNumber: Int])?
+
+    private struct PendingCapture {
+        let id: UUID
+        let touchType: UITouch.TouchType
+        let canvasSize: CGSize
+        var samples: [BrushStroke.Sample]
+        var outstanding: [NSNumber: Int]
+        var didRefine = false
+
+        var capture: CanvasStrokeCapture {
+            CanvasStrokeCapture(id: id, touchType: touchType, canvasSize: canvasSize, samples: samples)
+        }
+    }
+
+    private var captureSamples: [BrushStroke.Sample] = []
+    private var captureOutstanding: [NSNumber: Int] = [:]
+    private var pendingCapture: PendingCapture?
 
     // MARK: - Init
 
@@ -165,11 +183,15 @@ final class DrawingCanvasView: UIView {
 
         pendingRefinement = nil
         activeEstimationIndexMap = [:]
+        endPendingCapture()
         let sample = BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude)
         currentSamples = [sample]
         liveRenderer = BrushStroke.LiveRenderer(config: brushConfig)
         liveRenderer?.append(sample)
         recordEstimationIndex(for: touch, sampleIndex: 0)
+        captureSamples = []
+        captureOutstanding = [:]
+        appendCaptureSample(for: touch, rawPoint: rawPoint, force: force, altitude: altitude)
 
         let shapeLayer = makeBrushLayer()
         layer.addSublayer(shapeLayer)
@@ -196,6 +218,7 @@ final class DrawingCanvasView: UIView {
             currentSamples.append(sample)
             liveRenderer?.append(sample)
             recordEstimationIndex(for: ct, sampleIndex: currentSamples.count - 1)
+            appendCaptureSample(for: ct, rawPoint: rawPoint, force: cf, altitude: ca)
         }
 
         updateActivePath()
@@ -235,6 +258,7 @@ final class DrawingCanvasView: UIView {
                 currentSamples.append(sample)
                 liveRenderer?.append(sample)
                 recordEstimationIndex(for: ct, sampleIndex: currentSamples.count - 1)
+                appendCaptureSample(for: ct, rawPoint: rawPoint, force: cf, altitude: ca)
             }
         }
 
@@ -276,6 +300,7 @@ final class DrawingCanvasView: UIView {
                 pendingRefinement = pending
                 pending.layer.path = BrushStroke.createPath(from: pending.samples, config: brushConfig)
             }
+            refineCapture(with: touch, key: key, force: force, altitude: altitude)
         }
         if activeNeedsRender {
             updateActivePath()
@@ -360,6 +385,83 @@ final class DrawingCanvasView: UIView {
         activeEstimationIndexMap[key] = sampleIndex
     }
 
+    private func appendCaptureSample(for touch: UITouch, rawPoint: CGPoint, force: CGFloat?, altitude: CGFloat?) {
+        guard onStrokeCaptured != nil else {
+            return
+        }
+        captureSamples.append(
+            BrushStroke.Sample(point: rawPoint, timestamp: touch.timestamp, force: force, altitude: altitude)
+        )
+        guard touch.type == .pencil,
+              !touch.estimatedPropertiesExpectingUpdates.isEmpty,
+              let key = touch.estimationUpdateIndex else {
+            return
+        }
+        captureOutstanding[key] = captureSamples.count - 1
+    }
+
+    private func refineCapture(with touch: UITouch, key: NSNumber, force: CGFloat?, altitude: CGFloat) {
+        let isFinal = touch.estimatedPropertiesExpectingUpdates.isEmpty
+        if let idx = captureOutstanding[key], captureSamples.indices.contains(idx) {
+            captureSamples[idx] = refined(captureSamples[idx], force: force, altitude: altitude)
+            if isFinal {
+                captureOutstanding[key] = nil
+            }
+            return
+        }
+        guard var pending = pendingCapture,
+              let idx = pending.outstanding[key],
+              pending.samples.indices.contains(idx) else {
+            return
+        }
+        pending.samples[idx] = refined(pending.samples[idx], force: force, altitude: altitude)
+        pending.didRefine = true
+        if isFinal {
+            pending.outstanding[key] = nil
+        }
+        if pending.outstanding.isEmpty {
+            pendingCapture = nil
+            onStrokeCaptured?(pending.capture)
+        } else {
+            pendingCapture = pending
+        }
+    }
+
+    private func refined(_ sample: BrushStroke.Sample, force: CGFloat?, altitude: CGFloat) -> BrushStroke.Sample {
+        BrushStroke.Sample(point: sample.point, timestamp: sample.timestamp, force: force, altitude: altitude)
+    }
+
+    private func endPendingCapture() {
+        guard let pending = pendingCapture else {
+            return
+        }
+        pendingCapture = nil
+        if pending.didRefine {
+            onStrokeCaptured?(pending.capture)
+        }
+    }
+
+    private func emitCapture(touchType: UITouch.TouchType) {
+        defer {
+            captureSamples = []
+            captureOutstanding = [:]
+        }
+        guard let onStrokeCaptured, !captureSamples.isEmpty else {
+            return
+        }
+        let pending = PendingCapture(
+            id: UUID(),
+            touchType: touchType,
+            canvasSize: bounds.size,
+            samples: captureSamples,
+            outstanding: captureOutstanding
+        )
+        if !pending.outstanding.isEmpty {
+            pendingCapture = pending
+        }
+        onStrokeCaptured(pending.capture)
+    }
+
     private func makeBrushLayer() -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
         shapeLayer.contentsScale = layer.contentsScale
@@ -409,6 +511,7 @@ final class DrawingCanvasView: UIView {
         activeEstimationIndexMap = [:]
         currentSamples = []
         liveRenderer = nil
+        emitCapture(touchType: activeTouch?.type ?? .direct)
         onStrokeCompleted?(rawPoints, strokeIndex)
     }
 
@@ -421,5 +524,7 @@ final class DrawingCanvasView: UIView {
         currentSamples = []
         liveRenderer = nil
         activeEstimationIndexMap = [:]
+        captureSamples = []
+        captureOutstanding = [:]
     }
 }
