@@ -97,14 +97,14 @@ extension PracticeState {
 
     func applyPlacement(to reference: KanjiReferenceView) {
         guard usesRelativePlacement, !anchors.isEmpty else {
-            reference.setPlacementOffset(.zero)
+            reference.setPlacement(.identity)
             return
         }
-        let offset = StrokeValidator.placementOffset(
+        let placement = StrokeValidator.placement(
             anchors: anchors,
             referenceSamples: referenceSamples(canvasSize: reference.bounds.size),
             canvasSize: reference.bounds.size
         )
-        reference.setPlacementOffset(offset)
+        reference.setPlacement(placement)
     }
 }

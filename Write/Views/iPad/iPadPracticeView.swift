@@ -65,8 +65,10 @@ struct iPadPracticeView: View {
             showCompletionCheck = false
             applyGhostVisibility()
         }
-        .onChange(of: settings.maskPathWidth) { _ in
+        .onChange(of: settings.gradingStrictness) { _ in
             practiceState.validationConfig = settings.validationConfig
+        }
+        .onChange(of: settings.maskPathWidth) { _ in
             referenceView?.updateAppearance(
                 lineWidth: settings.maskPathWidth,
                 colorProvider: settings.colorPalette.strokeOrderColor
@@ -199,6 +201,12 @@ struct iPadPracticeView: View {
             hidesReference: false,
             notice: practiceState.lastRejection?.notice,
             startMarker: practiceState.startMarker,
+            canDispute: practiceState.canDisputeLastRejection,
+            onDispute: { practiceState.disputeLastRejection() },
+            captureContext: StrokeCaptureContext(
+                codePoint: practiceState.kanjiData.codePoint,
+                mode: practiceState.mode.rawValue
+            ),
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

@@ -13,6 +13,9 @@ struct PracticeCanvasArea: View {
     let hidesReference: Bool
     var notice: String?
     var startMarker: CGPoint?
+    var canDispute = false
+    var onDispute: (() -> Void)?
+    var captureContext: StrokeCaptureContext?
 
     var onStrokeCompleted: (([CGPoint]) -> Void)?
     var onPencilDoubleTap: (() -> Void)?
@@ -61,6 +64,7 @@ struct PracticeCanvasArea: View {
                 tiltSensitivity: tiltSensitivity,
                 smoothingStrength: smoothingStrength,
                 brushThickness: brushThickness,
+                captureContext: captureContext,
                 canvasView: $canvasView
             )
 

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     private let dataStore = KanjiDataStore()
+    private let wordPromptStore = WordPromptStore()
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.horizontalSizeClass) private var sizeClass
 
@@ -36,7 +37,7 @@ struct ContentView: View {
 
     private var iPhoneLayout: some View {
         NavigationStack(path: $iPhonePath) {
-            KanjiPickerView(dataStore: dataStore)
+            KanjiPickerView(dataStore: dataStore, wordPromptStore: wordPromptStore)
                 .navigationDestination(for: String.self) { codePoint in
                     if let kanji = dataStore.lookup(codePoint: codePoint) {
                         PracticeView(kanjiData: kanji, mode: settings.practiceMode)
@@ -45,6 +46,9 @@ struct ContentView: View {
                 }
                 .navigationDestination(for: SessionRoute.self) { route in
                     SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind)
+                }
+                .navigationDestination(for: WordSessionRoute.self) { route in
+                    WordPracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
                 }
                 .navigationDestination(for: ProgressRoute.self) { _ in
                     PracticeProgressView(dataStore: dataStore)
@@ -72,9 +76,12 @@ struct ContentView: View {
 
     private var iPadLayout: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            KanjiPickerView(dataStore: dataStore, selectedCodePoint: sidebarSelection)
+            KanjiPickerView(dataStore: dataStore, wordPromptStore: wordPromptStore, selectedCodePoint: sidebarSelection)
                 .navigationDestination(for: SessionRoute.self) { route in
                     SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind)
+                }
+                .navigationDestination(for: WordSessionRoute.self) { route in
+                    WordPracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
                 }
                 .navigationDestination(for: ProgressRoute.self) { _ in
                     PracticeProgressView(dataStore: dataStore)

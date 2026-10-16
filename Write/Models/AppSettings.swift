@@ -6,6 +6,8 @@ final class AppSettings: ObservableObject {
     static let defaultMaskPathWidth: CGFloat = 5.0
     static let maskPathWidthRange: ClosedRange<CGFloat> = 3...14
 
+    @Published var gradingStrictness: GradingStrictness = .normal
+
     @Published var maskPathWidth: CGFloat {
         didSet { UserDefaults.standard.set(Double(maskPathWidth), forKey: "maskPathWidth") }
     }
@@ -112,7 +114,7 @@ final class AppSettings: ObservableObject {
 
     var validationConfig: ValidationConfig {
         var config = ValidationConfig.standard
-        config.leniency = derivedLeniency
+        config.leniency = gradingStrictness.leniency
         return config
     }
 

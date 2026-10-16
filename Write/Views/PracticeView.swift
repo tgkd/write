@@ -57,8 +57,10 @@ struct PracticeView: View {
             showCompletionCheck = false
             applyGhostVisibility()
         }
-        .onChange(of: settings.maskPathWidth) { _ in
+        .onChange(of: settings.gradingStrictness) { _ in
             practiceState.validationConfig = settings.validationConfig
+        }
+        .onChange(of: settings.maskPathWidth) { _ in
             referenceView?.updateAppearance(
                 lineWidth: settings.maskPathWidth,
                 colorProvider: settings.colorPalette.strokeOrderColor
@@ -139,6 +141,12 @@ struct PracticeView: View {
             hidesReference: practiceState.hidesGuide,
             notice: practiceState.lastRejection?.notice,
             startMarker: practiceState.startMarker,
+            canDispute: practiceState.canDisputeLastRejection,
+            onDispute: { practiceState.disputeLastRejection() },
+            captureContext: StrokeCaptureContext(
+                codePoint: practiceState.kanjiData.codePoint,
+                mode: practiceState.isRecall ? PracticeRecord.recallMode : practiceState.mode.rawValue
+            ),
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

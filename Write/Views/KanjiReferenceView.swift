@@ -107,6 +107,10 @@ class KanjiReferenceView: UIView {
         applyDisplayState(at: index)
     }
 
+    func setPlacement(_ placement: StrokePlacement) {
+        setPlacementOffset(placement.offset)
+    }
+
     func setPlacementOffset(_ offset: CGVector) {
         CATransaction.begin()
         CATransaction.setDisableActions(true)

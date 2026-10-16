@@ -4,6 +4,7 @@ import SwiftUI
 struct WriteApp: App {
     @StateObject private var settings = AppSettings()
     @StateObject private var history = PracticeHistoryStore(directory: WriteApp.historyDirectory)
+    @StateObject private var wordHistory = WordHistoryStore(directory: WriteApp.wordHistoryDirectory)
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
@@ -11,12 +12,21 @@ struct WriteApp: App {
             ContentView()
                 .environmentObject(settings)
                 .environmentObject(history)
+                .environmentObject(wordHistory)
         }
         .onChange(of: scenePhase) { phase in
             if phase == .active {
                 history.retryUnsaved()
             }
         }
+    }
+
+    private static var wordHistoryDirectory: URL {
+        guard ProcessInfo.processInfo.arguments.contains("-uiTestingFreshHistory") else {
+            return WordHistoryStore.defaultDirectory
+        }
+        return FileManager.default.temporaryDirectory
+            .appendingPathComponent("UITestWordHistory-\(UUID().uuidString)", isDirectory: true)
     }
 
     private static var historyDirectory: URL {

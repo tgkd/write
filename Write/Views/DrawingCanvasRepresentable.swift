@@ -13,6 +13,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     var tiltSensitivity: TiltSensitivity = .off
     var smoothingStrength: SmoothingStrength = .medium
     var brushThickness: BrushThickness = .medium
+    var captureContext: StrokeCaptureContext?
 
     @Binding var canvasView: DrawingCanvasView?
 

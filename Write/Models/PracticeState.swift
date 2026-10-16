@@ -27,6 +27,7 @@ final class PracticeState: ObservableObject {
     @Published private(set) var mode: PracticeMode
     @Published private(set) var hint: RecallHint = .unused
     @Published private(set) var lastRejection: StrokeRejection?
+    @Published private(set) var missEvidence = MissEvidence()
 
     let kanjiData: KanjiData
     let isRecall: Bool
@@ -104,8 +105,8 @@ final class PracticeState: ObservableObject {
         if result.accepted, let matchedIndex = result.matchedStrokeIndex, result.correctOrder {
             matchedStrokeIndices.insert(matchedIndex)
             acceptanceOrder.append(matchedIndex)
-            if let userCentroid = result.userCentroid {
-                anchors.append(StrokeAnchor(referenceIndex: matchedIndex, userCentroid: userCentroid))
+            if let anchor = result.anchor {
+                anchors.append(anchor)
             }
             consecutiveMisses = 0
             lastRejection = nil
@@ -166,6 +167,12 @@ final class PracticeState: ObservableObject {
         return .wrongOrder(drawnStroke: drawn, expectedStroke: currentStrokeIndex)
     }
 
+    var canDisputeLastRejection: Bool {
+        false
+    }
+
+    func disputeLastRejection() {}
+
     func showNextHint() {
         guard let next = nextHint else { return }
         hint = next
@@ -190,7 +197,10 @@ final class PracticeState: ObservableObject {
             misses: attemptCount,
             startedAt: runStartedAt ?? completedAt,
             completedAt: completedAt,
-            leniency: Double(validationConfig.leniency)
+            leniency: Double(validationConfig.leniency),
+            strictness: GradingStrictness.nearest(toLeniency: validationConfig.leniency),
+            gradingVersion: ValidationConfig.gradingVersion,
+            evidence: missEvidence
         )
         onRunCompleted?(record)
     }

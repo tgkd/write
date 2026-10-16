@@ -2,6 +2,7 @@ import SwiftUI
 
 struct KanjiPickerView: View {
     let dataStore: KanjiDataStore
+    let wordPromptStore: WordPromptStore
     private let allKanji: [KanjiData]
 
     @EnvironmentObject private var settings: AppSettings
@@ -15,8 +16,9 @@ struct KanjiPickerView: View {
     @Binding var selectedCodePoint: String?
     private let usesSelectionBinding: Bool
 
-    init(dataStore: KanjiDataStore, selectedCodePoint: Binding<String?>? = nil) {
+    init(dataStore: KanjiDataStore, wordPromptStore: WordPromptStore, selectedCodePoint: Binding<String?>? = nil) {
         self.dataStore = dataStore
+        self.wordPromptStore = wordPromptStore
         self.allKanji = dataStore.allCodePoints.compactMap { dataStore.lookup(codePoint: $0) }
         if let binding = selectedCodePoint {
             _selectedCodePoint = binding
@@ -153,7 +155,33 @@ struct KanjiPickerView: View {
             if !review.isEmpty {
                 reviewCard(review)
             }
+            wordsCard
         }
+    }
+
+    private var wordsCard: some View {
+        let route = WordSessionRoute(promptIDs: wordPromptStore.randomPromptIDs(count: settings.sessionCount))
+        return NavigationLink(value: route) {
+            HStack(spacing: 6) {
+                Image(systemName: "character.book.closed.ja")
+                    .foregroundStyle(Color.accentColor)
+                Text("Words")
+                    .font(.headline)
+                Text("write the missing kanji")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(12)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .disabled(route.promptIDs.isEmpty)
+        .accessibilityIdentifier("session.words")
     }
 
     private func sessionCard(

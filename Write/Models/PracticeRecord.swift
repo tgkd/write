@@ -12,6 +12,9 @@ struct PracticeRecord: Codable, Equatable, Identifiable, Sendable {
     let startedAt: Date
     let completedAt: Date
     let leniency: Double
+    var strictness: GradingStrictness?
+    var gradingVersion: Int?
+    var evidence: MissEvidence?
 
     var isRecall: Bool {
         mode == Self.recallMode

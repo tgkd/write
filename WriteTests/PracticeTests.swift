@@ -314,7 +314,7 @@ final class PracticeStateTests: XCTestCase {
         state.beginDrawing()
         state.beginValidation()
         var result = makeAcceptedResult(matchedIndex: 0, expectedIndex: 0)
-        result.userCentroid = CGPoint(x: 40, y: 50)
+        result.anchor = StrokeAnchor(referenceIndex: 0, userCentroid: CGPoint(x: 40, y: 50))
         state.processValidationResult(result)
 
         XCTAssertEqual(state.anchors, [StrokeAnchor(referenceIndex: 0, userCentroid: CGPoint(x: 40, y: 50))])

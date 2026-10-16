@@ -25,6 +25,8 @@ struct ValidationConfig: Sendable {
     var sampleCount: Int = 50
 
     static let standard = ValidationConfig()
+
+    static let gradingVersion = 2
 }
 
 /// Result of validating a single user stroke against a reference.
@@ -45,6 +47,10 @@ struct StrokeValidationResult: Sendable {
     let frechetDistance: CGFloat
 
     var userCentroid: CGPoint?
+
+    var evidence: StrokeEvidence = .notEvaluated
+
+    var anchor: StrokeAnchor?
 }
 
 /// Orchestrates the stroke validation pipeline: sample -> normalize -> compare -> score.
@@ -194,7 +200,21 @@ enum StrokeValidator {
             frechetDistance: .infinity
         )
         result.userCentroid = userCentroid
+        if let matched = result.matchedStrokeIndex {
+            result.anchor = StrokeAnchor(referenceIndex: matched, userCentroid: userCentroid)
+        }
         return result
+    }
+
+    static func placement(
+        anchors: [StrokeAnchor],
+        referenceSamples: [[CGPoint]],
+        canvasSize: CGSize
+    ) -> StrokePlacement {
+        StrokePlacement(
+            scale: 1,
+            offset: placementOffset(anchors: anchors, referenceSamples: referenceSamples, canvasSize: canvasSize)
+        )
     }
 
     static func placementOffset(
