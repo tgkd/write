@@ -32,6 +32,10 @@ final class DrawingCanvasView: UIView {
     private var hoverLayer: CAShapeLayer?
     private var activeTouch: UITouch?
     private var inputFilter = OneEuroFilter()
+    private var strokeConfig = BrushStroke.Config()
+    private var validationFilter = OneEuroFilter()
+    private var validationPoints: [CGPoint] = []
+    private var lastValidationRawPoint: CGPoint?
     private var liveRenderer: BrushStroke.LiveRenderer?
     private var lastLayoutSize: CGSize = .zero
 
@@ -41,7 +45,12 @@ final class DrawingCanvasView: UIView {
     private var activeEstimationIndexMap: [NSNumber: Int] = [:]
     /// Refinements for the most recently finalized stroke, which can still
     /// arrive after touchesEnded. Dropped when the next stroke begins.
-    private var pendingRefinement: (samples: [BrushStroke.Sample], layer: CAShapeLayer, indexMap: [NSNumber: Int])?
+    private var pendingRefinement: (
+        samples: [BrushStroke.Sample],
+        layer: CAShapeLayer,
+        indexMap: [NSNumber: Int],
+        config: BrushStroke.Config
+    )?
 
     private struct PendingCapture {
         let id: UUID
@@ -177,17 +186,19 @@ final class DrawingCanvasView: UIView {
         let force = normalizedForce(of: touch)
         let altitude = touch.type == .pencil ? touch.altitudeAngle : nil
 
-        inputFilter.minCutoff = brushConfig.filterMinCutoff
-        inputFilter.beta = brushConfig.filterBeta
+        strokeConfig = brushConfig.resolved(forPencil: touch.type == .pencil)
+        inputFilter.minCutoff = strokeConfig.filterMinCutoff
+        inputFilter.beta = strokeConfig.filterBeta
         inputFilter.reset()
         let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
+        startValidation(at: rawPoint, timestamp: touch.timestamp)
 
         pendingRefinement = nil
         activeEstimationIndexMap = [:]
         endPendingCapture()
         let sample = BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude)
         currentSamples = [sample]
-        liveRenderer = BrushStroke.LiveRenderer(config: brushConfig)
+        liveRenderer = BrushStroke.LiveRenderer(config: strokeConfig)
         liveRenderer?.append(sample)
         recordEstimationIndex(for: touch, sampleIndex: 0)
         captureSamples = []
@@ -215,6 +226,7 @@ final class DrawingCanvasView: UIView {
             let cf = normalizedForce(of: ct)
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
+            appendValidation(rawPoint, timestamp: ct.timestamp)
             let sample = BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca)
             currentSamples.append(sample)
             liveRenderer?.append(sample)
@@ -254,6 +266,9 @@ final class DrawingCanvasView: UIView {
             let cf = normalizedForce(of: ct)
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
+            if rawPoint != lastValidationRawPoint {
+                appendValidation(rawPoint, timestamp: ct.timestamp)
+            }
             if point != currentSamples.last?.point {
                 let sample = BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca)
                 currentSamples.append(sample)
@@ -299,7 +314,7 @@ final class DrawingCanvasView: UIView {
                     point: old.point, timestamp: old.timestamp, force: force, altitude: altitude
                 )
                 pendingRefinement = pending
-                pending.layer.path = BrushStroke.createPath(from: pending.samples, config: brushConfig)
+                pending.layer.path = committedPath(from: pending.samples, config: pending.config)
             }
             refineCapture(with: touch, key: key, force: force, altitude: altitude)
         }
@@ -476,7 +491,28 @@ final class DrawingCanvasView: UIView {
     private func updateActivePath() {
         guard let activeLayer else { return }
         activeLayer.path = liveRenderer?.currentPath()
-            ?? BrushStroke.createPath(from: currentSamples, config: brushConfig)
+            ?? BrushStroke.createPath(from: currentSamples, config: strokeConfig)
+    }
+
+    private var hookParameters: StrokeHookTrimmer.Parameters {
+        StrokeHookTrimmer.Parameters(canvasSize: bounds.size)
+    }
+
+    private func committedPath(from samples: [BrushStroke.Sample], config: BrushStroke.Config) -> CGPath {
+        let range = StrokeHookTrimmer.keptRange(of: samples.map(\.point), parameters: hookParameters)
+        return BrushStroke.createPath(from: Array(samples[range]), config: config)
+    }
+
+    private func startValidation(at rawPoint: CGPoint, timestamp: TimeInterval) {
+        let params = SmoothingStrength.validation.filterParams
+        validationFilter = OneEuroFilter(minCutoff: params.minCutoff, beta: params.beta)
+        validationPoints = []
+        appendValidation(rawPoint, timestamp: timestamp)
+    }
+
+    private func appendValidation(_ rawPoint: CGPoint, timestamp: TimeInterval) {
+        lastValidationRawPoint = rawPoint
+        validationPoints.append(validationFilter.filter(point: rawPoint, timestamp: timestamp))
     }
 
     private func updatePredictedPath(predictedSamples: [BrushStroke.Sample]) {
@@ -496,25 +532,31 @@ final class DrawingCanvasView: UIView {
     }
 
     private func finalizeCurrentStroke() {
-        let rawPoints = currentSamples.map(\.point)
+        let points = StrokeHookTrimmer.trim(validationPoints, parameters: hookParameters)
         let strokeIndex = strokes.count
 
-        strokes.append(rawPoints)
+        strokes.append(points)
 
         if let active = activeLayer {
-            active.path = BrushStroke.createPath(from: currentSamples, config: brushConfig)
+            active.path = committedPath(from: currentSamples, config: strokeConfig)
             strokeLayers.append(active)
             if !activeEstimationIndexMap.isEmpty {
-                pendingRefinement = (currentSamples, active, activeEstimationIndexMap)
+                pendingRefinement = (currentSamples, active, activeEstimationIndexMap, strokeConfig)
             }
             activeLayer = nil
         }
 
         activeEstimationIndexMap = [:]
         currentSamples = []
+        resetValidation()
         liveRenderer = nil
         emitCapture(touchType: activeTouch?.type ?? .direct)
-        onStrokeCompleted?(rawPoints, strokeIndex)
+        onStrokeCompleted?(points, strokeIndex)
+    }
+
+    private func resetValidation() {
+        validationPoints = []
+        lastValidationRawPoint = nil
     }
 
     private func cancelCurrentStroke() {
@@ -524,6 +566,7 @@ final class DrawingCanvasView: UIView {
         activeLayer?.removeFromSuperlayer()
         activeLayer = nil
         currentSamples = []
+        resetValidation()
         liveRenderer = nil
         activeEstimationIndexMap = [:]
         captureSamples = []

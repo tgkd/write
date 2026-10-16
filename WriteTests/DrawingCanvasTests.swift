@@ -539,7 +539,88 @@ final class DrawingCanvasViewTests: XCTestCase {
         XCTAssertNotEqual(captures[2].id, captures[0].id)
     }
 
+    // MARK: - Validation input
+
+    func testValidationPointsIgnoreTheSmoothingSetting() {
+        func completedPoints(_ smoothing: SmoothingStrength, type: UITouch.TouchType) -> [CGPoint] {
+            let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+            canvas.brushConfig = BrushStroke.Config(pressure: .off, tilt: .off, smoothing: smoothing, thickness: .medium)
+            var completed: [CGPoint] = []
+            canvas.onStrokeCompleted = { points, _ in completed = points }
+            drawTimedStroke(on: canvas, points: hookedLine(), type: type)
+            return completed
+        }
+
+        let low = completedPoints(.low, type: .direct)
+        XCTAssertFalse(low.isEmpty)
+        XCTAssertEqual(low, completedPoints(.high, type: .direct))
+        XCTAssertEqual(low, completedPoints(.auto, type: .direct))
+        XCTAssertEqual(low, completedPoints(.low, type: .pencil))
+        XCTAssertEqual(low, completedPoints(.auto, type: .pencil))
+    }
+
+    func testValidationPointsDropStartAndEndHooks() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        var completed: [CGPoint] = []
+        canvas.onStrokeCompleted = { points, _ in completed = points }
+        let raw = hookedLine()
+
+        drawTimedStroke(on: canvas, points: raw, type: .direct)
+
+        guard let first = completed.first, let last = completed.last else {
+            return XCTFail("Expected a completed stroke")
+        }
+        XCTAssertLessThan(completed.count, raw.count)
+        XCTAssertLessThan(abs(first.y - 100), 0.6)
+        XCTAssertLessThan(first.x, 51)
+        XCTAssertLessThan(abs(last.y - 100), 0.6)
+        XCTAssertGreaterThan(last.x, 219)
+        XCTAssertEqual(canvas.strokes.last ?? [], completed)
+    }
+
+    func testStraightValidationStrokeKeepsEveryPoint() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        var completed: [CGPoint] = []
+        canvas.onStrokeCompleted = { points, _ in completed = points }
+        let raw = (0...100).map { CGPoint(x: 50 + CGFloat($0) * 1.5, y: 120) }
+
+        drawTimedStroke(on: canvas, points: raw, type: .direct)
+
+        XCTAssertEqual(completed.count, raw.count)
+        XCTAssertEqual(completed.first, raw.first)
+    }
+
     // MARK: - Helpers
+
+    private func hookedLine() -> [CGPoint] {
+        var points = [CGPoint(x: 52.12, y: 102.12), CGPoint(x: 51.06, y: 101.06), CGPoint(x: 50, y: 100)]
+        points += (1...170).map { CGPoint(x: 50 + CGFloat($0), y: 100) }
+        points += [
+            CGPoint(x: 219.29, y: 100.71),
+            CGPoint(x: 218.59, y: 101.41),
+            CGPoint(x: 217.88, y: 102.12),
+            CGPoint(x: 217.17, y: 102.83)
+        ]
+        return points
+    }
+
+    private func drawTimedStroke(on canvas: DrawingCanvasView, points: [CGPoint], type: UITouch.TouchType) {
+        guard let first = points.first else {
+            return
+        }
+        let touch = TestTouch(locationInView: first, timestamp: 10)
+        touch.touchType = type
+        touch.testForce = 1
+        canvas.touchesBegan([touch], with: nil)
+        for (i, point) in points.enumerated().dropFirst().dropLast() {
+            touch.updateLocation(point, timestamp: 10 + TimeInterval(i) / 120)
+            canvas.touchesMoved([touch], with: nil)
+        }
+        if let last = points.last, points.count > 1 {
+            touch.updateLocation(last, timestamp: 10 + TimeInterval(points.count - 1) / 120)
+        }
+        canvas.touchesEnded([touch], with: nil)
+    }
 
     private func drawPencilStroke(on canvas: DrawingCanvasView, firstKey: Int, y: CGFloat) -> TestTouch {
         let touch = TestTouch(locationInView: CGPoint(x: 20, y: y))
@@ -694,7 +775,7 @@ final class NotebookCellViewTests: XCTestCase {
 
 private class TestTouch: UITouch {
     private var _locationInView: CGPoint
-    private let _timestamp: TimeInterval
+    private var _timestamp: TimeInterval
 
     var touchType: UITouch.TouchType = .direct
     var testForce: CGFloat = 0
@@ -710,6 +791,11 @@ private class TestTouch: UITouch {
 
     func updateLocation(_ point: CGPoint) {
         _locationInView = point
+    }
+
+    func updateLocation(_ point: CGPoint, timestamp: TimeInterval) {
+        _locationInView = point
+        _timestamp = timestamp
     }
 
     override func location(in view: UIView?) -> CGPoint {

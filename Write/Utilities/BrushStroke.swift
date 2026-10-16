@@ -21,7 +21,14 @@ enum BrushStroke {
         }
     }
 
+    enum WidthModel: Sendable {
+        case speed
+        case finger
+    }
+
     struct Config {
+        var widthModel: WidthModel = .speed
+        var smoothing: SmoothingStrength = .medium
         var minWidth: CGFloat = 1.5
         var maxWidth: CGFloat = 8.0
         var taperFraction: CGFloat = 0.15
@@ -98,7 +105,8 @@ enum BrushStroke {
         centerline: [CGPoint]? = nil,
         config: Config,
         taperStart: Bool,
-        taperEnd: Bool
+        taperEnd: Bool,
+        arcOffset: CGFloat = 0
     ) -> CGPath {
         let points = centerline ?? filtered.map(\.point)
         guard points.count >= 2 else {
@@ -115,14 +123,25 @@ enum BrushStroke {
             subdivisions: config.smoothingSubdivisions
         )
 
-        let smoothedWidths = interpolateWidths(
+        var smoothedWidths = interpolateWidths(
             rawWidths: rawWidths,
             segmentCount: points.count - 1,
             subdivisions: config.smoothingSubdivisions,
             targetCount: smoothedPoints.count
         )
 
-        return buildRibbon(points: smoothedPoints, widths: smoothedWidths)
+        if config.widthModel == .finger {
+            applyFingerProfile(
+                to: &smoothedWidths,
+                points: smoothedPoints,
+                config: config,
+                taperStart: taperStart,
+                taperEnd: taperEnd,
+                arcOffset: arcOffset
+            )
+        }
+
+        return buildRibbon(points: smoothedPoints, widths: smoothedWidths, capStart: taperStart, capEnd: taperEnd)
     }
 
     /// Incrementally renders an in-progress stroke in O(tail) per update
@@ -149,6 +168,7 @@ enum BrushStroke {
 
         private let config: Config
         private var kept: [Sample] = []
+        private var keptArc: [CGFloat] = []
         private var keptRawIndices: [Int] = []
         private var provisional: Sample?
         private var provisionalRawIndex: Int?
@@ -170,6 +190,8 @@ enum BrushStroke {
                     return dx * dx + dy * dy >= Self.minDistanceSq
                 } ?? true
                 if farEnough {
+                    let step = kept.last.map { hypot(prov.point.x - $0.point.x, prov.point.y - $0.point.y) } ?? 0
+                    keptArc.append((keptArc.last ?? 0) + step)
                     kept.append(prov)
                     keptRawIndices.append(provIdx)
                 }
@@ -212,7 +234,8 @@ enum BrushStroke {
             let tailPath = BrushStroke.path(
                 fromFiltered: Array(window.dropFirst(offset)),
                 centerline: Array(smoothed.dropFirst(offset)),
-                config: config, taperStart: start == 0, taperEnd: true
+                config: config, taperStart: start == 0, taperEnd: true,
+                arcOffset: arcLength(at: start)
             )
             if frozenPath.isEmpty { return tailPath }
             let combined = CGMutablePath()
@@ -235,8 +258,16 @@ enum BrushStroke {
                 fromFiltered: Array(window.suffix(stubLength)) + predictedSamples,
                 centerline: Array(smoothed.suffix(stubLength)) + predictedSamples.map(\.point),
                 config: config,
-                taperStart: false, taperEnd: true
+                taperStart: false, taperEnd: true,
+                arcOffset: arcLength(at: kept.count - min(3, kept.count))
             )
+        }
+
+        private func arcLength(at keptIndex: Int) -> CGFloat {
+            guard keptArc.indices.contains(keptIndex) else {
+                return keptArc.last ?? 0
+            }
+            return keptArc[keptIndex]
         }
 
         private var contextLength: Int {
@@ -263,7 +294,8 @@ enum BrushStroke {
                     fromFiltered: Array(kept[start..<end]),
                     centerline: Array(smoothed[chunkRange]),
                     config: config,
-                    taperStart: start == 0, taperEnd: false
+                    taperStart: start == 0, taperEnd: false,
+                    arcOffset: arcLength(at: start)
                 )
                 frozenPath.addPath(chunk)
                 frozenKeptCount = chunkEnd
@@ -287,6 +319,61 @@ enum BrushStroke {
     private static let forceGamma: CGFloat = 0.5
 
     private static let cornerCosine: CGFloat = cos(.pi / 4)
+
+    private enum Finger {
+        static let slowSpeed: CGFloat = 150
+        static let fastSpeed: CGFloat = 1200
+        static let speedThinning: CGFloat = 0.2
+        static let tipFloor: CGFloat = 0.15
+        static let pressInWidths: CGFloat = 1.25
+        static let pressInMaxFraction: CGFloat = 0.25
+        static let tipWidths: CGFloat = 2
+        static let tipMaxFraction: CGFloat = 0.3
+        static let thinningWidths: CGFloat = 25
+        static let endWidth: CGFloat = 0.75
+    }
+
+    private static let capSegments = 8
+
+    private static func applyFingerProfile(
+        to widths: inout [CGFloat],
+        points: [CGPoint],
+        config: Config,
+        taperStart: Bool,
+        taperEnd: Bool,
+        arcOffset: CGFloat
+    ) {
+        guard widths.count == points.count, let first = points.first else {
+            return
+        }
+        var arc: [CGFloat] = [0]
+        arc.reserveCapacity(points.count)
+        var previous = first
+        for point in points.dropFirst() {
+            arc.append(arc[arc.count - 1] + hypot(point.x - previous.x, point.y - previous.y))
+            previous = point
+        }
+        let total = arc[arc.count - 1]
+        let pressIn = min(config.maxWidth * Finger.pressInWidths, total * Finger.pressInMaxFraction)
+        let tip = min(config.maxWidth * Finger.tipWidths, total * Finger.tipMaxFraction)
+        let thinningLength = config.maxWidth * Finger.thinningWidths
+
+        for i in widths.indices {
+            let fromStart = arc[i]
+            let toEnd = total - fromStart
+            let progress = min(1, (arcOffset + fromStart) / thinningLength)
+            let eased = progress * progress * (3 - 2 * progress)
+            var factor = 1 - (1 - Finger.endWidth) * eased
+            if taperStart, pressIn > 0, fromStart < pressIn {
+                factor *= Finger.tipFloor + (1 - Finger.tipFloor) * sqrt(fromStart / pressIn)
+            }
+            if taperEnd, tip > 0, toEnd < tip {
+                let t = toEnd / tip
+                factor *= Finger.tipFloor + (1 - Finger.tipFloor) * t * (2 - t)
+            }
+            widths[i] *= factor
+        }
+    }
 
     private static func turnCosine(_ a: CGPoint, _ b: CGPoint, _ c: CGPoint) -> CGFloat {
         let ux = b.x - a.x
@@ -351,13 +438,16 @@ enum BrushStroke {
             speeds[i] = (forward[i] + backward[i]) / 2
         }
 
-        let slowSpeed: CGFloat = 100
-        let fastSpeed: CGFloat = 1500
+        let isFinger = config.widthModel == .finger
+        let slowSpeed: CGFloat = isFinger ? Finger.slowSpeed : 100
+        let fastSpeed: CGFloat = isFinger ? Finger.fastSpeed : 1500
         let pressureBlend = config.pressureSensitivity.blendFactor
         let tiltBlend = config.tiltSensitivity.blendFactor
         var widths: [CGFloat] = samples.enumerated().map { i, sample in
             let speedT = min(1, max(0, (speeds[i] - slowSpeed) / (fastSpeed - slowSpeed)))
-            var width = config.maxWidth - speedT * (config.maxWidth - config.minWidth)
+            var width = isFinger
+                ? config.maxWidth * (1 - Finger.speedThinning * speedT)
+                : config.maxWidth - speedT * (config.maxWidth - config.minWidth)
 
             if pressureBlend > 0, let force = sample.force, force > 0 {
                 let forceT = min(1, pow(force, forceGamma))
@@ -372,6 +462,10 @@ enum BrushStroke {
             }
 
             return width
+        }
+
+        if isFinger {
+            return widths
         }
 
         // Taper at start and end
@@ -412,10 +506,17 @@ enum BrushStroke {
         return result
     }
 
-    private static func buildRibbon(points: [CGPoint], widths: [CGFloat]) -> CGPath {
+    private static func buildRibbon(
+        points: [CGPoint],
+        widths: [CGFloat],
+        capStart: Bool,
+        capEnd: Bool
+    ) -> CGPath {
         guard points.count >= 2 else {
             return dotPath(at: points.first ?? .zero, radius: (widths.first ?? 4) / 2)
         }
+        var firstNormal = CGVector(dx: 1, dy: 0)
+        var lastNormal = CGVector(dx: 1, dy: 0)
 
         var leftEdge: [CGPoint] = []
         var rightEdge: [CGPoint] = []
@@ -451,14 +552,44 @@ enum BrushStroke {
             let hw = widths[i] / 2
             leftEdge.append(CGPoint(x: points[i].x + nx * hw, y: points[i].y + ny * hw))
             rightEdge.append(CGPoint(x: points[i].x - nx * hw, y: points[i].y - ny * hw))
+            if i == 0 {
+                firstNormal = CGVector(dx: nx, dy: ny)
+            }
+            lastNormal = CGVector(dx: nx, dy: ny)
         }
 
         let path = CGMutablePath()
         path.move(to: leftEdge[0])
         for p in leftEdge.dropFirst() { path.addLine(to: p) }
+        if capEnd, let end = points.last, let width = widths.last {
+            addCap(to: path, center: end, normal: lastNormal, radius: width / 2, forward: true)
+        }
         for p in rightEdge.reversed() { path.addLine(to: p) }
+        if capStart {
+            addCap(to: path, center: points[0], normal: firstNormal, radius: widths[0] / 2, forward: false)
+        }
         path.closeSubpath()
         return path
+    }
+
+    private static func addCap(
+        to path: CGMutablePath,
+        center: CGPoint,
+        normal: CGVector,
+        radius: CGFloat,
+        forward: Bool
+    ) {
+        let sign: CGFloat = forward ? 1 : -1
+        let nx = normal.dx * sign
+        let ny = normal.dy * sign
+        let dx = normal.dy * sign
+        let dy = -normal.dx * sign
+        for k in 1..<capSegments {
+            let theta = CGFloat.pi * CGFloat(k) / CGFloat(capSegments)
+            let c = cos(theta) * radius
+            let s = sin(theta) * radius
+            path.addLine(to: CGPoint(x: center.x + c * nx + s * dx, y: center.y + c * ny + s * dy))
+        }
     }
 
     private static func dotPath(at center: CGPoint, radius: CGFloat) -> CGPath {

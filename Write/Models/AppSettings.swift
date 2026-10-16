@@ -93,7 +93,7 @@ final class AppSettings: ObservableObject {
         self.tiltSensitivity = TiltSensitivity(rawValue: storedTilt) ?? .low
 
         let storedSmoothing = defaults.string(forKey: "smoothingStrength") ?? ""
-        self.smoothingStrength = SmoothingStrength(rawValue: storedSmoothing) ?? .medium
+        self.smoothingStrength = SmoothingStrength(rawValue: storedSmoothing) ?? .auto
 
         let storedThickness = defaults.string(forKey: "brushThickness") ?? ""
         self.brushThickness = BrushThickness(rawValue: storedThickness) ?? .medium
