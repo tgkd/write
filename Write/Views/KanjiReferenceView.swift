@@ -28,6 +28,7 @@ class KanjiReferenceView: UIView {
         self.kanjiData = kanjiData
         lastBuiltSize = .zero
         strokeStates.removeAll()
+        placement = .identity
         rebuildStrokeLayers()
     }
 

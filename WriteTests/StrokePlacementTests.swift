@@ -133,6 +133,9 @@ final class StrokePlacementTests: XCTestCase {
         XCTAssertEqual(placement.scale, 1)
         XCTAssertEqual(placement.offset.dx, anchor.userCentroid.x - referenceCentroid.x, accuracy: 0.001)
         XCTAssertEqual(placement.offset.dy, anchor.userCentroid.y - referenceCentroid.y, accuracy: 0.001)
+        XCTAssertNil(StrokeValidator.proportionScale(
+            anchors: [anchor], referenceSamples: reference, canvasSize: canvasSize, config: .standard
+        ))
     }
 
     func testAnchorsWithNearbyCentroidsKeepTheScaleAtOne() {

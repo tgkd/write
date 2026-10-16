@@ -42,6 +42,8 @@ struct ValidationConfig: Sendable {
 
     var proportionMinimumReferenceExtent: CGFloat = 0.03
 
+    var proportionMinimumAnchors = 2
+
     var rejectsDisproportion: Bool {
         enforcesProportion && leniency <= GradingStrictness.strict.leniency + 0.001
     }
@@ -340,7 +342,7 @@ enum StrokeValidator {
             }
             return anchor.userExtent / referenceExtent
         }.sorted()
-        guard !ratios.isEmpty else {
+        guard !ratios.isEmpty, ratios.count >= config.proportionMinimumAnchors else {
             return nil
         }
         let middle = ratios.count / 2

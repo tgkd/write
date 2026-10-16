@@ -365,6 +365,14 @@ final class KanjiReferenceViewTests: XCTestCase {
         XCTAssertEqual(columns.max(), 213)
     }
 
+    func testConfigureResetsThePlacement() {
+        let view = makeConfiguredView()
+        view.setPlacement(StrokePlacement(scale: 0.7, offset: CGVector(dx: 20, dy: 10)))
+        view.configure(with: makeTestKanjiData())
+        XCTAssertEqual(view.placement, .identity)
+        XCTAssertTrue(CATransform3DIsIdentity(view.layer.sublayerTransform))
+    }
+
     func testPlacementOffsetKeepsTheScaleAtOne() {
         let view = makeConfiguredView()
         view.setPlacementOffset(CGVector(dx: 5, dy: 6))
