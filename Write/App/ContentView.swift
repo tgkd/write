@@ -92,25 +92,29 @@ struct ContentView: View {
                 .navigationDestination(for: ProgressRoute.self) { _ in
                     PracticeProgressView(dataStore: dataStore)
                 }
+                .removingSystemSidebarToggle()
         } detail: {
             NavigationStack(path: $iPadNavigationPath) {
-                if let codePoint = selectedCodePoint,
-                   let kanji = dataStore.lookup(codePoint: codePoint) {
-                    KanjiDetailView(
-                        kanji: kanji,
-                        onPractice: {
-                            iPadNavigationPath.append(PracticeRoute(codePoint: codePoint))
-                        },
-                        onNotebook: {
-                            iPadNavigationPath.append(NotebookRoute(codePoints: [codePoint]))
-                            columnVisibility = .detailOnly
-                        }
-                    )
-                } else {
-                    Text("Select a kanji")
-                        .font(.title3)
-                        .foregroundStyle(.tertiary)
+                Group {
+                    if let codePoint = selectedCodePoint,
+                       let kanji = dataStore.lookup(codePoint: codePoint) {
+                        KanjiDetailView(
+                            kanji: kanji,
+                            onPractice: {
+                                iPadNavigationPath.append(PracticeRoute(codePoint: codePoint))
+                            },
+                            onNotebook: {
+                                iPadNavigationPath.append(NotebookRoute(codePoints: [codePoint]))
+                                columnVisibility = .detailOnly
+                            }
+                        )
+                    } else {
+                        Text("Select a kanji")
+                            .font(.title3)
+                            .foregroundStyle(.tertiary)
+                    }
                 }
+                .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
             }
             .navigationDestination(for: PracticeRoute.self) { route in
                 if let kanji = dataStore.lookup(codePoint: route.codePoint) {

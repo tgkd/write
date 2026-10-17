@@ -4,14 +4,9 @@ struct SidebarToggleToolbar: ViewModifier {
     @Binding var columnVisibility: NavigationSplitViewVisibility
 
     func body(content: Content) -> some View {
-        if #available(iOS 17.0, *) {
-            content
-                .toolbar(removing: .sidebarToggle)
-                .toolbar { toggleItem }
-        } else {
-            content
-                .toolbar { toggleItem }
-        }
+        content
+            .removingSystemSidebarToggle()
+            .toolbar { toggleItem }
     }
 
     private var toggleItem: some ToolbarContent {
@@ -22,6 +17,17 @@ struct SidebarToggleToolbar: ViewModifier {
                 Image(systemName: "sidebar.left")
             }
             .accessibilityLabel("Toggle Sidebar")
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func removingSystemSidebarToggle() -> some View {
+        if #available(iOS 17.0, *) {
+            toolbar(removing: .sidebarToggle)
+        } else {
+            self
         }
     }
 }
