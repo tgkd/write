@@ -1,4 +1,15 @@
+import CryptoKit
+import Foundation
+
 struct WordPrompt: Codable, Equatable, Identifiable, Sendable {
+    private struct RevisionContent: Encodable {
+        let before: String
+        let reading: String
+        let after: String
+        let gloss: String
+        let segments: [Segment]
+    }
+
     enum Segment: Codable, Equatable, Sendable {
         case kanji(String)
         case kana(String)
@@ -67,6 +78,14 @@ struct WordPrompt: Codable, Equatable, Identifiable, Sendable {
 
     var kanjiSegmentIndices: [Int] {
         segments.indices.filter { segments[$0].isKanji }
+    }
+
+    var revision: String {
+        let content = RevisionContent(before: before, reading: reading, after: after, gloss: gloss, segments: segments)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let data = (try? encoder.encode(content)) ?? Data()
+        return SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
     }
 
     func slotID(segmentIndex: Int) -> String {

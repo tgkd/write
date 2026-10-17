@@ -55,6 +55,7 @@ python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWid
 ### Practice, Recall and practice history
 
 - The Home screen (`KanjiPickerView`) starts three session kinds for the current filter: Practice, Recall and Review (a Recall session over `PracticeStats.reviewItems`). Tapping a character in the grid, a widget link and the iPad detail view always open plain practice
+- The Words session card shows only when the Experimental setting `AppSettings.showWordPractice` is on (off by default). Its routes, prompts and `WordHistoryStore` exist regardless. UI tests pass `-showWordPractice YES|NO` explicitly, because the stored value survives between launches
 - `PracticeMode` is only the guide level (Trace, Guided, Copy). The picker writes `AppSettings.practiceMode`, which every new practice screen and the next session character start from. `copy` keeps the raw value `freeDraw` so old history and settings still decode
 - Recall is not a mode: `PracticeState(isRecall: true)` pins the mode to Guided, so the strokes hint reveals one stroke at a time, and hides the answer until hints. `hint` steps through `RecallHint` (character, then strokes); `hidesCharacter` swaps the header glyph for a placeholder and `hidesGuide` hides the whole `KanjiReferenceView` rather than individual strokes, because accepted-stroke marking and the initial ghost would each leak it
 - Recall only exists inside sessions, so a character the user just tapped in the grid is never treated as unseen. Recall queues contain only `RecallEligibility`-eligible characters (`KanjiDataStore.randomCharacters(forRecall:)` and `queue(for:)`); ineligible ones (identical readings, meanings and stroke count, or no cue) are dropped, never shown with the answer
@@ -62,6 +63,12 @@ python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWid
 - `PracticeState` emits one `PracticeRecord` per run through `onRunCompleted`; undo/recomplete never emits again, reset or a mode change starts a new run. Session results hang off the same event
 - Recall runs are stored with `mode` set to `PracticeRecord.recallMode` (`"study"`, the pre-rename value). `revealed` means a hint was used; `exposed` is false only for Recall runs and stays in the format because older Study runs could be exposed. Review only reads unexposed Recall runs
 - `PracticeHistoryStore` writes monthly versioned JSON files under Application Support; a file it can't decode is moved aside, and a month it can't move aside is never written to. UI tests pass `-uiTestingFreshHistory` for a throwaway store and `-practiceMode trace` so a saved guide level from an earlier run doesn't leak in
+- Records grow only by optional fields, so old files keep loading. An older build ignores the new keys and drops them when it rewrites a month. Analysis fields include:
+  - session and origin, passed in as `RunContext` when the screen creates its `PracticeState`;
+  - hint level, undos, input kind, canvas size, device, timing, interruption and config changes;
+  - per-stroke `StrokeStat` counters.
+  New counter types decode missing keys as zero and leave zeros out when encoding. Never store a non-finite Double: `JSONEncoder` throws, and the record stays unsaved forever
+- Only completed runs are recorded. A word record nests each slot's full `PracticeRecord` (`WordSlotRecord`). Slot runs never enter `PracticeHistoryStore`, so word success can't clear a standalone Review item
 
 ### Validation pipeline
 
@@ -70,6 +77,11 @@ User stroke -> sample N points -> Procrustes normalize (center + scale, no rotat
 Stroke identification uses centroid distance as a fast rejection filter before running the full Frechet comparison.
 
 Position is checked in canvas coordinates only while a guide is drawn (Trace, Guided). In Copy and Recall it is checked relative to the user's own accepted strokes (`StrokeAnchor`, `StrokeValidator.placementOffset`), with a start marker for stroke 1 (`PracticeState.startMarker`) and a looser first-stroke tolerance. The offset is clamped so the shifted reference stays inside the canvas, and `applyPlacement` shifts the reference layer by the same offset so accepted strokes and later hints line up with the user's ink. An expected stroke that passes always wins over a better-scoring lookalike.
+
+Every mode applies the box rule: a stroke is rejected (`StrokeRejection.outOfFrame`) when its centerline leaves the canvas by more than `ValidationConfig.boundaryTolerance`.
+- The check runs on the points validation already receives (fixed filter, hook-trimmed), so a trimmed lift-off hook never trips it.
+- `geometryAccepted` keeps the verdict from before the box check, so a geometric match to a later stroke still counts as order evidence.
+- Run-level and per-stroke miss counts both go through `MissEvidence.record`. The notice shown and the counts are decided independently.
 
 ### KanjiVG coordinate space
 

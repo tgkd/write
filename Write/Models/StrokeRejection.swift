@@ -3,6 +3,7 @@ import Foundation
 enum StrokeRejection: Equatable, Sendable {
     case shape
     case wrongOrder(drawnStroke: Int, expectedStroke: Int)
+    case outOfFrame
 
     var notice: String? {
         switch self {
@@ -10,6 +11,8 @@ enum StrokeRejection: Equatable, Sendable {
             return nil
         case .wrongOrder(let drawn, let expected):
             return String(localized: "Right shape, wrong order: that was stroke \(drawn + 1). Draw stroke \(expected + 1) first.")
+        case .outOfFrame:
+            return String(localized: "That stroke went outside the box. Keep it inside.")
         }
     }
 }

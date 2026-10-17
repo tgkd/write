@@ -9,12 +9,22 @@ struct PracticeView: View {
     @State private var feedbackView: FeedbackOverlayView?
     @State private var showCompletionCheck = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
 
     let onComplete: ((PracticeRecord) -> Void)?
     let showToolbar: Bool
 
-    init(kanjiData: KanjiData, mode: PracticeMode = .trace, isRecall: Bool = false, showToolbar: Bool = true, onComplete: ((PracticeRecord) -> Void)? = nil) {
-        _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode, isRecall: isRecall))
+    init(
+        kanjiData: KanjiData,
+        mode: PracticeMode = .trace,
+        isRecall: Bool = false,
+        showToolbar: Bool = true,
+        context: RunContext = RunContext(),
+        onComplete: ((PracticeRecord) -> Void)? = nil
+    ) {
+        _practiceState = StateObject(
+            wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode, isRecall: isRecall, context: context)
+        )
         self.showToolbar = showToolbar
         self.onComplete = onComplete
     }
@@ -79,12 +89,18 @@ struct PracticeView: View {
         .onChange(of: practiceState.hint) { _ in
             applyGhostVisibility()
         }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active {
+                practiceState.noteSceneLeftActive()
+            }
+        }
         .onAppear {
             practiceState.validationConfig = settings.validationConfig
             practiceState.onRunCompleted = { record in
                 history.add(record)
                 onComplete?(record)
             }
+            practiceState.noteCueShown()
         }
     }
 
@@ -147,6 +163,9 @@ struct PracticeView: View {
                 codePoint: practiceState.kanjiData.codePoint,
                 mode: practiceState.isRecall ? PracticeRecord.recallMode : practiceState.mode.rawValue
             ),
+            onStrokeBegan: { touchType in
+                practiceState.noteStrokeBegan(touchType: touchType)
+            },
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

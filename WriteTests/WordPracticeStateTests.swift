@@ -1,3 +1,4 @@
+import CryptoKit
 import XCTest
 @testable import Write
 
@@ -253,9 +254,184 @@ final class WordPracticeStateTests: XCTestCase {
         completeSlot(state)
 
         XCTAssertEqual(recorder.records.count, 2)
+        XCTAssertEqual(recorder.records.flatMap { $0.slots ?? [] }.count, 3)
         XCTAssertTrue(history.records.isEmpty)
         XCTAssertEqual(history.unsavedCount, 0)
         XCTAssertTrue(PracticeHistoryStore(directory: historyDirectory).records.isEmpty)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: historyDirectory.path))
+    }
+
+    func testWordRecordNestsEverySlotRunInSlotOrder() throws {
+        let (state, recorder) = makeState([school, big])
+        completeSlot(state, misses: 1)
+        completeSlot(state)
+        state.advanceWord()
+        completeSlot(state, misses: 2)
+
+        let first = try XCTUnwrap(recorder.records.first)
+        let slots = try XCTUnwrap(first.slots)
+        XCTAssertEqual(slots.map(\.segmentIndex), [0, 1])
+        XCTAssertEqual(slots.map(\.record.codePoint), ["5b66", "6821"])
+        XCTAssertEqual(slots.map(\.record.misses), [1, 0])
+        XCTAssertEqual(slots.map(\.record.sessionID), [state.sessionID, state.sessionID])
+        XCTAssertEqual(slots.map(\.record.slot), [0, 0])
+        XCTAssertEqual(slots.map(\.record.origin), [nil, nil])
+        XCTAssertTrue(slots.allSatisfy { $0.record.isRecall })
+        XCTAssertEqual(first.sessionID, state.sessionID)
+
+        let second = try XCTUnwrap(recorder.records.last)
+        XCTAssertEqual(second.slots?.map(\.segmentIndex), [0])
+        XCTAssertEqual(second.slots?.map(\.record.slot), [1])
+        XCTAssertEqual(second.slots?.map(\.record.misses), [2])
+        XCTAssertEqual(second.sessionID, state.sessionID)
+    }
+
+    func testResetWordKeepsOnlyTheFinalSlotRuns() throws {
+        let (state, recorder) = makeState([school])
+        completeSlot(state, misses: 4)
+        state.resetWord()
+        completeSlot(state)
+        completeSlot(state, misses: 1)
+
+        let slots = try XCTUnwrap(recorder.records.first?.slots)
+        XCTAssertEqual(slots.map(\.segmentIndex), [0, 1])
+        XCTAssertEqual(slots.map(\.record.misses), [0, 1])
+    }
+
+    func testWordRecordCarriesItsPromptRevisionAndCue() throws {
+        let (state, recorder) = makeState([big])
+        completeSlot(state)
+
+        let record = try XCTUnwrap(recorder.records.first)
+        XCTAssertEqual(record.promptRevision, big.revision)
+        XCTAssertEqual(record.cue, "kana-sentence+en-gloss")
+        XCTAssertEqual(WordPracticeState.cueProfile, "kana-sentence+en-gloss")
+    }
+
+    func testEverySessionHasItsOwnID() {
+        let (first, _) = makeState([school])
+        let (second, _) = makeState([school])
+
+        XCTAssertNotEqual(first.sessionID, second.sessionID)
+    }
+
+    func testPromptRevisionIsTheSHA256OfItsCanonicalContent() {
+        let canonical = #"{"after":"に いきます。","before":"まいあさ ","gloss":"school","reading":"がっこう","segments":[{"kanji":"学"},{"kanji":"校"}]}"#
+        let digest = SHA256.hash(data: Data(canonical.utf8)).map { String(format: "%02x", $0) }.joined()
+
+        XCTAssertEqual(digest, "4fe18a97367459e97c044433f1663785370afe37a315d67c9e6408c2e5e894d7")
+        XCTAssertEqual(school.revision, digest)
+    }
+
+    func testPromptRevisionIgnoresIDAndNotes() {
+        let renamed = WordPrompt(
+            id: "t-renamed",
+            before: school.before,
+            reading: school.reading,
+            after: school.after,
+            gloss: school.gloss,
+            segments: school.segments,
+            notes: "Rewritten notes."
+        )
+
+        XCTAssertEqual(renamed.revision, school.revision)
+    }
+
+    func testPromptRevisionChangesWithEveryCueField() {
+        let variants = [
+            prompt(school, before: "あさ "),
+            prompt(school, reading: "がっこ"),
+            prompt(school, after: "へ いきます。"),
+            prompt(school, gloss: "a school"),
+            prompt(school, segments: [.kanji("学"), .kana("こう")]),
+        ]
+
+        for variant in variants {
+            XCTAssertNotEqual(variant.revision, school.revision)
+        }
+        XCTAssertEqual(Set(variants.map(\.revision)).count, variants.count)
+    }
+
+    func testEffectiveMissesSubtractDisputedSlotMisses() throws {
+        let (state, recorder) = makeState([school])
+        let firstSlot = try XCTUnwrap(state.slotState)
+        submit(firstSlot, matchedIndex: nil)
+        firstSlot.disputeLastRejection()
+        submit(firstSlot, matchedIndex: nil)
+        for index in 0..<firstSlot.totalStrokes {
+            submit(firstSlot, matchedIndex: index)
+        }
+        let secondSlot = try XCTUnwrap(state.slotState)
+        submit(secondSlot, matchedIndex: nil)
+        secondSlot.disputeLastRejection()
+        for index in 0..<secondSlot.totalStrokes {
+            submit(secondSlot, matchedIndex: index)
+        }
+
+        let record = try XCTUnwrap(recorder.records.first)
+        XCTAssertEqual(record.misses, 3)
+        XCTAssertEqual(record.effectiveMisses, 1)
+    }
+
+    func testEffectiveMissesWithoutSlotsAreTheRawMisses() {
+        let record = WordRecord(
+            id: UUID(),
+            promptID: "w01",
+            startedAt: Date(timeIntervalSince1970: 0),
+            completedAt: Date(timeIntervalSince1970: 60),
+            misses: 2,
+            hintsUsed: 0,
+            slotCount: 1
+        )
+
+        XCTAssertEqual(record.effectiveMisses, 2)
+    }
+
+    func testEffectiveMissesNeverGoBelowZero() {
+        let day = Date(timeIntervalSince1970: 0)
+        let slotRun = PracticeRecord(
+            id: UUID(),
+            codePoint: "5927",
+            mode: PracticeRecord.recallMode,
+            revealed: false,
+            exposed: false,
+            misses: 1,
+            startedAt: day,
+            completedAt: day,
+            leniency: 1,
+            evidence: MissEvidence(disputed: 2)
+        )
+        let record = WordRecord(
+            id: UUID(),
+            promptID: "t-big",
+            startedAt: day,
+            completedAt: day,
+            misses: 1,
+            hintsUsed: 0,
+            slotCount: 1,
+            slots: [WordSlotRecord(segmentIndex: 0, record: slotRun)]
+        )
+
+        XCTAssertEqual(record.effectiveMisses, 0)
+    }
+
+    private func prompt(
+        _ base: WordPrompt,
+        before: String? = nil,
+        reading: String? = nil,
+        after: String? = nil,
+        gloss: String? = nil,
+        segments: [WordPrompt.Segment]? = nil
+    ) -> WordPrompt {
+        WordPrompt(
+            id: base.id,
+            before: before ?? base.before,
+            reading: reading ?? base.reading,
+            after: after ?? base.after,
+            gloss: gloss ?? base.gloss,
+            segments: segments ?? base.segments,
+            notes: base.notes
+        )
     }
 }
 

@@ -643,6 +643,143 @@ final class PracticeStateTests: XCTestCase {
         state.reset()
         XCTAssertFalse(state.canDisputeLastRejection)
     }
+
+    private let boxCanvas = CGSize(width: 300, height: 300)
+
+    private func makeEdgeKanjiData() -> KanjiData {
+        KanjiData(
+            codePoint: "4e09",
+            element: nil,
+            strokes: [
+                KanjiStroke(strokeNumber: 1, pathData: "M25,30 L85,30", strokeType: nil),
+                KanjiStroke(strokeNumber: 2, pathData: "M25,60 L85,60", strokeType: nil),
+                KanjiStroke(strokeNumber: 3, pathData: "M0,20 L0,95", strokeType: nil),
+            ],
+            components: []
+        )
+    }
+
+    private func makeBoxStates() -> [(label: String, state: PracticeState)] {
+        [
+            ("copy", PracticeState(kanjiData: makeEdgeKanjiData(), mode: .copy)),
+            ("recall", PracticeState(kanjiData: makeEdgeKanjiData(), isRecall: true)),
+            ("trace", PracticeState(kanjiData: makeEdgeKanjiData(), mode: .trace)),
+        ]
+    }
+
+    private func reference(_ index: Int, of state: PracticeState) -> [CGPoint] {
+        state.referenceSamples(canvasSize: boxCanvas)[index]
+    }
+
+    private func outOfBox(_ index: Int, of state: PracticeState) -> [CGPoint] {
+        reference(index, of: state).map { CGPoint(x: $0.x - 0.03 * boxCanvas.width, y: $0.y) }
+    }
+
+    @discardableResult
+    private func draw(_ points: [CGPoint], on state: PracticeState) -> StrokeValidationResult {
+        let result = StrokeValidator.identifyStroke(
+            userPoints: points,
+            referenceSamples: state.referenceSamples(canvasSize: boxCanvas),
+            unmatchedIndices: state.unmatchedIndices,
+            canvasSize: boxCanvas,
+            expectedStrokeIndex: state.currentStrokeIndex,
+            anchors: state.usesRelativePlacement ? state.anchors : nil,
+            config: state.validationConfig
+        )
+        state.beginDrawing()
+        state.beginValidation()
+        state.processValidationResult(result)
+        state.acknowledgeResult()
+        return result
+    }
+
+    func testOutOfBoxStrokeMatchingALaterStrokeCountsAsBoundaryAndOrderEvidence() {
+        for (label, state) in makeBoxStates() {
+            draw(reference(0, of: state), on: state)
+            XCTAssertEqual(state.matchedStrokeIndices, [0], label)
+            let anchors = state.anchors
+
+            let result = draw(outOfBox(2, of: state), on: state)
+
+            XCTAssertEqual(result.matchedStrokeIndex, 2, label)
+            XCTAssertFalse(result.correctOrder, label)
+            XCTAssertEqual(result.geometryAccepted, true, label)
+            XCTAssertEqual(state.lastRejection, .outOfFrame, label)
+            XCTAssertEqual(state.missEvidence.boundary, 1, label)
+            XCTAssertEqual(state.missEvidence.order, 1, label)
+            XCTAssertEqual(state.missEvidence, MissEvidence(order: 1, boundary: 1), label)
+            XCTAssertEqual(state.anchors, anchors, label)
+            XCTAssertEqual(state.attemptCount, 1, label)
+            XCTAssertEqual(state.matchedStrokeIndices, [0], label)
+            XCTAssertEqual(state.currentStrokeIndex, 1, label)
+        }
+    }
+
+    func testOutOfBoxStrokeThatFailedGeometryIsNotOrderEvidence() {
+        for (label, state) in makeBoxStates() {
+            draw(reference(0, of: state), on: state)
+            XCTAssertEqual(state.matchedStrokeIndices, [0], label)
+            let anchors = state.anchors
+
+            let result = draw(Array(outOfBox(2, of: state).reversed()), on: state)
+
+            XCTAssertEqual(result.matchedStrokeIndex, 2, label)
+            XCTAssertFalse(result.correctOrder, label)
+            XCTAssertEqual(result.geometryAccepted, false, label)
+            XCTAssertEqual(state.lastRejection, .outOfFrame, label)
+            XCTAssertEqual(state.missEvidence.order, 0, label)
+            XCTAssertEqual(state.missEvidence.boundary, 1, label)
+            XCTAssertEqual(state.missEvidence.shape, 1, label)
+            XCTAssertEqual(state.anchors, anchors, label)
+            XCTAssertEqual(state.attemptCount, 1, label)
+        }
+    }
+
+    func testOutOfBoxExpectedStrokeCountsOnlyAsBoundaryEvidence() {
+        for (label, state) in makeBoxStates() {
+            var records: [PracticeRecord] = []
+            state.onRunCompleted = { records.append($0) }
+            draw(reference(0, of: state), on: state)
+            draw(reference(1, of: state), on: state)
+            XCTAssertEqual(state.matchedStrokeIndices, [0, 1], label)
+            let anchors = state.anchors
+
+            let result = draw(outOfBox(2, of: state), on: state)
+
+            XCTAssertEqual(result.matchedStrokeIndex, 2, label)
+            XCTAssertTrue(result.correctOrder, label)
+            XCTAssertEqual(result.geometryAccepted, true, label)
+            XCTAssertEqual(state.lastRejection, .outOfFrame, label)
+            XCTAssertEqual(state.missEvidence, MissEvidence(boundary: 1), label)
+            XCTAssertEqual(state.anchors, anchors, label)
+            XCTAssertEqual(state.attemptCount, 1, label)
+            XCTAssertEqual(state.currentStrokeIndex, 2, label)
+            XCTAssertFalse(state.isComplete, label)
+
+            draw(reference(2, of: state), on: state)
+
+            XCTAssertTrue(state.isComplete, label)
+            XCTAssertNil(state.lastRejection, label)
+            XCTAssertEqual(records.map(\.evidence), [MissEvidence(boundary: 1)], label)
+        }
+    }
+
+    func testOutOfBoxStrokeWithoutACandidateCountsAsBoundaryAndNotEvaluated() {
+        for (label, state) in makeBoxStates() {
+            let far = reference(2, of: state).map { CGPoint(x: $0.x - 200, y: $0.y) }
+
+            let result = draw(far, on: state)
+
+            XCTAssertNil(result.matchedStrokeIndex, label)
+            XCTAssertEqual(state.lastRejection, .outOfFrame, label)
+            XCTAssertEqual(state.missEvidence, MissEvidence(notEvaluated: 1, boundary: 1), label)
+            XCTAssertEqual(state.attemptCount, 1, label)
+        }
+    }
+
+    func testOutOfFrameNoticeAsksToKeepTheStrokeInside() {
+        XCTAssertEqual(StrokeRejection.outOfFrame.notice, "That stroke went outside the box. Keep it inside.")
+    }
 }
 
 // MARK: - FeedbackOverlayView Tests

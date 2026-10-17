@@ -1,6 +1,7 @@
 import Combine
 import CoreGraphics
 import Foundation
+import UIKit
 
 @MainActor
 final class PracticeState: ObservableObject {
@@ -11,6 +12,31 @@ final class PracticeState: ObservableObject {
         case validating
         case strokeAccepted(strokeIndex: Int)
         case strokeRejected
+    }
+
+    private struct RunDetails {
+        var shownAt: Date?
+        var firstTouchAt: Date?
+        var pendingTouch: (input: InputKind, at: Date)?
+        var inputs: Set<InputKind> = []
+        var undos = 0
+        var gradedSetup: (config: ValidationConfig, canvasSize: CGSize?)?
+        var configChanged = false
+        var interrupted = false
+        var rejectedStroke: Int?
+        var strokes: [StrokeStat]
+
+        init(strokeCount: Int, shownAt: Date? = nil) {
+            self.shownAt = shownAt
+            strokes = Array(repeating: StrokeStat(), count: strokeCount)
+        }
+
+        var input: InputKind? {
+            guard let only = inputs.first else {
+                return nil
+            }
+            return inputs.count == 1 ? only : .mixed
+        }
     }
 
     @Published private(set) var phase: Phase = .waitingForInput
@@ -33,12 +59,16 @@ final class PracticeState: ObservableObject {
     let kanjiData: KanjiData
     let isRecall: Bool
     let firstStrokeStart: CGPoint?
+    let context: RunContext
     var validationConfig: ValidationConfig
     var now: () -> Date = Date.init
+    var idiom: String
+    var appVersion: String?
     var onRunCompleted: ((PracticeRecord) -> Void)?
 
     private var runStartedAt: Date?
     private var runRecorded = false
+    private var details: RunDetails
 
     private var referenceSampleCache: (canvasSize: CGSize, sampleCount: Int, samples: [[CGPoint]])?
 
@@ -76,11 +106,21 @@ final class PracticeState: ObservableObject {
         return consecutiveMisses >= threshold
     }
 
-    init(kanjiData: KanjiData, mode: PracticeMode = .trace, isRecall: Bool = false, config: ValidationConfig = .standard) {
+    init(
+        kanjiData: KanjiData,
+        mode: PracticeMode = .trace,
+        isRecall: Bool = false,
+        config: ValidationConfig = .standard,
+        context: RunContext = RunContext()
+    ) {
         self.kanjiData = kanjiData
         self.isRecall = isRecall
         self.mode = isRecall ? .strokeByStroke : mode
         self.validationConfig = config
+        self.context = context
+        self.idiom = Self.deviceIdiom()
+        self.appVersion = Self.bundleVersion()
+        self.details = RunDetails(strokeCount: kanjiData.strokes.count)
         self.firstStrokeStart = kanjiData.strokes.first
             .flatMap { try? StrokeRenderer.createPath(from: $0.pathData) }
             .flatMap { PointSampler.sample(path: $0, count: 2).first }
@@ -96,14 +136,38 @@ final class PracticeState: ObservableObject {
         phase = .validating
     }
 
-    func processValidationResult(_ result: StrokeValidationResult) {
+    func noteCueShown() {
+        guard details.shownAt == nil else {
+            return
+        }
+        details.shownAt = now()
+    }
+
+    func noteStrokeBegan(_ input: InputKind) {
+        details.pendingTouch = (input, now())
+    }
+
+    func noteSceneLeftActive() {
+        guard details.shownAt != nil, !runRecorded else {
+            return
+        }
+        details.interrupted = true
+    }
+
+    func processValidationResult(_ result: StrokeValidationResult, canvasSize: CGSize? = nil) {
         guard phase == .validating else { return }
 
         if runStartedAt == nil {
             runStartedAt = now()
         }
+        noteGradedAttempt(canvasSize: canvasSize)
+
+        let expected = currentStrokeIndex
+        let hintName = isRecall ? hint.recordName : nil
+        updateStroke(expected) { $0.recordAttempt(hint: hintName) }
 
         if result.accepted, let matchedIndex = result.matchedStrokeIndex, result.correctOrder {
+            updateStroke(expected) { $0.acceptedHint = hintName }
             matchedStrokeIndices.insert(matchedIndex)
             acceptanceOrder.append(matchedIndex)
             if let anchor = result.anchor {
@@ -122,9 +186,10 @@ final class PracticeState: ObservableObject {
         } else {
             attemptCount += 1
             consecutiveMisses += 1
-            let rejection = rejection(for: result)
-            recordMiss(rejection, evidence: result.evidence)
-            lastRejection = rejection
+            missEvidence.record(result)
+            updateStroke(expected) { $0.recordRejection(result) }
+            details.rejectedStroke = expected
+            lastRejection = rejection(for: result)
             isLastRejectionDisputed = false
             phase = .strokeRejected
         }
@@ -147,6 +212,8 @@ final class PracticeState: ObservableObject {
         isComplete = false
         lastRejection = nil
         phase = .waitingForInput
+        details.undos += 1
+        updateStroke(lastDrawn) { $0.undone += 1 }
         return lastDrawn
     }
 
@@ -164,34 +231,17 @@ final class PracticeState: ObservableObject {
         missEvidence = MissEvidence()
         runStartedAt = nil
         runRecorded = false
+        details = RunDetails(strokeCount: totalStrokes, shownAt: now())
     }
 
     private func rejection(for result: StrokeValidationResult) -> StrokeRejection {
-        guard result.accepted, let drawn = result.matchedStrokeIndex, !result.correctOrder else {
-            return .shape
+        if result.failedBoundary {
+            return .outOfFrame
         }
-        return .wrongOrder(drawnStroke: drawn, expectedStroke: currentStrokeIndex)
-    }
-
-    private func recordMiss(_ rejection: StrokeRejection, evidence: StrokeEvidence) {
-        if case .wrongOrder = rejection {
-            missEvidence.order += 1
-            return
+        if let drawn = result.wrongOrderCandidate {
+            return .wrongOrder(drawnStroke: drawn, expectedStroke: currentStrokeIndex)
         }
-        let flags = [evidence.shapePassed, evidence.positionPassed, evidence.proportionPassed]
-        if flags.allSatisfy({ $0 == nil }) {
-            missEvidence.notEvaluated += 1
-            return
-        }
-        if evidence.shapePassed == false {
-            missEvidence.shape += 1
-        }
-        if evidence.positionPassed == false {
-            missEvidence.position += 1
-        }
-        if evidence.proportionPassed == false {
-            missEvidence.proportion += 1
-        }
+        return .shape
     }
 
     var canDisputeLastRejection: Bool {
@@ -203,6 +253,9 @@ final class PracticeState: ObservableObject {
             return
         }
         missEvidence.disputed += 1
+        if let stroke = details.rejectedStroke {
+            updateStroke(stroke) { $0.evidence.disputed += 1 }
+        }
         isLastRejectionDisputed = true
     }
 
@@ -221,6 +274,7 @@ final class PracticeState: ObservableObject {
         guard !runRecorded else { return }
         runRecorded = true
         let completedAt = now()
+        let canvasSize = details.gradedSetup?.canvasSize
         let record = PracticeRecord(
             id: UUID(),
             codePoint: kanjiData.codePoint,
@@ -233,9 +287,91 @@ final class PracticeState: ObservableObject {
             leniency: Double(validationConfig.leniency),
             strictness: GradingStrictness.nearest(toLeniency: validationConfig.leniency).rawValue,
             gradingVersion: ValidationConfig.gradingVersion,
-            evidence: missEvidence
+            evidence: missEvidence,
+            sessionID: context.sessionID,
+            slot: context.slot,
+            origin: context.origin?.rawValue,
+            hint: hint.recordName,
+            undos: details.undos,
+            input: details.input?.rawValue,
+            canvasWidth: canvasSize.map { Double($0.width) },
+            canvasHeight: canvasSize.map { Double($0.height) },
+            idiom: idiom,
+            appVersion: appVersion,
+            shownAt: details.shownAt,
+            firstTouchAt: details.firstTouchAt,
+            firstTouchDelayMs: Self.milliseconds(from: details.shownAt, to: details.firstTouchAt),
+            interrupted: details.interrupted,
+            configChanged: details.configChanged,
+            strokes: details.strokes
         )
         onRunCompleted?(record)
+    }
+
+    private func noteGradedAttempt(canvasSize: CGSize?) {
+        if let touch = details.pendingTouch {
+            details.inputs.insert(touch.input)
+            if details.firstTouchAt == nil {
+                details.firstTouchAt = touch.at
+            }
+            details.pendingTouch = nil
+        }
+        let size = canvasSize.flatMap(Self.recordableSize)
+        guard let setup = details.gradedSetup else {
+            details.gradedSetup = (validationConfig, size)
+            return
+        }
+        if setup.config != validationConfig {
+            details.configChanged = true
+        }
+        if let first = setup.canvasSize, let size, first != size {
+            details.configChanged = true
+        }
+    }
+
+    private func updateStroke(_ index: Int, _ update: (inout StrokeStat) -> Void) {
+        guard details.strokes.indices.contains(index) else {
+            return
+        }
+        update(&details.strokes[index])
+    }
+
+    private static func milliseconds(from start: Date?, to end: Date?) -> Int? {
+        guard let start, let end else {
+            return nil
+        }
+        let interval = end.timeIntervalSince(start)
+        guard interval.isFinite, interval >= 0 else {
+            return nil
+        }
+        return Int((interval * 1000).rounded())
+    }
+
+    private static func recordableSize(_ size: CGSize) -> CGSize? {
+        guard size.width.isFinite, size.height.isFinite, size.width > 0, size.height > 0 else {
+            return nil
+        }
+        return size
+    }
+
+    private static func deviceIdiom() -> String {
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
+            return "phone"
+        case .pad:
+            return "pad"
+        default:
+            return "other"
+        }
+    }
+
+    private static func bundleVersion() -> String? {
+        let info = Bundle.main.infoDictionary
+        guard let version = info?["CFBundleShortVersionString"] as? String,
+              let build = info?["CFBundleVersion"] as? String else {
+            return nil
+        }
+        return "\(version) (\(build))"
     }
 
     /// Reference strokes parsed/scaled/sampled for a canvas size, cached so

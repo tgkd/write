@@ -1,7 +1,24 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "?" : {
+
+    },
+    "%@" : {
+
+    },
+    "%@ · %@ / %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@ / %3$@"
+          }
+        }
+      }
+    },
     "%@ · %lld needed a hint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -11,7 +28,14 @@
         }
       }
     },
+    "%@ strokes" : {
+
+    },
+    "%@ to recall again" : {
+
+    },
     "%@: %lld completed" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -22,6 +46,7 @@
       }
     },
     "%lld / %lld  — tap anywhere" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -32,6 +57,7 @@
       }
     },
     "%lld character practiced" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -42,6 +68,7 @@
       }
     },
     "%lld character recalled" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -52,6 +79,7 @@
       }
     },
     "%lld characters practiced" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -62,6 +90,7 @@
       }
     },
     "%lld characters recalled" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -72,6 +101,7 @@
       }
     },
     "%lld hints" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -82,6 +112,7 @@
       }
     },
     "%lld miss" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -92,6 +123,7 @@
       }
     },
     "%lld misses" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -102,6 +134,7 @@
       }
     },
     "%lld random · %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -112,6 +145,7 @@
       }
     },
     "%lld random · from memory" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -122,6 +156,7 @@
       }
     },
     "%lld retries" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -132,6 +167,7 @@
       }
     },
     "%lld retry" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -142,6 +178,7 @@
       }
     },
     "%lld strokes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -152,6 +189,7 @@
       }
     },
     "%lld to recall again" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -162,6 +200,7 @@
       }
     },
     "%lld word written" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -172,6 +211,7 @@
       }
     },
     "%lld words written" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -182,6 +222,7 @@
       }
     },
     "1 hint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -192,6 +233,7 @@
       }
     },
     "1 stroke" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -212,6 +254,7 @@
       }
     },
     "All" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -222,6 +265,7 @@
       }
     },
     "Allow Finger Drawing" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -231,7 +275,11 @@
         }
       }
     },
+    "Apple Pencil" : {
+
+    },
     "Auto" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -262,6 +310,7 @@
       }
     },
     "Character shown. Counts as a hint." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -272,6 +321,7 @@
       }
     },
     "Characters" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -312,6 +362,7 @@
       }
     },
     "Completed" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -332,6 +383,7 @@
       }
     },
     "Cool" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -342,6 +394,7 @@
       }
     },
     "Copy" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -352,6 +405,7 @@
       }
     },
     "Copy the character without a guide." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -362,6 +416,7 @@
       }
     },
     "Crosshair Guidelines" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -372,6 +427,7 @@
       }
     },
     "Current kanji slot" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -382,6 +438,7 @@
       }
     },
     "Days" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -402,6 +459,7 @@
       }
     },
     "Double-tap with two fingers to clear a cell and start over" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -412,6 +470,7 @@
       }
     },
     "Draw in any cell to practice — no rules, just write" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -432,6 +491,7 @@
       }
     },
     "Drawing canvas" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -442,6 +502,7 @@
       }
     },
     "Empty kanji slot" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -452,6 +513,7 @@
       }
     },
     "Example sentences — CC BY 2.0 FR" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -461,7 +523,18 @@
         }
       }
     },
+    "Experimental" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "試験中の機能"
+          }
+        }
+      }
+    },
     "Finish" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -472,6 +545,7 @@
       }
     },
     "Follow one stroke at a time." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -482,6 +556,7 @@
       }
     },
     "Freq" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -492,6 +567,7 @@
       }
     },
     "Grade" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -502,6 +578,7 @@
       }
     },
     "Grade %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -532,6 +609,7 @@
       }
     },
     "Guided" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -552,6 +630,7 @@
       }
     },
     "Hidden character" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -562,6 +641,7 @@
       }
     },
     "High" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -571,7 +651,19 @@
         }
       }
     },
+    "hint" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒント"
+          }
+        }
+      }
+    },
     "Hiragana" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -602,6 +694,7 @@
       }
     },
     "Ink" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -612,6 +705,7 @@
       }
     },
     "Kanji" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -632,6 +726,7 @@
       }
     },
     "Katakana" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -642,6 +737,7 @@
       }
     },
     "Last %lld weeks" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -662,6 +758,7 @@
       }
     },
     "Left" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -672,6 +769,7 @@
       }
     },
     "Lenient" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -682,6 +780,7 @@
       }
     },
     "Levels" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -692,6 +791,7 @@
       }
     },
     "Low" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -702,6 +802,7 @@
       }
     },
     "Medium" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -712,6 +813,7 @@
       }
     },
     "Mode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -722,6 +824,7 @@
       }
     },
     "Next" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -732,6 +835,7 @@
       }
     },
     "Next stroke shown. Counts as a hint." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -742,6 +846,7 @@
       }
     },
     "No more hints" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -752,6 +857,7 @@
       }
     },
     "Normal" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -772,6 +878,7 @@
       }
     },
     "Off" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -782,6 +889,7 @@
       }
     },
     "Other Jōyō" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -812,6 +920,7 @@
       }
     },
     "Practice" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -822,6 +931,7 @@
       }
     },
     "Progress" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -832,6 +942,7 @@
       }
     },
     "Readings & meanings — CC BY-SA 4.0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -842,6 +953,7 @@
       }
     },
     "Recall" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -852,6 +964,7 @@
       }
     },
     "Recall these" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -862,6 +975,7 @@
       }
     },
     "Restart word" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -872,6 +986,7 @@
       }
     },
     "Retry" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -892,6 +1007,7 @@
       }
     },
     "Right" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -902,6 +1018,7 @@
       }
     },
     "Right shape, wrong order: that was stroke %lld. Draw stroke %lld first." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -912,6 +1029,7 @@
       }
     },
     "School" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -922,6 +1040,7 @@
       }
     },
     "Search kanji or kana" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -962,6 +1081,7 @@
       }
     },
     "Settings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -972,6 +1092,7 @@
       }
     },
     "Show character" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -982,11 +1103,22 @@
       }
     },
     "Show next stroke" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "次の一画を表示"
+          }
+        }
+      }
+    },
+    "Shows the Words session on the home screen. It is still being tested." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ホーム画面に「ことば」を表示します。まだテスト中の機能です。"
           }
         }
       }
@@ -1012,6 +1144,7 @@
       }
     },
     "Start of the first stroke" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1022,6 +1155,7 @@
       }
     },
     "Strict" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1032,6 +1166,7 @@
       }
     },
     "Stroke data — CC BY-SA 3.0" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1042,6 +1177,7 @@
       }
     },
     "Stroke guide" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1052,6 +1188,7 @@
       }
     },
     "Strokes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1062,6 +1199,7 @@
       }
     },
     "Tap the reference kanji to see stroke order animation" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1071,7 +1209,18 @@
         }
       }
     },
+    "That stroke went outside the box. Keep it inside." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線が枠の外に出ました。枠の中に書いてください。"
+          }
+        }
+      }
+    },
     "Thick" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1082,6 +1231,7 @@
       }
     },
     "Thin" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1092,6 +1242,7 @@
       }
     },
     "Toggle Sidebar" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1102,6 +1253,7 @@
       }
     },
     "Trace" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1112,6 +1264,7 @@
       }
     },
     "Undo stroke" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1122,6 +1275,7 @@
       }
     },
     "Use the sidebar to pick a different kanji" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1132,6 +1286,7 @@
       }
     },
     "Used a hint" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1142,11 +1297,22 @@
       }
     },
     "Warm" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "暖色"
+          }
+        }
+      }
+    },
+    "Word practice" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ことばの練習"
           }
         }
       }
@@ -1161,7 +1327,18 @@
         }
       }
     },
+    "Words · %@ / %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Words · %1$@ / %2$@"
+          }
+        }
+      }
+    },
     "Words · %lld / %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1172,6 +1349,7 @@
       }
     },
     "Write it from memory." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1182,6 +1360,7 @@
       }
     },
     "Write over the full guide." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -1192,21 +1371,12 @@
       }
     },
     "Write the kanji for the highlighted box." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "色のついたマスの漢字を書いてください。"
-          }
-        }
-      }
-    },
-    "hint" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ヒント"
           }
         }
       }

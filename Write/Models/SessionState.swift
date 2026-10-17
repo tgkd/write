@@ -8,9 +8,10 @@ enum SessionKind: Hashable, Sendable {
 struct SessionRoute: Hashable {
     let codePoints: [String]
     var kind: SessionKind = .practice
+    var origin: RunOrigin = .randomSession
 
     static func review(_ items: [PracticeStats.ReviewItem], count: Int) -> SessionRoute {
-        SessionRoute(codePoints: items.prefix(count).map(\.codePoint), kind: .recall)
+        SessionRoute(codePoints: items.prefix(count).map(\.codePoint), kind: .recall, origin: .reviewSession)
     }
 }
 
@@ -24,8 +25,10 @@ final class SessionState: ObservableObject {
         let usedHint: Bool
     }
 
+    let id = UUID()
     let kanjiQueue: [KanjiData]
     let kind: SessionKind
+    let origin: RunOrigin
     @Published private(set) var currentIndex: Int = 0
     @Published private(set) var results: [KanjiResult] = []
     @Published private(set) var isSessionComplete: Bool
@@ -39,9 +42,10 @@ final class SessionState: ObservableObject {
         (currentIndex + 1, kanjiQueue.count)
     }
 
-    init(kanjiQueue: [KanjiData], kind: SessionKind = .practice) {
+    init(kanjiQueue: [KanjiData], kind: SessionKind = .practice, origin: RunOrigin = .randomSession) {
         self.kanjiQueue = kanjiQueue
         self.kind = kind
+        self.origin = origin
         self.isSessionComplete = kanjiQueue.isEmpty
     }
 

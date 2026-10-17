@@ -1,7 +1,18 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ · JLPT N%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · JLPT N%2$@"
+          }
+        }
+      }
+    },
     "%lld strokes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -12,6 +23,7 @@
       }
     },
     "1 stroke" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -22,6 +34,7 @@
       }
     },
     "A new kanji to practice every day." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -32,6 +45,7 @@
       }
     },
     "Daily Kanji" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {

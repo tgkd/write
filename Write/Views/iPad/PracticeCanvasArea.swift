@@ -17,6 +17,7 @@ struct PracticeCanvasArea: View {
     var onDispute: (() -> Void)?
     var captureContext: StrokeCaptureContext?
 
+    var onStrokeBegan: ((UITouch.TouchType) -> Void)?
     var onStrokeCompleted: (([CGPoint]) -> Void)?
     var onPencilDoubleTap: (() -> Void)?
 
@@ -55,6 +56,7 @@ struct PracticeCanvasArea: View {
             }
 
             DrawingCanvasRepresentable(
+                onStrokeBegan: onStrokeBegan,
                 onStrokeCompleted: { points, _ in
                     onStrokeCompleted?(points)
                 },

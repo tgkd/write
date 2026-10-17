@@ -6,8 +6,8 @@ struct SessionPracticeView: View {
     @State private var showNextButton = false
     @Environment(\.dismiss) private var dismiss
 
-    init(kanji: [KanjiData], kind: SessionKind = .practice) {
-        _sessionState = StateObject(wrappedValue: SessionState(kanjiQueue: kanji, kind: kind))
+    init(kanji: [KanjiData], kind: SessionKind = .practice, origin: RunOrigin = .randomSession) {
+        _sessionState = StateObject(wrappedValue: SessionState(kanjiQueue: kanji, kind: kind, origin: origin))
     }
 
     var body: some View {
@@ -51,6 +51,11 @@ struct SessionPracticeView: View {
                 mode: settings.practiceMode,
                 isRecall: sessionState.kind == .recall,
                 showToolbar: false,
+                context: RunContext(
+                    sessionID: sessionState.id,
+                    origin: sessionState.origin,
+                    slot: sessionState.currentIndex
+                ),
                 onComplete: { record in
                     sessionState.recordResult(attemptCount: record.misses, usedHint: record.revealed)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {

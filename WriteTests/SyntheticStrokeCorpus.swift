@@ -282,8 +282,24 @@ enum SyntheticStrokeCorpus {
             }
         }
         strokes = strokes.map { jittered($0, rng: &rng) }
-        let placed = boundingBox(of: strokes.flatMap { $0 })
         let margin: CGFloat = 4
+        let drawn = boundingBox(of: strokes.flatMap { $0 })
+        let shrink = min(
+            1,
+            (canvasSize.width - 2 * margin) / max(drawn.width, 1),
+            (canvasSize.height - 2 * margin) / max(drawn.height, 1)
+        )
+        if shrink < 1 {
+            strokes = strokes.map { stroke in
+                stroke.map { point in
+                    CGPoint(
+                        x: drawn.midX + shrink * (point.x - drawn.midX),
+                        y: drawn.midY + shrink * (point.y - drawn.midY)
+                    )
+                }
+            }
+        }
+        let placed = boundingBox(of: strokes.flatMap { $0 })
         let correction = CGVector(
             dx: fit(placed.minX, placed.maxX, upper: canvasSize.width, margin: margin),
             dy: fit(placed.minY, placed.maxY, upper: canvasSize.height, margin: margin)

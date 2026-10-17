@@ -2,7 +2,7 @@ import CoreGraphics
 import SVGPath
 
 /// Configuration for stroke validation thresholds.
-struct ValidationConfig: Sendable {
+struct ValidationConfig: Equatable, Sendable {
     /// Overall leniency multiplier. Higher = more forgiving.
     var leniency: CGFloat = 1.0
 
@@ -44,6 +44,8 @@ struct ValidationConfig: Sendable {
 
     var proportionMinimumAnchors = 2
 
+    var boundaryTolerance: CGFloat = 0.02
+
     var rejectsDisproportion: Bool {
         enforcesProportion && leniency <= GradingStrictness.strict.leniency + 0.001
     }
@@ -52,7 +54,7 @@ struct ValidationConfig: Sendable {
 
     static let standard = ValidationConfig()
 
-    static let gradingVersion = 2
+    static let gradingVersion = 3
 }
 
 /// Result of validating a single user stroke against a reference.
@@ -77,6 +79,25 @@ struct StrokeValidationResult: Sendable {
     var evidence: StrokeEvidence = .notEvaluated
 
     var anchor: StrokeAnchor?
+
+    var geometryAccepted: Bool?
+}
+
+extension StrokeValidationResult {
+    var passedGeometry: Bool {
+        (geometryAccepted ?? accepted) && matchedStrokeIndex != nil
+    }
+
+    var wrongOrderCandidate: Int? {
+        guard passedGeometry, !correctOrder else {
+            return nil
+        }
+        return matchedStrokeIndex
+    }
+
+    var failedBoundary: Bool {
+        evidence.boundaryPassed == false
+    }
 }
 
 /// Orchestrates the stroke validation pipeline: sample -> normalize -> compare -> score.
@@ -166,6 +187,8 @@ enum StrokeValidator {
         anchors: [StrokeAnchor]? = nil,
         config: ValidationConfig = .standard
     ) -> StrokeValidationResult {
+        let insideBox = StrokeBoundary.excursion(of: userPoints, canvasSize: canvasSize)
+            .map { $0 <= config.boundaryTolerance } ?? false
         let userSampled = PointSampler.sample(points: userPoints, count: config.sampleCount)
         let userCentroid = ProcrustesNormalizer.centroid(of: userSampled)
 
@@ -249,7 +272,18 @@ enum StrokeValidator {
                 userExtent: extent(of: userSampled)
             )
         }
-        return result
+        result.evidence.boundaryPassed = insideBox
+        return StrokeValidationResult(
+            score: result.score,
+            accepted: result.accepted && insideBox,
+            matchedStrokeIndex: result.matchedStrokeIndex,
+            correctOrder: result.correctOrder,
+            frechetDistance: result.frechetDistance,
+            userCentroid: result.userCentroid,
+            evidence: result.evidence,
+            anchor: result.anchor,
+            geometryAccepted: result.accepted
+        )
     }
 
     static func placement(
