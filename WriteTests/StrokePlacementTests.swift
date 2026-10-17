@@ -326,7 +326,7 @@ final class StrokePlacementTests: XCTestCase {
             anchors: []
         )
         XCTAssertNil(result.matchedStrokeIndex)
-        XCTAssertEqual(result.evidence, .notEvaluated)
+        XCTAssertEqual(result.evidence, StrokeEvidence(boundaryPassed: true))
         XCTAssertNil(result.anchor)
     }
 
