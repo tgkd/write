@@ -89,6 +89,7 @@ struct KanjiPickerView: View {
                     } label: {
                         Image(systemName: "gearshape")
                     }
+                    .accessibilityLabel("Settings")
                 }
             }
         }
@@ -155,7 +156,9 @@ struct KanjiPickerView: View {
             if !review.isEmpty {
                 reviewCard(review)
             }
-            wordsCard
+            if settings.showWordPractice {
+                wordsCard
+            }
         }
     }
 
