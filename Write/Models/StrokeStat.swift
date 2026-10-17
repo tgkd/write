@@ -45,3 +45,21 @@ extension StrokeStat {
         try container.encodeIfPresent(acceptedHint, forKey: .acceptedHint)
     }
 }
+
+extension StrokeStat {
+    mutating func recordAttempt(hint: String) {
+        if attempts == 0 {
+            firstHint = hint
+        }
+        attempts += 1
+    }
+
+    mutating func recordRejection(_ result: StrokeValidationResult) {
+        evidence.record(result)
+        guard let drawn = result.wrongOrderCandidate, !drawnInstead.contains(drawn) else {
+            return
+        }
+        drawnInstead.append(drawn)
+        drawnInstead.sort()
+    }
+}

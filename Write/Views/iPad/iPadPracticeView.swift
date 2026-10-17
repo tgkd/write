@@ -9,11 +9,17 @@ struct iPadPracticeView: View {
     @State private var feedbackView: FeedbackOverlayView?
     @State private var showCompletionCheck = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
 
     let onComplete: ((Int) -> Void)?
 
-    init(kanjiData: KanjiData, mode: PracticeMode = .trace, onComplete: ((Int) -> Void)? = nil) {
-        _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode))
+    init(
+        kanjiData: KanjiData,
+        mode: PracticeMode = .trace,
+        context: RunContext = RunContext(),
+        onComplete: ((Int) -> Void)? = nil
+    ) {
+        _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode, context: context))
         self.onComplete = onComplete
     }
 
@@ -84,12 +90,18 @@ struct iPadPracticeView: View {
             feedbackView?.rejectedColor = settings.colorPalette.rejectedColor
             applyGhostVisibility()
         }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active {
+                practiceState.noteSceneLeftActive()
+            }
+        }
         .onAppear {
             practiceState.validationConfig = settings.validationConfig
             practiceState.onRunCompleted = { record in
                 history.add(record)
                 onComplete?(record.misses)
             }
+            practiceState.noteCueShown()
         }
     }
 
@@ -207,6 +219,9 @@ struct iPadPracticeView: View {
                 codePoint: practiceState.kanjiData.codePoint,
                 mode: practiceState.mode.rawValue
             ),
+            onStrokeBegan: { touchType in
+                practiceState.noteStrokeBegan(touchType: touchType)
+            },
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

@@ -3,6 +3,8 @@ import Foundation
 
 @MainActor
 final class WordPracticeState: ObservableObject {
+    static let cueProfile = "kana-sentence+en-gloss"
+
     struct Slot: Equatable {
         let segmentIndex: Int
         let kanjiData: KanjiData
@@ -20,13 +22,7 @@ final class WordPracticeState: ObservableObject {
         let slotCount: Int
     }
 
-    private struct SlotOutcome {
-        let misses: Int
-        let usedHint: Bool
-        let startedAt: Date
-        let completedAt: Date
-    }
-
+    let sessionID = UUID()
     let items: [Item]
     @Published private(set) var promptIndex = 0
     @Published private(set) var slotIndex = 0
@@ -44,7 +40,7 @@ final class WordPracticeState: ObservableObject {
     var onWordCompleted: ((WordRecord) -> Void)?
 
     private(set) var slotRun = 0
-    private var outcomes: [SlotOutcome] = []
+    private var slotRecords: [WordSlotRecord] = []
 
     init(prompts: [WordPrompt], lookup: (Character) -> KanjiData?, config: ValidationConfig = .standard) {
         items = prompts.compactMap { prompt in
@@ -149,7 +145,7 @@ final class WordPracticeState: ObservableObject {
 
     private func startWord() {
         slotIndex = 0
-        outcomes = []
+        slotRecords = []
         isWordComplete = false
         slotState = makeSlotState()
     }
@@ -158,7 +154,12 @@ final class WordPracticeState: ObservableObject {
         guard let slot = currentSlot else {
             return nil
         }
-        let state = PracticeState(kanjiData: slot.kanjiData, isRecall: true, config: validationConfig)
+        let state = PracticeState(
+            kanjiData: slot.kanjiData,
+            isRecall: true,
+            config: validationConfig,
+            context: RunContext(sessionID: sessionID, origin: nil, slot: promptIndex)
+        )
         slotRun += 1
         state.onRunCompleted = { [weak self, weak state] record in
             guard let self, let state else {
@@ -170,15 +171,10 @@ final class WordPracticeState: ObservableObject {
     }
 
     private func slotDidComplete(_ state: PracticeState, record: PracticeRecord) {
-        guard state === slotState, !isWordComplete, let item = currentItem else {
+        guard state === slotState, !isWordComplete, let item = currentItem, let slot = currentSlot else {
             return
         }
-        outcomes.append(SlotOutcome(
-            misses: record.misses,
-            usedHint: record.revealed,
-            startedAt: record.startedAt,
-            completedAt: record.completedAt
-        ))
+        slotRecords.append(WordSlotRecord(segmentIndex: slot.segmentIndex, record: record))
         guard slotIndex + 1 >= item.slots.count else {
             slotIndex += 1
             slotState = makeSlotState()
@@ -188,17 +184,22 @@ final class WordPracticeState: ObservableObject {
     }
 
     private func finishWord(_ item: Item) {
-        let misses = outcomes.reduce(0) { $0 + $1.misses }
-        let hintsUsed = outcomes.filter(\.usedHint).count
-        let completedAt = outcomes.last?.completedAt ?? Date()
+        let slotRuns = slotRecords.map(\.record)
+        let misses = slotRuns.reduce(0) { $0 + $1.misses }
+        let hintsUsed = slotRuns.filter(\.revealed).count
+        let completedAt = slotRuns.last?.completedAt ?? Date()
         let record = WordRecord(
             id: UUID(),
             promptID: item.prompt.id,
-            startedAt: outcomes.first?.startedAt ?? completedAt,
+            startedAt: slotRuns.first?.startedAt ?? completedAt,
             completedAt: completedAt,
             misses: misses,
             hintsUsed: hintsUsed,
-            slotCount: item.slots.count
+            slotCount: item.slots.count,
+            sessionID: sessionID,
+            promptRevision: item.prompt.revision,
+            cue: Self.cueProfile,
+            slots: slotRecords
         )
         results.append(WordResult(
             prompt: item.prompt,

@@ -17,6 +17,7 @@ final class DrawingCanvasView: UIView {
     // MARK: - Callbacks
 
     var onPointAdded: ((CGPoint, Int) -> Void)?
+    var onStrokeBegan: ((UITouch.TouchType) -> Void)?
     var onPencilStrokeBegan: (() -> Void)?
     var onStrokeCompleted: (([CGPoint], Int) -> Void)?
     var onStrokeCaptured: ((CanvasStrokeCapture) -> Void)?
@@ -211,6 +212,7 @@ final class DrawingCanvasView: UIView {
 
         updateActivePath()
         hideHover()
+        onStrokeBegan?(touch.type)
         if touch.type == .pencil {
             onPencilStrokeBegan?()
         }

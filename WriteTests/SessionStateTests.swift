@@ -58,5 +58,28 @@ final class SessionStateTests: XCTestCase {
 
         XCTAssertEqual(route.codePoints, ["4e00", "4e8c"])
         XCTAssertEqual(route.kind, .recall)
+        XCTAssertEqual(route.origin, .reviewSession)
+    }
+
+    func testRoutesAndSessionsDefaultToARandomSession() {
+        XCTAssertEqual(SessionRoute(codePoints: ["4e00"]).origin, .randomSession)
+        XCTAssertEqual(SessionRoute(codePoints: ["4e00"], kind: .recall).origin, .randomSession)
+        XCTAssertEqual(SessionState(kanjiQueue: [kanji("4e00")]).origin, .randomSession)
+    }
+
+    func testSessionKeepsTheRouteOrigin() {
+        let session = SessionState(kanjiQueue: [kanji("4e00")], kind: .recall, origin: .reviewSession)
+
+        XCTAssertEqual(session.origin, .reviewSession)
+    }
+
+    func testEverySessionHasItsOwnStableID() {
+        let session = SessionState(kanjiQueue: [kanji("4e00"), kanji("4e8c")])
+        let id = session.id
+        session.recordResult(attemptCount: 0)
+        session.advance()
+
+        XCTAssertEqual(session.id, id)
+        XCTAssertNotEqual(SessionState(kanjiQueue: [kanji("4e00")]).id, id)
     }
 }

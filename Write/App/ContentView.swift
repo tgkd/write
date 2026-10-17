@@ -22,12 +22,12 @@ struct ContentView: View {
               let kanji = dataStore.lookup(codePoint: linkedCodePoint) else {
             return
         }
-        let codePoint = kanji.codePoint
+        let route = PracticeRoute(codePoint: kanji.codePoint, origin: .widget)
         if sizeClass == .regular {
-            selectedCodePoint = codePoint
-            iPadNavigationPath = NavigationPath([PracticeRoute(codePoint: codePoint)])
+            selectedCodePoint = route.codePoint
+            iPadNavigationPath = NavigationPath([route])
         } else {
-            iPhonePath = NavigationPath([codePoint])
+            iPhonePath = NavigationPath([route])
         }
     }
 
@@ -40,12 +40,18 @@ struct ContentView: View {
             KanjiPickerView(dataStore: dataStore, wordPromptStore: wordPromptStore)
                 .navigationDestination(for: String.self) { codePoint in
                     if let kanji = dataStore.lookup(codePoint: codePoint) {
-                        PracticeView(kanjiData: kanji, mode: settings.practiceMode)
+                        PracticeView(kanjiData: kanji, mode: settings.practiceMode, context: RunContext(origin: .grid))
                             .id(codePoint)
                     }
                 }
+                .navigationDestination(for: PracticeRoute.self) { route in
+                    if let kanji = dataStore.lookup(codePoint: route.codePoint) {
+                        PracticeView(kanjiData: kanji, mode: settings.practiceMode, context: RunContext(origin: route.origin))
+                            .id(route.codePoint)
+                    }
+                }
                 .navigationDestination(for: SessionRoute.self) { route in
-                    SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind)
+                    SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind, origin: route.origin)
                 }
                 .navigationDestination(for: WordSessionRoute.self) { route in
                     WordPracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
@@ -78,7 +84,7 @@ struct ContentView: View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             KanjiPickerView(dataStore: dataStore, wordPromptStore: wordPromptStore, selectedCodePoint: sidebarSelection)
                 .navigationDestination(for: SessionRoute.self) { route in
-                    SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind)
+                    SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind, origin: route.origin)
                 }
                 .navigationDestination(for: WordSessionRoute.self) { route in
                     WordPracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
@@ -108,7 +114,7 @@ struct ContentView: View {
             }
             .navigationDestination(for: PracticeRoute.self) { route in
                 if let kanji = dataStore.lookup(codePoint: route.codePoint) {
-                    iPadPracticeView(kanjiData: kanji, mode: settings.practiceMode)
+                    iPadPracticeView(kanjiData: kanji, mode: settings.practiceMode, context: RunContext(origin: route.origin))
                         .id(route.codePoint)
                         .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
                 }
@@ -125,6 +131,7 @@ struct ContentView: View {
 
 struct PracticeRoute: Hashable {
     let codePoint: String
+    var origin: RunOrigin = .grid
 }
 
 struct NotebookRoute: Hashable {
