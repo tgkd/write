@@ -187,6 +187,8 @@ enum StrokeValidator {
         anchors: [StrokeAnchor]? = nil,
         config: ValidationConfig = .standard
     ) -> StrokeValidationResult {
+        let insideBox = StrokeBoundary.excursion(of: userPoints, canvasSize: canvasSize)
+            .map { $0 <= config.boundaryTolerance } ?? false
         let userSampled = PointSampler.sample(points: userPoints, count: config.sampleCount)
         let userCentroid = ProcrustesNormalizer.centroid(of: userSampled)
 
@@ -270,7 +272,18 @@ enum StrokeValidator {
                 userExtent: extent(of: userSampled)
             )
         }
-        return result
+        result.evidence.boundaryPassed = insideBox
+        return StrokeValidationResult(
+            score: result.score,
+            accepted: result.accepted && insideBox,
+            matchedStrokeIndex: result.matchedStrokeIndex,
+            correctOrder: result.correctOrder,
+            frechetDistance: result.frechetDistance,
+            userCentroid: result.userCentroid,
+            evidence: result.evidence,
+            anchor: result.anchor,
+            geometryAccepted: result.accepted
+        )
     }
 
     static func placement(
