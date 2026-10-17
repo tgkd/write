@@ -122,9 +122,8 @@ final class PracticeState: ObservableObject {
         } else {
             attemptCount += 1
             consecutiveMisses += 1
-            let rejection = rejection(for: result)
-            recordMiss(rejection, evidence: result.evidence)
-            lastRejection = rejection
+            missEvidence.record(result)
+            lastRejection = rejection(for: result)
             isLastRejectionDisputed = false
             phase = .strokeRejected
         }
@@ -167,31 +166,13 @@ final class PracticeState: ObservableObject {
     }
 
     private func rejection(for result: StrokeValidationResult) -> StrokeRejection {
-        guard result.accepted, let drawn = result.matchedStrokeIndex, !result.correctOrder else {
-            return .shape
+        if result.failedBoundary {
+            return .outOfFrame
         }
-        return .wrongOrder(drawnStroke: drawn, expectedStroke: currentStrokeIndex)
-    }
-
-    private func recordMiss(_ rejection: StrokeRejection, evidence: StrokeEvidence) {
-        if case .wrongOrder = rejection {
-            missEvidence.order += 1
-            return
+        if let drawn = result.wrongOrderCandidate {
+            return .wrongOrder(drawnStroke: drawn, expectedStroke: currentStrokeIndex)
         }
-        let flags = [evidence.shapePassed, evidence.positionPassed, evidence.proportionPassed]
-        if flags.allSatisfy({ $0 == nil }) {
-            missEvidence.notEvaluated += 1
-            return
-        }
-        if evidence.shapePassed == false {
-            missEvidence.shape += 1
-        }
-        if evidence.positionPassed == false {
-            missEvidence.position += 1
-        }
-        if evidence.proportionPassed == false {
-            missEvidence.proportion += 1
-        }
+        return .shape
     }
 
     var canDisputeLastRejection: Bool {

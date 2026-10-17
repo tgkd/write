@@ -523,6 +523,16 @@
         }
       }
     },
+    "Experimental" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "試験中の機能"
+          }
+        }
+      }
+    },
     "Finish" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1103,6 +1113,16 @@
         }
       }
     },
+    "Shows the Words session on the home screen. It is still being tested." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ホーム画面に「ことば」を表示します。まだテスト中の機能です。"
+          }
+        }
+      }
+    },
     "Smoothing" : {
       "localizations" : {
         "ja" : {
@@ -1185,6 +1205,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "お手本の漢字をタップすると、書き順のアニメーションが見られます"
+          }
+        }
+      }
+    },
+    "That stroke went outside the box. Keep it inside." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線が枠の外に出ました。枠の中に書いてください。"
           }
         }
       }
@@ -1273,6 +1303,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "暖色"
+          }
+        }
+      }
+    },
+    "Word practice" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ことばの練習"
           }
         }
       }

@@ -8,4 +8,8 @@ struct WordRecord: Codable, Equatable, Identifiable, Sendable {
     let misses: Int
     let hintsUsed: Int
     let slotCount: Int
+    var sessionID: UUID?
+    var promptRevision: String?
+    var cue: String?
+    var slots: [WordSlotRecord]?
 }
