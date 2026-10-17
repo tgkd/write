@@ -615,6 +615,40 @@ final class PracticeRecordingTests: XCTestCase {
         XCTAssertEqual(strokes.map(\.acceptedHint), ["character", "strokes"])
     }
 
+    func testStrokeHintsAreLeftOutOutsideRecall() throws {
+        let (state, recorder) = makeState(strokeCount: 2, mode: .copy, isRecall: false)
+        submit(state, matchedIndex: nil)
+        complete(state)
+
+        let record = try XCTUnwrap(recorder.records.first)
+        XCTAssertEqual(record.hint, "none")
+        let strokes = try XCTUnwrap(record.strokes)
+        XCTAssertEqual(strokes.map(\.attempts), [2, 1])
+        XCTAssertEqual(strokes.map(\.firstHint), [nil, nil])
+        XCTAssertEqual(strokes.map(\.acceptedHint), [nil, nil])
+    }
+
+    func testFirstTouchDelayKeepsMilliseconds() throws {
+        let (state, recorder) = makeState(strokeCount: 1)
+        let shown = Date(timeIntervalSince1970: 1_000)
+        state.now = { shown }
+        state.noteCueShown()
+        state.now = { shown.addingTimeInterval(1.234) }
+        state.noteStrokeBegan(.finger)
+        submit(state, matchedIndex: 0)
+
+        XCTAssertEqual(recorder.records.first?.firstTouchDelayMs, 1234)
+    }
+
+    func testFirstTouchDelayNeedsBothTimes() throws {
+        let (state, recorder) = makeState(strokeCount: 1)
+        state.noteStrokeBegan(.finger)
+        submit(state, matchedIndex: 0)
+
+        XCTAssertNil(recorder.records.first?.shownAt)
+        XCTAssertNil(recorder.records.first?.firstTouchDelayMs)
+    }
+
     func testStrokeEvidenceAddsUpToTheRunEvidence() throws {
         let (state, recorder) = makeState(strokeCount: 3)
         reject(state, evidence: StrokeEvidence(shapePassed: false, positionPassed: false))

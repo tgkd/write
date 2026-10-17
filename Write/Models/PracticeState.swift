@@ -163,7 +163,7 @@ final class PracticeState: ObservableObject {
         noteGradedAttempt(canvasSize: canvasSize)
 
         let expected = currentStrokeIndex
-        let hintName = hint.recordName
+        let hintName = isRecall ? hint.recordName : nil
         updateStroke(expected) { $0.recordAttempt(hint: hintName) }
 
         if result.accepted, let matchedIndex = result.matchedStrokeIndex, result.correctOrder {
@@ -300,6 +300,7 @@ final class PracticeState: ObservableObject {
             appVersion: appVersion,
             shownAt: details.shownAt,
             firstTouchAt: details.firstTouchAt,
+            firstTouchDelayMs: Self.milliseconds(from: details.shownAt, to: details.firstTouchAt),
             interrupted: details.interrupted,
             configChanged: details.configChanged,
             strokes: details.strokes
@@ -333,6 +334,17 @@ final class PracticeState: ObservableObject {
             return
         }
         update(&details.strokes[index])
+    }
+
+    private static func milliseconds(from start: Date?, to end: Date?) -> Int? {
+        guard let start, let end else {
+            return nil
+        }
+        let interval = end.timeIntervalSince(start)
+        guard interval.isFinite, interval >= 0 else {
+            return nil
+        }
+        return Int((interval * 1000).rounded())
     }
 
     private static func recordableSize(_ size: CGSize) -> CGSize? {

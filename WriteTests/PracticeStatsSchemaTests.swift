@@ -88,6 +88,7 @@ final class PracticeStatsSchemaTests: XCTestCase {
             appVersion: "1.9 (56)",
             shownAt: completedAt.addingTimeInterval(-50),
             firstTouchAt: completedAt.addingTimeInterval(-44),
+            firstTouchDelayMs: 6000,
             interrupted: false,
             configChanged: false,
             strokes: strokeStats(count: strokeCount)
@@ -175,6 +176,7 @@ final class PracticeStatsSchemaTests: XCTestCase {
         XCTAssertNil(record.appVersion, file: file, line: line)
         XCTAssertNil(record.shownAt, file: file, line: line)
         XCTAssertNil(record.firstTouchAt, file: file, line: line)
+        XCTAssertNil(record.firstTouchDelayMs, file: file, line: line)
         XCTAssertNil(record.interrupted, file: file, line: line)
         XCTAssertNil(record.configChanged, file: file, line: line)
         XCTAssertNil(record.strokes, file: file, line: line)

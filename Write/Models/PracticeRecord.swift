@@ -27,6 +27,7 @@ struct PracticeRecord: Codable, Equatable, Identifiable, Sendable {
     var appVersion: String?
     var shownAt: Date?
     var firstTouchAt: Date?
+    var firstTouchDelayMs: Int?
     var interrupted: Bool?
     var configChanged: Bool?
     var strokes: [StrokeStat]?

@@ -47,7 +47,7 @@ extension StrokeStat {
 }
 
 extension StrokeStat {
-    mutating func recordAttempt(hint: String) {
+    mutating func recordAttempt(hint: String?) {
         if attempts == 0 {
             firstHint = hint
         }
