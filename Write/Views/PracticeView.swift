@@ -157,8 +157,6 @@ struct PracticeView: View {
             hidesReference: practiceState.hidesGuide,
             notice: practiceState.lastRejection?.notice,
             startMarker: practiceState.startMarker,
-            canDispute: practiceState.canDisputeLastRejection,
-            onDispute: { practiceState.disputeLastRejection() },
             captureContext: StrokeCaptureContext(
                 codePoint: practiceState.kanjiData.codePoint,
                 mode: practiceState.isRecall ? PracticeRecord.recallMode : practiceState.mode.rawValue

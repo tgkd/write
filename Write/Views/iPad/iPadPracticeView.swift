@@ -213,8 +213,6 @@ struct iPadPracticeView: View {
             hidesReference: false,
             notice: practiceState.lastRejection?.notice,
             startMarker: practiceState.startMarker,
-            canDispute: practiceState.canDisputeLastRejection,
-            onDispute: { practiceState.disputeLastRejection() },
             captureContext: StrokeCaptureContext(
                 codePoint: practiceState.kanjiData.codePoint,
                 mode: practiceState.mode.rawValue

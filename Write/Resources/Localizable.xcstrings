@@ -683,16 +683,6 @@
         }
       }
     },
-    "I wrote it right" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正しく書けた"
-          }
-        }
-      }
-    },
     "Ink" : {
       "extractionState" : "stale",
       "localizations" : {

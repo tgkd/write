@@ -13,8 +13,6 @@ struct PracticeCanvasArea: View {
     let hidesReference: Bool
     var notice: String?
     var startMarker: CGPoint?
-    var canDispute = false
-    var onDispute: (() -> Void)?
     var captureContext: StrokeCaptureContext?
 
     var onStrokeBegan: ((UITouch.TouchType) -> Void)?
@@ -84,39 +82,21 @@ struct PracticeCanvasArea: View {
             }
         }
         .overlay(alignment: .top) {
-            VStack(spacing: 6) {
-                if let notice {
-                    Text(notice)
-                        .font(.footnote.weight(.medium))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(.regularMaterial, in: Capsule())
-                        .allowsHitTesting(false)
-                        .transition(.opacity)
-                        .accessibilityIdentifier("strokeNotice")
-                }
-                if canDispute {
-                    Button {
-                        onDispute?()
-                    } label: {
-                        Text("I wrote it right")
-                            .font(.footnote.weight(.medium))
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(.regularMaterial, in: Capsule())
-                            .overlay(Capsule().strokeBorder(Color.secondary.opacity(0.4), lineWidth: 1))
-                    }
-                    .buttonStyle(.plain)
+            if let notice {
+                Text(notice)
+                    .font(.footnote.weight(.medium))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(.regularMaterial, in: Capsule())
+                    .allowsHitTesting(false)
                     .transition(.opacity)
-                    .accessibilityIdentifier("disputeRejection")
-                }
+                    .accessibilityIdentifier("strokeNotice")
+                    .padding(.top, 8)
+                    .padding(.horizontal, 8)
             }
-            .padding(.top, 8)
-            .padding(.horizontal, 8)
         }
         .animation(.easeInOut(duration: 0.2), value: notice)
-        .animation(.easeInOut(duration: 0.2), value: canDispute)
     }
 }
 

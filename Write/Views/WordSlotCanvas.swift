@@ -72,8 +72,6 @@ struct WordSlotCanvas: View {
             hidesReference: slotState.hidesGuide,
             notice: slotState.lastRejection?.notice,
             startMarker: slotState.startMarker,
-            canDispute: slotState.canDisputeLastRejection,
-            onDispute: { slotState.disputeLastRejection() },
             captureContext: StrokeCaptureContext(
                 codePoint: slotState.kanjiData.codePoint,
                 mode: "word"
