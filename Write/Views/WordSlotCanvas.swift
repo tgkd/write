@@ -8,6 +8,7 @@ struct WordSlotCanvas: View {
     let onResetWord: () -> Void
 
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.scenePhase) private var scenePhase
     @State private var canvasView: DrawingCanvasView?
     @State private var referenceView: KanjiReferenceView?
     @State private var feedbackView: FeedbackOverlayView?
@@ -47,6 +48,14 @@ struct WordSlotCanvas: View {
             feedbackView?.rejectedColor = settings.colorPalette.rejectedColor
             applyGhostVisibility()
         }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active {
+                slotState.noteSceneLeftActive()
+            }
+        }
+        .onAppear {
+            slotState.noteCueShown()
+        }
     }
 
     private var canvasArea: some View {
@@ -69,6 +78,9 @@ struct WordSlotCanvas: View {
                 codePoint: slotState.kanjiData.codePoint,
                 mode: "word"
             ),
+            onStrokeBegan: { touchType in
+                slotState.noteStrokeBegan(touchType: touchType)
+            },
             onStrokeCompleted: { points in
                 handleStrokeCompleted(points: points)
             },

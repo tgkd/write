@@ -17,17 +17,18 @@ extension PracticeState {
         beginDrawing()
         beginValidation()
 
+        let canvasSize = canvas.bounds.size
         let result = StrokeValidator.identifyStroke(
             userPoints: points,
-            referenceSamples: referenceSamples(canvasSize: canvas.bounds.size),
+            referenceSamples: referenceSamples(canvasSize: canvasSize),
             unmatchedIndices: unmatchedIndices,
-            canvasSize: canvas.bounds.size,
+            canvasSize: canvasSize,
             expectedStrokeIndex: currentStrokeIndex,
             anchors: usesRelativePlacement ? anchors : nil,
             config: validationConfig
         )
 
-        processValidationResult(result)
+        processValidationResult(result, canvasSize: canvasSize)
 
         switch phase {
         case .strokeAccepted(let strokeIndex):
@@ -53,6 +54,17 @@ extension PracticeState {
 
         default:
             return false
+        }
+    }
+
+    func noteStrokeBegan(touchType: UITouch.TouchType) {
+        switch touchType {
+        case .direct:
+            noteStrokeBegan(.finger)
+        case .pencil:
+            noteStrokeBegan(.pencil)
+        default:
+            noteStrokeBegan(.other)
         }
     }
 

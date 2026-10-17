@@ -5,6 +5,7 @@ import SwiftUI
 struct DrawingCanvasRepresentable: UIViewRepresentable {
 
     var onPointAdded: ((CGPoint, Int) -> Void)?
+    var onStrokeBegan: ((UITouch.TouchType) -> Void)?
     var onStrokeCompleted: (([CGPoint], Int) -> Void)?
     var onPencilDoubleTap: (() -> Void)?
 
@@ -24,6 +25,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> DrawingCanvasView {
         let view = DrawingCanvasView()
         view.onPointAdded = onPointAdded
+        view.onStrokeBegan = onStrokeBegan
         view.onStrokeCompleted = onStrokeCompleted
         view.onStrokeCaptured = strokeCaptureHandler()
         view.allowedTouchTypes = allowedTouchTypes
@@ -47,6 +49,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
 
     func updateUIView(_ uiView: DrawingCanvasView, context: Context) {
         uiView.onPointAdded = onPointAdded
+        uiView.onStrokeBegan = onStrokeBegan
         uiView.onStrokeCompleted = onStrokeCompleted
         uiView.onStrokeCaptured = strokeCaptureHandler()
         uiView.allowedTouchTypes = allowedTouchTypes

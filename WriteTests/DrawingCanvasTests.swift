@@ -325,6 +325,58 @@ final class DrawingCanvasViewTests: XCTestCase {
         XCTAssertEqual(pencilStrokes, 1)
     }
 
+    func testStrokeBeganReportsTheTouchTypeOfEachStroke() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        var began: [UITouch.TouchType] = []
+        canvas.onStrokeBegan = { began.append($0) }
+
+        let finger = TestTouch(locationInView: CGPoint(x: 20, y: 20))
+        canvas.touchesBegan([finger], with: nil)
+        canvas.touchesEnded([finger], with: nil)
+
+        let pencil = TestTouch(locationInView: CGPoint(x: 100, y: 100))
+        pencil.touchType = .pencil
+        canvas.touchesBegan([pencil], with: nil)
+        canvas.touchesEnded([pencil], with: nil)
+
+        XCTAssertEqual(began, [.direct, .pencil])
+    }
+
+    func testPencilTakeoverReportsAPencilStroke() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        var began: [UITouch.TouchType] = []
+        canvas.onStrokeBegan = { began.append($0) }
+
+        let finger = TestTouch(locationInView: CGPoint(x: 10, y: 10))
+        canvas.touchesBegan([finger], with: nil)
+        let pencil = TestTouch(locationInView: CGPoint(x: 200, y: 200))
+        pencil.touchType = .pencil
+        canvas.touchesBegan([pencil], with: nil)
+        canvas.touchesEnded([pencil], with: nil)
+
+        XCTAssertEqual(began, [.direct, .pencil])
+    }
+
+    func testTouchesThatStartNoStrokeReportNothing() {
+        let canvas = DrawingCanvasView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+        canvas.allowedTouchTypes = [.pencil]
+        var began: [UITouch.TouchType] = []
+        canvas.onStrokeBegan = { began.append($0) }
+
+        let palm = TestTouch(locationInView: CGPoint(x: 20, y: 20))
+        canvas.touchesBegan([palm], with: nil)
+        canvas.touchesEnded([palm], with: nil)
+
+        let pencil = TestTouch(locationInView: CGPoint(x: 100, y: 100))
+        pencil.touchType = .pencil
+        canvas.touchesBegan([pencil], with: nil)
+        let finger = TestTouch(locationInView: CGPoint(x: 150, y: 150))
+        canvas.touchesBegan([finger], with: nil)
+        canvas.touchesEnded([pencil], with: nil)
+
+        XCTAssertEqual(began, [.pencil])
+    }
+
     // MARK: - Clear during an active stroke
 
     func testClearAllDuringActiveStrokeLeavesNoPhantomStroke() {
