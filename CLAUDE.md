@@ -51,6 +51,7 @@ python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWid
    - **Shared/** (top level) is compiled into both the app and the extension: the daily kanji model, catalog and picker, and `PracticeLink`
    - Tapping the widget opens `kakijun://practice?cp=<codePoint>`, which `ContentView` handles in `onOpenURL` on iPhone and iPad
    - On iPad the sidebar writes its selection through `ContentView.sidebarSelection`, which also clears the detail path; any other writer of the selection must set the detail path itself
+   - The iPad sidebar starts visible beside the detail (`columnVisibility = .all`, `.navigationSplitViewStyle(.balanced)`). With `.automatic`, portrait launched into an empty "Select a kanji" screen. UI tests written for the iPhone push flow (`RecallUITests`) don't apply to this layout
 
 ### Practice, Recall and practice history
 

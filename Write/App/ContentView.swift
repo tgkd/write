@@ -66,7 +66,7 @@ struct ContentView: View {
 
     @State private var selectedCodePoint: String?
     @State private var iPadNavigationPath = NavigationPath()
-    @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
     private var sidebarSelection: Binding<String?> {
         Binding(
@@ -126,6 +126,7 @@ struct ContentView: View {
                     .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
             }
         }
+        .navigationSplitViewStyle(.balanced)
     }
 }
 
