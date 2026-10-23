@@ -316,6 +316,7 @@ struct SettingsView: View {
                 Image(systemName: "arrow.up.right")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
             }
         }
     }
@@ -338,11 +339,13 @@ struct SettingsView: View {
                 if settings.colorPalette == palette {
                     Image(systemName: "checkmark")
                         .foregroundStyle(.tint)
+                        .accessibilityHidden(true)
                 }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
         }
+        .accessibilityAddTraits(settings.colorPalette == palette ? .isSelected : [])
     }
 }
 

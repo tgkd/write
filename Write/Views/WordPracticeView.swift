@@ -32,6 +32,7 @@ struct WordPracticeView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "xmark")
                 }
+                .accessibilityLabel("End session")
             }
             ToolbarItem(placement: .principal) {
                 if !wordState.isSessionComplete {

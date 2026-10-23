@@ -168,6 +168,7 @@ struct KanjiPickerView: View {
             HStack(spacing: 6) {
                 Image(systemName: "character.book.closed.ja")
                     .foregroundStyle(Color.accentColor)
+                    .accessibilityHidden(true)
                 Text("Words")
                     .font(.headline)
                 Text("write the missing kanji")
@@ -177,6 +178,7 @@ struct KanjiPickerView: View {
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
             }
             .padding(12)
             .background(Color(.secondarySystemBackground))
@@ -199,6 +201,7 @@ struct KanjiPickerView: View {
                 HStack(spacing: 6) {
                     Image(systemName: systemImage)
                         .foregroundStyle(Color.accentColor)
+                        .accessibilityHidden(true)
                     Text(title)
                 }
                 .font(.headline)
@@ -222,6 +225,7 @@ struct KanjiPickerView: View {
             HStack(spacing: 6) {
                 Image(systemName: "repeat")
                     .foregroundStyle(Color.accentColor)
+                    .accessibilityHidden(true)
                 Text("Review")
                     .font(.headline)
                 Text("\(review.count) to recall again")
@@ -231,6 +235,7 @@ struct KanjiPickerView: View {
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
             }
             .padding(12)
             .background(Color(.secondarySystemBackground))
@@ -266,6 +271,7 @@ struct KanjiPickerView: View {
                 Text(levelScheme.label)
                 Image(systemName: "chevron.up.chevron.down")
                     .font(.caption2)
+                    .accessibilityHidden(true)
             }
             .font(.subheadline.weight(.medium))
             .fixedSize()

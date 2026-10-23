@@ -10,6 +10,7 @@ struct WordSessionSummaryView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 48))
                     .foregroundStyle(.green)
+                    .accessibilityHidden(true)
                 Text("Session Complete")
                     .font(.title2.weight(.semibold))
                 Text(subtitle)
@@ -42,6 +43,7 @@ struct WordSessionSummaryView: View {
                         Image(systemName: "star.fill")
                             .foregroundStyle(.orange)
                             .font(.caption)
+                            .accessibilityLabel("No retries or hints")
                     } else {
                         Text(detail(for: result))
                             .font(.caption)
