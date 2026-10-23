@@ -157,9 +157,47 @@ struct KanjiPickerView: View {
                 reviewCard(review)
             }
             if settings.showWordPractice {
-                wordsCard
+                if showsSentenceCard {
+                    HStack(spacing: 8) {
+                        wordsCard
+                        sentencesCard
+                    }
+                } else {
+                    wordsCard
+                }
             }
         }
+    }
+
+    private var showsSentenceCard: Bool {
+        DeviceContext.isIPad && !wordPromptStore.sentencePrompts.isEmpty
+    }
+
+    private var sentencesCard: some View {
+        let route = SentenceSessionRoute(promptIDs: wordPromptStore.randomSentencePromptIDs(count: 5))
+        return NavigationLink(value: route) {
+            HStack(spacing: 6) {
+                Image(systemName: "text.alignleft")
+                    .foregroundStyle(Color.accentColor)
+                    .accessibilityHidden(true)
+                Text("Sentences")
+                    .font(.headline)
+                Text("write the whole sentence")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .padding(12)
+            .background(Color(.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .disabled(route.promptIDs.isEmpty)
+        .accessibilityIdentifier("session.sentences")
     }
 
     private var wordsCard: some View {
