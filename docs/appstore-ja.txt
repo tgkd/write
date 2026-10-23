@@ -1,0 +1,66 @@
+App Store Connect — Japanese localization (v1.10)
+
+=== Name ===
+Kanji Write: 漢字・かなの書き順
+
+=== Subtitle ===
+指やApple Pencilで手書き練習
+
+=== Promotional Text ===
+操作画面が日本語になりました。小学1〜6年の学年別フィルターと、判定の厳しさの設定を追加しました。
+
+=== Description ===
+漢字・ひらがな・カタカナを、一画ずつ手書きで練習できるアプリです。書いた線の形と書き順を、その場で判定します。
+
+※操作画面は日本語に対応しています。漢字の意味は英語で表示されます。
+
+■ 収録文字
+・JLPT N5〜N1のレベル別に練習できる漢字2,200字以上
+・小学1〜6年の学年別の漢字と、その他の常用漢字
+・ひらがな・カタカナ（清音・濁音・半濁音）
+
+■ 3つのガイド
+・なぞり書き：お手本全体をなぞって書く
+・ガイド付き：次に書く一画だけを表示
+・見て書く：ガイドなしで、文字を見て書く
+どのガイドでも書き順を確認します。
+
+■ 思い出して書く・復習
+・思い出して書く：文字を隠して、読みや英語の意味を手がかりに書きます。分からないときは、文字や次の一画をヒントとして表示できます
+・復習：「思い出して書く」でヒントを使ったり書き直したりした文字を、もう一度練習できます
+
+■ そのほかの機能
+・判定の厳しさ：ゆるめ・ふつう・きびしめから選べます
+・記録：練習した日数・完了回数・文字数と、直近5週間の練習状況を確認できます
+・今日の漢字ウィジェット：毎日1つの漢字をホーム画面・ロック画面に表示。タップするとすぐに練習を始められます
+・iPhoneは指で、iPadはApple Pencilで練習できます。iPadでは、ノートのマスに自由に書いて練習することもできます
+
+■ データ
+書き順データはKanjiVG、読みと意味はKANJIDIC2を使用しています。
+
+=== What's New in This Version ===
+・操作画面が日本語に対応しました。端末の言語設定に合わせて表示されます（漢字の意味は英語のままです）。
+・学年別フィルター：JLPTのレベルに加えて、小学1〜6年とその他の常用漢字から選べるようになりました。
+・判定の厳しさ：ゆるめ・ふつう・きびしめから選べます。
+・文字の大きさや位置が少しずれていても、正しく判定されるようになりました。
+・枠から大きくはみ出した線は、書き直しになります。
+・指で書いた線が、よりなめらかできれいに表示されるようになりました。
+・iPadでは、サイドバーが最初から表示されます。
+
+=== Keywords ===
+筆順,書き取り,ひらがな,カタカナ,なぞり書き,ドリル,日本語能力試験,復習,ウィジェット,常用,小学生,ノート
+
+=== Same as English (U.S.) ===
+Support URL: https://write.thetango.org
+Marketing URL: https://write.thetango.org
+Privacy Policy URL (needed for each language): https://write.thetango.org/privacy
+
+
+English (U.S.) changes
+======================
+
+Keywords (append n2,n1):
+writing,hiragana,katakana,kana,jlpt,learn,study,calligraphy,trace,kakijun,n5,n4,n3,characters,n2,n1
+
+Description: replace "all hiragana and katakana" (the app has no small kana and no ゐ/ゑ/ゔ), e.g.:
+basic hiragana and katakana, including voiced forms

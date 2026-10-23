@@ -67,6 +67,8 @@ struct WordPrompt: Codable, Equatable, Identifiable, Sendable {
     let gloss: String
     let segments: [Segment]
     let notes: String
+    var translation: String? = nil
+    var tokens: [SentenceToken]? = nil
 
     var sentence: String {
         before + reading + after

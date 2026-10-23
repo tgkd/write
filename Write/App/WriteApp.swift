@@ -5,6 +5,7 @@ struct WriteApp: App {
     @StateObject private var settings = AppSettings()
     @StateObject private var history = PracticeHistoryStore(directory: WriteApp.historyDirectory)
     @StateObject private var wordHistory = WordHistoryStore(directory: WriteApp.wordHistoryDirectory)
+    @StateObject private var historySync = HistorySyncController()
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
@@ -13,10 +14,12 @@ struct WriteApp: App {
                 .environmentObject(settings)
                 .environmentObject(history)
                 .environmentObject(wordHistory)
+                .environmentObject(historySync)
         }
         .onChange(of: scenePhase) { phase in
             if phase == .active {
                 history.retryUnsaved()
+                historySync.sceneBecameActive(history: history, enabled: settings.iCloudSyncEnabled)
             }
         }
     }

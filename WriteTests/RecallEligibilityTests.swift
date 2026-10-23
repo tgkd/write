@@ -84,6 +84,31 @@ final class RecallEligibilityTests: XCTestCase {
         )
     }
 
+    func testEligibilityIsTheSameUnderEveryCueOrder() {
+        struct ShownCue: Hashable {
+            let script: WritingScript
+            let lines: Set<RecallCue.Line>
+            let strokeCount: Int
+        }
+        let store = KanjiDataStore()
+        let all = store.allCodePoints.compactMap(store.lookup(codePoint:))
+        let withCue = all.filter(RecallEligibility.hasCue)
+
+        for order in RecallCueOrder.allCases {
+            var groups: [ShownCue: [String]] = [:]
+            for item in withCue {
+                let shown = ShownCue(
+                    script: item.script,
+                    lines: Set(RecallCue(kanji: item, order: order).lines),
+                    strokeCount: item.strokes.count
+                )
+                groups[shown, default: []].append(item.codePoint)
+            }
+            let ambiguous = Set(groups.values.filter { $0.count > 1 }.joined())
+            XCTAssertEqual(ambiguous, store.recallEligibility.ambiguousCodePoints, "\(order)")
+        }
+    }
+
     func testRandomRecallCharactersAreEligible() {
         let store = KanjiDataStore()
         let picked = store.randomCharacters(matching: .all, count: 200, forRecall: true)

@@ -32,4 +32,16 @@ final class WordPromptStore: Sendable {
     func randomPromptIDs(count: Int) -> [String] {
         Array(prompts.shuffled().prefix(count)).map(\.id)
     }
+
+    var sentencePrompts: [WordPrompt] {
+        prompts.filter { $0.tokens?.isEmpty == false && $0.translation != nil }
+    }
+
+    func prompts(for route: SentenceSessionRoute) -> [WordPrompt] {
+        route.promptIDs.compactMap { id in sentencePrompts.first { $0.id == id } }
+    }
+
+    func randomSentencePromptIDs(count: Int) -> [String] {
+        Array(sentencePrompts.shuffled().prefix(count)).map(\.id)
+    }
 }

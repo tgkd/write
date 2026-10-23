@@ -100,6 +100,7 @@ struct iPadPracticeView: View {
         }
         .onAppear {
             practiceState.validationConfig = settings.validationConfig
+            practiceState.cueOrder = settings.recallCueOrder
             practiceState.onRunCompleted = { record in
                 history.add(record)
                 onComplete?(record.misses)
@@ -136,27 +137,17 @@ struct iPadPracticeView: View {
     }
 
     private var readingsBlock: some View {
-        VStack(spacing: 4) {
-            if let romaji = practiceState.kanjiData.romaji {
-                Text(romaji)
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-            }
-            if let on = practiceState.kanjiData.onYomi, !on.isEmpty {
-                Text(on.joined(separator: "、 "))
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-            }
-            if let kun = practiceState.kanjiData.kunYomi, !kun.isEmpty {
-                Text(kun.joined(separator: "、 "))
-                    .font(.body)
-                    .foregroundStyle(.tertiary)
-            }
-            if let meanings = practiceState.kanjiData.meanings, !meanings.isEmpty {
-                Text(meanings.prefix(3).joined(separator: ", "))
-                    .font(.subheadline)
-                    .foregroundStyle(.tertiary)
-                    .padding(.top, 2)
+        let kanji = practiceState.kanjiData
+        return VStack(spacing: 4) {
+            RecallCueText(
+                cue: RecallCue(kanji: kanji, order: settings.recallCueOrder),
+                alignment: .center,
+                primaryFont: .body,
+                secondaryFont: .subheadline
+            )
+            .multilineTextAlignment(.center)
+            ReadingSpeakerButton(text: SpokenReading.text(for: kanji)) {
+                practiceState.noteCueAudioPlayed()
             }
         }
     }

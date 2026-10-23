@@ -42,6 +42,52 @@ final class PracticeHistoryStore: ObservableObject {
         retryUnsaved()
     }
 
+    func merge(_ incoming: [PracticeRecord]) {
+        var known = Set(records.map(\.id)).union(pending.map(\.id))
+        let fresh = incoming.filter { known.insert($0.id).inserted }
+        guard !fresh.isEmpty else {
+            return
+        }
+        let byMonth = Dictionary(grouping: fresh) { monthKey(for: $0.completedAt) }
+        var persisted: [PracticeRecord] = []
+        var unsaved: [PracticeRecord] = []
+        for key in byMonth.keys.sorted() {
+            let monthNew = byMonth[key] ?? []
+            guard !blockedMonths.contains(key) else {
+                unsaved += monthNew
+                continue
+            }
+            let monthRecords = (recordsByMonth[key] ?? []) + monthNew
+            do {
+                try write(monthRecords, toMonth: key)
+            } catch {
+                unsaved += monthNew
+                continue
+            }
+            recordsByMonth[key] = monthRecords
+            persisted += monthNew
+        }
+        if !unsaved.isEmpty {
+            pending += unsaved
+        }
+        if !persisted.isEmpty {
+            records = (records + persisted).sorted { $0.completedAt < $1.completedAt }
+        }
+    }
+
+    nonisolated static func makeEncoder() -> JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        encoder.outputFormatting = [.sortedKeys]
+        return encoder
+    }
+
+    nonisolated static func makeDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }
+
     func retryUnsaved() {
         pending = pending.filter { !persist($0) }
     }
@@ -84,17 +130,12 @@ final class PracticeHistoryStore: ObservableObject {
     }
 
     private func decode(_ data: Data) -> MonthFile? {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return try? decoder.decode(MonthFile.self, from: data)
+        try? Self.makeDecoder().decode(MonthFile.self, from: data)
     }
 
     private func write(_ records: [PracticeRecord], toMonth key: String) throws {
         try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        encoder.outputFormatting = [.sortedKeys]
-        let data = try encoder.encode(MonthFile(version: Self.fileVersion, records: records))
+        let data = try Self.makeEncoder().encode(MonthFile(version: Self.fileVersion, records: records))
         try data.write(to: directory.appendingPathComponent("\(key).json"), options: .atomic)
     }
 

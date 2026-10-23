@@ -24,6 +24,7 @@ final class PracticeState: ObservableObject {
         var configChanged = false
         var interrupted = false
         var rejectedStroke: Int?
+        var cueAudioPlays = 0
         var strokes: [StrokeStat]
 
         init(strokeCount: Int, shownAt: Date? = nil) {
@@ -65,6 +66,7 @@ final class PracticeState: ObservableObject {
     var idiom: String
     var appVersion: String?
     var onRunCompleted: ((PracticeRecord) -> Void)?
+    var cueOrder: RecallCueOrder = .meaningsFirst
 
     private var runStartedAt: Date?
     private var runRecorded = false
@@ -145,6 +147,13 @@ final class PracticeState: ObservableObject {
 
     func noteStrokeBegan(_ input: InputKind) {
         details.pendingTouch = (input, now())
+    }
+
+    func noteCueAudioPlayed() {
+        guard !runRecorded else {
+            return
+        }
+        details.cueAudioPlays += 1
     }
 
     func noteSceneLeftActive() {
@@ -303,7 +312,9 @@ final class PracticeState: ObservableObject {
             firstTouchDelayMs: Self.milliseconds(from: details.shownAt, to: details.firstTouchAt),
             interrupted: details.interrupted,
             configChanged: details.configChanged,
-            strokes: details.strokes
+            strokes: details.strokes,
+            cueOrder: isRecall ? cueOrder.rawValue : nil,
+            cueAudioPlays: details.cueAudioPlays > 0 ? details.cueAudioPlays : nil
         )
         onRunCompleted?(record)
     }
