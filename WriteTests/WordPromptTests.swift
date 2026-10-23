@@ -31,15 +31,15 @@ final class WordPromptTests: XCTestCase {
         }
     }
 
-    func testBundledFileHasExactlyTwentyFourPrompts() {
-        XCTAssertEqual(prompts.count, 24)
+    func testBundledFileHasAtLeastOneHundredPrompts() {
+        XCTAssertGreaterThanOrEqual(prompts.count, 100)
     }
 
     func testPromptIDsAreUnique() {
         XCTAssertEqual(Set(prompts.map(\.id)).count, prompts.count)
     }
 
-    func testEveryKanjiSlotExistsWithGradeOneToThree() {
+    func testEveryKanjiSlotExistsWithElementaryGradeOrJLPTN5ToN3() {
         for prompt in prompts {
             for segment in prompt.segments where segment.isKanji {
                 let character = segment.kanjiCharacter
@@ -50,7 +50,9 @@ final class WordPromptTests: XCTestCase {
                 let kanji = kanjiStore.lookup(character: character)
                 XCTAssertNotNil(kanji, "\(prompt.id): \(character) missing from kanji data")
                 XCTAssertFalse(kanji?.strokes.isEmpty ?? true, "\(prompt.id): \(character) has no strokes")
-                XCTAssertTrue((1...3).contains(kanji?.grade ?? 0), "\(prompt.id): \(character) is not grade 1-3")
+                let elementary = (1...6).contains(kanji?.grade ?? 0)
+                let jlpt = (3...5).contains(kanji?.jlpt ?? 0)
+                XCTAssertTrue(elementary || jlpt, "\(prompt.id): \(character) is neither grade 1-6 nor JLPT N5-N3")
             }
         }
     }

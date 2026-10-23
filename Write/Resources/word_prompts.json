@@ -39,7 +39,9 @@
     "after": "を さんびき つった。",
     "gloss": "fish",
     "segments": [{ "kanji": "魚" }],
-    "notes": "Tatoeba #108413 (CC BY 2.0 FR): 彼は魚を３匹釣った。 “He caught three fish.” Kana from the Tatoeba furigana transcription. Answer 魚; 肴 is a different word; つった fixes the meaning."
+    "translation": "He caught three fish.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "魚", "reading": "さかな"}, {"surface": "を"}, {"surface": "三匹", "reading": "さんびき"}, {"surface": "釣った", "reading": "つった"}, {"surface": "。"}],
+    "notes": "Tatoeba #108413 (CC BY 2.0 FR): 彼は魚を３匹釣った。 “He caught three fish.” Kana from the Tatoeba furigana transcription. Answer 魚; 肴 is a different word; つった fixes the meaning. The sentence tokens write ３ as 三, since the fullwidth digit has no stroke data."
   },
   {
     "id": "w05",
@@ -48,6 +50,8 @@
     "after": "で おります。",
     "gloss": "(train) station",
     "segments": [{ "kanji": "駅" }],
+    "translation": "I am getting off at the next station.",
+    "tokens": [{"surface": "次", "reading": "つぎ"}, {"surface": "の"}, {"surface": "駅", "reading": "えき"}, {"surface": "で"}, {"surface": "降ります", "reading": "おります"}, {"surface": "。"}],
     "notes": "Tatoeba #150316 (CC BY 2.0 FR): 次の駅で降ります。 “I am getting off at the next station.” Kana from the Tatoeba furigana transcription. Answer 駅; 液 and 益 are ruled out by つぎの〜で おります and the gloss."
   },
   {
@@ -57,6 +61,8 @@
     "after": "。",
     "gloss": "to be absent, to take time off",
     "segments": [{ "kanji": "休" }, { "kana": "む" }],
+    "translation": "He often absents himself from school.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "学校", "reading": "がっこう"}, {"surface": "を"}, {"surface": "よく"}, {"surface": "休む", "reading": "やすむ"}, {"surface": "。"}],
     "notes": "Tatoeba #108870 (CC BY 2.0 FR): 彼は学校をよく休む。 “He often absents himself from school.” Kana from the Tatoeba furigana transcription. Answer 休む, okurigana む shown. No competing everyday spelling."
   },
   {
@@ -66,6 +72,8 @@
     "after": " たてものですね。",
     "gloss": "high, tall (building)",
     "segments": [{ "kanji": "高" }, { "kana": "い" }],
+    "translation": "That is a high building, is it not?",
+    "tokens": [{"surface": "高い", "reading": "たかい"}, {"surface": "建物", "reading": "たてもの"}, {"surface": "です"}, {"surface": "ね"}, {"surface": "。"}],
     "notes": "Tatoeba #229710 (CC BY 2.0 FR): 高い建物ですね。 “That is a high building, is it not?” Kana from the Tatoeba furigana transcription. Answer 高い, okurigana い shown; たてもの makes the height sense clear."
   },
   {
@@ -75,6 +83,8 @@
     "after": "。",
     "gloss": "big",
     "segments": [{ "kanji": "大" }, { "kana": "きい" }],
+    "translation": "That dog is big.",
+    "tokens": [{"surface": "あの"}, {"surface": "犬", "reading": "いぬ"}, {"surface": "は"}, {"surface": "大きい", "reading": "おおきい"}, {"surface": "。"}],
     "notes": "Tatoeba #231367 (CC BY 2.0 FR): あの犬は大きい。 “That dog is big.” Kana from the Tatoeba furigana transcription. Answer 大きい as a predicate, okurigana きい shown, so 大きな is not the target."
   },
   {
@@ -84,6 +94,8 @@
     "after": "。",
     "gloss": "to eat",
     "segments": [{ "kanji": "食" }, { "kana": "べる" }],
+    "translation": "Sheep feed on grass.",
+    "tokens": [{"surface": "羊", "reading": "ひつじ"}, {"surface": "は"}, {"surface": "草", "reading": "くさ"}, {"surface": "を"}, {"surface": "食べる", "reading": "たべる"}, {"surface": "。"}],
     "notes": "Tatoeba #78845 (CC BY 2.0 FR): 羊は草を食べる。 “Sheep feed on grass.” Kana from the Tatoeba furigana transcription. Answer 食べる, okurigana べる shown. No competing everyday spelling."
   },
   {
@@ -93,6 +105,8 @@
     "after": "。",
     "gloss": "bought",
     "segments": [{ "kanji": "買" }, { "kana": "った" }],
+    "translation": "He bought a new car.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "新車", "reading": "しんしゃ"}, {"surface": "を"}, {"surface": "買った", "reading": "かった"}, {"surface": "。"}],
     "notes": "Tatoeba #103766 (CC BY 2.0 FR): 彼は新車を買った。 “He bought a new car.” Kana from the Tatoeba furigana transcription. Answer 買った (買う), okurigana った shown; 勝った and 飼った are ruled out by しんしゃを and the gloss."
   },
   {
@@ -102,6 +116,8 @@
     "after": "しかない。",
     "gloss": "to wait",
     "segments": [{ "kanji": "待" }, { "kana": "つ" }],
+    "translation": "I can only wait.",
+    "tokens": [{"surface": "待つ", "reading": "まつ"}, {"surface": "しかない"}, {"surface": "。"}],
     "notes": "Tatoeba #4849 (CC BY 2.0 FR): 待つしかない。 “I can only wait.” Kana from the Tatoeba furigana transcription. Answer 待つ, okurigana つ shown; 松 is ruled out by しかない and the gloss."
   },
   {
@@ -111,6 +127,8 @@
     "after": "。",
     "gloss": "can swim",
     "segments": [{ "kanji": "泳" }, { "kana": "げる" }],
+    "translation": "I can swim fast.",
+    "tokens": [{"surface": "私", "reading": "わたし"}, {"surface": "は"}, {"surface": "速く", "reading": "はやく"}, {"surface": "泳げる", "reading": "およげる"}, {"surface": "。"}],
     "notes": "Tatoeba #155294 (CC BY 2.0 FR): 私は速く泳げる。 “I can swim fast.” Kana from the Tatoeba furigana transcription. Answer 泳げる (泳ぐ), okurigana げる shown. No competing everyday spelling."
   },
   {
@@ -120,6 +138,8 @@
     "after": "に いく じかんよ。",
     "gloss": "school",
     "segments": [{ "kanji": "学" }, { "kanji": "校" }],
+    "translation": "It's time to go to school.",
+    "tokens": [{"surface": "学校", "reading": "がっこう"}, {"surface": "に"}, {"surface": "行く", "reading": "いく"}, {"surface": "時間", "reading": "じかん"}, {"surface": "よ"}, {"surface": "。"}],
     "notes": "Tatoeba #184467 (CC BY 2.0 FR): 学校に行く時間よ。 “It's time to go to school.” Kana from the Tatoeba furigana transcription. Answer 学校. No everyday homophone."
   },
   {
@@ -129,6 +149,8 @@
     "after": "です。",
     "gloss": "teacher",
     "segments": [{ "kanji": "先" }, { "kanji": "生" }],
+    "translation": "He is my teacher.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "私", "reading": "わたし"}, {"surface": "の"}, {"surface": "先生", "reading": "せんせい"}, {"surface": "です"}, {"surface": "。"}],
     "notes": "Tatoeba #105758 (CC BY 2.0 FR): 彼は私の先生です。 “He is my teacher.” Kana from the Tatoeba furigana transcription. Answer 先生; 先制, 宣誓 and 専制 are ruled out by わたしの and the gloss."
   },
   {
@@ -138,6 +160,8 @@
     "after": "に かさを わすれた。",
     "gloss": "train",
     "segments": [{ "kanji": "電" }, { "kanji": "車" }],
+    "translation": "I left my umbrella on the train.",
+    "tokens": [{"surface": "電車", "reading": "でんしゃ"}, {"surface": "に"}, {"surface": "傘", "reading": "かさ"}, {"surface": "を"}, {"surface": "忘れた", "reading": "わすれた"}, {"surface": "。"}],
     "notes": "Tatoeba #124806 (CC BY 2.0 FR): 電車に傘を忘れた。 “I left my umbrella on the train.” Kana from the Tatoeba furigana transcription. Answer 電車; 列車 is a different word."
   },
   {
@@ -147,6 +171,8 @@
     "after": "ですね。",
     "gloss": "weather",
     "segments": [{ "kanji": "天" }, { "kanji": "気" }],
+    "translation": "It is a nice day, isn't it?",
+    "tokens": [{"surface": "いい"}, {"surface": "天気", "reading": "てんき"}, {"surface": "です"}, {"surface": "ね"}, {"surface": "。"}],
     "notes": "Tatoeba #229331 (CC BY 2.0 FR): いい天気ですね。 “It is a nice day, isn't it?” Kana from the Tatoeba furigana transcription. Answer 天気; 転機 is ruled out by いい〜ですね and the gloss."
   },
   {
@@ -156,6 +182,8 @@
     "after": "を さんぽしましょう。",
     "gloss": "park",
     "segments": [{ "kanji": "公" }, { "kanji": "園" }],
+    "translation": "Let's take a walk in the park.",
+    "tokens": [{"surface": "公園", "reading": "こうえん"}, {"surface": "を"}, {"surface": "散歩", "reading": "さんぽ"}, {"surface": "しましょう"}, {"surface": "。"}],
     "notes": "Tatoeba #174014 (CC BY 2.0 FR): 公園を散歩しましょう。 “Let's take a walk in the park.” Kana from the Tatoeba furigana transcription. Answer 公園; 講演, 公演 and 後援 are ruled out by さんぽ and the gloss."
   },
   {
@@ -165,6 +193,8 @@
     "after": "が ある。",
     "gloss": "hospital",
     "segments": [{ "kanji": "病" }, { "kanji": "院" }],
+    "translation": "There is a hospital nearby.",
+    "tokens": [{"surface": "近く", "reading": "ちかく"}, {"surface": "に"}, {"surface": "病院", "reading": "びょういん"}, {"surface": "が"}, {"surface": "ある"}, {"surface": "。"}],
     "notes": "Tatoeba #179875 (CC BY 2.0 FR): 近くに病院がある。 “There is a hospital nearby.” Kana from the Tatoeba furigana transcription. Answer 病院; 美容院 is read びよういん, a different word."
   },
   {
@@ -174,6 +204,8 @@
     "after": "を おえた。",
     "gloss": "homework",
     "segments": [{ "kanji": "宿" }, { "kanji": "題" }],
+    "translation": "I've finished my homework.",
+    "tokens": [{"surface": "私", "reading": "わたし"}, {"surface": "は"}, {"surface": "宿題", "reading": "しゅくだい"}, {"surface": "を"}, {"surface": "終えた", "reading": "おえた"}, {"surface": "。"}],
     "notes": "Tatoeba #155984 (CC BY 2.0 FR): 私は宿題を終えた。 “I've finished my homework.” Kana from the Tatoeba furigana transcription. Answer 宿題. No everyday homophone."
   },
   {
@@ -183,6 +215,8 @@
     "after": "を かいた。",
     "gloss": "letter (mail)",
     "segments": [{ "kanji": "手" }, { "kanji": "紙" }],
+    "translation": "He wrote a letter.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "手紙", "reading": "てがみ"}, {"surface": "を"}, {"surface": "書いた", "reading": "かいた"}, {"surface": "。"}],
     "notes": "Tatoeba #104466 (CC BY 2.0 FR): 彼は手紙を書いた。 “He wrote a letter.” Kana from the Tatoeba furigana transcription. Answer 手紙. No everyday homophone."
   },
   {
@@ -192,6 +226,8 @@
     "after": "です。",
     "gloss": "summer vacation",
     "segments": [{ "kanji": "夏" }, { "kanji": "休" }, { "kana": "み" }],
+    "translation": "Soon there will be summer vacation.",
+    "tokens": [{"surface": "もうすぐ"}, {"surface": "夏休み", "reading": "なつやすみ"}, {"surface": "です"}, {"surface": "。"}],
     "notes": "Tatoeba #194438 (CC BY 2.0 FR): もうすぐ夏休みです。 “Soon there will be summer vacation.” Kana from the Tatoeba furigana transcription. Answer 夏休み, okurigana み shown."
   },
   {
@@ -201,6 +237,8 @@
     "after": "に ほんを かえした。",
     "gloss": "library",
     "segments": [{ "kanji": "図" }, { "kanji": "書" }, { "kanji": "館" }],
+    "translation": "She took the book back to the library.",
+    "tokens": [{"surface": "図書館", "reading": "としょかん"}, {"surface": "に"}, {"surface": "本", "reading": "ほん"}, {"surface": "を"}, {"surface": "返した", "reading": "かえした"}, {"surface": "。"}],
     "notes": "Tatoeba #143874 (CC BY 2.0 FR): 図書館に本を返した。 “She took the book back to the library.” Kana from the Tatoeba furigana transcription. Answer 図書館; 図書室 is a different word."
   },
   {
@@ -210,6 +248,8 @@
     "after": "へ いった。",
     "gloss": "zoo",
     "segments": [{ "kanji": "動" }, { "kanji": "物" }, { "kanji": "園" }],
+    "translation": "I went to the zoo.",
+    "tokens": [{"surface": "私", "reading": "わたし"}, {"surface": "は"}, {"surface": "動物園", "reading": "どうぶつえん"}, {"surface": "へ"}, {"surface": "行った", "reading": "いった"}, {"surface": "。"}],
     "notes": "Tatoeba #154827 (CC BY 2.0 FR): 私は動物園へ行った。 “I went to the zoo.” Kana from the Tatoeba furigana transcription. Answer 動物園. No everyday homophone."
   },
   {
@@ -219,6 +259,1064 @@
     "after": "で つうがくする。",
     "gloss": "bicycle",
     "segments": [{ "kanji": "自" }, { "kanji": "転" }, { "kanji": "車" }],
+    "translation": "He goes to school by bicycle.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "自転車", "reading": "じてんしゃ"}, {"surface": "で"}, {"surface": "通学", "reading": "つうがく"}, {"surface": "する"}, {"surface": "。"}],
     "notes": "Tatoeba #105211 (CC BY 2.0 FR): 彼は自転車で通学する。 “He goes to school by bicycle.” Kana from the Tatoeba furigana transcription. Answer 自転車. No everyday homophone."
+  },
+  {
+    "id": "t4704",
+    "before": "",
+    "reading": "なに",
+    "after": "してるの？",
+    "gloss": "what",
+    "segments": [{ "kanji": "何" }],
+    "translation": "What are you doing?",
+    "tokens": [{"surface": "何", "reading": "なに"}, {"surface": "してる"}, {"surface": "の"}, {"surface": "？"}],
+    "notes": "Tatoeba #4704 (CC BY 2.0 FR): 何してるの？ “What are you doing?” Kana from the Tatoeba furigana transcription. Answer 何. Only spelling: 何. JMdict lists no other common word read なに with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t5049",
+    "before": "ねようと ",
+    "reading": "おもう",
+    "after": "。",
+    "gloss": "to think, to consider",
+    "segments": [{ "kanji": "思" }, { "kana": "う" }],
+    "translation": "I think I'm gonna go to sleep.",
+    "tokens": [{"surface": "寝よう", "reading": "ねよう"}, {"surface": "と"}, {"surface": "思う", "reading": "おもう"}, {"surface": "。"}],
+    "notes": "Tatoeba #5049 (CC BY 2.0 FR): 寝ようと思う。 “I think I'm gonna go to sleep.” Kana from the Tatoeba furigana transcription. Answer 思う, okurigana う shown. Only spelling: 思う. JMdict lists no other common word read おもう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t77650",
+    "before": "れいせんの きんちょうが ",
+    "reading": "たかまった",
+    "after": "。",
+    "gloss": "to rise, to swell",
+    "segments": [{ "kanji": "高" }, { "kana": "まった" }],
+    "translation": "Cold-war tension has mounted.",
+    "tokens": [{"surface": "冷戦", "reading": "れいせん"}, {"surface": "の"}, {"surface": "緊張", "reading": "きんちょう"}, {"surface": "が"}, {"surface": "高まった", "reading": "たかまった"}, {"surface": "。"}],
+    "notes": "Tatoeba #77650 (CC BY 2.0 FR): 冷戦の緊張が高まった。 “Cold-war tension has mounted.” Kana from the Tatoeba furigana transcription. Answer 高まった (高まる), okurigana まった shown. Only spelling: 高まる. JMdict lists no other common word read たかまる with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t77955",
+    "before": "",
+    "reading": "りょうり",
+    "after": " うまいね。",
+    "gloss": "cooking, cookery",
+    "segments": [{ "kanji": "料" }, { "kanji": "理" }],
+    "translation": "You are a good cook, aren't you?",
+    "tokens": [{"surface": "料理", "reading": "りょうり"}, {"surface": "うまい"}, {"surface": "ね"}, {"surface": "。"}],
+    "notes": "Tatoeba #77955 (CC BY 2.0 FR): 料理うまいね。 “You are a good cook, aren't you?” Kana from the Tatoeba furigana transcription. Answer 料理. Only spelling: 料理. JMdict lists no other common word read りょうり with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t78581",
+    "before": "",
+    "reading": "らいねん",
+    "after": "は あえるでしょう。",
+    "gloss": "next year",
+    "segments": [{ "kanji": "来" }, { "kanji": "年" }],
+    "translation": "I will be able to see you next year.",
+    "tokens": [{"surface": "来年", "reading": "らいねん"}, {"surface": "は"}, {"surface": "会える", "reading": "あえる"}, {"surface": "でしょう"}, {"surface": "。"}],
+    "notes": "Tatoeba #78581 (CC BY 2.0 FR): 来年は会えるでしょう。 “I will be able to see you next year.” Kana from the Tatoeba furigana transcription. Answer 来年. Only spelling: 来年. JMdict lists no other common word read らいねん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t79727",
+    "before": "よるの ",
+    "reading": "あいだ",
+    "after": "に あめが ふった。",
+    "gloss": "space (between), gap",
+    "segments": [{ "kanji": "間" }],
+    "translation": "It rained during the night.",
+    "tokens": [{"surface": "夜", "reading": "よる"}, {"surface": "の"}, {"surface": "間", "reading": "あいだ"}, {"surface": "に"}, {"surface": "雨", "reading": "あめ"}, {"surface": "が"}, {"surface": "降った", "reading": "ふった"}, {"surface": "。"}],
+    "notes": "Tatoeba #79727 (CC BY 2.0 FR): 夜の間に雨が降った。 “It rained during the night.” Kana from the Tatoeba furigana transcription. Answer 間. Only spelling: 間. JMdict lists no other common word read あいだ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t79875",
+    "before": "",
+    "reading": "もんだい",
+    "after": "だなあ。",
+    "gloss": "question (e.g. on a test)",
+    "segments": [{ "kanji": "問" }, { "kanji": "題" }],
+    "translation": "It's a problem.",
+    "tokens": [{"surface": "問題", "reading": "もんだい"}, {"surface": "だ"}, {"surface": "なあ"}, {"surface": "。"}],
+    "notes": "Tatoeba #79875 (CC BY 2.0 FR): 問題だなあ。 “It's a problem.” Kana from the Tatoeba furigana transcription. Answer 問題. Only spelling: 問題. JMdict lists no other common word read もんだい with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t80778",
+    "before": "",
+    "reading": "なまえ",
+    "after": "は なんですか。",
+    "gloss": "name",
+    "segments": [{ "kanji": "名" }, { "kanji": "前" }],
+    "translation": "What's its name?",
+    "tokens": [{"surface": "名前", "reading": "なまえ"}, {"surface": "は"}, {"surface": "何", "reading": "なん"}, {"surface": "ですか"}, {"surface": "。"}],
+    "notes": "Tatoeba #80778 (CC BY 2.0 FR): 名前は何ですか。 “What's its name?” Kana from the Tatoeba furigana transcription. Answer 名前. Only spelling: 名前. JMdict lists no other common word read なまえ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t81589",
+    "before": "",
+    "reading": "ほんき",
+    "after": "ですか。",
+    "gloss": "seriousness, earnestness",
+    "segments": [{ "kanji": "本" }, { "kanji": "気" }],
+    "translation": "Do you mean what you say?",
+    "tokens": [{"surface": "本気", "reading": "ほんき"}, {"surface": "ですか"}, {"surface": "。"}],
+    "notes": "Tatoeba #81589 (CC BY 2.0 FR): 本気ですか。 “Do you mean what you say?” Kana from the Tatoeba furigana transcription. Answer 本気. Only spelling: 本気. JMdict lists no other common word read ほんき with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t82498",
+    "before": "ぼうりょくは ",
+    "reading": "しゃかい",
+    "after": "の ガンだ。",
+    "gloss": "society, public",
+    "segments": [{ "kanji": "社" }, { "kanji": "会" }],
+    "translation": "Violence is the cancer of our society.",
+    "tokens": [{"surface": "暴力", "reading": "ぼうりょく"}, {"surface": "は"}, {"surface": "社会", "reading": "しゃかい"}, {"surface": "の"}, {"surface": "ガン"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #82498 (CC BY 2.0 FR): 暴力は社会のガンだ。 “Violence is the cancer of our society.” Kana from the Tatoeba furigana transcription. Answer 社会. Only spelling: 社会. JMdict lists no other common word read しゃかい with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t82831",
+    "before": "",
+    "reading": "ぼし",
+    "after": " ともに けんぜんです。",
+    "gloss": "mother and child",
+    "segments": [{ "kanji": "母" }, { "kanji": "子" }],
+    "translation": "Mother and child are both doing well.",
+    "tokens": [{"surface": "母子", "reading": "ぼし"}, {"surface": "ともに"}, {"surface": "健全", "reading": "けんぜん"}, {"surface": "です"}, {"surface": "。"}],
+    "notes": "Tatoeba #82831 (CC BY 2.0 FR): 母子ともに健全です。 “Mother and child are both doing well.” Kana from the Tatoeba furigana transcription. Answer 母子. Only spelling: 母子. JMdict lists no other common word read ぼし with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t83624",
+    "before": "",
+    "reading": "きこえます",
+    "after": "か。",
+    "gloss": "to be heard, to be audible",
+    "segments": [{ "kanji": "聞" }, { "kana": "こえます" }],
+    "translation": "Do you read me?",
+    "tokens": [{"surface": "聞こえます", "reading": "きこえます"}, {"surface": "か"}, {"surface": "。"}],
+    "notes": "Tatoeba #83624 (CC BY 2.0 FR): 聞こえますか。 “Do you read me?” Kana from the Tatoeba furigana transcription. Answer 聞こえます (聞こえる), okurigana こえます shown. Only spelling: 聞こえる. JMdict lists no other common word read きこえる with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t84005",
+    "before": "かぜは ",
+    "reading": "みなみ",
+    "after": "へ ふく。",
+    "gloss": "south",
+    "segments": [{ "kanji": "南" }],
+    "translation": "The wind blows south.",
+    "tokens": [{"surface": "風", "reading": "かぜ"}, {"surface": "は"}, {"surface": "南", "reading": "みなみ"}, {"surface": "へ"}, {"surface": "吹く", "reading": "ふく"}, {"surface": "。"}],
+    "notes": "Tatoeba #84005 (CC BY 2.0 FR): 風は南へ吹く。 “The wind blows south.” Kana from the Tatoeba furigana transcription. Answer 南. Only spelling: 南. JMdict lists no other common word read みなみ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t88028",
+    "before": "かのじょは ",
+    "reading": "だいがく",
+    "after": "の めいよだ。",
+    "gloss": "university, college",
+    "segments": [{ "kanji": "大" }, { "kanji": "学" }],
+    "translation": "She is an honor to our college.",
+    "tokens": [{"surface": "彼女", "reading": "かのじょ"}, {"surface": "は"}, {"surface": "大学", "reading": "だいがく"}, {"surface": "の"}, {"surface": "名誉", "reading": "めいよ"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #88028 (CC BY 2.0 FR): 彼女は大学の名誉だ。 “She is an honor to our college.” Kana from the Tatoeba furigana transcription. Answer 大学. Only spelling: 大学. JMdict lists no other common word read だいがく with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t90696",
+    "before": "かのじょは ",
+    "reading": "がくせい",
+    "after": "だ。",
+    "gloss": "student",
+    "segments": [{ "kanji": "学" }, { "kanji": "生" }],
+    "translation": "She is a student.",
+    "tokens": [{"surface": "彼女", "reading": "かのじょ"}, {"surface": "は"}, {"surface": "学生", "reading": "がくせい"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #90696 (CC BY 2.0 FR): 彼女は学生だ。 “She is a student.” Kana from the Tatoeba furigana transcription. Answer 学生. Only spelling: 学生. JMdict lists no other common word read がくせい with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t98697",
+    "before": "かれらが ",
+    "reading": "さぎょう",
+    "after": "を おえた。",
+    "gloss": "work, operation",
+    "segments": [{ "kanji": "作" }, { "kanji": "業" }],
+    "translation": "They were through with work.",
+    "tokens": [{"surface": "彼ら", "reading": "かれら"}, {"surface": "が"}, {"surface": "作業", "reading": "さぎょう"}, {"surface": "を"}, {"surface": "終えた", "reading": "おえた"}, {"surface": "。"}],
+    "notes": "Tatoeba #98697 (CC BY 2.0 FR): 彼らが作業を終えた。 “They were through with work.” Kana from the Tatoeba furigana transcription. Answer 作業. Only spelling: 作業. JMdict lists no other common word read さぎょう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t103801",
+    "before": "かれは あたらしい とけいを ",
+    "reading": "みせびらかした",
+    "after": "。",
+    "gloss": "to show off, to flaunt",
+    "segments": [{ "kanji": "見" }, { "kana": "せびらかした" }],
+    "translation": "He showed off his new watch.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "新しい", "reading": "あたらしい"}, {"surface": "時計", "reading": "とけい"}, {"surface": "を"}, {"surface": "見せびらかした", "reading": "みせびらかした"}, {"surface": "。"}],
+    "notes": "Tatoeba #103801 (CC BY 2.0 FR): 彼は新しい時計を見せびらかした。 “He showed off his new watch.” Kana from the Tatoeba furigana transcription. Answer 見せびらかした (見せびらかす), okurigana せびらかした shown. Only spelling: 見せびらかす. JMdict lists no other common word read みせびらかす with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t104422",
+    "before": "かれは くびを ",
+    "reading": "じょうげ",
+    "after": "に ふった。",
+    "gloss": "top and bottom, high and low",
+    "segments": [{ "kanji": "上" }, { "kanji": "下" }],
+    "translation": "He shook his head up and down.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "首", "reading": "くび"}, {"surface": "を"}, {"surface": "上下", "reading": "じょうげ"}, {"surface": "に"}, {"surface": "振った", "reading": "ふった"}, {"surface": "。"}],
+    "notes": "Tatoeba #104422 (CC BY 2.0 FR): 彼は首を上下に振った。 “He shook his head up and down.” Kana from the Tatoeba furigana transcription. Answer 上下. Only spelling: 上下. JMdict lists no other common word read じょうげ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t104510",
+    "before": "かれは ",
+    "reading": "て",
+    "after": "が よい。",
+    "gloss": "hand, arm",
+    "segments": [{ "kanji": "手" }],
+    "translation": "He has a good hand.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "手", "reading": "て"}, {"surface": "が"}, {"surface": "よい"}, {"surface": "。"}],
+    "notes": "Tatoeba #104510 (CC BY 2.0 FR): 彼は手がよい。 “He has a good hand.” Kana from the Tatoeba furigana transcription. Answer 手. Only spelling: 手. JMdict lists no other common word read て with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t105244",
+    "before": "かれは ",
+    "reading": "みずから",
+    "after": " そこへ でかけた。",
+    "gloss": "oneself",
+    "segments": [{ "kanji": "自" }, { "kana": "ら" }],
+    "translation": "He went there in person.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "自ら", "reading": "みずから"}, {"surface": "そこ"}, {"surface": "へ"}, {"surface": "出かけた", "reading": "でかけた"}, {"surface": "。"}],
+    "notes": "Tatoeba #105244 (CC BY 2.0 FR): 彼は自らそこへ出かけた。 “He went there in person.” Kana from the Tatoeba furigana transcription. Answer 自ら, okurigana ら shown. Only spelling: 自ら. JMdict lists no other common word read みずから with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t105614",
+    "before": "かれは わたしを じっと ",
+    "reading": "みつめた",
+    "after": "。",
+    "gloss": "to stare (at), to gaze (at)",
+    "segments": [{ "kanji": "見" }, { "kana": "つめた" }],
+    "translation": "He fastened his eyes on me.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "私", "reading": "わたし"}, {"surface": "を"}, {"surface": "じっと"}, {"surface": "見つめた", "reading": "みつめた"}, {"surface": "。"}],
+    "notes": "Tatoeba #105614 (CC BY 2.0 FR): 彼は私をじっと見つめた。 “He fastened his eyes on me.” Kana from the Tatoeba furigana transcription. Answer 見つめた (見つめる), okurigana つめた shown. Only spelling: 見つめる. JMdict lists no other common word read みつめる with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t107697",
+    "before": "かれは ",
+    "reading": "けんきゅう",
+    "after": "に むちゅうだ。",
+    "gloss": "research, study",
+    "segments": [{ "kanji": "研" }, { "kanji": "究" }],
+    "translation": "His study absorbs him.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "研究", "reading": "けんきゅう"}, {"surface": "に"}, {"surface": "夢中", "reading": "むちゅう"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #107697 (CC BY 2.0 FR): 彼は研究に夢中だ。 “His study absorbs him.” Kana from the Tatoeba furigana transcription. Answer 研究. Only spelling: 研究. JMdict lists no other common word read けんきゅう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t109232",
+    "before": "かれは ",
+    "reading": "かぞく",
+    "after": "を すてた。",
+    "gloss": "family",
+    "segments": [{ "kanji": "家" }, { "kanji": "族" }],
+    "translation": "He abandoned his family.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "家族", "reading": "かぞく"}, {"surface": "を"}, {"surface": "捨てた", "reading": "すてた"}, {"surface": "。"}],
+    "notes": "Tatoeba #109232 (CC BY 2.0 FR): 彼は家族を捨てた。 “He abandoned his family.” Kana from the Tatoeba furigana transcription. Answer 家族. Only spelling: 家族. JMdict lists no other common word read かぞく with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t109797",
+    "before": "かれは ",
+    "reading": "うんてん",
+    "after": "が あらい。",
+    "gloss": "operation (of a machine)",
+    "segments": [{ "kanji": "運" }, { "kanji": "転" }],
+    "translation": "He drives roughly.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "運転", "reading": "うんてん"}, {"surface": "が"}, {"surface": "荒い", "reading": "あらい"}, {"surface": "。"}],
+    "notes": "Tatoeba #109797 (CC BY 2.0 FR): 彼は運転が荒い。 “He drives roughly.” Kana from the Tatoeba furigana transcription. Answer 運転. Only spelling: 運転. JMdict lists no other common word read うんてん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t110402",
+    "before": "かれは よく わたしの ところに ",
+    "reading": "でいり",
+    "after": "した。",
+    "gloss": "going in and out",
+    "segments": [{ "kanji": "出" }, { "kanji": "入" }, { "kana": "り" }],
+    "translation": "He was accustomed to frequenting my house.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "よく"}, {"surface": "私", "reading": "わたし"}, {"surface": "の"}, {"surface": "所", "reading": "ところ"}, {"surface": "に"}, {"surface": "出入り", "reading": "でいり"}, {"surface": "した"}, {"surface": "。"}],
+    "notes": "Tatoeba #110402 (CC BY 2.0 FR): 彼はよく私の所に出入りした。 “He was accustomed to frequenting my house.” Kana from the Tatoeba furigana transcription. Answer 出入り, okurigana り shown. Only spelling: 出入り. JMdict lists no other common word read でいり with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t115424",
+    "before": "かれは ",
+    "reading": "ちょうなん",
+    "after": "です。",
+    "gloss": "eldest son (may be the only son)",
+    "segments": [{ "kanji": "長" }, { "kanji": "男" }],
+    "translation": "He's the oldest son.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "は"}, {"surface": "長男", "reading": "ちょうなん"}, {"surface": "です"}, {"surface": "。"}],
+    "notes": "Tatoeba #115424 (CC BY 2.0 FR): 彼は長男です。 “He's the oldest son.” Kana from the Tatoeba furigana transcription. Answer 長男. Only spelling: 長男. JMdict lists no other common word read ちょうなん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t116347",
+    "before": "かれの ",
+    "reading": "はつげん",
+    "after": "は しんちょうだった。",
+    "gloss": "statement, remark",
+    "segments": [{ "kanji": "発" }, { "kanji": "言" }],
+    "translation": "He was guarded in his remarks.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "の"}, {"surface": "発言", "reading": "はつげん"}, {"surface": "は"}, {"surface": "慎重", "reading": "しんちょう"}, {"surface": "だった"}, {"surface": "。"}],
+    "notes": "Tatoeba #116347 (CC BY 2.0 FR): 彼の発言は慎重だった。 “He was guarded in his remarks.” Kana from the Tatoeba furigana transcription. Answer 発言. Only spelling: 発言. JMdict lists no other common word read はつげん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t116373",
+    "before": "かれの のうじょうの ",
+    "reading": "つち",
+    "after": "は とても こえている。",
+    "gloss": "earth, soil",
+    "segments": [{ "kanji": "土" }],
+    "translation": "The land on his farm is very fertile.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "の"}, {"surface": "農場", "reading": "のうじょう"}, {"surface": "の"}, {"surface": "土", "reading": "つち"}, {"surface": "は"}, {"surface": "とても"}, {"surface": "肥えている", "reading": "こえている"}, {"surface": "。"}],
+    "notes": "Tatoeba #116373 (CC BY 2.0 FR): 彼の農場の土はとても肥えている。 “The land on his farm is very fertile.” Kana from the Tatoeba furigana transcription. Answer 土. Only spelling: 土. JMdict lists no other common word read つち with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t118031",
+    "before": "かれの おくさんは ",
+    "reading": "がいこくじん",
+    "after": "らしい。",
+    "gloss": "foreigner, foreign citizen",
+    "segments": [{ "kanji": "外" }, { "kanji": "国" }, { "kanji": "人" }],
+    "translation": "His wife seems to be foreign.",
+    "tokens": [{"surface": "彼", "reading": "かれ"}, {"surface": "の"}, {"surface": "奥さん", "reading": "おくさん"}, {"surface": "は"}, {"surface": "外国人", "reading": "がいこくじん"}, {"surface": "らしい"}, {"surface": "。"}],
+    "notes": "Tatoeba #118031 (CC BY 2.0 FR): 彼の奥さんは外国人らしい。 “His wife seems to be foreign.” Kana from the Tatoeba furigana transcription. Answer 外国人. Only spelling: 外国人. JMdict lists no other common word read がいこくじん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t121438",
+    "before": "",
+    "reading": "しろい",
+    "after": "ですか。",
+    "gloss": "white",
+    "segments": [{ "kanji": "白" }, { "kana": "い" }],
+    "translation": "Is it white?",
+    "tokens": [{"surface": "白い", "reading": "しろい"}, {"surface": "ですか"}, {"surface": "。"}],
+    "notes": "Tatoeba #121438 (CC BY 2.0 FR): 白いですか。 “Is it white?” Kana from the Tatoeba furigana transcription. Answer 白い, okurigana い shown. Only spelling: 白い. JMdict lists no other common word read しろい with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t122409",
+    "before": "にっぽんは ",
+    "reading": "なんぼく",
+    "after": "に ながい くにです。",
+    "gloss": "north and south, north to south",
+    "segments": [{ "kanji": "南" }, { "kanji": "北" }],
+    "translation": "Japan is a very long country from north to south.",
+    "tokens": [{"surface": "日本", "reading": "にっぽん"}, {"surface": "は"}, {"surface": "南北", "reading": "なんぼく"}, {"surface": "に"}, {"surface": "長い", "reading": "ながい"}, {"surface": "国", "reading": "くに"}, {"surface": "です"}, {"surface": "。"}],
+    "notes": "Tatoeba #122409 (CC BY 2.0 FR): 日本は南北に長い国です。 “Japan is a very long country from north to south.” Kana from the Tatoeba furigana transcription. Answer 南北. Only spelling: 南北. JMdict lists no other common word read なんぼく with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t123400",
+    "before": "",
+    "reading": "どくしょ",
+    "after": "が すきです。",
+    "gloss": "reading (books)",
+    "segments": [{ "kanji": "読" }, { "kanji": "書" }],
+    "translation": "I like reading books.",
+    "tokens": [{"surface": "読書", "reading": "どくしょ"}, {"surface": "が"}, {"surface": "好き", "reading": "すき"}, {"surface": "です"}, {"surface": "。"}],
+    "notes": "Tatoeba #123400 (CC BY 2.0 FR): 読書が好きです。 “I like reading books.” Kana from the Tatoeba furigana transcription. Answer 読書. Only spelling: 読書. JMdict lists no other common word read どくしょ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t123458",
+    "before": "",
+    "reading": "とくべつ",
+    "after": " いい きぶんだ。",
+    "gloss": "special, particular",
+    "segments": [{ "kanji": "特" }, { "kanji": "別" }],
+    "translation": "I feel just fine.",
+    "tokens": [{"surface": "特別", "reading": "とくべつ"}, {"surface": "いい"}, {"surface": "気分", "reading": "きぶん"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #123458 (CC BY 2.0 FR): 特別いい気分だ。 “I feel just fine.” Kana from the Tatoeba furigana transcription. Answer 特別. Only spelling: 特別. JMdict lists no other common word read とくべつ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t124487",
+    "before": "",
+    "reading": "とち",
+    "after": "を たがやす。",
+    "gloss": "plot of land, lot",
+    "segments": [{ "kanji": "土" }, { "kanji": "地" }],
+    "translation": "I till the earth.",
+    "tokens": [{"surface": "土地", "reading": "とち"}, {"surface": "を"}, {"surface": "耕す", "reading": "たがやす"}, {"surface": "。"}],
+    "notes": "Tatoeba #124487 (CC BY 2.0 FR): 土地を耕す。 “I till the earth.” Kana from the Tatoeba furigana transcription. Answer 土地. Only spelling: 土地. JMdict lists no other common word read とち with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t124724",
+    "before": "",
+    "reading": "でんわ",
+    "after": "しよう。",
+    "gloss": "telephone call, phone call",
+    "segments": [{ "kanji": "電" }, { "kanji": "話" }],
+    "translation": "Let's make a phone call.",
+    "tokens": [{"surface": "電話", "reading": "でんわ"}, {"surface": "しよう"}, {"surface": "。"}],
+    "notes": "Tatoeba #124724 (CC BY 2.0 FR): 電話しよう。 “Let's make a phone call.” Kana from the Tatoeba furigana transcription. Answer 電話. Only spelling: 電話. JMdict lists no other common word read でんわ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t126920",
+    "before": "",
+    "reading": "じもと",
+    "after": "の チームは かった。",
+    "gloss": "home area, home town",
+    "segments": [{ "kanji": "地" }, { "kanji": "元" }],
+    "translation": "The home team won.",
+    "tokens": [{"surface": "地元", "reading": "じもと"}, {"surface": "の"}, {"surface": "チーム"}, {"surface": "は"}, {"surface": "勝った", "reading": "かった"}, {"surface": "。"}],
+    "notes": "Tatoeba #126920 (CC BY 2.0 FR): 地元のチームは勝った。 “The home team won.” Kana from the Tatoeba furigana transcription. Answer 地元. Only spelling: 地元. JMdict lists no other common word read じもと with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t127089",
+    "before": "",
+    "reading": "しらない",
+    "after": "わ。",
+    "gloss": "to know, to be aware (of)",
+    "segments": [{ "kanji": "知" }, { "kana": "らない" }],
+    "translation": "I don't know.",
+    "tokens": [{"surface": "知らない", "reading": "しらない"}, {"surface": "わ"}, {"surface": "。"}],
+    "notes": "Tatoeba #127089 (CC BY 2.0 FR): 知らないわ。 “I don't know.” Kana from the Tatoeba furigana transcription. Answer 知らない (知る), okurigana らない shown. Only spelling: 知る. JMdict lists no other common word read しる with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t127178",
+    "before": "",
+    "reading": "だんし",
+    "after": "は いもうとを、 みくだしがちだ。",
+    "gloss": "boy",
+    "segments": [{ "kanji": "男" }, { "kanji": "子" }],
+    "translation": "Boys tend to look down on their sisters.",
+    "tokens": [{"surface": "男子", "reading": "だんし"}, {"surface": "は"}, {"surface": "妹", "reading": "いもうと"}, {"surface": "を"}, {"surface": "、"}, {"surface": "見下し", "reading": "みくだし"}, {"surface": "がち"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #127178 (CC BY 2.0 FR): 男子は妹を、見下しがちだ。 “Boys tend to look down on their sisters.” Kana from the Tatoeba furigana transcription. Answer 男子. Only spelling: 男子. JMdict lists no other common word read だんし with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t137598",
+    "before": "だいきぎょうが ",
+    "reading": "ぎょうかい",
+    "after": "を しはいしています。",
+    "gloss": "business world, business circles",
+    "segments": [{ "kanji": "業" }, { "kanji": "界" }],
+    "translation": "The large firms in the industry call all the shots.",
+    "tokens": [{"surface": "大企業", "reading": "だいきぎょう"}, {"surface": "が"}, {"surface": "業界", "reading": "ぎょうかい"}, {"surface": "を"}, {"surface": "支配", "reading": "しはい"}, {"surface": "しています"}, {"surface": "。"}],
+    "notes": "Tatoeba #137598 (CC BY 2.0 FR): 大企業が業界を支配しています。 “The large firms in the industry call all the shots.” Kana from the Tatoeba furigana transcription. Answer 業界. Only spelling: 業界. JMdict lists no other common word read ぎょうかい with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t138013",
+    "before": "",
+    "reading": "からだ",
+    "after": "に わるいよ。",
+    "gloss": "body",
+    "segments": [{ "kanji": "体" }],
+    "translation": "It's not healthy for you.",
+    "tokens": [{"surface": "体", "reading": "からだ"}, {"surface": "に"}, {"surface": "悪い", "reading": "わるい"}, {"surface": "よ"}, {"surface": "。"}],
+    "notes": "Tatoeba #138013 (CC BY 2.0 FR): 体に悪いよ。 “It's not healthy for you.” Kana from the Tatoeba furigana transcription. Answer 体. Only spelling: 体. JMdict lists no other common word read からだ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t138111",
+    "before": "たいようは ひかりと ねつを ",
+    "reading": "だす",
+    "after": "。",
+    "gloss": "to take out, to get out",
+    "segments": [{ "kanji": "出" }, { "kana": "す" }],
+    "translation": "The sun gives light and heat.",
+    "tokens": [{"surface": "太陽", "reading": "たいよう"}, {"surface": "は"}, {"surface": "光", "reading": "ひかり"}, {"surface": "と"}, {"surface": "熱", "reading": "ねつ"}, {"surface": "を"}, {"surface": "出す", "reading": "だす"}, {"surface": "。"}],
+    "notes": "Tatoeba #138111 (CC BY 2.0 FR): 太陽は光と熱を出す。 “The sun gives light and heat.” Kana from the Tatoeba furigana transcription. Answer 出す, okurigana す shown. Only spelling: 出す. JMdict lists no other common word read だす with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t140625",
+    "before": "すてきな ",
+    "reading": "きゅうじつ",
+    "after": "を。",
+    "gloss": "holiday, day off",
+    "segments": [{ "kanji": "休" }, { "kanji": "日" }],
+    "translation": "Have a nice holiday.",
+    "tokens": [{"surface": "素敵", "reading": "すてき"}, {"surface": "な"}, {"surface": "休日", "reading": "きゅうじつ"}, {"surface": "を"}, {"surface": "。"}],
+    "notes": "Tatoeba #140625 (CC BY 2.0 FR): 素敵な休日を。 “Have a nice holiday.” Kana from the Tatoeba furigana transcription. Answer 休日. Only spelling: 休日. JMdict lists no other common word read きゅうじつ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t141086",
+    "before": "ふねは あらしで ",
+    "reading": "さゆう",
+    "after": "に ゆれた。",
+    "gloss": "left and right, right and left",
+    "segments": [{ "kanji": "左" }, { "kanji": "右" }],
+    "translation": "The ship rolled from side to side in the storm.",
+    "tokens": [{"surface": "船", "reading": "ふね"}, {"surface": "は"}, {"surface": "嵐", "reading": "あらし"}, {"surface": "で"}, {"surface": "左右", "reading": "さゆう"}, {"surface": "に"}, {"surface": "揺れた", "reading": "ゆれた"}, {"surface": "。"}],
+    "notes": "Tatoeba #141086 (CC BY 2.0 FR): 船は嵐で左右に揺れた。 “The ship rolled from side to side in the storm.” Kana from the Tatoeba furigana transcription. Answer 左右. Only spelling: 左右. JMdict lists no other common word read さゆう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t142832",
+    "before": "しょうじた りそくは ちょきん こうざに ",
+    "reading": "にゅうきん",
+    "after": "されます。",
+    "gloss": "receipt of money, money received",
+    "segments": [{ "kanji": "入" }, { "kanji": "金" }],
+    "translation": "Accrued interest will be paid into your account.",
+    "tokens": [{"surface": "生じた", "reading": "しょうじた"}, {"surface": "利息", "reading": "りそく"}, {"surface": "は"}, {"surface": "貯金", "reading": "ちょきん"}, {"surface": "口座", "reading": "こうざ"}, {"surface": "に"}, {"surface": "入金", "reading": "にゅうきん"}, {"surface": "されます"}, {"surface": "。"}],
+    "notes": "Tatoeba #142832 (CC BY 2.0 FR): 生じた利息は貯金口座に入金されます。 “Accrued interest will be paid into your account.” Kana from the Tatoeba furigana transcription. Answer 入金. Only spelling: 入金. JMdict lists no other common word read にゅうきん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t143410",
+    "before": "",
+    "reading": "せかい",
+    "after": "は むかしとは ちがう。",
+    "gloss": "the world, society",
+    "segments": [{ "kanji": "世" }, { "kanji": "界" }],
+    "translation": "The world is not what it used to be.",
+    "tokens": [{"surface": "世界", "reading": "せかい"}, {"surface": "は"}, {"surface": "昔", "reading": "むかし"}, {"surface": "とは"}, {"surface": "違う", "reading": "ちがう"}, {"surface": "。"}],
+    "notes": "Tatoeba #143410 (CC BY 2.0 FR): 世界は昔とは違う。 “The world is not what it used to be.” Kana from the Tatoeba furigana transcription. Answer 世界. Only spelling: 世界. JMdict lists no other common word read せかい with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t143660",
+    "before": "",
+    "reading": "すいちゅう",
+    "after": "を およげるかい？",
+    "gloss": "underwater",
+    "segments": [{ "kanji": "水" }, { "kanji": "中" }],
+    "translation": "Can you swim underwater?",
+    "tokens": [{"surface": "水中", "reading": "すいちゅう"}, {"surface": "を"}, {"surface": "泳げる", "reading": "およげる"}, {"surface": "かい"}, {"surface": "？"}],
+    "notes": "Tatoeba #143660 (CC BY 2.0 FR): 水中を泳げるかい？ “Can you swim underwater?” Kana from the Tatoeba furigana transcription. Answer 水中. Only spelling: 水中. JMdict lists no other common word read すいちゅう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t143687",
+    "before": "すいえいは よい ",
+    "reading": "うんどう",
+    "after": "だ。",
+    "gloss": "exercise, physical training",
+    "segments": [{ "kanji": "運" }, { "kanji": "動" }],
+    "translation": "Swimming is good exercise.",
+    "tokens": [{"surface": "水泳", "reading": "すいえい"}, {"surface": "は"}, {"surface": "よい"}, {"surface": "運動", "reading": "うんどう"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #143687 (CC BY 2.0 FR): 水泳はよい運動だ。 “Swimming is good exercise.” Kana from the Tatoeba furigana transcription. Answer 運動. Only spelling: 運動. JMdict lists no other common word read うんどう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t146779",
+    "before": "",
+    "reading": "すこし",
+    "after": " つかれた。",
+    "gloss": "a little, a bit",
+    "segments": [{ "kanji": "少" }, { "kana": "し" }],
+    "translation": "I'm a bit tired.",
+    "tokens": [{"surface": "少し", "reading": "すこし"}, {"surface": "疲れた", "reading": "つかれた"}, {"surface": "。"}],
+    "notes": "Tatoeba #146779 (CC BY 2.0 FR): 少し疲れた。 “I'm a bit tired.” Kana from the Tatoeba furigana transcription. Answer 少し, okurigana し shown. Only spelling: 少し. JMdict lists no other common word read すこし with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t146929",
+    "before": "",
+    "reading": "おがわ",
+    "after": "の みずを のむ。",
+    "gloss": "stream, brook",
+    "segments": [{ "kanji": "小" }, { "kanji": "川" }],
+    "translation": "Drink water from a stream.",
+    "tokens": [{"surface": "小川", "reading": "おがわ"}, {"surface": "の"}, {"surface": "水", "reading": "みず"}, {"surface": "を"}, {"surface": "飲む", "reading": "のむ"}, {"surface": "。"}],
+    "notes": "Tatoeba #146929 (CC BY 2.0 FR): 小川の水を飲む。 “Drink water from a stream.” Kana from the Tatoeba furigana transcription. Answer 小川. Only spelling: 小川. JMdict lists no other common word read おがわ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t147124",
+    "before": "しょうばいは ",
+    "reading": "あかじ",
+    "after": "だ。",
+    "gloss": "(being in) the red, deficit",
+    "segments": [{ "kanji": "赤" }, { "kanji": "字" }],
+    "translation": "The business is in the red.",
+    "tokens": [{"surface": "商売", "reading": "しょうばい"}, {"surface": "は"}, {"surface": "赤字", "reading": "あかじ"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #147124 (CC BY 2.0 FR): 商売は赤字だ。 “The business is in the red.” Kana from the Tatoeba furigana transcription. Answer 赤字. Only spelling: 赤字. JMdict lists no other common word read あかじ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t149096",
+    "before": "くるまで ",
+    "reading": "いこう",
+    "after": "。",
+    "gloss": "to go, to move (towards)",
+    "segments": [{ "kanji": "行" }, { "kana": "こう" }],
+    "translation": "Let's go by car.",
+    "tokens": [{"surface": "車", "reading": "くるま"}, {"surface": "で"}, {"surface": "行こう", "reading": "いこう"}, {"surface": "。"}],
+    "notes": "Tatoeba #149096 (CC BY 2.0 FR): 車で行こう。 “Let's go by car.” Kana from the Tatoeba furigana transcription. Answer 行こう (行く), okurigana こう shown. Only spelling: 行く. JMdict lists no other common word read いく with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t150036",
+    "before": "",
+    "reading": "じどうしゃ",
+    "after": "は させつした。",
+    "gloss": "car, automobile",
+    "segments": [{ "kanji": "自" }, { "kanji": "動" }, { "kanji": "車" }],
+    "translation": "The car made a turn to the left.",
+    "tokens": [{"surface": "自動車", "reading": "じどうしゃ"}, {"surface": "は"}, {"surface": "左折", "reading": "させつ"}, {"surface": "した"}, {"surface": "。"}],
+    "notes": "Tatoeba #150036 (CC BY 2.0 FR): 自動車は左折した。 “The car made a turn to the left.” Kana from the Tatoeba furigana transcription. Answer 自動車. Only spelling: 自動車. JMdict lists no other common word read じどうしゃ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t150174",
+    "before": "じしゃくの はりは ",
+    "reading": "きた",
+    "after": "を さす。",
+    "gloss": "north",
+    "segments": [{ "kanji": "北" }],
+    "translation": "Compass needles point to the north.",
+    "tokens": [{"surface": "磁石", "reading": "じしゃく"}, {"surface": "の"}, {"surface": "針", "reading": "はり"}, {"surface": "は"}, {"surface": "北", "reading": "きた"}, {"surface": "を"}, {"surface": "指す", "reading": "さす"}, {"surface": "。"}],
+    "notes": "Tatoeba #150174 (CC BY 2.0 FR): 磁石の針は北を指す。 “Compass needles point to the north.” Kana from the Tatoeba furigana transcription. Answer 北. Only spelling: 北. JMdict lists no other common word read きた with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t150318",
+    "before": "つぎの えきで ",
+    "reading": "げしゃ",
+    "after": "します。",
+    "gloss": "alighting",
+    "segments": [{ "kanji": "下" }, { "kanji": "車" }],
+    "translation": "I'm getting off at the next station.",
+    "tokens": [{"surface": "次", "reading": "つぎ"}, {"surface": "の"}, {"surface": "駅", "reading": "えき"}, {"surface": "で"}, {"surface": "下車", "reading": "げしゃ"}, {"surface": "します"}, {"surface": "。"}],
+    "notes": "Tatoeba #150318 (CC BY 2.0 FR): 次の駅で下車します。 “I'm getting off at the next station.” Kana from the Tatoeba furigana transcription. Answer 下車. Only spelling: 下車. JMdict lists no other common word read げしゃ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t150730",
+    "before": "じぜんを ",
+    "reading": "おこなう",
+    "after": "。",
+    "gloss": "to perform, to do",
+    "segments": [{ "kanji": "行" }, { "kana": "う" }],
+    "translation": "Perform an act of charity.",
+    "tokens": [{"surface": "慈善", "reading": "じぜん"}, {"surface": "を"}, {"surface": "行う", "reading": "おこなう"}, {"surface": "。"}],
+    "notes": "Tatoeba #150730 (CC BY 2.0 FR): 慈善を行う。 “Perform an act of charity.” Kana from the Tatoeba furigana transcription. Answer 行う, okurigana う shown. Only spelling: 行う. JMdict lists no other common word read おこなう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t152691",
+    "before": "わたしは ",
+    "reading": "まいにち",
+    "after": " あるきます。",
+    "gloss": "every day",
+    "segments": [{ "kanji": "毎" }, { "kanji": "日" }],
+    "translation": "I walk every day.",
+    "tokens": [{"surface": "私", "reading": "わたし"}, {"surface": "は"}, {"surface": "毎日", "reading": "まいにち"}, {"surface": "歩きます", "reading": "あるきます"}, {"surface": "。"}],
+    "notes": "Tatoeba #152691 (CC BY 2.0 FR): 私は毎日歩きます。 “I walk every day.” Kana from the Tatoeba furigana transcription. Answer 毎日. Only spelling: 毎日. JMdict lists no other common word read まいにち with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t155133",
+    "before": "わたしは ",
+    "reading": "ちじ",
+    "after": "に りっこうほした。",
+    "gloss": "prefectural governor",
+    "segments": [{ "kanji": "知" }, { "kanji": "事" }],
+    "translation": "I ran for the governor.",
+    "tokens": [{"surface": "私", "reading": "わたし"}, {"surface": "は"}, {"surface": "知事", "reading": "ちじ"}, {"surface": "に"}, {"surface": "立候補", "reading": "りっこうほ"}, {"surface": "した"}, {"surface": "。"}],
+    "notes": "Tatoeba #155133 (CC BY 2.0 FR): 私は知事に立候補した。 “I ran for the governor.” Kana from the Tatoeba furigana transcription. Answer 知事. Only spelling: 知事. JMdict lists no other common word read ちじ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t162459",
+    "before": "わたしの ",
+    "reading": "たちば",
+    "after": "になってくれ。",
+    "gloss": "position, situation",
+    "segments": [{ "kanji": "立" }, { "kanji": "場" }],
+    "translation": "Please put yourself in my place.",
+    "tokens": [{"surface": "私", "reading": "わたし"}, {"surface": "の"}, {"surface": "立場", "reading": "たちば"}, {"surface": "になって"}, {"surface": "くれ"}, {"surface": "。"}],
+    "notes": "Tatoeba #162459 (CC BY 2.0 FR): 私の立場になってくれ。 “Please put yourself in my place.” Kana from the Tatoeba furigana transcription. Answer 立場. Only spelling: 立場. JMdict lists no other common word read たちば with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t165145",
+    "before": "わたしたちは ",
+    "reading": "ぼこう",
+    "after": "を おとずれた。",
+    "gloss": "alma mater",
+    "segments": [{ "kanji": "母" }, { "kanji": "校" }],
+    "translation": "We visited our old school.",
+    "tokens": [{"surface": "私たち", "reading": "わたしたち"}, {"surface": "は"}, {"surface": "母校", "reading": "ぼこう"}, {"surface": "を"}, {"surface": "訪れた", "reading": "おとずれた"}, {"surface": "。"}],
+    "notes": "Tatoeba #165145 (CC BY 2.0 FR): 私たちは母校を訪れた。 “We visited our old school.” Kana from the Tatoeba furigana transcription. Answer 母校. Only spelling: 母校. JMdict lists no other common word read ぼこう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t167611",
+    "before": "わたしが ",
+    "reading": "さきに",
+    "after": " そこへ つくよ。",
+    "gloss": "previously, before",
+    "segments": [{ "kanji": "先" }, { "kana": "に" }],
+    "translation": "I'll get there before you will.",
+    "tokens": [{"surface": "私", "reading": "わたし"}, {"surface": "が"}, {"surface": "先に", "reading": "さきに"}, {"surface": "そこ"}, {"surface": "へ"}, {"surface": "着く", "reading": "つく"}, {"surface": "よ"}, {"surface": "。"}],
+    "notes": "Tatoeba #167611 (CC BY 2.0 FR): 私が先にそこへ着くよ。 “I'll get there before you will.” Kana from the Tatoeba furigana transcription. Answer 先に, okurigana に shown. Only spelling: 先に. JMdict lists no other common word read さきに with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t170053",
+    "before": "きのうは ",
+    "reading": "こさめ",
+    "after": "だった。",
+    "gloss": "light rain, drizzle",
+    "segments": [{ "kanji": "小" }, { "kanji": "雨" }],
+    "translation": "There was a light rain yesterday.",
+    "tokens": [{"surface": "昨日", "reading": "きのう"}, {"surface": "は"}, {"surface": "小雨", "reading": "こさめ"}, {"surface": "だった"}, {"surface": "。"}],
+    "notes": "Tatoeba #170053 (CC BY 2.0 FR): 昨日は小雨だった。 “There was a light rain yesterday.” Kana from the Tatoeba furigana transcription. Answer 小雨. Only spelling: 小雨. JMdict lists no other common word read こさめ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t170924",
+    "before": "",
+    "reading": "ひだり",
+    "after": "を むいてください。",
+    "gloss": "left, left-hand side",
+    "segments": [{ "kanji": "左" }],
+    "translation": "Turn to the left.",
+    "tokens": [{"surface": "左", "reading": "ひだり"}, {"surface": "を"}, {"surface": "向いて", "reading": "むいて"}, {"surface": "ください"}, {"surface": "。"}],
+    "notes": "Tatoeba #170924 (CC BY 2.0 FR): 左を向いてください。 “Turn to the left.” Kana from the Tatoeba furigana transcription. Answer 左. Only spelling: 左. JMdict lists no other common word read ひだり with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t171316",
+    "before": "",
+    "reading": "ことし",
+    "after": "は はるが おそい。",
+    "gloss": "this year",
+    "segments": [{ "kanji": "今" }, { "kanji": "年" }],
+    "translation": "Spring is late this year.",
+    "tokens": [{"surface": "今年", "reading": "ことし"}, {"surface": "は"}, {"surface": "春", "reading": "はる"}, {"surface": "が"}, {"surface": "遅い", "reading": "おそい"}, {"surface": "。"}],
+    "notes": "Tatoeba #171316 (CC BY 2.0 FR): 今年は春が遅い。 “Spring is late this year.” Kana from the Tatoeba furigana transcription. Answer 今年. Only spelling: 今年. JMdict lists no other common word read ことし with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t172252",
+    "before": "けさは ",
+    "reading": "とくに",
+    "after": " さむい。",
+    "gloss": "particularly, especially",
+    "segments": [{ "kanji": "特" }, { "kana": "に" }],
+    "translation": "It is especially cold this morning.",
+    "tokens": [{"surface": "今朝", "reading": "けさ"}, {"surface": "は"}, {"surface": "特に", "reading": "とくに"}, {"surface": "寒い", "reading": "さむい"}, {"surface": "。"}],
+    "notes": "Tatoeba #172252 (CC BY 2.0 FR): 今朝は特に寒い。 “It is especially cold this morning.” Kana from the Tatoeba furigana transcription. Answer 特に, okurigana に shown. Only spelling: 特に. JMdict lists no other common word read とくに with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t172454",
+    "before": "",
+    "reading": "こんげつ",
+    "after": "は くろじである。",
+    "gloss": "this month",
+    "segments": [{ "kanji": "今" }, { "kanji": "月" }],
+    "translation": "We are in the black this month.",
+    "tokens": [{"surface": "今月", "reading": "こんげつ"}, {"surface": "は"}, {"surface": "黒字", "reading": "くろじ"}, {"surface": "である"}, {"surface": "。"}],
+    "notes": "Tatoeba #172454 (CC BY 2.0 FR): 今月は黒字である。 “We are in the black this month.” Kana from the Tatoeba furigana transcription. Answer 今月. Only spelling: 今月. JMdict lists no other common word read こんげつ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t174227",
+    "before": "",
+    "reading": "かたる",
+    "after": " かちさえない。",
+    "gloss": "to talk about, to speak of",
+    "segments": [{ "kanji": "語" }, { "kana": "る" }],
+    "translation": "It's not even worth mentioning.",
+    "tokens": [{"surface": "語る", "reading": "かたる"}, {"surface": "価値", "reading": "かち"}, {"surface": "さえ"}, {"surface": "ない"}, {"surface": "。"}],
+    "notes": "Tatoeba #174227 (CC BY 2.0 FR): 語る価値さえない。 “It's not even worth mentioning.” Kana from the Tatoeba furigana transcription. Answer 語る, okurigana る shown. Only spelling: 語る. JMdict lists no other common word read かたる with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t174302",
+    "before": "",
+    "reading": "うしろ",
+    "after": "を みろ。",
+    "gloss": "back, behind",
+    "segments": [{ "kanji": "後" }, { "kana": "ろ" }],
+    "translation": "Look back!",
+    "tokens": [{"surface": "後ろ", "reading": "うしろ"}, {"surface": "を"}, {"surface": "見ろ", "reading": "みろ"}, {"surface": "。"}],
+    "notes": "Tatoeba #174302 (CC BY 2.0 FR): 後ろを見ろ。 “Look back!” Kana from the Tatoeba furigana transcription. Answer 後ろ, okurigana ろ shown. Only spelling: 後ろ. JMdict lists no other common word read うしろ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t174389",
+    "before": "",
+    "reading": "ごご",
+    "after": "は やすみだった。",
+    "gloss": "afternoon, p.m.",
+    "segments": [{ "kanji": "午" }, { "kanji": "後" }],
+    "translation": "We had the afternoon off.",
+    "tokens": [{"surface": "午後", "reading": "ごご"}, {"surface": "は"}, {"surface": "休み", "reading": "やすみ"}, {"surface": "だった"}, {"surface": "。"}],
+    "notes": "Tatoeba #174389 (CC BY 2.0 FR): 午後は休みだった。 “We had the afternoon off.” Kana from the Tatoeba furigana transcription. Answer 午後. Only spelling: 午後. JMdict lists no other common word read ごご with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t175148",
+    "before": "みごとな ",
+    "reading": "さくひん",
+    "after": "ですね。",
+    "gloss": "work",
+    "segments": [{ "kanji": "作" }, { "kanji": "品" }],
+    "translation": "It's a beautiful job.",
+    "tokens": [{"surface": "見事", "reading": "みごと"}, {"surface": "な"}, {"surface": "作品", "reading": "さくひん"}, {"surface": "です"}, {"surface": "ね"}, {"surface": "。"}],
+    "notes": "Tatoeba #175148 (CC BY 2.0 FR): 見事な作品ですね。 “It's a beautiful job.” Kana from the Tatoeba furigana transcription. Answer 作品. Only spelling: 作品. JMdict lists no other common word read さくひん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t175628",
+    "before": "つきは ",
+    "reading": "ひがし",
+    "after": "から のぼる。",
+    "gloss": "east",
+    "segments": [{ "kanji": "東" }],
+    "translation": "The moon rises in the east.",
+    "tokens": [{"surface": "月", "reading": "つき"}, {"surface": "は"}, {"surface": "東", "reading": "ひがし"}, {"surface": "から"}, {"surface": "上る", "reading": "のぼる"}, {"surface": "。"}],
+    "notes": "Tatoeba #175628 (CC BY 2.0 FR): 月は東から上る。 “The moon rises in the east.” Kana from the Tatoeba furigana transcription. Answer 東. Only spelling: 東. JMdict lists no other common word read ひがし with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t176436",
+    "before": "",
+    "reading": "けいかく",
+    "after": "は できた。",
+    "gloss": "plan, project",
+    "segments": [{ "kanji": "計" }, { "kanji": "画" }],
+    "translation": "Our plan is made.",
+    "tokens": [{"surface": "計画", "reading": "けいかく"}, {"surface": "は"}, {"surface": "できた"}, {"surface": "。"}],
+    "notes": "Tatoeba #176436 (CC BY 2.0 FR): 計画はできた。 “Our plan is made.” Kana from the Tatoeba furigana transcription. Answer 計画. Only spelling: 計画. JMdict lists no other common word read けいかく with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t178414",
+    "before": "きみの ぐちを ",
+    "reading": "きかされる",
+    "after": "のは うんざりだ。",
+    "gloss": "to let (someone) hear",
+    "segments": [{ "kanji": "聞" }, { "kana": "かされる" }],
+    "translation": "I'm sick of listening to your complaints.",
+    "tokens": [{"surface": "君", "reading": "きみ"}, {"surface": "の"}, {"surface": "愚痴", "reading": "ぐち"}, {"surface": "を"}, {"surface": "聞かされる", "reading": "きかされる"}, {"surface": "の"}, {"surface": "は"}, {"surface": "うんざり"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #178414 (CC BY 2.0 FR): 君の愚痴を聞かされるのはうんざりだ。 “I'm sick of listening to your complaints.” Kana from the Tatoeba furigana transcription. Answer 聞かされる (聞かす), okurigana かされる shown. Only spelling: 聞かす. JMdict lists no other common word read きかす with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t179732",
+    "before": "きんは ",
+    "reading": "ぎん",
+    "after": "より おもい。",
+    "gloss": "silver (Ag)",
+    "segments": [{ "kanji": "銀" }],
+    "translation": "Gold is heavier than silver.",
+    "tokens": [{"surface": "金", "reading": "きん"}, {"surface": "は"}, {"surface": "銀", "reading": "ぎん"}, {"surface": "より"}, {"surface": "重い", "reading": "おもい"}, {"surface": "。"}],
+    "notes": "Tatoeba #179732 (CC BY 2.0 FR): 金は銀より重い。 “Gold is heavier than silver.” Kana from the Tatoeba furigana transcription. Answer 銀. Only spelling: 銀. JMdict lists no other common word read ぎん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t179736",
+    "before": "かねはないが ",
+    "reading": "きまえ",
+    "after": "は よい。",
+    "gloss": "generosity",
+    "segments": [{ "kanji": "気" }, { "kanji": "前" }],
+    "translation": "Poor as he is, he is generous.",
+    "tokens": [{"surface": "金", "reading": "かね"}, {"surface": "は"}, {"surface": "ない"}, {"surface": "が"}, {"surface": "気前", "reading": "きまえ"}, {"surface": "は"}, {"surface": "よい"}, {"surface": "。"}],
+    "notes": "Tatoeba #179736 (CC BY 2.0 FR): 金はないが気前はよい。 “Poor as he is, he is generous.” Kana from the Tatoeba furigana transcription. Answer 気前. Only spelling: 気前. JMdict lists no other common word read きまえ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t181517",
+    "before": "きょうそうは ",
+    "reading": "ほんらい",
+    "after": " わるい ものではない。",
+    "gloss": "originally, primarily",
+    "segments": [{ "kanji": "本" }, { "kanji": "来" }],
+    "translation": "Competition is not by nature evil.",
+    "tokens": [{"surface": "競争", "reading": "きょうそう"}, {"surface": "は"}, {"surface": "本来", "reading": "ほんらい"}, {"surface": "悪い", "reading": "わるい"}, {"surface": "もの"}, {"surface": "ではない"}, {"surface": "。"}],
+    "notes": "Tatoeba #181517 (CC BY 2.0 FR): 競争は本来悪いものではない。 “Competition is not by nature evil.” Kana from the Tatoeba furigana transcription. Answer 本来. Only spelling: 本来. JMdict lists no other common word read ほんらい with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t184808",
+    "before": "",
+    "reading": "がいこく",
+    "after": "へ いきたい。",
+    "gloss": "foreign country",
+    "segments": [{ "kanji": "外" }, { "kanji": "国" }],
+    "translation": "I want to go abroad.",
+    "tokens": [{"surface": "外国", "reading": "がいこく"}, {"surface": "へ"}, {"surface": "いきたい"}, {"surface": "。"}],
+    "notes": "Tatoeba #184808 (CC BY 2.0 FR): 外国へいきたい。 “I want to go abroad.” Kana from the Tatoeba furigana transcription. Answer 外国. Only spelling: 外国. JMdict lists no other common word read がいこく with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t185289",
+    "before": "",
+    "reading": "かいしゃ",
+    "after": "が あかじになる。",
+    "gloss": "company, corporation",
+    "segments": [{ "kanji": "会" }, { "kanji": "社" }],
+    "translation": "The company is in deficit.",
+    "tokens": [{"surface": "会社", "reading": "かいしゃ"}, {"surface": "が"}, {"surface": "赤字", "reading": "あかじ"}, {"surface": "になる"}, {"surface": "。"}],
+    "notes": "Tatoeba #185289 (CC BY 2.0 FR): 会社が赤字になる。 “The company is in deficit.” Kana from the Tatoeba furigana transcription. Answer 会社. Only spelling: 会社. JMdict lists no other common word read かいしゃ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t185297",
+    "before": "かいごうは ",
+    "reading": "せんげつ",
+    "after": " あった。",
+    "gloss": "last month",
+    "segments": [{ "kanji": "先" }, { "kanji": "月" }],
+    "translation": "The meeting was last month.",
+    "tokens": [{"surface": "会合", "reading": "かいごう"}, {"surface": "は"}, {"surface": "先月", "reading": "せんげつ"}, {"surface": "あった"}, {"surface": "。"}],
+    "notes": "Tatoeba #185297 (CC BY 2.0 FR): 会合は先月あった。 “The meeting was last month.” Kana from the Tatoeba furigana transcription. Answer 先月. Only spelling: 先月. JMdict lists no other common word read せんげつ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t186710",
+    "before": "",
+    "reading": "かざん",
+    "after": "が ふたたび かつどうを はじめた。",
+    "gloss": "volcano",
+    "segments": [{ "kanji": "火" }, { "kanji": "山" }],
+    "translation": "The volcano has become active again.",
+    "tokens": [{"surface": "火山", "reading": "かざん"}, {"surface": "が"}, {"surface": "再び", "reading": "ふたたび"}, {"surface": "活動", "reading": "かつどう"}, {"surface": "を"}, {"surface": "始めた", "reading": "はじめた"}, {"surface": "。"}],
+    "notes": "Tatoeba #186710 (CC BY 2.0 FR): 火山が再び活動を始めた。 “The volcano has become active again.” Kana from the Tatoeba furigana transcription. Answer 火山. Only spelling: 火山. JMdict lists no other common word read かざん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t187205",
+    "before": "",
+    "reading": "なつ",
+    "after": "は すぎた。",
+    "gloss": "summer",
+    "segments": [{ "kanji": "夏" }],
+    "translation": "The summer is over.",
+    "tokens": [{"surface": "夏", "reading": "なつ"}, {"surface": "は"}, {"surface": "過ぎた", "reading": "すぎた"}, {"surface": "。"}],
+    "notes": "Tatoeba #187205 (CC BY 2.0 FR): 夏は過ぎた。 “The summer is over.” Kana from the Tatoeba furigana transcription. Answer 夏. Only spelling: 夏. JMdict lists no other common word read なつ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t187729",
+    "before": "なにに ",
+    "reading": "つかう",
+    "after": "の？",
+    "gloss": "to use (a tool, method, etc.)",
+    "segments": [{ "kanji": "使" }, { "kana": "う" }],
+    "translation": "What for?",
+    "tokens": [{"surface": "何", "reading": "なに"}, {"surface": "に"}, {"surface": "使う", "reading": "つかう"}, {"surface": "の"}, {"surface": "？"}],
+    "notes": "Tatoeba #187729 (CC BY 2.0 FR): 何に使うの？ “What for?” Kana from the Tatoeba furigana transcription. Answer 使う, okurigana う shown. Only spelling: 使う. JMdict lists no other common word read つかう with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t188173",
+    "before": "",
+    "reading": "なにか",
+    "after": " あった？",
+    "gloss": "something, some",
+    "segments": [{ "kanji": "何" }, { "kana": "か" }],
+    "translation": "Anything new?",
+    "tokens": [{"surface": "何か", "reading": "なにか"}, {"surface": "あった"}, {"surface": "？"}],
+    "notes": "Tatoeba #188173 (CC BY 2.0 FR): 何かあった？ “Anything new?” Kana from the Tatoeba furigana transcription. Answer 何か, okurigana か shown. Only spelling: 何か. JMdict lists no other common word read なにか with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t188279",
+    "before": "",
+    "reading": "おんがく",
+    "after": "は すき？",
+    "gloss": "music",
+    "segments": [{ "kanji": "音" }, { "kanji": "楽" }],
+    "translation": "Are you fond of music?",
+    "tokens": [{"surface": "音楽", "reading": "おんがく"}, {"surface": "は"}, {"surface": "好き", "reading": "すき"}, {"surface": "？"}],
+    "notes": "Tatoeba #188279 (CC BY 2.0 FR): 音楽は好き？ “Are you fond of music?” Kana from the Tatoeba furigana transcription. Answer 音楽. Only spelling: 音楽. JMdict lists no other common word read おんがく with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t188359",
+    "before": "おれは ",
+    "reading": "にんげん",
+    "after": "だ。",
+    "gloss": "human being, human",
+    "segments": [{ "kanji": "人" }, { "kanji": "間" }],
+    "translation": "I am a man.",
+    "tokens": [{"surface": "俺", "reading": "おれ"}, {"surface": "は"}, {"surface": "人間", "reading": "にんげん"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #188359 (CC BY 2.0 FR): 俺は人間だ。 “I am a man.” Kana from the Tatoeba furigana transcription. Answer 人間. Only spelling: 人間. JMdict lists no other common word read にんげん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t189331",
+    "before": "",
+    "reading": "えいが",
+    "after": "に いくの？",
+    "gloss": "movie, film",
+    "segments": [{ "kanji": "映" }, { "kanji": "画" }],
+    "translation": "You're going to a movie?",
+    "tokens": [{"surface": "映画", "reading": "えいが"}, {"surface": "に"}, {"surface": "行く", "reading": "いく"}, {"surface": "の"}, {"surface": "？"}],
+    "notes": "Tatoeba #189331 (CC BY 2.0 FR): 映画に行くの？ “You're going to a movie?” Kana from the Tatoeba furigana transcription. Answer 映画. Only spelling: 映画. JMdict lists no other common word read えいが with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t189516",
+    "before": "",
+    "reading": "うてん",
+    "after": "の ばあいは うんどうかいを ちゅうしする。",
+    "gloss": "rainy weather",
+    "segments": [{ "kanji": "雨" }, { "kanji": "天" }],
+    "translation": "In case of rain, the athletic meeting will be called off.",
+    "tokens": [{"surface": "雨天", "reading": "うてん"}, {"surface": "の"}, {"surface": "場合", "reading": "ばあい"}, {"surface": "は"}, {"surface": "運動会", "reading": "うんどうかい"}, {"surface": "を"}, {"surface": "中止", "reading": "ちゅうし"}, {"surface": "する"}, {"surface": "。"}],
+    "notes": "Tatoeba #189516 (CC BY 2.0 FR): 雨天の場合は運動会を中止する。 “In case of rain, the athletic meeting will be called off.” Kana from the Tatoeba furigana transcription. Answer 雨天. Only spelling: 雨天. JMdict lists no other common word read うてん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t189919",
+    "before": "",
+    "reading": "みぎ",
+    "after": "の みちを いけ。",
+    "gloss": "right, right-hand side",
+    "segments": [{ "kanji": "右" }],
+    "translation": "Take the right road.",
+    "tokens": [{"surface": "右", "reading": "みぎ"}, {"surface": "の"}, {"surface": "道", "reading": "みち"}, {"surface": "を"}, {"surface": "行け", "reading": "いけ"}, {"surface": "。"}],
+    "notes": "Tatoeba #189919 (CC BY 2.0 FR): 右の道を行け。 “Take the right road.” Kana from the Tatoeba furigana transcription. Answer 右. Only spelling: 右. JMdict lists no other common word read みぎ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t190270",
+    "before": "いちにちの ",
+    "reading": "たいはん",
+    "after": "を どくしょして すごした。",
+    "gloss": "majority, more than half",
+    "segments": [{ "kanji": "大" }, { "kanji": "半" }],
+    "translation": "I spent the best part of the day reading.",
+    "tokens": [{"surface": "一日", "reading": "いちにち"}, {"surface": "の"}, {"surface": "大半", "reading": "たいはん"}, {"surface": "を"}, {"surface": "読書", "reading": "どくしょ"}, {"surface": "して"}, {"surface": "過ごした", "reading": "すごした"}, {"surface": "。"}],
+    "notes": "Tatoeba #190270 (CC BY 2.0 FR): 一日の大半を読書して過ごした。 “I spent the best part of the day reading.” Kana from the Tatoeba furigana transcription. Answer 大半. Only spelling: 大半. JMdict lists no other common word read たいはん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t191036",
+    "before": "",
+    "reading": "いみ",
+    "after": "は わかります。",
+    "gloss": "meaning, significance",
+    "segments": [{ "kanji": "意" }, { "kanji": "味" }],
+    "translation": "I'm catching on.",
+    "tokens": [{"surface": "意味", "reading": "いみ"}, {"surface": "は"}, {"surface": "分かります", "reading": "わかります"}, {"surface": "。"}],
+    "notes": "Tatoeba #191036 (CC BY 2.0 FR): 意味は分かります。 “I'm catching on.” Kana from the Tatoeba furigana transcription. Answer 意味. Only spelling: 意味. JMdict lists no other common word read いみ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t192384",
+    "before": "ルミは ",
+    "reading": "ちょうじょ",
+    "after": "です。",
+    "gloss": "eldest daughter",
+    "segments": [{ "kanji": "長" }, { "kanji": "女" }],
+    "translation": "Rumi is the first daughter.",
+    "tokens": [{"surface": "ルミ"}, {"surface": "は"}, {"surface": "長女", "reading": "ちょうじょ"}, {"surface": "です"}, {"surface": "。"}],
+    "notes": "Tatoeba #192384 (CC BY 2.0 FR): ルミは長女です。 “Rumi is the first daughter.” Kana from the Tatoeba furigana transcription. Answer 長女. Only spelling: 長女. JMdict lists no other common word read ちょうじょ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t192905",
+    "before": "よい ",
+    "reading": "しつもん",
+    "after": "だ。",
+    "gloss": "question, inquiry",
+    "segments": [{ "kanji": "質" }, { "kanji": "問" }],
+    "translation": "Good question!",
+    "tokens": [{"surface": "よい"}, {"surface": "質問", "reading": "しつもん"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #192905 (CC BY 2.0 FR): よい質問だ。 “Good question!” Kana from the Tatoeba furigana transcription. Answer 質問. Only spelling: 質問. JMdict lists no other common word read しつもん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t207863",
+    "before": "その ちほうは だいきぼに ",
+    "reading": "かいはつ",
+    "after": "されるだろう。",
+    "gloss": "development",
+    "segments": [{ "kanji": "開" }, { "kanji": "発" }],
+    "translation": "It seems the rural area will be developed on a large scale.",
+    "tokens": [{"surface": "その"}, {"surface": "地方", "reading": "ちほう"}, {"surface": "は"}, {"surface": "大規模", "reading": "だいきぼ"}, {"surface": "に"}, {"surface": "開発", "reading": "かいはつ"}, {"surface": "される"}, {"surface": "だろう"}, {"surface": "。"}],
+    "notes": "Tatoeba #207863 (CC BY 2.0 FR): その地方は大規模に開発されるだろう。 “It seems the rural area will be developed on a large scale.” Kana from the Tatoeba furigana transcription. Answer 開発. Only spelling: 開発. JMdict lists no other common word read かいはつ with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t216878",
+    "before": "さあ ",
+    "reading": "しごと",
+    "after": "だ。",
+    "gloss": "work, job",
+    "segments": [{ "kanji": "仕" }, { "kanji": "事" }],
+    "translation": "Let's get down to business.",
+    "tokens": [{"surface": "さあ"}, {"surface": "仕事", "reading": "しごと"}, {"surface": "だ"}, {"surface": "。"}],
+    "notes": "Tatoeba #216878 (CC BY 2.0 FR): さあ仕事だ。 “Let's get down to business.” Kana from the Tatoeba furigana transcription. Answer 仕事. Only spelling: 仕事. JMdict lists no other common word read しごと with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t224256",
+    "before": "ここへ くると いつも こころが ",
+    "reading": "やすまります",
+    "after": "。",
+    "gloss": "to be rested, to feel at ease",
+    "segments": [{ "kanji": "休" }, { "kana": "まります" }],
+    "translation": "Whenever I come here, I feel at ease.",
+    "tokens": [{"surface": "ここ"}, {"surface": "へ"}, {"surface": "来る", "reading": "くる"}, {"surface": "と"}, {"surface": "いつも"}, {"surface": "心", "reading": "こころ"}, {"surface": "が"}, {"surface": "休まります", "reading": "やすまります"}, {"surface": "。"}],
+    "notes": "Tatoeba #224256 (CC BY 2.0 FR): ここへ来るといつも心が休まります。 “Whenever I come here, I feel at ease.” Kana from the Tatoeba furigana transcription. Answer 休まります (休まる), okurigana まります shown. Only spelling: 休まる. JMdict lists no other common word read やすまる with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t229669",
+    "before": "あれは ぼくの ",
+    "reading": "しゃしん",
+    "after": "？",
+    "gloss": "photograph, photo",
+    "segments": [{ "kanji": "写" }, { "kanji": "真" }],
+    "translation": "Is that a picture of me?",
+    "tokens": [{"surface": "あれ"}, {"surface": "は"}, {"surface": "僕", "reading": "ぼく"}, {"surface": "の"}, {"surface": "写真", "reading": "しゃしん"}, {"surface": "？"}],
+    "notes": "Tatoeba #229669 (CC BY 2.0 FR): あれは僕の写真？ “Is that a picture of me?” Kana from the Tatoeba furigana transcription. Answer 写真. Only spelling: 写真. JMdict lists no other common word read しゃしん with a kanji spelling, and no common alternative spelling."
+  },
+  {
+    "id": "t232071",
+    "before": "",
+    "reading": "こうこうせい",
+    "after": "ですか？",
+    "gloss": "senior high school student",
+    "segments": [{ "kanji": "高" }, { "kanji": "校" }, { "kanji": "生" }],
+    "translation": "Are you a senior high school student?",
+    "tokens": [{"surface": "高校生", "reading": "こうこうせい"}, {"surface": "ですか"}, {"surface": "？"}],
+    "notes": "Tatoeba #232071 (CC BY 2.0 FR): 高校生ですか？ “Are you a senior high school student?” Kana from the Tatoeba furigana transcription. Answer 高校生. Only spelling: 高校生. JMdict lists no other common word read こうこうせい with a kanji spelling, and no common alternative spelling."
   }
 ]
