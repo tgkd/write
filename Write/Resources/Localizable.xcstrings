@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%lld sentence written" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld文を書きました"
+          }
+        }
+      }
+    },
+    "%lld sentences written" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld文を書きました"
+          }
+        }
+      }
+    },
     "?" : {
 
     },
@@ -436,6 +456,16 @@
         }
       }
     },
+    "Current character slot" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今のマス"
+          }
+        }
+      }
+    },
     "Current kanji slot" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -507,6 +537,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "手書きキャンバス"
+          }
+        }
+      }
+    },
+    "Empty character slot" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空のマス"
           }
         }
       }
@@ -703,6 +743,26 @@
         }
       }
     },
+    "iCloud" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        }
+      }
+    },
+    "iCloud account unavailable" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloudアカウントを利用できません"
+          }
+        }
+      }
+    },
     "Ink" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -821,6 +881,16 @@
         }
       }
     },
+    "Meanings first" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "意味を先に"
+          }
+        }
+      }
+    },
     "Medium" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -897,6 +967,16 @@
         }
       }
     },
+    "Not synced yet" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "まだ同期していません"
+          }
+        }
+      }
+    },
     "Notebook" : {
       "localizations" : {
         "ja" : {
@@ -959,6 +1039,16 @@
         }
       }
     },
+    "Play reading" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読みを再生"
+          }
+        }
+      }
+    },
     "Practice" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -992,6 +1082,16 @@
         }
       }
     },
+    "Readings first" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "読みを先に"
+          }
+        }
+      }
+    },
     "Recall" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1010,6 +1110,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "復習する"
+          }
+        }
+      }
+    },
+    "Restart sentence" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文をやり直す"
           }
         }
       }
@@ -1096,6 +1206,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "漢字を選んでください"
+          }
+        }
+      }
+    },
+    "Sentences" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文"
+          }
+        }
+      }
+    },
+    "Sentences · %lld / %lld" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文 · %1$lld / %2$lld"
           }
         }
       }
@@ -1258,6 +1388,36 @@
         }
       }
     },
+    "Sync practice history" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "練習の記録を同期"
+          }
+        }
+      }
+    },
+    "Synced %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@に同期しました"
+          }
+        }
+      }
+    },
+    "Syncing…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同期中…"
+          }
+        }
+      }
+    },
     "Tap the reference kanji to see stroke order animation" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1367,6 +1527,16 @@
         }
       }
     },
+    "Which line leads the cue under the character. Both orders show the same readings and meanings." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文字の下のヒントで、どちらを先に表示するかを選びます。どちらの順番でも、同じ読みと意味が表示されます。"
+          }
+        }
+      }
+    },
     "Word practice" : {
       "localizations" : {
         "ja" : {
@@ -1430,6 +1600,16 @@
         }
       }
     },
+    "Write the character for the highlighted box." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ハイライトされたマスの文字を書いてください。"
+          }
+        }
+      }
+    },
     "Write the kanji for the highlighted box." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1447,6 +1627,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "空欄の漢字を書く"
+          }
+        }
+      }
+    },
+    "write the whole sentence" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文を全部書く"
           }
         }
       }
