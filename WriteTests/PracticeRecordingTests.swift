@@ -303,6 +303,56 @@ final class PracticeRecordingTests: XCTestCase {
         XCTAssertNil(record.firstTouchAt)
     }
 
+    func testRecallRunRecordsTheCueOrder() throws {
+        let (state, recorder) = makeState(strokeCount: 1)
+        state.cueOrder = .readingsFirst
+        complete(state)
+
+        XCTAssertEqual(try XCTUnwrap(recorder.records.first).cueOrder, "readingsFirst")
+    }
+
+    func testRecallRunRecordsTheDefaultCueOrder() throws {
+        let (state, recorder) = makeState(strokeCount: 1)
+        complete(state)
+
+        XCTAssertEqual(try XCTUnwrap(recorder.records.first).cueOrder, "meaningsFirst")
+    }
+
+    func testPracticeRunLeavesTheCueOrderOut() throws {
+        let (state, recorder) = makeState(strokeCount: 1, isRecall: false)
+        state.cueOrder = .readingsFirst
+        complete(state)
+
+        XCTAssertNil(try XCTUnwrap(recorder.records.first).cueOrder)
+    }
+
+    func testCueAudioPlaysAreCountedPerRun() throws {
+        let (state, recorder) = makeState(strokeCount: 1)
+        state.noteCueAudioPlayed()
+        state.noteCueAudioPlayed()
+        state.noteCueAudioPlayed()
+        complete(state)
+
+        XCTAssertEqual(try XCTUnwrap(recorder.records.first).cueAudioPlays, 3)
+    }
+
+    func testRunWithoutAudioLeavesThePlayCountOut() throws {
+        let (state, recorder) = makeState(strokeCount: 1, isRecall: false)
+        complete(state)
+
+        XCTAssertNil(try XCTUnwrap(recorder.records.first).cueAudioPlays)
+    }
+
+    func testResetStartsTheAudioCountAgain() throws {
+        let (state, recorder) = makeState(strokeCount: 1)
+        state.noteCueAudioPlayed()
+        state.reset()
+        state.noteCueAudioPlayed()
+        complete(state)
+
+        XCTAssertEqual(try XCTUnwrap(recorder.records.first).cueAudioPlays, 1)
+    }
+
     func testHintIsTheLevelReachedAtCompletion() {
         let (none, noneRecorder) = makeState(strokeCount: 1)
         complete(none)

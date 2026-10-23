@@ -71,6 +71,9 @@ struct PracticeView: View {
         .onChange(of: settings.gradingStrictness) { _ in
             practiceState.validationConfig = settings.validationConfig
         }
+        .onChange(of: settings.recallCueOrder) { order in
+            practiceState.cueOrder = order
+        }
         .onChange(of: settings.maskPathWidth) { _ in
             referenceView?.updateAppearance(
                 lineWidth: settings.maskPathWidth,
@@ -97,6 +100,7 @@ struct PracticeView: View {
         }
         .onAppear {
             practiceState.validationConfig = settings.validationConfig
+            practiceState.cueOrder = settings.recallCueOrder
             practiceState.onRunCompleted = { record in
                 history.add(record)
                 onComplete?(record)
@@ -113,31 +117,18 @@ struct PracticeView: View {
 
     private var kanjiHeader: some View {
         let kanji = practiceState.kanjiData
-        return VStack(alignment: .leading, spacing: 2) {
-            AnswerGlyph(
-                kanji: kanji,
-                isHidden: practiceState.hidesCharacter,
-                fontSize: 40
-            )
-            if let romaji = kanji.romaji {
-                Text(romaji)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+        return HStack(alignment: .top, spacing: 8) {
+            VStack(alignment: .leading, spacing: 2) {
+                AnswerGlyph(
+                    kanji: kanji,
+                    isHidden: practiceState.hidesCharacter,
+                    fontSize: 40
+                )
+                RecallCueText(cue: RecallCue(kanji: kanji, order: settings.recallCueOrder))
             }
-            if let on = kanji.onYomi, !on.isEmpty {
-                Text(on.joined(separator: "、 "))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            if let kun = kanji.kunYomi, !kun.isEmpty {
-                Text(kun.joined(separator: "、 "))
-                    .font(.subheadline)
-                    .foregroundStyle(.tertiary)
-            }
-            if let meanings = kanji.meanings, !meanings.isEmpty {
-                Text(meanings.prefix(3).joined(separator: ", "))
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+            Spacer(minLength: 0)
+            ReadingSpeakerButton(text: SpokenReading.text(for: kanji)) {
+                practiceState.noteCueAudioPlayed()
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

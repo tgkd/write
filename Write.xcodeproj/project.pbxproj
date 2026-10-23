@@ -22,6 +22,7 @@
 		13655CFB99479F105926B14F /* ValidationCorpusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8A0A8EAE16F53B28499FCE /* ValidationCorpusTests.swift */; };
 		13805E5DF596D2D770066B07 /* WriteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1837E06356F61F94BAA0150 /* WriteApp.swift */; };
 		158C089A378FB4553CB38A0F /* CircularDailyKanjiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726FF41DE0192AE24EBF3B42 /* CircularDailyKanjiView.swift */; };
+		1601E15F3758E0EB349A1BAE /* SpokenReadingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79D15EBEBDCFB7386C9AC32 /* SpokenReadingTests.swift */; };
 		19275A8022373AC020789EDD /* SidebarToggleToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C548959ED7801CF3AAB211 /* SidebarToggleToolbar.swift */; };
 		1A7A2E8BE7A6329A870E97C9 /* DailyKanjiWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F816E5E552D47AFF0C9E02 /* DailyKanjiWidget.swift */; };
 		1E24C468DD9098956C7BCBAD /* RecallEligibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8325327D969A5203657499FB /* RecallEligibilityTests.swift */; };
@@ -36,6 +37,7 @@
 		2CE8603ECFE626A50B41BC45 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE1B0BE867D120C7B58025A /* SessionState.swift */; };
 		3091AB60CF8E500CB962695C /* SessionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04AD17897E04A41024D1B8 /* SessionStateTests.swift */; };
 		30CCFD7614AB420B6D3825DB /* NotebookViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C89F5B131A72BBA8176DDC /* NotebookViewRepresentable.swift */; };
+		30D9FB0F93B4FA646B89F83C /* RecallCue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5E7D0872C341B23C8A0BB9 /* RecallCue.swift */; };
 		324FB60BD0893FD6D5DFE551 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BE9563E3884403974EFDDA /* ContentView.swift */; };
 		33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */; };
 		35443E333F00D1C5ECBDD34B /* RecentActivityGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D84FDA72BA84ADF1FAE1AFE /* RecentActivityGrid.swift */; };
@@ -45,6 +47,7 @@
 		3E13794820A9F2D53A2AA677 /* SessionPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB30AA618797898AC069C94E /* SessionPracticeView.swift */; };
 		3EAF97A7B4099067582D078A /* SmallDailyKanjiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F14EE12B192559C5C1D80B4 /* SmallDailyKanjiView.swift */; };
 		42A4EC0BA54B8DF2FE3D25E9 /* KanjiReferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */; };
+		4373F3E42D45B89EE35CFF2A /* ReadingSpeakerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F31DB2AA57261CB1AE8F1A /* ReadingSpeakerButton.swift */; };
 		45E82F835E2886FDA2D7971A /* StrokeCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A3382CA15F471B5CBC56F3 /* StrokeCaptureTests.swift */; };
 		45E977634109E1BB1CA0F45B /* WordSlotsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63841E624A3858B0774A3EB2 /* WordSlotsRow.swift */; };
 		45EA541A8AE474627E14726C /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B138A055F1450C9C03D9543 /* ColorPalette.swift */; };
@@ -116,8 +119,10 @@
 		ADD8FEF06219AE2BCB8E1DEB /* HistorySyncState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0463ED7B142D22D8A993E64E /* HistorySyncState.swift */; };
 		AFF5B85AE113401547A10A21 /* PracticeRecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D517CC48ABC842765F86C37 /* PracticeRecordingTests.swift */; };
 		B037177797577ABE30D2A867 /* WordFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F6055451A43C538E53796A /* WordFlowLayout.swift */; };
+		B205F59CCA9BC755444AB7A9 /* RecallCueText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D2DE7EF17035327BD13B3D /* RecallCueText.swift */; };
 		B23EF2A18FC4C7ECBB096EED /* word_prompts.json in Resources */ = {isa = PBXBuildFile; fileRef = F5F70C273FAFA8FFC96EB33C /* word_prompts.json */; };
 		B30641609562A0245EF1E843 /* iPadPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88B587A13BCDF864D27A86F0 /* iPadPracticeView.swift */; };
+		B6F9307A83AE09472E19E9FC /* RecallCueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C785701BA93F927E1C30C2E /* RecallCueTests.swift */; };
 		B78475BE7EA8CECEEEE3D241 /* PracticeSessionActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */; };
 		B91198FA842033EEFEBB4BD6 /* PracticeCanvasArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AA9B63CD622B139D3F46A7 /* PracticeCanvasArea.swift */; };
 		B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */; };
@@ -129,6 +134,7 @@
 		C12AC366AA836136BF38279C /* WordPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867DDB5C7818D43AC17D78AC /* WordPrompt.swift */; };
 		C14A938526D29F16D5D96210 /* PracticeModePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69ADD85D74462EE94A52D6 /* PracticeModePicker.swift */; };
 		C2092910EEFC045C62FDBA6A /* CatmullRomSpline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17098F96AF141B32DF224A0E /* CatmullRomSpline.swift */; };
+		C31E0EC428DF91726E90B1AE /* SpokenReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE9F035FAC971EEB5AA74CE /* SpokenReading.swift */; };
 		C695C9E3FAE5DC87D1A812D8 /* WordPromptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7E81B45BF63C8724621803 /* WordPromptTests.swift */; };
 		C7720D4B2FB8B039A59FCD9C /* PencilSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C63D0EA4D3CD0F61D0FCE6 /* PencilSettings.swift */; };
 		C97338CC8DDF48D66C991762 /* NotebookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F71A065B609837DC66E2821B /* NotebookViewController.swift */; };
@@ -163,6 +169,7 @@
 		F1F35D17B3F20D014FD06C0E /* NavigationGestureGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A55B5A3382E587D6C4B51B2 /* NavigationGestureGuard.swift */; };
 		F559626C8A958E8FF148A068 /* StrokeAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E0E8906C4E2FD0A0CD7886 /* StrokeAnchor.swift */; };
 		F6A2FE7FAD40C6585935356A /* StrokeValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */; };
+		F7B293F82349DF8130160E6E /* ReadingSpeaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2374E2808124DF04F9ADB346 /* ReadingSpeaker.swift */; };
 		FB17898AA4CFCE1E2611A35B /* CharacterFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F12DD54E7482308F5E56E5 /* CharacterFilterTests.swift */; };
 		FBB4B4E1DC63B8FCB5416030 /* HistorySyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4187ADD8C74224F0E71B3ACA /* HistorySyncEngine.swift */; };
 		FD903222566FCEC1F11F3060 /* DailyKanjiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B35D196D26E753E1C2EB181 /* DailyKanjiPicker.swift */; };
@@ -235,6 +242,8 @@
 		1F14EE12B192559C5C1D80B4 /* SmallDailyKanjiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallDailyKanjiView.swift; sourceTree = "<group>"; };
 		212ACC578AE57C47BED61DC8 /* SentencePracticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentencePracticeView.swift; sourceTree = "<group>"; };
 		21F6055451A43C538E53796A /* WordFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordFlowLayout.swift; sourceTree = "<group>"; };
+		2374E2808124DF04F9ADB346 /* ReadingSpeaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpeaker.swift; sourceTree = "<group>"; };
+		24D2DE7EF17035327BD13B3D /* RecallCueText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecallCueText.swift; sourceTree = "<group>"; };
 		25CBBCB68667372609A4A51E /* DailyKanji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanji.swift; sourceTree = "<group>"; };
 		26C7480B4C98A8D075738579 /* WordHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordHistoryStore.swift; sourceTree = "<group>"; };
 		26FB7CC3EEC51777470FD493 /* PracticeHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeHistoryStore.swift; sourceTree = "<group>"; };
@@ -291,6 +300,7 @@
 		76A573E07580005FA275E101 /* KanjiDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStore.swift; sourceTree = "<group>"; };
 		787DEC6143AF5C3E8D2B0A69 /* AnswerGlyph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerGlyph.swift; sourceTree = "<group>"; };
 		7B37186D09ACE811FF4E4A27 /* WriteWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = WriteWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C785701BA93F927E1C30C2E /* RecallCueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecallCueTests.swift; sourceTree = "<group>"; };
 		7F1EC7D912AE81459BF48A71 /* WordHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordHistoryStoreTests.swift; sourceTree = "<group>"; };
 		804FB4BF8A6F7493904A63CB /* HistorySyncChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySyncChanges.swift; sourceTree = "<group>"; };
 		80BF101F0465C66B4CE01F75 /* PracticeLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeLinkTests.swift; sourceTree = "<group>"; };
@@ -318,7 +328,9 @@
 		9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreprocessingTests.swift; sourceTree = "<group>"; };
 		9C889E081FC574BBD400E4E3 /* HistorySyncCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySyncCloud.swift; sourceTree = "<group>"; };
 		9DDBFDF4EC8C00E45285CDED /* PracticeRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeRecord.swift; sourceTree = "<group>"; };
+		9DE9F035FAC971EEB5AA74CE /* SpokenReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpokenReading.swift; sourceTree = "<group>"; };
 		9E3C929748166DAA68DD742A /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		9E5E7D0872C341B23C8A0BB9 /* RecallCue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecallCue.swift; sourceTree = "<group>"; };
 		9F134C374DB603CA09B205AE /* HistorySyncFetchCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySyncFetchCollector.swift; sourceTree = "<group>"; };
 		A38E5D0257B76A3C0E3F76E1 /* WriteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WriteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A745F198732D30DE5AC76A8D /* StrokeRejection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRejection.swift; sourceTree = "<group>"; };
@@ -328,10 +340,12 @@
 		AF04AD17897E04A41024D1B8 /* SessionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStateTests.swift; sourceTree = "<group>"; };
 		B03AA6FB4D6043B3FB186BB9 /* RecallCueOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecallCueOrder.swift; sourceTree = "<group>"; };
 		B1837E06356F61F94BAA0150 /* WriteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteApp.swift; sourceTree = "<group>"; };
+		B2F31DB2AA57261CB1AE8F1A /* ReadingSpeakerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpeakerButton.swift; sourceTree = "<group>"; };
 		B3952D4CCC6555B28415681F /* StrokePlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokePlacement.swift; sourceTree = "<group>"; };
 		B59B14D36C3E50D20B96F9EB /* PracticeHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeHistoryStoreTests.swift; sourceTree = "<group>"; };
 		B6318A9467691D30D3EAE7E4 /* HistorySyncControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySyncControllerTests.swift; sourceTree = "<group>"; };
 		B69D6BC67F10FFB80CFEEA78 /* InputKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputKind.swift; sourceTree = "<group>"; };
+		B79D15EBEBDCFB7386C9AC32 /* SpokenReadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpokenReadingTests.swift; sourceTree = "<group>"; };
 		B7F12DD54E7482308F5E56E5 /* CharacterFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFilterTests.swift; sourceTree = "<group>"; };
 		B8F816E5E552D47AFF0C9E02 /* DailyKanjiWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiWidget.swift; sourceTree = "<group>"; };
 		BA6D64264C7D7504993129BC /* PracticeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeTests.swift; sourceTree = "<group>"; };
@@ -406,6 +420,7 @@
 				F97AE96A8017838FE58C472D /* SentenceSessionRoute.swift */,
 				62787A52194D66A3E8B9366A /* SentenceToken.swift */,
 				0FE1B0BE867D120C7B58025A /* SessionState.swift */,
+				9DE9F035FAC971EEB5AA74CE /* SpokenReading.swift */,
 				1C62491A18554F4E6C150034 /* StrokeCapture.swift */,
 				A745F198732D30DE5AC76A8D /* StrokeRejection.swift */,
 				0AA1CAD15178587675976EC5 /* StrokeStat.swift */,
@@ -435,6 +450,7 @@
 				92348938F38E5248FEDF3C63 /* HistorySyncUpload.swift */,
 				76A573E07580005FA275E101 /* KanjiDataStore.swift */,
 				26FB7CC3EEC51777470FD493 /* PracticeHistoryStore.swift */,
+				2374E2808124DF04F9ADB346 /* ReadingSpeaker.swift */,
 				57B562D2D07F5BF51E9491EF /* StrokeCaptureRecorder.swift */,
 				26C7480B4C98A8D075738579 /* WordHistoryStore.swift */,
 				CD2CBB00D92DFAF5253060C4 /* WordPromptStore.swift */,
@@ -462,8 +478,10 @@
 				305CB7F2A902C2CA345E11B8 /* PracticeStatsTests.swift */,
 				BA6D64264C7D7504993129BC /* PracticeTests.swift */,
 				9C038840EC001DDD8C4D6825 /* PreprocessingTests.swift */,
+				7C785701BA93F927E1C30C2E /* RecallCueTests.swift */,
 				8325327D969A5203657499FB /* RecallEligibilityTests.swift */,
 				AF04AD17897E04A41024D1B8 /* SessionStateTests.swift */,
+				B79D15EBEBDCFB7386C9AC32 /* SpokenReadingTests.swift */,
 				54599270F63F958A2D78F67E /* StrokeBoundaryTests.swift */,
 				87A3382CA15F471B5CBC56F3 /* StrokeCaptureTests.swift */,
 				0261AA0113DE605CEEAF3F19 /* StrokeHookTrimmerTests.swift */,
@@ -531,7 +549,10 @@
 				09467A3890CD8C766D06E7A1 /* PracticeProgressView.swift */,
 				DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */,
 				44A5A9E84315E390CECEC817 /* PracticeView.swift */,
+				B2F31DB2AA57261CB1AE8F1A /* ReadingSpeakerButton.swift */,
+				9E5E7D0872C341B23C8A0BB9 /* RecallCue.swift */,
 				832F59DAFB8349145E995B7E /* RecallCueSettingsSection.swift */,
+				24D2DE7EF17035327BD13B3D /* RecallCueText.swift */,
 				BD7D454A56EDF0A5C47EF61F /* RecallHintButton.swift */,
 				6D84FDA72BA84ADF1FAE1AFE /* RecentActivityGrid.swift */,
 				212ACC578AE57C47BED61DC8 /* SentencePracticeView.swift */,
@@ -852,8 +873,10 @@
 				D5CB0BAA234218E2F98CD159 /* PracticeStatsTests.swift in Sources */,
 				527CE900711B6897827483D1 /* PracticeTests.swift in Sources */,
 				F0E3647DC6161023D81E8180 /* PreprocessingTests.swift in Sources */,
+				B6F9307A83AE09472E19E9FC /* RecallCueTests.swift in Sources */,
 				1E24C468DD9098956C7BCBAD /* RecallEligibilityTests.swift in Sources */,
 				3091AB60CF8E500CB962695C /* SessionStateTests.swift in Sources */,
+				1601E15F3758E0EB349A1BAE /* SpokenReadingTests.swift in Sources */,
 				12B7C3C7D2222AC3A4620127 /* StrokeBoundaryTests.swift in Sources */,
 				45E82F835E2886FDA2D7971A /* StrokeCaptureTests.swift in Sources */,
 				BE927C39B8525F3B22DD4E20 /* StrokeHookTrimmerTests.swift in Sources */,
@@ -932,8 +955,12 @@
 				CF177FA2D2605D8D2A5E252B /* PracticeStats.swift in Sources */,
 				5B44846DBEA1792BA3DA966E /* PracticeView.swift in Sources */,
 				A804FD3A9F8B74A9AE25B5DB /* ProcrustesNormalizer.swift in Sources */,
+				F7B293F82349DF8130160E6E /* ReadingSpeaker.swift in Sources */,
+				4373F3E42D45B89EE35CFF2A /* ReadingSpeakerButton.swift in Sources */,
+				30D9FB0F93B4FA646B89F83C /* RecallCue.swift in Sources */,
 				FDF18032E9F6C6B56BD1259B /* RecallCueOrder.swift in Sources */,
 				8343F512DA51A6BD1257D5FE /* RecallCueSettingsSection.swift in Sources */,
+				B205F59CCA9BC755444AB7A9 /* RecallCueText.swift in Sources */,
 				6CD1B1E30A5500AAD7EDE557 /* RecallEligibility.swift in Sources */,
 				84CD36670FEAB9C92F9FF17D /* RecallHint.swift in Sources */,
 				94039D249418AD1889961776 /* RecallHintButton.swift in Sources */,
@@ -948,6 +975,7 @@
 				503286B1C7B9044CEB698754 /* SessionSummaryView.swift in Sources */,
 				9DA403F28AAB60A0F95271A9 /* SettingsView.swift in Sources */,
 				19275A8022373AC020789EDD /* SidebarToggleToolbar.swift in Sources */,
+				C31E0EC428DF91726E90B1AE /* SpokenReading.swift in Sources */,
 				F559626C8A958E8FF148A068 /* StrokeAnchor.swift in Sources */,
 				A98AD42E50E21C0594715E2C /* StrokeBoundary.swift in Sources */,
 				813C180D894F6AFEBE0041AB /* StrokeCapture.swift in Sources */,
