@@ -94,19 +94,22 @@ final class GuidelessValidationTests: XCTestCase {
         return session(user, samples: reference, config: config)
     }
 
-    func testOneStrokeCharacterIsJudgedWithoutProportion() {
+    func testShortFirstStrokeFailsProportionAgainstTheReference() {
         let reference = samples([towerStrokes[4]])
         let user = drawn(reference[0], scale: 0.7, about: pivot(of: reference))
-        let result = identify(user, samples: reference, index: 0, anchors: [])
-        XCTAssertTrue(result.accepted)
-        XCTAssertEqual(result.evidence.shapePassed, true)
-        XCTAssertEqual(result.evidence.positionPassed, true)
-        XCTAssertNil(result.evidence.proportionPassed)
-        XCTAssertEqual(result.anchor?.referenceIndex, 0)
-        XCTAssertGreaterThan(result.anchor?.userExtent ?? 0, 0)
+        let normal = identify(user, samples: reference, index: 0, anchors: [])
+        XCTAssertTrue(normal.accepted)
+        XCTAssertEqual(normal.evidence.shapePassed, true)
+        XCTAssertEqual(normal.evidence.positionPassed, true)
+        XCTAssertEqual(normal.evidence.proportionPassed, false)
+        XCTAssertEqual(normal.anchor?.referenceIndex, 0)
+
+        let strict = identify(user, samples: reference, index: 0, anchors: [], config: config(.strict))
+        XCTAssertFalse(strict.accepted)
+        XCTAssertEqual(strict.evidence.proportionPassed, false)
     }
 
-    func testTinyFirstDotIsNotUsedForProportion() {
+    func testTinyDotIsNotCheckedForProportion() {
         let reference = samples(dotStrokes)
         let center = pivot(of: reference)
         let user = reference.map { drawn($0, scale: 0.95, about: center) }
@@ -116,12 +119,9 @@ final class GuidelessValidationTests: XCTestCase {
         XCTAssertNil(dot.evidence.proportionPassed)
 
         let anchors = [dot.anchor!]
-        XCTAssertNil(StrokeValidator.proportionScale(
-            anchors: anchors, referenceSamples: reference, canvasSize: canvasSize, config: .standard
-        ))
         let second = identify(user[1], samples: reference, index: 1, anchors: anchors)
         XCTAssertTrue(second.accepted)
-        XCTAssertNil(second.evidence.proportionPassed)
+        XCTAssertEqual(second.evidence.proportionPassed, true)
     }
 
     func testCharacterDrawnAtTheReferenceSizeIsAccepted() {

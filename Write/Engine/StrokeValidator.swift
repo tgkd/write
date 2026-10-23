@@ -17,18 +17,16 @@ struct ValidationConfig: Equatable, Sendable {
     /// Tighter than centroidTolerance — strokes must be near the correct location.
     var positionTolerance: CGFloat = 0.03
 
-    var guidelessPositionTolerance: CGFloat = 0.07
+    var guidelessPositionTolerance: CGFloat = 0.05
 
     /// Number of sample points for comparison.
     var sampleCount: Int = 50
 
     var enforcesProportion = true
 
-    var proportionTolerance: CGFloat = 1.6
+    var proportionTolerance: CGFloat = 1.3
 
     var proportionMinimumReferenceExtent: CGFloat = 0.03
-
-    var proportionMinimumAnchors = 2
 
     var boundaryTolerance: CGFloat = 0.02
 
@@ -38,7 +36,7 @@ struct ValidationConfig: Equatable, Sendable {
 
     static let standard = ValidationConfig()
 
-    static let gradingVersion = 4
+    static let gradingVersion = 5
 }
 
 /// Result of validating a single user stroke against a reference.
@@ -110,7 +108,6 @@ enum StrokeValidator {
             userPoints: userSampled,
             referencePoints: refPoints,
             referenceExtent: extent(of: refPoints),
-            proportionScale: 1,
             rejectsDisproportion: false,
             canvasSize: canvasSize,
             config: config,
@@ -180,14 +177,6 @@ enum StrokeValidator {
             canvasSize.width * canvasSize.width + canvasSize.height * canvasSize.height
         )
         let centroidMaxDist = canvasDiagonal * config.centroidTolerance * config.leniency
-        let proportionScale: CGFloat?
-        if let anchors {
-            proportionScale = self.proportionScale(
-                anchors: anchors, referenceSamples: referenceSamples, canvasSize: canvasSize, config: config
-            )
-        } else {
-            proportionScale = 1
-        }
         let positionTolerance = anchors == nil ? config.positionTolerance : config.guidelessPositionTolerance
 
         var bestResult: StrokeValidationResult?
@@ -209,7 +198,6 @@ enum StrokeValidator {
                 userPoints: userSampled,
                 referencePoints: refPoints,
                 referenceExtent: extent(of: referenceSamples[idx]),
-                proportionScale: proportionScale,
                 rejectsDisproportion: anchors != nil && config.rejectsDisproportion,
                 canvasSize: canvasSize,
                 config: config,
@@ -260,34 +248,6 @@ enum StrokeValidator {
         )
     }
 
-    static func proportionScale(
-        anchors: [StrokeAnchor],
-        referenceSamples: [[CGPoint]],
-        canvasSize: CGSize,
-        config: ValidationConfig
-    ) -> CGFloat? {
-        let minimumExtent = config.proportionMinimumReferenceExtent * min(canvasSize.width, canvasSize.height)
-        let ratios = anchors.compactMap { anchor -> CGFloat? in
-            guard anchor.userExtent > 0,
-                  referenceSamples.indices.contains(anchor.referenceIndex) else {
-                return nil
-            }
-            let referenceExtent = extent(of: referenceSamples[anchor.referenceIndex])
-            guard referenceExtent >= minimumExtent else {
-                return nil
-            }
-            return anchor.userExtent / referenceExtent
-        }.sorted()
-        guard !ratios.isEmpty, ratios.count >= config.proportionMinimumAnchors else {
-            return nil
-        }
-        let middle = ratios.count / 2
-        if ratios.count % 2 == 0 {
-            return (ratios[middle - 1] + ratios[middle]) / 2
-        }
-        return ratios[middle]
-    }
-
     static func extent(of points: [CGPoint]) -> CGFloat {
         ProcrustesNormalizer.rmsSize(of: ProcrustesNormalizer.translateToOrigin(points))
     }
@@ -298,7 +258,6 @@ enum StrokeValidator {
         userPoints: [CGPoint],
         referencePoints: [CGPoint],
         referenceExtent: CGFloat,
-        proportionScale: CGFloat?,
         rejectsDisproportion: Bool,
         canvasSize: CGSize,
         config: ValidationConfig,
@@ -332,7 +291,6 @@ enum StrokeValidator {
         let proportionPassed = proportionCheck(
             userExtent: normUser.scale,
             referenceExtent: referenceExtent,
-            proportionScale: proportionScale,
             canvasSize: canvasSize,
             config: config
         )
@@ -376,15 +334,14 @@ enum StrokeValidator {
     private static func proportionCheck(
         userExtent: CGFloat,
         referenceExtent: CGFloat,
-        proportionScale: CGFloat?,
         canvasSize: CGSize,
         config: ValidationConfig
     ) -> Bool? {
         let minimumExtent = config.proportionMinimumReferenceExtent * min(canvasSize.width, canvasSize.height)
-        guard let proportionScale, proportionScale > 0, referenceExtent >= minimumExtent else {
+        guard referenceExtent >= minimumExtent else {
             return nil
         }
-        let ratio = userExtent / (referenceExtent * proportionScale)
+        let ratio = userExtent / referenceExtent
         return ratio >= 1 / config.proportionTolerance && ratio <= config.proportionTolerance
     }
 }

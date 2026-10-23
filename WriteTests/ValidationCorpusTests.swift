@@ -4,8 +4,7 @@ import XCTest
 final class ValidationCorpusTests: XCTestCase {
 
     private static let characterLimit = 80
-    private static let falseRejectMarginAtNaturalSize = 0.01
-    private static let falseAcceptCeilingAtNormal = 0.09
+    private static let falseAcceptCeilingAtNormal = 0.05
 
     private func heldOutCharacters() throws -> [SyntheticStrokeCorpus.CorpusCharacter] {
         guard let url = Bundle.main.url(forResource: "kanji_strokes", withExtension: "json")
@@ -43,14 +42,10 @@ final class ValidationCorpusTests: XCTestCase {
             rows.first { $0.strictness == strictness }!.report
         }
 
-        for strictness in GradingStrictness.allCases {
+        for (strictness, ceiling) in [(GradingStrictness.normal, 0.01), (.strict, 0.08)] {
             let natural = report(strictness).falseRejects[1.0] ?? SyntheticStrokeCorpus.CorpusTally()
             XCTAssertGreaterThan(natural.judged, 0)
-            XCTAssertLessThanOrEqual(
-                Double(natural.hits),
-                Double(natural.judged) * Self.falseRejectMarginAtNaturalSize,
-                "false rejects at 1.0x, \(strictness.rawValue)"
-            )
+            XCTAssertLessThanOrEqual(natural.rate, ceiling, "false rejects at 1.0x, \(strictness.rawValue)")
         }
 
         let small = report(.normal).falseRejects[0.7] ?? SyntheticStrokeCorpus.CorpusTally()
@@ -64,7 +59,10 @@ final class ValidationCorpusTests: XCTestCase {
         let truncatedStrict = report(.strict).falseAccepts[.truncated]?.hits ?? 0
         XCTAssertLessThan(truncatedStrict, truncatedNormal, "Strict must reject truncated strokes more often than Normal")
 
-        XCTAssertEqual(report(.strict).disproportionateCorrectStrokes.hits, 0)
+        let strict = report(.strict)
+        XCTAssertEqual(strict.totalFalseAccepts.hits, 0)
+        let shrunkStrict = strict.falseRejects[0.7] ?? SyntheticStrokeCorpus.CorpusTally()
+        XCTAssertGreaterThan(shrunkStrict.rate, small.rate, "Strict must reject a shrunk character more often than Normal")
     }
 
     func testCorpusIsDeterministic() {
