@@ -59,6 +59,10 @@ struct SettingsView: View {
 
                     drawingSection
 
+                    RecallCueSettingsSection()
+
+                    SyncSettingsSection()
+
                     if DeviceContext.isIPad {
                         iPadSettingsSection
                     }

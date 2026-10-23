@@ -6,6 +6,8 @@
     "after": "が のみたい。",
     "gloss": "water",
     "segments": [{ "kanji": "水" }],
+    "translation": "I want to drink some water.",
+    "tokens": [{"surface": "水", "reading": "みず"}, {"surface": "が"}, {"surface": "飲みたい", "reading": "のみたい"}, {"surface": "。"}],
     "notes": "Tatoeba #143825 (CC BY 2.0 FR): 水が飲みたい。 “I want to drink some water.” Kana from the Tatoeba furigana transcription. Only spelling: 水."
   },
   {
@@ -15,6 +17,8 @@
     "after": "は うつくしい。",
     "gloss": "flower",
     "segments": [{ "kanji": "花" }],
+    "translation": "The flowers in the garden are beautiful.",
+    "tokens": [{"surface": "庭", "reading": "にわ"}, {"surface": "の"}, {"surface": "花", "reading": "はな"}, {"surface": "は"}, {"surface": "美しい", "reading": "うつくしい"}, {"surface": "。"}],
     "notes": "Tatoeba #125498 (CC BY 2.0 FR): 庭の花は美しい。 “The flowers in the garden are beautiful.” Kana from the Tatoeba furigana transcription. Answer 花; 鼻 (nose) is ruled out by にわの and the gloss; 華 is a literary variant and is not accepted."
   },
   {
@@ -24,6 +28,8 @@
     "after": "が ふるそうだ。",
     "gloss": "rain",
     "segments": [{ "kanji": "雨" }],
+    "translation": "They say it will rain.",
+    "tokens": [{"surface": "雨", "reading": "あめ"}, {"surface": "が"}, {"surface": "降る", "reading": "ふる"}, {"surface": "そうだ"}, {"surface": "。"}],
     "notes": "Tatoeba #189727 (CC BY 2.0 FR): 雨が降るそうだ。 “They say it will rain.” Kana from the Tatoeba furigana transcription. Answer 雨; 飴 (candy) is ruled out by ふる and the gloss."
   },
   {

@@ -7,6 +7,8 @@ final class AppSettings: ObservableObject {
     static let maskPathWidthRange: ClosedRange<CGFloat> = 3...14
     static let gradingStrictnessKey = "gradingStrictness"
     static let showWordPracticeKey = "showWordPractice"
+    static let iCloudSyncEnabledKey = "iCloudSyncEnabled"
+    static let recallCueOrderKey = "recallCueOrder"
 
     private let defaults: UserDefaults
 
@@ -32,6 +34,14 @@ final class AppSettings: ObservableObject {
 
     @Published var showWordPractice: Bool {
         didSet { defaults.set(showWordPractice, forKey: Self.showWordPracticeKey) }
+    }
+
+    @Published var iCloudSyncEnabled: Bool {
+        didSet { defaults.set(iCloudSyncEnabled, forKey: Self.iCloudSyncEnabledKey) }
+    }
+
+    @Published var recallCueOrder: RecallCueOrder {
+        didSet { defaults.set(recallCueOrder.rawValue, forKey: Self.recallCueOrderKey) }
     }
 
     // MARK: - iPad Settings
@@ -92,6 +102,13 @@ final class AppSettings: ObservableObject {
         self.practiceMode = PracticeMode(rawValue: storedMode) ?? .trace
 
         self.showWordPractice = defaults.bool(forKey: Self.showWordPracticeKey)
+
+        self.iCloudSyncEnabled = defaults.object(forKey: Self.iCloudSyncEnabledKey) == nil
+            ? true
+            : defaults.bool(forKey: Self.iCloudSyncEnabledKey)
+
+        let storedCueOrder = defaults.string(forKey: Self.recallCueOrderKey) ?? ""
+        self.recallCueOrder = RecallCueOrder(rawValue: storedCueOrder) ?? .meaningsFirst
 
         let storedSensitivity = defaults.string(forKey: "pressureSensitivity") ?? ""
         self.pressureSensitivity = PressureSensitivity(rawValue: storedSensitivity) ?? .medium

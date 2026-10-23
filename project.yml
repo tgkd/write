@@ -40,6 +40,13 @@ targets:
         SUPPORTS_MACCATALYST: false
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: false
+    entitlements:
+      path: Write/Write.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.j.write
+        com.apple.developer.icloud-services:
+          - CloudKit
     dependencies:
       - package: SVGPath
       - target: WriteWidget
