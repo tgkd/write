@@ -25,7 +25,7 @@ struct SentenceSlotCanvas: View {
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(Color(.systemGray4), lineWidth: 0.5)
                 )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: .infinity)
                 .padding(.horizontal, 16)
 
             controls

@@ -111,16 +111,17 @@ struct SentencePracticeView: View {
                 onRestartSentence: { sentenceState.restartSentence() }
             )
             .id(sentenceState.slotRun)
-            .padding(.vertical, 16)
 
             if showNextButton {
                 nextButton
                     .frame(maxWidth: 640)
+                    .padding(.vertical, 12)
+                    .background(Color(.systemBackground))
                     .transition(.move(edge: .bottom).combined(with: .opacity))
-                    .padding(.bottom, 24)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.vertical, 16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     private var nextButton: some View {

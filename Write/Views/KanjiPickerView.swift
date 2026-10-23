@@ -157,13 +157,9 @@ struct KanjiPickerView: View {
                 reviewCard(review)
             }
             if settings.showWordPractice {
+                wordsCard
                 if showsSentenceCard {
-                    HStack(spacing: 8) {
-                        wordsCard
-                        sentencesCard
-                    }
-                } else {
-                    wordsCard
+                    sentencesCard
                 }
             }
         }
