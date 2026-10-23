@@ -58,6 +58,7 @@ struct PracticeView: View {
                     Button { dismiss() } label: {
                         Image(systemName: "chevron.backward")
                     }
+                    .accessibilityLabel("Back")
                 }
             }
         }
@@ -190,6 +191,7 @@ struct PracticeView: View {
                         .font(.title3)
                 }
                 .disabled(practiceState.matchedStrokeIndices.isEmpty)
+                .accessibilityLabel("Undo stroke")
 
                 if practiceState.isRecall {
                     RecallHintButton(practiceState: practiceState)
@@ -207,6 +209,7 @@ struct PracticeView: View {
                     Image(systemName: "arrow.counterclockwise")
                         .font(.title3)
                 }
+                .accessibilityLabel("Start over")
             }
 
             Text(controlsCaption)

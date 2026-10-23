@@ -46,6 +46,7 @@ struct iPadPracticeView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.backward")
                 }
+                .accessibilityLabel("Back")
             }
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
@@ -54,6 +55,7 @@ struct iPadPracticeView: View {
                 } label: {
                     Image(systemName: "minus")
                 }
+                .accessibilityLabel("Smaller canvas")
                 .disabled(settings.practiceCanvasScale <= AppSettings.canvasScaleRange.lowerBound)
 
                 Button {
@@ -62,6 +64,7 @@ struct iPadPracticeView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
+                .accessibilityLabel("Larger canvas")
                 .disabled(settings.practiceCanvasScale >= AppSettings.canvasScaleRange.upperBound)
             }
         }
@@ -171,6 +174,7 @@ struct iPadPracticeView: View {
                     .font(.title3)
             }
             .disabled(practiceState.matchedStrokeIndices.isEmpty)
+            .accessibilityLabel("Undo stroke")
 
             Button {
                 practiceState.reset()
@@ -182,6 +186,7 @@ struct iPadPracticeView: View {
                 Image(systemName: "arrow.counterclockwise")
                     .font(.title3)
             }
+            .accessibilityLabel("Start over")
         }
     }
 

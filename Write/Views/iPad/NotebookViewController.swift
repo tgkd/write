@@ -94,6 +94,7 @@ final class NotebookViewController: UIViewController {
             target: self,
             action: #selector(showTips)
         )
+        navigationItem.rightBarButtonItem?.accessibilityLabel = String(localized: "Notebook tips")
     }
 
     private let tipsOverlay = NotebookTipsOverlay()

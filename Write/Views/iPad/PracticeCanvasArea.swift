@@ -79,6 +79,7 @@ struct PracticeCanvasArea: View {
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.3), radius: 12, y: 4)
                     .transition(.scale(scale: 0.5).combined(with: .opacity))
+                    .accessibilityHidden(true)
             }
         }
         .overlay(alignment: .top) {

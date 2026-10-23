@@ -22,9 +22,15 @@ final class RecallUITests: XCTestCase {
     }
 
     private func dismissSearch() {
-        for label in ["close", "Cancel"] where app.buttons[label].exists {
-            app.buttons[label].tap()
-            return
+        let progress = app.buttons["Progress"]
+        for _ in 0..<2 {
+            guard let button = ["close", "Cancel"].map({ app.buttons[$0] }).first(where: \.exists) else {
+                return
+            }
+            button.tap()
+            if progress.waitForExistence(timeout: 2) {
+                return
+            }
         }
     }
 

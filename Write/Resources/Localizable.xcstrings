@@ -289,6 +289,16 @@
         }
       }
     },
+    "Back" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "戻る"
+          }
+        }
+      }
+    },
     "Brush Thickness" : {
       "localizations" : {
         "ja" : {
@@ -512,6 +522,16 @@
         }
       }
     },
+    "End session" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "セッションを終了"
+          }
+        }
+      }
+    },
     "Example sentences — CC BY 2.0 FR" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -726,6 +746,16 @@
         }
       }
     },
+    "Larger canvas" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンバスを大きく"
+          }
+        }
+      }
+    },
     "Last %lld weeks" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -846,6 +876,16 @@
         }
       }
     },
+    "No retries or hints" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "やり直しもヒントもなし"
+          }
+        }
+      }
+    },
     "Normal" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -863,6 +903,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ノート"
+          }
+        }
+      }
+    },
+    "Notebook tips" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ノートの使い方"
           }
         }
       }
@@ -1113,6 +1163,16 @@
         }
       }
     },
+    "Smaller canvas" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンバスを小さく"
+          }
+        }
+      }
+    },
     "Smoothing" : {
       "localizations" : {
         "ja" : {
@@ -1140,6 +1200,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一画目の書き始め"
+          }
+        }
+      }
+    },
+    "Start over" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最初から書き直す"
           }
         }
       }
