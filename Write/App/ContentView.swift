@@ -85,12 +85,15 @@ struct ContentView: View {
             KanjiPickerView(dataStore: dataStore, wordPromptStore: wordPromptStore, selectedCodePoint: sidebarSelection)
                 .navigationDestination(for: SessionRoute.self) { route in
                     SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind, origin: route.origin)
+                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
                 }
                 .navigationDestination(for: WordSessionRoute.self) { route in
                     WordPracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
+                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
                 }
                 .navigationDestination(for: SentenceSessionRoute.self) { route in
                     SentencePracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
+                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
                 }
                 .navigationDestination(for: ProgressRoute.self) { _ in
                     PracticeProgressView(dataStore: dataStore)

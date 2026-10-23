@@ -141,14 +141,17 @@ final class AppSettings: ObservableObject {
     }
 
     static func storedStrictness(in defaults: UserDefaults) -> GradingStrictness {
-        if let raw = defaults.string(forKey: gradingStrictnessKey),
-           let stored = GradingStrictness(rawValue: raw) {
+        if let raw = defaults.string(forKey: gradingStrictnessKey) {
+            let stored = GradingStrictness(rawValue: raw) ?? .normal
+            if stored.rawValue != raw {
+                defaults.set(stored.rawValue, forKey: gradingStrictnessKey)
+            }
             return stored
         }
         let width = CGFloat(defaults.double(forKey: "maskPathWidth"))
         let migrated = width > 0
             ? GradingStrictness.nearest(toLeniency: sqrt(width / defaultMaskPathWidth))
-            : .normal
+            : .strict
         defaults.set(migrated.rawValue, forKey: gradingStrictnessKey)
         return migrated
     }

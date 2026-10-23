@@ -172,24 +172,7 @@ struct KanjiPickerView: View {
     private var sentencesCard: some View {
         let route = SentenceSessionRoute(promptIDs: wordPromptStore.randomSentencePromptIDs(count: 5))
         return NavigationLink(value: route) {
-            HStack(spacing: 6) {
-                Image(systemName: "text.alignleft")
-                    .foregroundStyle(Color.accentColor)
-                    .accessibilityHidden(true)
-                Text("Sentences")
-                    .font(.headline)
-                Text("write the whole sentence")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
-                    .accessibilityHidden(true)
-            }
-            .padding(12)
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            linkCardLabel(title: "Sentences", subtitle: "write the whole sentence", systemImage: "text.alignleft")
         }
         .buttonStyle(.plain)
         .disabled(route.promptIDs.isEmpty)
@@ -199,28 +182,37 @@ struct KanjiPickerView: View {
     private var wordsCard: some View {
         let route = WordSessionRoute(promptIDs: wordPromptStore.randomPromptIDs(count: settings.sessionCount))
         return NavigationLink(value: route) {
+            linkCardLabel(title: "Words", subtitle: "write the missing kanji", systemImage: "character.book.closed.ja")
+        }
+        .buttonStyle(.plain)
+        .disabled(route.promptIDs.isEmpty)
+        .accessibilityIdentifier("session.words")
+    }
+
+    private func linkCardLabel(title: LocalizedStringKey, subtitle: LocalizedStringKey, systemImage: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
-                Image(systemName: "character.book.closed.ja")
+                Image(systemName: systemImage)
                     .foregroundStyle(Color.accentColor)
                     .accessibilityHidden(true)
-                Text("Words")
+                Text(title)
                     .font(.headline)
-                Text("write the missing kanji")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
                     .accessibilityHidden(true)
             }
-            .padding(12)
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            Text(subtitle)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
         }
-        .buttonStyle(.plain)
-        .disabled(route.promptIDs.isEmpty)
-        .accessibilityIdentifier("session.words")
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(Color(.secondarySystemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private func sessionCard(

@@ -87,7 +87,7 @@ User stroke -> sample N points -> Procrustes normalize (center + scale, no rotat
 
 Stroke identification uses centroid distance as a fast rejection filter before running the full Frechet comparison.
 
-Position is checked in canvas coordinates only while a guide is drawn (Trace, Guided). In Copy and Recall it is checked relative to the user's own accepted strokes (`StrokeAnchor`, `StrokeValidator.placementOffset`), with a start marker for stroke 1 (`PracticeState.startMarker`) and a looser first-stroke tolerance. The offset is clamped so the shifted reference stays inside the canvas, and `applyPlacement` shifts the reference layer by the same offset so accepted strokes and later hints line up with the user's ink. An expected stroke that passes always wins over a better-scoring lookalike.
+Position is always checked against the fixed reference in canvas coordinates; the reference never moves to follow the user's ink. With a guide drawn (Trace, Guided) the tolerance is `positionTolerance`; in Copy and Recall it is the looser `guidelessPositionTolerance` for every stroke, and stroke 1 gets a start marker (`PracticeState.startMarker`). A character drawn shifted or at another size is reported as position errors. Accepted strokes are still kept as `StrokeAnchor`s, only for the Strict proportion check. An expected stroke that passes always wins over a better-scoring lookalike.
 
 Every mode applies the box rule: a stroke is rejected (`StrokeRejection.outOfFrame`) when its centerline leaves the canvas by more than `ValidationConfig.boundaryTolerance`.
 - The check runs on the points validation already receives (fixed filter, hook-trimmed), so a trimmed lift-off hook never trips it.

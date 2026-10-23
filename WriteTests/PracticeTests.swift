@@ -310,7 +310,7 @@ final class PracticeStateTests: XCTestCase {
 
     func testAcceptedStrokesBecomeAnchorsAndUndoRemovesThem() {
         let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2), mode: .copy)
-        XCTAssertTrue(state.usesRelativePlacement)
+        XCTAssertTrue(state.isGuideless)
         state.beginDrawing()
         state.beginValidation()
         var result = makeAcceptedResult(matchedIndex: 0, expectedIndex: 0)
@@ -323,12 +323,12 @@ final class PracticeStateTests: XCTestCase {
         XCTAssertTrue(state.anchors.isEmpty)
     }
 
-    func testRecallKeepsRelativePlacementAfterHints() {
+    func testRecallStaysGuidelessAfterHints() {
         let state = PracticeState(kanjiData: makeKanjiData(strokeCount: 2), isRecall: true)
-        XCTAssertTrue(state.usesRelativePlacement)
+        XCTAssertTrue(state.isGuideless)
         state.showNextHint()
         state.showNextHint()
-        XCTAssertTrue(state.usesRelativePlacement)
+        XCTAssertTrue(state.isGuideless)
     }
 
     func testStartMarkerShowsUntilTheFirstStrokeInCopy() {
@@ -354,9 +354,9 @@ final class PracticeStateTests: XCTestCase {
         XCTAssertNil(PracticeState(kanjiData: makeKanjiData(strokeCount: 2), mode: .strokeByStroke).startMarker)
     }
 
-    func testGuidedModesUseAbsolutePlacement() {
-        XCTAssertFalse(PracticeState(kanjiData: makeKanjiData(strokeCount: 1), mode: .trace).usesRelativePlacement)
-        XCTAssertFalse(PracticeState(kanjiData: makeKanjiData(strokeCount: 1), mode: .strokeByStroke).usesRelativePlacement)
+    func testGuidedModesAreNotGuideless() {
+        XCTAssertFalse(PracticeState(kanjiData: makeKanjiData(strokeCount: 1), mode: .trace).isGuideless)
+        XCTAssertFalse(PracticeState(kanjiData: makeKanjiData(strokeCount: 1), mode: .strokeByStroke).isGuideless)
     }
 
     func testResetClearsTheRejection() {
@@ -683,7 +683,7 @@ final class PracticeStateTests: XCTestCase {
             unmatchedIndices: state.unmatchedIndices,
             canvasSize: boxCanvas,
             expectedStrokeIndex: state.currentStrokeIndex,
-            anchors: state.usesRelativePlacement ? state.anchors : nil,
+            anchors: state.isGuideless ? state.anchors : nil,
             config: state.validationConfig
         )
         state.beginDrawing()

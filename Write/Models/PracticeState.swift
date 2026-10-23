@@ -88,12 +88,12 @@ final class PracticeState: ObservableObject {
         isRecall && hint < .strokes
     }
 
-    var usesRelativePlacement: Bool {
+    var isGuideless: Bool {
         isRecall || mode == .copy
     }
 
     var startMarker: CGPoint? {
-        guard usesRelativePlacement, mode == .copy || hidesGuide, matchedStrokeIndices.isEmpty else {
+        guard isGuideless, mode == .copy || hidesGuide, matchedStrokeIndices.isEmpty else {
             return nil
         }
         return firstStrokeStart

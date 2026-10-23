@@ -848,17 +848,6 @@
         }
       }
     },
-    "Lenient" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ゆるめ"
-          }
-        }
-      }
-    },
     "Levels" : {
       "extractionState" : "stale",
       "localizations" : {

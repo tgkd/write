@@ -28,16 +28,12 @@ final class GradingStrictnessTests: XCTestCase {
         XCTAssertEqual(migrated(fromWidth: 5), .normal)
     }
 
-    func testWideGuideMigratesToLenient() {
-        XCTAssertEqual(migrated(fromWidth: 8), .lenient)
+    func testWidestGuideMigratesToNormal() {
+        XCTAssertEqual(migrated(fromWidth: 14), .normal)
     }
 
-    func testWidestGuideMigratesToLenient() {
-        XCTAssertEqual(migrated(fromWidth: 14), .lenient)
-    }
-
-    func testMissingWidthMigratesToNormal() {
-        XCTAssertEqual(AppSettings(defaults: defaults).gradingStrictness, .normal)
+    func testMissingWidthDefaultsToStrict() {
+        XCTAssertEqual(AppSettings(defaults: defaults).gradingStrictness, .strict)
     }
 
     func testMigrationIsStoredSoLaterWidthChangesDoNotRemigrate() {
@@ -50,14 +46,14 @@ final class GradingStrictnessTests: XCTestCase {
         XCTAssertEqual(AppSettings(defaults: defaults).gradingStrictness, .strict)
     }
 
-    func testAbsentWidthStoresNormal() {
+    func testAbsentWidthStoresStrict() {
         _ = AppSettings(defaults: defaults)
-        XCTAssertEqual(defaults.string(forKey: "gradingStrictness"), "normal")
+        XCTAssertEqual(defaults.string(forKey: "gradingStrictness"), "strict")
 
         let settings = AppSettings(defaults: defaults)
-        settings.maskPathWidth = 3
+        settings.maskPathWidth = 14
 
-        XCTAssertEqual(AppSettings(defaults: defaults).gradingStrictness, .normal)
+        XCTAssertEqual(AppSettings(defaults: defaults).gradingStrictness, .strict)
     }
 
     func testStrictnessPersists() {
@@ -65,13 +61,19 @@ final class GradingStrictnessTests: XCTestCase {
         settings.gradingStrictness = .strict
         XCTAssertEqual(AppSettings(defaults: defaults).gradingStrictness, .strict)
 
-        settings.gradingStrictness = .lenient
-        XCTAssertEqual(AppSettings(defaults: defaults).gradingStrictness, .lenient)
+        settings.gradingStrictness = .normal
+        XCTAssertEqual(AppSettings(defaults: defaults).gradingStrictness, .normal)
     }
 
     func testStoredStrictnessWinsOverWidth() {
+        defaults.set("normal", forKey: "gradingStrictness")
+        XCTAssertEqual(migrated(fromWidth: 3), .normal)
+    }
+
+    func testRemovedLenientBecomesNormal() {
         defaults.set("lenient", forKey: "gradingStrictness")
-        XCTAssertEqual(migrated(fromWidth: 3), .lenient)
+        XCTAssertEqual(migrated(fromWidth: 3), .normal)
+        XCTAssertEqual(defaults.string(forKey: "gradingStrictness"), "normal")
     }
 
     func testValidationConfigFollowsStrictness() {
@@ -94,7 +96,6 @@ final class GradingStrictnessTests: XCTestCase {
                 XCTAssertEqual(config.shapeThreshold, expected.shapeThreshold)
                 XCTAssertEqual(config.centroidTolerance, expected.centroidTolerance)
                 XCTAssertEqual(config.positionTolerance, expected.positionTolerance)
-                XCTAssertEqual(config.guidelessFirstStrokeTolerance, expected.guidelessFirstStrokeTolerance)
                 XCTAssertEqual(config.guidelessPositionTolerance, expected.guidelessPositionTolerance)
                 XCTAssertEqual(config.sampleCount, expected.sampleCount)
             }

@@ -28,7 +28,6 @@
 		1A7A2E8BE7A6329A870E97C9 /* DailyKanjiWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F816E5E552D47AFF0C9E02 /* DailyKanjiWidget.swift */; };
 		1E24C468DD9098956C7BCBAD /* RecallEligibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8325327D969A5203657499FB /* RecallEligibilityTests.swift */; };
 		1ED9B8128A6C00E273ED4437 /* WordPracticeStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E767A77F798EDC96B49F04FC /* WordPracticeStateTests.swift */; };
-		22E457C4917BCA35680767F5 /* StrokePlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3952D4CCC6555B28415681F /* StrokePlacement.swift */; };
 		24EB3F4BFDC07A657374EB45 /* PracticeStatsSchemaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8EC9F1455E9555D260F3DFF /* PracticeStatsSchemaTests.swift */; };
 		27F9F845DE36767BE4F43208 /* DailyKanjiCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41398576631CF20005AABB /* DailyKanjiCatalog.swift */; };
 		28975F97AAC63CD86AE2072B /* KanjiData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D3EA225B25052BFBC34F84 /* KanjiData.swift */; };
@@ -59,6 +58,7 @@
 		50E985A6383AD626CF5FBA68 /* MissEvidence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12323F75478344DC11AB0C5D /* MissEvidence.swift */; };
 		5272AF7CD2F1F2BA028E887E /* OneEuroFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07296BCD0F4677A61F19D871 /* OneEuroFilterTests.swift */; };
 		527CE900711B6897827483D1 /* PracticeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6D64264C7D7504993129BC /* PracticeTests.swift */; };
+		555612418710F4BD209D982A /* GuidelessValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B73F45E640F111EF3FF5D92F /* GuidelessValidationTests.swift */; };
 		55653B92EB36BA7A7396D504 /* DailyKanjiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95D7A60DC5381E68C2AEEF80 /* DailyKanjiProvider.swift */; };
 		565BC9D14BF6E9AB3EB57615 /* PracticeLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3744C25E92B668CB94F6BFAA /* PracticeLink.swift */; };
 		566FF7DAD15FA41DED2FF446 /* HistorySyncChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804FB4BF8A6F7493904A63CB /* HistorySyncChanges.swift */; };
@@ -85,7 +85,6 @@
 		7A7256E4B35872AE7EE73CCF /* FeedbackOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DEE31691318124C4601AF7 /* FeedbackOverlayView.swift */; };
 		7C92CC4ABC30580AF8D4269A /* KanjiStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */; };
 		7FF78868F525B2AB470DEF46 /* NavigationGestureGuardRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E6ED38AA97D0CF33DA08F8 /* NavigationGestureGuardRepresentable.swift */; };
-		8074541BDB8B87C02B11FFD4 /* StrokePlacementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E361AA8765506BA6335211F0 /* StrokePlacementTests.swift */; };
 		80A889EE0AF45218186D17F3 /* WordRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A3AAF9BF1467AA7CD51FD0 /* WordRecord.swift */; };
 		813C180D894F6AFEBE0041AB /* StrokeCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C62491A18554F4E6C150034 /* StrokeCapture.swift */; };
 		8343F512DA51A6BD1257D5FE /* RecallCueSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 832F59DAFB8349145E995B7E /* RecallCueSettingsSection.swift */; };
@@ -353,10 +352,10 @@
 		B1837E06356F61F94BAA0150 /* WriteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteApp.swift; sourceTree = "<group>"; };
 		B2C185EC230027C5AF958B00 /* SentenceSessionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentenceSessionUITests.swift; sourceTree = "<group>"; };
 		B2F31DB2AA57261CB1AE8F1A /* ReadingSpeakerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpeakerButton.swift; sourceTree = "<group>"; };
-		B3952D4CCC6555B28415681F /* StrokePlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokePlacement.swift; sourceTree = "<group>"; };
 		B59B14D36C3E50D20B96F9EB /* PracticeHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeHistoryStoreTests.swift; sourceTree = "<group>"; };
 		B6318A9467691D30D3EAE7E4 /* HistorySyncControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySyncControllerTests.swift; sourceTree = "<group>"; };
 		B69D6BC67F10FFB80CFEEA78 /* InputKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputKind.swift; sourceTree = "<group>"; };
+		B73F45E640F111EF3FF5D92F /* GuidelessValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidelessValidationTests.swift; sourceTree = "<group>"; };
 		B79D15EBEBDCFB7386C9AC32 /* SpokenReadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpokenReadingTests.swift; sourceTree = "<group>"; };
 		B7F12DD54E7482308F5E56E5 /* CharacterFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFilterTests.swift; sourceTree = "<group>"; };
 		B8F816E5E552D47AFF0C9E02 /* DailyKanjiWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiWidget.swift; sourceTree = "<group>"; };
@@ -378,7 +377,6 @@
 		DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionActions.swift; sourceTree = "<group>"; };
 		DCB18873D0AD048D68CEC4AA /* SyntheticStrokeCorpus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntheticStrokeCorpus.swift; sourceTree = "<group>"; };
 		DE816A45A5022B69DCC5ADCA /* FrechetDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrechetDistance.swift; sourceTree = "<group>"; };
-		E361AA8765506BA6335211F0 /* StrokePlacementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokePlacementTests.swift; sourceTree = "<group>"; };
 		E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiStroke.swift; sourceTree = "<group>"; };
 		E767A77F798EDC96B49F04FC /* WordPracticeStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordPracticeStateTests.swift; sourceTree = "<group>"; };
 		F193A4EB55122496F990982B /* CharacterFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFilter.swift; sourceTree = "<group>"; };
@@ -484,6 +482,7 @@
 				8CFE38DE1DDAD1B3F3EBE131 /* DailyKanjiPickerTests.swift */,
 				5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */,
 				FAFC9A169E0FC0816EA3A8C0 /* GradingStrictnessTests.swift */,
+				B73F45E640F111EF3FF5D92F /* GuidelessValidationTests.swift */,
 				B6318A9467691D30D3EAE7E4 /* HistorySyncControllerTests.swift */,
 				01BAF514718E1116267293EB /* HistorySyncEngineTests.swift */,
 				8FDA49D778EC07DFE62610BD /* KanjiDataStoreTests.swift */,
@@ -503,7 +502,6 @@
 				54599270F63F958A2D78F67E /* StrokeBoundaryTests.swift */,
 				87A3382CA15F471B5CBC56F3 /* StrokeCaptureTests.swift */,
 				0261AA0113DE605CEEAF3F19 /* StrokeHookTrimmerTests.swift */,
-				E361AA8765506BA6335211F0 /* StrokePlacementTests.swift */,
 				81F5BA6C37381E0E6BF39015 /* StrokeRenderingTests.swift */,
 				32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */,
 				DCB18873D0AD048D68CEC4AA /* SyntheticStrokeCorpus.swift */,
@@ -527,7 +525,6 @@
 				52E0E8906C4E2FD0A0CD7886 /* StrokeAnchor.swift */,
 				909D552229E0D840A81A3EDF /* StrokeBoundary.swift */,
 				4755E0D4B147F26087AE49E5 /* StrokeEvidence.swift */,
-				B3952D4CCC6555B28415681F /* StrokePlacement.swift */,
 				94E4DECBDC7CF8F2058887A8 /* StrokeValidator.swift */,
 			);
 			path = Engine;
@@ -886,6 +883,7 @@
 				E380FB8B64EB2FA012DB205A /* DailyKanjiPickerTests.swift in Sources */,
 				998FCA762B4EEDEDFCDE2EC1 /* DrawingCanvasTests.swift in Sources */,
 				CFBE45635ED91880FB820837 /* GradingStrictnessTests.swift in Sources */,
+				555612418710F4BD209D982A /* GuidelessValidationTests.swift in Sources */,
 				997D85BC3B675A7D487DEE36 /* HistorySyncControllerTests.swift in Sources */,
 				7172A9C4C452664A35003EBC /* HistorySyncEngineTests.swift in Sources */,
 				06ED2FD32F9E763D4E1F483C /* KanjiDataStoreTests.swift in Sources */,
@@ -905,7 +903,6 @@
 				12B7C3C7D2222AC3A4620127 /* StrokeBoundaryTests.swift in Sources */,
 				45E82F835E2886FDA2D7971A /* StrokeCaptureTests.swift in Sources */,
 				BE927C39B8525F3B22DD4E20 /* StrokeHookTrimmerTests.swift in Sources */,
-				8074541BDB8B87C02B11FFD4 /* StrokePlacementTests.swift in Sources */,
 				B954A537E2A42CBD021E1C50 /* StrokeRenderingTests.swift in Sources */,
 				F6A2FE7FAD40C6585935356A /* StrokeValidationTests.swift in Sources */,
 				A1BA7A0AF415FEFD26C0A64B /* SyntheticStrokeCorpus.swift in Sources */,
@@ -1013,7 +1010,6 @@
 				612EC5A217E78BEBDA8D77A3 /* StrokeCaptureRecorder.swift in Sources */,
 				8C007E60BF46A9CC14EBFCD2 /* StrokeEvidence.swift in Sources */,
 				87636BFB0601EDE433A0945B /* StrokeHookTrimmer.swift in Sources */,
-				22E457C4917BCA35680767F5 /* StrokePlacement.swift in Sources */,
 				686299C8F3EAA5E06F5F4B64 /* StrokeProgressDots.swift in Sources */,
 				84EDCD6B8E55DD180AEC6B65 /* StrokeRejection.swift in Sources */,
 				8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */,

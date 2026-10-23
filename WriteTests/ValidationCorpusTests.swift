@@ -4,7 +4,8 @@ import XCTest
 final class ValidationCorpusTests: XCTestCase {
 
     private static let characterLimit = 80
-    private static let falseAcceptMargin = 0.01
+    private static let falseRejectMarginAtNaturalSize = 0.01
+    private static let falseAcceptCeilingAtNormal = 0.09
 
     private func heldOutCharacters() throws -> [SyntheticStrokeCorpus.CorpusCharacter] {
         guard let url = Bundle.main.url(forResource: "kanji_strokes", withExtension: "json")
@@ -23,61 +24,47 @@ final class ValidationCorpusTests: XCTestCase {
         return selected.filter(SyntheticStrokeCorpus.isHeldOut)
     }
 
-    func testScaleFitReducesFalseRejectsWithoutRaisingFalseAccepts() throws {
+    func testReferenceSizedCharactersPassAndMistakesAreCaught() throws {
         let heldOut = try heldOutCharacters()
         XCTAssertGreaterThanOrEqual(heldOut.count, 25)
 
-        var labels: [(label: String, strictness: GradingStrictness)] = []
-        var configs: [ValidationConfig] = []
-        for strictness in GradingStrictness.allCases {
-            for (label, base) in [("translation-only", ValidationConfig.translationOnly), ("scale-fit", .standard)] {
-                var config = base
-                config.leniency = strictness.leniency
-                labels.append((label, strictness))
-                configs.append(config)
-            }
+        let configs = GradingStrictness.allCases.map { strictness -> ValidationConfig in
+            var config = ValidationConfig.standard
+            config.leniency = strictness.leniency
+            return config
         }
         let reports = SyntheticStrokeCorpus.evaluate(heldOut, configs: configs)
-        let rows = zip(labels, reports).map { (label: $0.0.label, strictness: $0.0.strictness, report: $0.1) }
+        let rows = zip(GradingStrictness.allCases, reports).map {
+            (label: "fixed", strictness: $0.0, report: $0.1)
+        }
         print(SyntheticStrokeCorpus.describe(title: "Held-out synthetic corpus", characters: heldOut, reports: rows))
 
-        func report(_ label: String, _ strictness: GradingStrictness) -> SyntheticStrokeCorpus.CorpusReport {
-            rows.first { $0.label == label && $0.strictness == strictness }!.report
+        func report(_ strictness: GradingStrictness) -> SyntheticStrokeCorpus.CorpusReport {
+            rows.first { $0.strictness == strictness }!.report
         }
 
-        for scale in [CGFloat(0.7), 1.2] {
-            let baseline = GradingStrictness.allCases.reduce(SyntheticStrokeCorpus.CorpusTally()) {
-                $0 + (report("translation-only", $1).falseRejects[scale] ?? SyntheticStrokeCorpus.CorpusTally())
-            }
-            let fitted = GradingStrictness.allCases.reduce(SyntheticStrokeCorpus.CorpusTally()) {
-                $0 + (report("scale-fit", $1).falseRejects[scale] ?? SyntheticStrokeCorpus.CorpusTally())
-            }
-            XCTAssertGreaterThan(baseline.hits, 0, "baseline must reject some \(scale)x strokes for the comparison to mean anything")
-            XCTAssertLessThan(fitted.hits, baseline.hits, "false rejects at \(scale)x")
+        for strictness in GradingStrictness.allCases {
+            let natural = report(strictness).falseRejects[1.0] ?? SyntheticStrokeCorpus.CorpusTally()
+            XCTAssertGreaterThan(natural.judged, 0)
+            XCTAssertLessThanOrEqual(
+                Double(natural.hits),
+                Double(natural.judged) * Self.falseRejectMarginAtNaturalSize,
+                "false rejects at 1.0x, \(strictness.rawValue)"
+            )
         }
 
-        let normalBaseline = report("translation-only", .normal)
-        let normalFitted = report("scale-fit", .normal)
-        let smallBaseline = normalBaseline.falseRejects[0.7]?.hits ?? 0
-        let smallFitted = normalFitted.falseRejects[0.7]?.hits ?? 0
-        XCTAssertLessThan(smallFitted, smallBaseline, "false rejects at 0.7x, Normal")
-        XCTAssertLessThanOrEqual(normalFitted.falseRejects[1.0]?.hits ?? 0, normalBaseline.falseRejects[1.0]?.hits ?? 0)
+        let small = report(.normal).falseRejects[0.7] ?? SyntheticStrokeCorpus.CorpusTally()
+        XCTAssertGreaterThan(small.hits, 0, "a character drawn at 0.7x must not be followed by the reference")
 
-        let acceptsBaseline = normalBaseline.totalFalseAccepts
-        let acceptsFitted = normalFitted.totalFalseAccepts
-        XCTAssertGreaterThan(acceptsFitted.judged, 0)
-        XCTAssertEqual(acceptsFitted.judged, acceptsBaseline.judged)
-        XCTAssertLessThanOrEqual(
-            acceptsFitted.rate,
-            acceptsBaseline.rate + Self.falseAcceptMargin,
-            "false accepts at Normal rose by more than \(Self.falseAcceptMargin * 100) points"
-        )
+        let normal = report(.normal)
+        XCTAssertGreaterThan(normal.totalFalseAccepts.judged, 0)
+        XCTAssertLessThanOrEqual(normal.totalFalseAccepts.rate, Self.falseAcceptCeilingAtNormal)
 
-        let truncatedNormal = normalFitted.falseAccepts[.truncated]?.hits ?? 0
-        let truncatedStrict = report("scale-fit", .strict).falseAccepts[.truncated]?.hits ?? 0
+        let truncatedNormal = normal.falseAccepts[.truncated]?.hits ?? 0
+        let truncatedStrict = report(.strict).falseAccepts[.truncated]?.hits ?? 0
         XCTAssertLessThan(truncatedStrict, truncatedNormal, "Strict must reject truncated strokes more often than Normal")
 
-        XCTAssertEqual(report("scale-fit", .strict).disproportionateCorrectStrokes.hits, 0)
+        XCTAssertEqual(report(.strict).disproportionateCorrectStrokes.hits, 0)
     }
 
     func testCorpusIsDeterministic() {
