@@ -91,7 +91,9 @@ final class PracticeStatsSchemaTests: XCTestCase {
             firstTouchDelayMs: 6000,
             interrupted: false,
             configChanged: false,
-            strokes: strokeStats(count: strokeCount)
+            strokes: strokeStats(count: strokeCount),
+            cueOrder: RecallCueOrder.readingsFirst.rawValue,
+            cueAudioPlays: 2
         )
     }
 
@@ -133,7 +135,9 @@ final class PracticeStatsSchemaTests: XCTestCase {
         let state = PracticeState(kanjiData: kanji, isRecall: true, context: context)
         let recorder = Recorder()
         state.onRunCompleted = { recorder.records.append($0) }
+        state.cueOrder = .readingsFirst
         state.noteCueShown()
+        state.noteCueAudioPlayed()
         for index in 0..<state.totalStrokes {
             state.noteStrokeBegan(.finger)
             state.beginDrawing()
@@ -180,6 +184,8 @@ final class PracticeStatsSchemaTests: XCTestCase {
         XCTAssertNil(record.interrupted, file: file, line: line)
         XCTAssertNil(record.configChanged, file: file, line: line)
         XCTAssertNil(record.strokes, file: file, line: line)
+        XCTAssertNil(record.cueOrder, file: file, line: line)
+        XCTAssertNil(record.cueAudioPlays, file: file, line: line)
     }
 
     private func seconds(_ work: () -> Void) -> Double {
@@ -262,6 +268,24 @@ final class PracticeStatsSchemaTests: XCTestCase {
 
         XCTAssertEqual(nilFields(of: record), [])
         XCTAssertEqual(record.strokes?.count, 2)
+    }
+
+    func testCueFieldsRoundTripAndAreLeftOutWhenNil() throws {
+        let completedAt = Date(timeIntervalSince1970: 1_791_000_000)
+        let record = richRecord(completedAt: completedAt)
+        let json = try encodedString(record)
+        XCTAssertTrue(json.contains(#""cueOrder":"readingsFirst""#))
+        XCTAssertTrue(json.contains(#""cueAudioPlays":2"#))
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        XCTAssertEqual(try decoder.decode(PracticeRecord.self, from: Data(json.utf8)), record)
+
+        var bare = record
+        bare.cueOrder = nil
+        bare.cueAudioPlays = nil
+        let bareJSON = try encodedString(bare)
+        XCTAssertFalse(bareJSON.contains("cueOrder"))
+        XCTAssertFalse(bareJSON.contains("cueAudioPlays"))
     }
 
     func testZeroCountersAreLeftOutOfTheEncoding() throws {

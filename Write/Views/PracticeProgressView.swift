@@ -131,11 +131,15 @@ struct PracticeProgressView: View {
         case .hiragana, .katakana:
             return "\(kanji.romaji ?? "") · \(kanji.script.displayName)"
         case .kanji:
-            let meanings = (kanji.meanings ?? []).prefix(RecallEligibility.meaningsShown)
-            if !meanings.isEmpty {
-                return meanings.joined(separator: ", ")
+            let cue = RecallCue(kanji: kanji, order: settings.recallCueOrder)
+            switch cue.primary.first?.kind {
+            case .onYomi?, .kunYomi?, .romaji?:
+                return cue.primary.map(\.text).joined(separator: "、 ")
+            case .meanings?:
+                return cue.primary.map(\.text).joined(separator: ", ")
+            case nil:
+                return ""
             }
-            return ((kanji.onYomi ?? []) + (kanji.kunYomi ?? [])).joined(separator: "、 ")
         }
     }
 

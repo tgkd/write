@@ -31,6 +31,8 @@ struct PracticeRecord: Codable, Equatable, Identifiable, Sendable {
     var interrupted: Bool?
     var configChanged: Bool?
     var strokes: [StrokeStat]?
+    var cueOrder: String?
+    var cueAudioPlays: Int?
 
     var isRecall: Bool {
         mode == Self.recallMode
