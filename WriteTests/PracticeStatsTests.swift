@@ -174,4 +174,33 @@ final class PracticeStatsTests: XCTestCase {
         let decoded = try JSONDecoder().decode(MissEvidence.self, from: Data(#"{"shape": 2}"#.utf8))
         XCTAssertEqual(decoded, MissEvidence(shape: 2))
     }
+
+    func testLatestRunTieIsBrokenByIdRegardlessOfOrder() {
+        let completedAt = today
+        let ids = [UUID(), UUID()].sorted { $0.uuidString < $1.uuidString }
+        let hinted = PracticeRecord(
+            id: ids[1], codePoint: "4e00", mode: PracticeRecord.recallMode, revealed: true, exposed: false,
+            misses: 0, startedAt: completedAt, completedAt: completedAt, leniency: 1
+        )
+        let missed = PracticeRecord(
+            id: ids[0], codePoint: "4e00", mode: PracticeRecord.recallMode, revealed: false, exposed: false,
+            misses: 2, startedAt: completedAt, completedAt: completedAt, leniency: 1
+        )
+
+        let forward = PracticeStats.reviewItems(from: [hinted, missed])
+        let backward = PracticeStats.reviewItems(from: [missed, hinted])
+
+        XCTAssertEqual(forward.map(\.reason), [.usedHint])
+        XCTAssertEqual(backward, forward)
+    }
+
+    func testReviewOrderTieIsBrokenByCodePoint() {
+        let items = PracticeStats.reviewItems(from: [
+            record("4e8c", daysAgo: 1, misses: 1),
+            record("4e00", daysAgo: 1, misses: 1),
+            record("4e09", daysAgo: 0, misses: 1)
+        ])
+
+        XCTAssertEqual(items.map(\.codePoint), ["4e09", "4e00", "4e8c"])
+    }
 }
