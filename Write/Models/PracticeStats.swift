@@ -42,10 +42,14 @@ struct PracticeStats: Equatable {
     static func reviewItems(from records: [PracticeRecord]) -> [ReviewItem] {
         let hiddenRecallRuns = records.filter { $0.isRecall && !$0.exposed }
         let latestRecallRuns = Dictionary(grouping: hiddenRecallRuns, by: \.codePoint)
-            .compactMapValues { runs in runs.max { $0.completedAt < $1.completedAt } }
+            .compactMapValues { runs in runs.max(by: Self.isEarlier) }
         return latestRecallRuns.values
             .compactMap(Self.reviewItem)
-            .sorted { $0.lastPracticed > $1.lastPracticed }
+            .sorted { ($0.lastPracticed, $1.codePoint) > ($1.lastPracticed, $0.codePoint) }
+    }
+
+    static func isEarlier(_ lhs: PracticeRecord, _ rhs: PracticeRecord) -> Bool {
+        (lhs.completedAt, lhs.id.uuidString) < (rhs.completedAt, rhs.id.uuidString)
     }
 
     static func effectiveMisses(of run: PracticeRecord) -> Int {

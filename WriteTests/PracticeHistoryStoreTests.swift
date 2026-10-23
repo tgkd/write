@@ -144,4 +144,71 @@ final class PracticeHistoryStoreTests: XCTestCase {
         XCTAssertNil(store.records.first?.strictness)
         XCTAssertEqual(try fileNames(), ["2026-10.json"])
     }
+
+    private func monthCounts() throws -> [String: Int] {
+        var counts: [String: Int] = [:]
+        for name in try fileNames() where name.hasSuffix(".json") {
+            let data = try Data(contentsOf: directory.appendingPathComponent(name))
+            let object = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+            counts[name] = (object?["records"] as? [Any])?.count
+        }
+        return counts
+    }
+
+    func testMergeGroupsByLocalMonthAndKeepsRecordsSorted() throws {
+        let store = PracticeHistoryStore(directory: directory, timeZone: tokyo)
+        let existing = makeRecord(completedAt: date("2026-10-09T01:00:00Z"))
+        store.add(existing)
+        let september = makeRecord(completedAt: date("2026-09-30T14:30:00Z"))
+        let octoberEarly = makeRecord(completedAt: date("2026-09-30T15:30:00Z"))
+        let octoberLate = makeRecord(completedAt: date("2026-10-20T01:00:00Z"))
+        let november = makeRecord(completedAt: date("2026-11-02T01:00:00Z"))
+
+        store.merge([november, octoberLate, september, octoberEarly])
+
+        XCTAssertEqual(try monthCounts(), ["2026-09.json": 1, "2026-10.json": 3, "2026-11.json": 1])
+        XCTAssertEqual(store.records.map(\.id), [september, octoberEarly, existing, octoberLate, november].map(\.id))
+        let reloaded = PracticeHistoryStore(directory: directory, timeZone: tokyo)
+        XCTAssertEqual(reloaded.records.map(\.id), store.records.map(\.id))
+    }
+
+    func testMergeSkipsKnownAndRepeatedIds() throws {
+        let store = PracticeHistoryStore(directory: directory, timeZone: tokyo)
+        let existing = makeRecord(completedAt: date("2026-10-09T01:00:00Z"))
+        store.add(existing)
+        let incoming = makeRecord(completedAt: date("2026-10-10T01:00:00Z"))
+
+        store.merge([existing, incoming, incoming])
+
+        XCTAssertEqual(store.records.map(\.id), [existing.id, incoming.id])
+        XCTAssertEqual(try monthCounts(), ["2026-10.json": 2])
+    }
+
+    func testMergeOfNothingNewLeavesFilesAlone() throws {
+        let store = PracticeHistoryStore(directory: directory, timeZone: tokyo)
+
+        store.merge([])
+
+        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
+        XCTAssertTrue(store.records.isEmpty)
+    }
+
+    func testMergeIntoBlockedMonthKeepsRecordsUnsaved() throws {
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let corrupt = Data("not json".utf8)
+        let monthURL = directory.appendingPathComponent("2026-10.json")
+        try corrupt.write(to: monthURL)
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: directory.path)
+        let store = PracticeHistoryStore(directory: directory, timeZone: tokyo)
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: directory.path)
+        let blocked = makeRecord(completedAt: date("2026-10-09T01:00:00Z"))
+
+        store.merge([blocked, makeRecord(completedAt: date("2026-11-02T01:00:00Z"))])
+        store.merge([blocked])
+
+        XCTAssertEqual(try Data(contentsOf: monthURL), corrupt)
+        XCTAssertEqual(store.unsavedCount, 1)
+        XCTAssertEqual(store.records.count, 1)
+        XCTAssertTrue(try fileNames().contains("2026-11.json"))
+    }
 }
