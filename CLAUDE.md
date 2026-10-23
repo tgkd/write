@@ -13,13 +13,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 xcodegen generate
 
 # Run all tests
-xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iOS Simulator,name=iPhone 16' -resultBundlePath TestResults
+xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=27.0' -parallel-testing-enabled NO -resultBundlePath TestResults
 
 # Run a single test class
-xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:WriteTests/StrokeValidationTests
+xcodebuild test -project Write.xcodeproj -scheme Write -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=27.0' -parallel-testing-enabled NO -only-testing:WriteTests/StrokeValidationTests
 
 # UI tests live in their own scheme so the unit-test command stays fast
-xcodebuild test -project Write.xcodeproj -scheme WriteUITests -destination 'platform=iOS Simulator,name=iPhone 16'
+xcodebuild test -project Write.xcodeproj -scheme WriteUITests -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=27.0' -parallel-testing-enabled NO
 
 # Preprocess KanjiVG + KANJIDIC2 data (only needed when updating the dataset)
 python3 Scripts/preprocess_kanjivg.py Data/kanjivg.xml Data/kanjidic2.xml Write/Resources/kanji_strokes.json
@@ -29,6 +29,12 @@ Whenever `kanji_strokes.json` changes, regenerate the widget's kanji list and co
 
 ```sh
 python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWidget/Resources/daily_kanji.json
+```
+
+`word_prompts.json` is generated from the Tanaka/Tatoeba corpus and JMdict in the sibling `jisho-data` checkout; never hand-edit it. The script's usage line has the arguments, and its hand-excluded sentence list is part of the dataset:
+
+```sh
+python3 Scripts/build_word_prompts.py <examples.utf> <jpn_transcriptions.tsv> <JMdict_e> Write/Resources/kanji_strokes.json Write/Resources/word_prompts.json
 ```
 
 ## Architecture
@@ -57,13 +63,17 @@ python3 Scripts/build_daily_kanji.py Write/Resources/kanji_strokes.json WriteWid
 
 - The Home screen (`KanjiPickerView`) starts three session kinds for the current filter: Practice, Recall and Review (a Recall session over `PracticeStats.reviewItems`). Tapping a character in the grid, a widget link and the iPad detail view always open plain practice
 - The Words session card shows only when the Experimental setting `AppSettings.showWordPractice` is on (off by default). Its routes, prompts and `WordHistoryStore` exist regardless. UI tests pass `-showWordPractice YES|NO` explicitly, because the stored value survives between launches
+- Word prompts keep the original `w..` ids and their hashed fields (`WordPrompt.revision`) unchanged forever, because word history refers to them; generated prompts use `t<tatoebaId>`. The answer must be unambiguous from the kana sentence plus the gloss, which the generator enforces against JMdict
+- iPad also offers Sentences behind the same setting: the whole written sentence, one block per token, every character with stroke data written in Recall; characters without stroke data (small kana, punctuation) fill in automatically. A sentence is stored as one `WordRecord` in `WordHistoryStore`, never in `PracticeHistoryStore`
 - `PracticeMode` is only the guide level (Trace, Guided, Copy). The picker writes `AppSettings.practiceMode`, which every new practice screen and the next session character start from. `copy` keeps the raw value `freeDraw` so old history and settings still decode
+- `AppSettings.recallCueOrder` only reorders the cue; both orders show the same information, so `RecallEligibility` is order-independent (a test enforces it). A cue profile that hides information must revisit eligibility. Spoken readings go through `SpokenReading`, never raw dictionary notation
 - Recall is not a mode: `PracticeState(isRecall: true)` pins the mode to Guided, so the strokes hint reveals one stroke at a time, and hides the answer until hints. `hint` steps through `RecallHint` (character, then strokes); `hidesCharacter` swaps the header glyph for a placeholder and `hidesGuide` hides the whole `KanjiReferenceView` rather than individual strokes, because accepted-stroke marking and the initial ghost would each leak it
 - Recall only exists inside sessions, so a character the user just tapped in the grid is never treated as unseen. Recall queues contain only `RecallEligibility`-eligible characters (`KanjiDataStore.randomCharacters(forRecall:)` and `queue(for:)`); ineligible ones (identical readings, meanings and stroke count, or no cue) are dropped, never shown with the answer
 - Stroke order is enforced in every mode
 - `PracticeState` emits one `PracticeRecord` per run through `onRunCompleted`; undo/recomplete never emits again, reset or a mode change starts a new run. Session results hang off the same event
 - Recall runs are stored with `mode` set to `PracticeRecord.recallMode` (`"study"`, the pre-rename value). `revealed` means a hint was used; `exposed` is false only for Recall runs and stays in the format because older Study runs could be exposed. Review only reads unexposed Recall runs
 - `PracticeHistoryStore` writes monthly versioned JSON files under Application Support; a file it can't decode is moved aside, and a month it can't move aside is never written to. UI tests pass `-uiTestingFreshHistory` for a throwaway store and `-practiceMode trace` so a saved guide level from an earlier run doesn't leak in
+- Practice history (not word history or settings) syncs through a CloudKit private zone: one immutable record per `PracticeRecord`, carrying the store's own JSON encoding, merged as a union by id. There are no deletes and no push; sync runs on foreground and shortly after a local record. `-uiTestingFreshHistory` turns sync off. A new CloudKit field or record type works in Development only until the schema is deployed to Production
 - Records grow only by optional fields, so old files keep loading. An older build ignores the new keys and drops them when it rewrites a month. Analysis fields include:
   - session and origin, passed in as `RunContext` when the screen creates its `PracticeState`;
   - hint level, undos, input kind, canvas size, device, timing, interruption and config changes;
