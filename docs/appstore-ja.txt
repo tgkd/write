@@ -1,4 +1,4 @@
-App Store Connect — Japanese localization (v1.11)
+App Store Connect — Japanese localization (v1.12)
 
 === Name ===
 Kanji Write: 漢字・かなの書き順
@@ -17,7 +17,7 @@ Kanji Write: 漢字・かなの書き順
 ■ 収録文字
 ・JLPT N5〜N1のレベル別に練習できる漢字2,200字以上
 ・小学1〜6年の学年別の漢字と、その他の常用漢字
-・ひらがな・カタカナ（清音・濁音・半濁音）
+・ひらがな・カタカナ（清音・濁音・半濁音・拗音）
 
 ■ 3つのガイド
 ・なぞり書き：お手本全体をなぞって書く
@@ -39,13 +39,7 @@ Kanji Write: 漢字・かなの書き順
 書き順データはKanjiVG、読みと意味はKANJIDIC2を使用しています。
 
 === What's New in This Version ===
-・iCloud同期：練習の記録が、ほかの端末と同期されるようになりました。
-・思い出して書く：手がかりを「読みを先に」「意味を先に」から選べます。読みを音声で再生することもできます。
-・判定：お手本の位置と大きさを基準に、一画ずつ判定するようになりました。厳しさは「ふつう」「きびしめ」から選べます（新しくインストールした場合は「きびしめ」）。
-・枠から大きくはみ出した線は、書き直しになります。
-・指で書いた線が、よりなめらかできれいに表示されるようになりました。
-・iPadでは、サイドバーが最初から表示され、どの画面でも隠せます。
-・VoiceOverの読み上げを改善しました。
+・拗音を追加しました：「きょ」「しゃ」「ニュ」など、ひらがな・カタカナ各33字を、1つのマスに書いて練習できます。ひらがな・カタカナの一覧から選ぶか、「きょ」「kyo」で検索できます。
 
 === Keywords ===
 筆順,書き取り,ひらがな,カタカナ,なぞり書き,ドリル,日本語能力試験,復習,ウィジェット,常用,小学生,ノート
@@ -62,5 +56,8 @@ English (U.S.) changes
 Keywords (append n2,n1):
 writing,hiragana,katakana,kana,jlpt,learn,study,calligraphy,trace,kakijun,n5,n4,n3,characters,n2,n1
 
-Description: replace "all hiragana and katakana" (the app has no small kana and no ゐ/ゑ/ゔ), e.g.:
-basic hiragana and katakana, including voiced forms
+Description, in the opening paragraph: ...including voiced forms and yōon.
+Description, Hiragana & Katakana: ...plus the voiced forms (が, ぱ…) and yōon combinations (きょ, シャ…), each written in one box.
+
+What's New:
+• New: yōon combinations like きょ, しゃ and ニュ, 33 each in hiragana and katakana, written in a single box. Find them under Hiragana and Katakana, or search by kana or romaji ("kyo").
