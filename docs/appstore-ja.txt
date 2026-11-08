@@ -40,6 +40,10 @@ Kanji Write: 漢字・かなの書き順
 
 === What's New in This Version ===
 ・拗音を追加しました：「きょ」「しゃ」「ニュ」など、ひらがな・カタカナ各33字を、1つのマスに書いて練習できます。ひらがな・カタカナの一覧から選ぶか、「きょ」「kyo」で検索できます。
+・線が正解にならなかったとき、形・位置・大きさのどれが違ったかを表示します。設定でオフにできます。
+・練習の枠にうすいマス目を追加しました。「見て書く」では、お手本も同じマス目に表示します。設定でオフにできます。
+・判定を見直しました：半濁点の丸は、どこから書き始めても、どちら回りでも正解になります。「う」「や」などの短い線は、最後のはねの長さを問いません。
+・iPad：「記録」に戻るボタンを追加しました。文字をタップすると、いつでもその文字を開けます。
 
 === Keywords ===
 筆順,書き取り,ひらがな,カタカナ,なぞり書き,ドリル,日本語能力試験,復習,ウィジェット,常用,小学生,ノート
@@ -61,3 +65,7 @@ Description, Hiragana & Katakana: ...plus the voiced forms (が, ぱ…) and yō
 
 What's New:
 • New: yōon combinations like きょ, しゃ and ニュ, 33 each in hiragana and katakana, written in a single box. Find them under Hiragana and Katakana, or search by kana or romaji ("kyo").
+• When a stroke isn't accepted, the app now says whether the shape, place or size was off. You can turn this off in Settings.
+• A faint grid on the practice canvas shows where each part of the character goes, and Copy shows the model on the same grid. You can turn the grid off in Settings.
+• Fairer checking: the small circle on ぱ, ぴ and friends can start anywhere and go either way, and short strokes like the top of う pass whatever the length of the final flick.
+• iPad: Progress has a back button, and tapping a character always opens it.
