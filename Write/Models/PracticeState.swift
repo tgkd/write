@@ -92,6 +92,10 @@ final class PracticeState: ObservableObject {
         isRecall || mode == .copy
     }
 
+    var showsPracticeModel: Bool {
+        isGuideless
+    }
+
     var startMarker: CGPoint? {
         guard isGuideless, mode == .copy || hidesGuide, matchedStrokeIndices.isEmpty else {
             return nil
@@ -147,6 +151,7 @@ final class PracticeState: ObservableObject {
 
     func noteStrokeBegan(_ input: InputKind) {
         details.pendingTouch = (input, now())
+        lastRejection = nil
     }
 
     func noteCueAudioPlayed() {
@@ -249,6 +254,16 @@ final class PracticeState: ObservableObject {
         }
         if let drawn = result.wrongOrderCandidate {
             return .wrongOrder(drawnStroke: drawn, expectedStroke: currentStrokeIndex)
+        }
+        let evidence = result.expectedEvidence ?? result.evidence
+        if evidence.shapePassed == false {
+            return evidence.positionPassed == false ? .shapeAndPosition : .shape
+        }
+        if evidence.positionPassed == false {
+            return .position
+        }
+        if evidence.proportionPassed == false {
+            return .size
         }
         return .shape
     }
@@ -398,6 +413,16 @@ final class PracticeState: ObservableObject {
         )
         referenceSampleCache = (canvasSize, sampleCount, samples)
         return samples
+    }
+
+    func alternateSamples(canvasSize: CGSize) -> [Int: [[CGPoint]]] {
+        let samples = referenceSamples(canvasSize: canvasSize)
+        var alternates: [Int: [[CGPoint]]] = [:]
+        let curled = KanaStrokeVariants.curledStrokeIndices(text: kanjiData.text, strokeCount: samples.count)
+        for index in curled where !samples[index].isEmpty {
+            alternates[index] = KanaStrokeVariants.curlVariants(of: samples[index])
+        }
+        return alternates
     }
 
     func prewarmReferenceSamples(canvasSize: CGSize) {

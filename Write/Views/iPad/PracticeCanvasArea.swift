@@ -11,6 +11,7 @@ struct PracticeCanvasArea: View {
     let brushThickness: BrushThickness
     let showCompletionCheck: Bool
     let hidesReference: Bool
+    let showsGrid: Bool
     var notice: String?
     var startMarker: CGPoint?
     var captureContext: StrokeCaptureContext?
@@ -28,6 +29,10 @@ struct PracticeCanvasArea: View {
     var body: some View {
         ZStack {
             NavigationGestureGuardRepresentable()
+
+            if showsGrid {
+                PracticeGridView()
+            }
 
             KanjiReferenceRepresentable(
                 kanjiData: kanjiData,

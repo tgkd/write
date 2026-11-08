@@ -57,7 +57,8 @@ python3 Scripts/build_word_prompts.py <examples.utf> <jpn_transcriptions.tsv> <J
    - **Shared/** (top level) is compiled into both the app and the extension: the daily kanji model, catalog and picker, and `PracticeLink`
    - Tapping the widget opens `kakijun://practice?cp=<codePoint>`, which `ContentView` handles in `onOpenURL` on iPhone and iPad
    - On iPad the sidebar writes its selection through `ContentView.sidebarSelection`, which also clears the detail path; any other writer of the selection must set the detail path itself
-   - The iPad sidebar starts visible beside the detail (`columnVisibility = .all`, `.navigationSplitViewStyle(.balanced)`). With `.automatic`, portrait launched into an empty "Select a kanji" screen. The app owns the sidebar toggle (`SidebarToggleToolbar` on the detail root and the drawing screens) and removes the system one from the sidebar column. The system toggle vanishes on pushed drawing screens, and next to the custom one it showed twice whenever the sidebar was hidden. UI tests written for the iPhone push flow (`RecallUITests`) don't apply to this layout
+   - The iPad detail column has one owner: every detail screen is a route in `iPadNavigationPath`. Sidebar controls open routes through `KanjiPickerView.openRoute`, which replaces the path, never through a value `NavigationLink`. A sidebar link covers the detail stack with a screen that has no back button and that clearing the path can't remove, so letter taps stop doing anything
+   - The iPad sidebar starts visible beside the detail (`columnVisibility = .all`, `.navigationSplitViewStyle(.balanced)`). With `.automatic`, portrait launched into an empty "Select a kanji" screen. The app owns the sidebar toggle (`SidebarToggleToolbar` on the detail root and every route) and removes the system one from the sidebar column. The system toggle vanishes on pushed drawing screens, and next to the custom one it showed twice whenever the sidebar was hidden. UI tests written for the iPhone push flow (`RecallUITests`) don't apply to this layout
 
 ### Practice, Recall and practice history
 
@@ -95,6 +96,16 @@ Every mode applies the box rule: a stroke is rejected (`StrokeRejection.outOfFra
 - Run-level and per-stroke miss counts both go through `MissEvidence.record`. The notice shown and the counts are decided independently.
 
 Yōon catalog entries are composed by the preprocessor from two KanjiVG glyphs and keyed by two hyphen-separated code points. Small kana have no entries of their own. Yōon combinations are not writable units in Sentences or Words.
+
+A rejection reports why the expected stroke failed (`StrokeValidationResult.expectedEvidence`), not the best-scoring candidate. `AppSettings.showRejectionReasons` hides all rejection text, and the text clears when the next stroke begins.
+
+Closed reference strokes, which today means only the handakuten circle, go through `ClosedStrokeMatcher`: any start, either direction and imperfect closure pass, and Strict uses Normal's shape limit for them. Size and position stay at the configured strictness. Which strokes count as closed is geometric, so a dataset update can change the set; a test pins it. Open strokes stay sensitive to start and direction.
+
+KanjiVG draws some short kana strokes with a back-flick the printed glyph doesn't have. `KanaStrokeVariants` lists them by hand, because geometry alone also catches real parts of kanji strokes such as the ㇕ of a small 口. In every mode a listed stroke is also compared against variants with no flick, a shorter one or a longer one, because the flick's length is what rejected hand-drawn strokes lying on the guide. Each variant is a complete candidate: its own shape, centroid and extent all have to pass.
+
+### Practice grid and model
+
+Every practice canvas draws `PracticeGridView` under the reference (`AppSettings.showPracticeGrid`), in the same transform as the strokes. Copy and Recall show `PracticeModelView`, drawn from the KanjiVG strokes on the same grid, because the system font's glyph has different extents and forms from what is graded: its う dash has no curl. Never crop the model to its ink or give it the mask's line width. In Recall the model follows `hidesCharacter`. Turning the grid off removes only the lines, not the model. Elsewhere the font stays: compact labels, the character card, word and sentence hints.
 
 ### KanjiVG coordinate space
 

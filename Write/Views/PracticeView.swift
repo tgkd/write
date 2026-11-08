@@ -2,6 +2,8 @@ import SwiftUI
 
 struct PracticeView: View {
     @StateObject private var practiceState: PracticeState
+    private static let modelSide: CGFloat = 120
+
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var history: PracticeHistoryStore
     @State private var canvasView: DrawingCanvasView?
@@ -117,14 +119,24 @@ struct PracticeView: View {
 
     private var kanjiHeader: some View {
         let kanji = practiceState.kanjiData
-        return HStack(alignment: .top, spacing: 8) {
-            VStack(alignment: .leading, spacing: 2) {
-                AnswerGlyph(
+        return HStack(alignment: .top, spacing: 12) {
+            if practiceState.showsPracticeModel {
+                PracticeModelSlot(
                     kanji: kanji,
                     isHidden: practiceState.hidesCharacter,
-                    fontSize: 40
+                    showsGrid: settings.showPracticeGrid,
+                    side: Self.modelSide
                 )
                 RecallCueText(cue: RecallCue(kanji: kanji, order: settings.recallCueOrder))
+            } else {
+                VStack(alignment: .leading, spacing: 2) {
+                    AnswerGlyph(
+                        kanji: kanji,
+                        isHidden: practiceState.hidesCharacter,
+                        fontSize: 40
+                    )
+                    RecallCueText(cue: RecallCue(kanji: kanji, order: settings.recallCueOrder))
+                }
             }
             Spacer(minLength: 0)
             ReadingSpeakerButton(text: SpokenReading.text(for: kanji)) {
@@ -147,7 +159,8 @@ struct PracticeView: View {
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
             hidesReference: practiceState.hidesGuide,
-            notice: practiceState.lastRejection?.notice,
+            showsGrid: settings.showPracticeGrid,
+            notice: settings.rejectionNotice(for: practiceState.lastRejection),
             startMarker: practiceState.startMarker,
             captureContext: StrokeCaptureContext(
                 codePoint: practiceState.kanjiData.codePoint,

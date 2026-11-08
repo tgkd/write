@@ -25,6 +25,7 @@ extension PracticeState {
             canvasSize: canvasSize,
             expectedStrokeIndex: currentStrokeIndex,
             anchors: isGuideless ? anchors : nil,
+            alternates: alternateSamples(canvasSize: canvasSize),
             config: validationConfig
         )
 

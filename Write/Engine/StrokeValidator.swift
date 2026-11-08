@@ -36,7 +36,7 @@ struct ValidationConfig: Equatable, Sendable {
 
     static let standard = ValidationConfig()
 
-    static let gradingVersion = 5
+    static let gradingVersion = 6
 }
 
 /// Result of validating a single user stroke against a reference.
@@ -63,6 +63,8 @@ struct StrokeValidationResult: Sendable {
     var anchor: StrokeAnchor?
 
     var geometryAccepted: Bool?
+
+    var expectedEvidence: StrokeEvidence?
 }
 
 extension StrokeValidationResult {
@@ -166,6 +168,7 @@ enum StrokeValidator {
         canvasSize: CGSize,
         expectedStrokeIndex: Int,
         anchors: [StrokeAnchor]? = nil,
+        alternates: [Int: [[CGPoint]]] = [:],
         config: ValidationConfig = .standard
     ) -> StrokeValidationResult {
         let insideBox = StrokeBoundary.excursion(of: userPoints, canvasSize: canvasSize)
@@ -180,6 +183,7 @@ enum StrokeValidator {
         let positionTolerance = anchors == nil ? config.positionTolerance : config.guidelessPositionTolerance
 
         var bestResult: StrokeValidationResult?
+        var expectedEvidence: StrokeEvidence?
 
         for idx in unmatchedIndices.sorted() {
             guard referenceSamples.indices.contains(idx) else { continue }
@@ -191,10 +195,13 @@ enum StrokeValidator {
             let centroidDist = hypot(userCentroid.x - refCentroid.x, userCentroid.y - refCentroid.y)
 
             if centroidDist > centroidMaxDist {
+                if idx == expectedStrokeIndex {
+                    expectedEvidence = StrokeEvidence(positionPassed: false)
+                }
                 continue
             }
 
-            let result = compareStrokes(
+            var result = compareStrokes(
                 userPoints: userSampled,
                 referencePoints: refPoints,
                 referenceExtent: extent(of: referenceSamples[idx]),
@@ -205,6 +212,27 @@ enum StrokeValidator {
                 matchedIndex: idx,
                 expectedIndex: expectedStrokeIndex
             )
+
+            for alternate in alternates[idx] ?? [] where !result.accepted {
+                let alternateResult = compareStrokes(
+                    userPoints: userSampled,
+                    referencePoints: alternate,
+                    referenceExtent: extent(of: alternate),
+                    rejectsDisproportion: anchors != nil && config.rejectsDisproportion,
+                    canvasSize: canvasSize,
+                    config: config,
+                    positionTolerance: positionTolerance,
+                    matchedIndex: idx,
+                    expectedIndex: expectedStrokeIndex
+                )
+                if alternateResult.accepted || alternateResult.frechetDistance < result.frechetDistance {
+                    result = alternateResult
+                }
+            }
+
+            if idx == expectedStrokeIndex {
+                expectedEvidence = result.evidence
+            }
 
             if result.accepted && result.correctOrder {
                 bestResult = result
@@ -244,7 +272,8 @@ enum StrokeValidator {
             userCentroid: result.userCentroid,
             evidence: result.evidence,
             anchor: result.anchor,
-            geometryAccepted: result.accepted
+            geometryAccepted: result.accepted,
+            expectedEvidence: expectedEvidence
         )
     }
 
@@ -281,12 +310,15 @@ enum StrokeValidator {
             applyRotation: false
         )
 
-        let frechet = FrechetDistance.compute(
-            between: normUser.points,
-            and: normRef.points
-        )
+        let isClosed = ClosedStrokeMatcher.isClosed(referencePoints)
+        let frechet = isClosed
+            ? ClosedStrokeMatcher.distance(user: normUser.points, closedReference: referencePoints)
+            : FrechetDistance.compute(between: normUser.points, and: normRef.points)
 
-        let shapeThreshold = config.shapeThreshold * config.leniency
+        let shapeLeniency = isClosed
+            ? max(config.leniency, GradingStrictness.normal.leniency)
+            : config.leniency
+        let shapeThreshold = config.shapeThreshold * shapeLeniency
         let shapePassed = frechet <= shapeThreshold
         let proportionPassed = proportionCheck(
             userExtent: normUser.scale,
