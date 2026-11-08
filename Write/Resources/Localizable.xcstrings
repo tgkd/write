@@ -593,6 +593,16 @@
         }
       }
     },
+    "Explain rejected strokes" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不正解の理由を表示"
+          }
+        }
+      }
+    },
     "Finish" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1049,6 +1059,16 @@
         }
       }
     },
+    "Practice grid" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "練習用のマス目"
+          }
+        }
+      }
+    },
     "Progress" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1163,6 +1183,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "形は合っていますが、書き順が違います。今のは%1$lld画目です。先に%2$lld画目を書いてください。"
+          }
+        }
+      }
+    },
+    "Says whether the shape, place or size was off." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "形・位置・大きさのどれが違ったかを表示します。"
           }
         }
       }
@@ -1428,6 +1458,16 @@
         }
       }
     },
+    "The shape doesn't match this stroke." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線の形がお手本と違います。"
+          }
+        }
+      }
+    },
     "Thick" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1450,6 +1490,16 @@
         }
       }
     },
+    "This stroke is too big or too small." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線の大きさがお手本と違います。"
+          }
+        }
+      }
+    },
     "Toggle Sidebar" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1457,6 +1507,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "サイドバーの表示を切り替え"
+          }
+        }
+      }
+    },
+    "Too far from where this stroke belongs." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線の位置がお手本からずれています。"
           }
         }
       }
@@ -1626,6 +1686,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "文を全部書く"
+          }
+        }
+      }
+    },
+    "Wrong shape, and too far from where this stroke belongs." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "線の形と位置がお手本と違います。"
           }
         }
       }

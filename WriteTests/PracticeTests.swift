@@ -267,7 +267,6 @@ final class PracticeStateTests: XCTestCase {
     func testWrongOrderNoticeNamesBothStrokes() {
         let rejection = StrokeRejection.wrongOrder(drawnStroke: 2, expectedStroke: 0)
         XCTAssertEqual(rejection.notice, "Right shape, wrong order: that was stroke 3. Draw stroke 1 first.")
-        XCTAssertNil(StrokeRejection.shape.notice)
     }
 
     func testBadShapeIsNotReportedAsWrongOrder() {

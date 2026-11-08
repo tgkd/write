@@ -7,6 +7,8 @@ final class AppSettings: ObservableObject {
     static let maskPathWidthRange: ClosedRange<CGFloat> = 3...14
     static let gradingStrictnessKey = "gradingStrictness"
     static let showWordPracticeKey = "showWordPractice"
+    static let showRejectionReasonsKey = "showRejectionReasons"
+    static let showPracticeGridKey = "showPracticeGrid"
     static let iCloudSyncEnabledKey = "iCloudSyncEnabled"
     static let recallCueOrderKey = "recallCueOrder"
 
@@ -14,6 +16,14 @@ final class AppSettings: ObservableObject {
 
     @Published var gradingStrictness: GradingStrictness {
         didSet { defaults.set(gradingStrictness.rawValue, forKey: Self.gradingStrictnessKey) }
+    }
+
+    @Published var showRejectionReasons: Bool {
+        didSet { defaults.set(showRejectionReasons, forKey: Self.showRejectionReasonsKey) }
+    }
+
+    @Published var showPracticeGrid: Bool {
+        didSet { defaults.set(showPracticeGrid, forKey: Self.showPracticeGridKey) }
     }
 
     @Published var maskPathWidth: CGFloat {
@@ -89,6 +99,14 @@ final class AppSettings: ObservableObject {
         self.defaults = defaults
         self.gradingStrictness = Self.storedStrictness(in: defaults)
 
+        self.showRejectionReasons = defaults.object(forKey: Self.showRejectionReasonsKey) == nil
+            ? true
+            : defaults.bool(forKey: Self.showRejectionReasonsKey)
+
+        self.showPracticeGrid = defaults.object(forKey: Self.showPracticeGridKey) == nil
+            ? true
+            : defaults.bool(forKey: Self.showPracticeGridKey)
+
         let storedWidth = defaults.double(forKey: "maskPathWidth")
         self.maskPathWidth = storedWidth > 0 ? CGFloat(storedWidth) : Self.defaultMaskPathWidth
 
@@ -154,6 +172,13 @@ final class AppSettings: ObservableObject {
             : .strict
         defaults.set(migrated.rawValue, forKey: gradingStrictnessKey)
         return migrated
+    }
+
+    func rejectionNotice(for rejection: StrokeRejection?) -> String? {
+        guard showRejectionReasons else {
+            return nil
+        }
+        return rejection?.notice
     }
 
     var validationConfig: ValidationConfig {

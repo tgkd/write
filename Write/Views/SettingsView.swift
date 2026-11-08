@@ -133,6 +133,15 @@ struct SettingsView: View {
                 Text("How closely strokes must match. Strict also checks stroke length.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                Divider()
+
+                Toggle("Explain rejected strokes", isOn: $settings.showRejectionReasons)
+                    .accessibilityIdentifier("showRejectionReasons")
+
+                Text("Says whether the shape, place or size was off.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
             .padding(16)
             .background(Color(.secondarySystemBackground))
@@ -176,6 +185,13 @@ struct SettingsView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
+
+                Divider().padding(.leading, 16)
+
+                Toggle("Practice grid", isOn: $settings.showPracticeGrid)
+                    .accessibilityIdentifier("showPracticeGrid")
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
             }
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 10))

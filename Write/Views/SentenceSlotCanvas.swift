@@ -71,7 +71,8 @@ struct SentenceSlotCanvas: View {
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
             hidesReference: slotState.hidesGuide,
-            notice: slotState.lastRejection?.notice,
+            showsGrid: settings.showPracticeGrid,
+            notice: settings.rejectionNotice(for: slotState.lastRejection),
             startMarker: slotState.startMarker,
             captureContext: StrokeCaptureContext(
                 codePoint: slotState.kanjiData.codePoint,

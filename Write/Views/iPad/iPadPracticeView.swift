@@ -2,6 +2,8 @@ import SwiftUI
 
 struct iPadPracticeView: View {
     @StateObject private var practiceState: PracticeState
+    private static let modelSide: CGFloat = 200
+
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var history: PracticeHistoryStore
     @State private var canvasView: DrawingCanvasView?
@@ -115,12 +117,8 @@ struct iPadPracticeView: View {
         VStack(spacing: 20) {
             Spacer()
 
-            Text(practiceState.kanjiData.text)
-                .font(.system(size: 80))
-                .lineLimit(1)
-                .minimumScaleFactor(0.4)
-                .frame(width: practiceState.kanjiData.text.count > 1 ? 80 : nil)
-                .accessibilityIdentifier("answerGlyph")
+            PracticeModelView(kanji: practiceState.kanjiData, showsGrid: settings.showPracticeGrid)
+                .frame(width: Self.modelSide, height: Self.modelSide)
 
             readingsBlock
 
@@ -210,7 +208,8 @@ struct iPadPracticeView: View {
             brushThickness: settings.brushThickness,
             showCompletionCheck: showCompletionCheck,
             hidesReference: false,
-            notice: practiceState.lastRejection?.notice,
+            showsGrid: settings.showPracticeGrid,
+            notice: settings.rejectionNotice(for: practiceState.lastRejection),
             startMarker: practiceState.startMarker,
             captureContext: StrokeCaptureContext(
                 codePoint: practiceState.kanjiData.codePoint,
