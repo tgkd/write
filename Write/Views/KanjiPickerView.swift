@@ -15,10 +15,17 @@ struct KanjiPickerView: View {
 
     @Binding var selectedCodePoint: String?
     private let usesSelectionBinding: Bool
+    private let openRoute: ((any Hashable) -> Void)?
 
-    init(dataStore: KanjiDataStore, wordPromptStore: WordPromptStore, selectedCodePoint: Binding<String?>? = nil) {
+    init(
+        dataStore: KanjiDataStore,
+        wordPromptStore: WordPromptStore,
+        selectedCodePoint: Binding<String?>? = nil,
+        openRoute: ((any Hashable) -> Void)? = nil
+    ) {
         self.dataStore = dataStore
         self.wordPromptStore = wordPromptStore
+        self.openRoute = openRoute
         self.allKanji = dataStore.allCodePoints.compactMap { dataStore.lookup(codePoint: $0) }
         if let binding = selectedCodePoint {
             _selectedCodePoint = binding
@@ -80,7 +87,7 @@ struct KanjiPickerView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 16) {
-                    NavigationLink(value: ProgressRoute()) {
+                    routeLink(ProgressRoute()) {
                         Image(systemName: "chart.bar")
                     }
                     .accessibilityLabel("Progress")
@@ -134,6 +141,24 @@ struct KanjiPickerView: View {
             .cornerRadius(8)
     }
 
+    @ViewBuilder
+    private func routeLink<Route: Hashable, Label: View>(
+        _ route: Route,
+        @ViewBuilder label: () -> Label
+    ) -> some View {
+        if let openRoute {
+            Button {
+                openRoute(route)
+            } label: {
+                label()
+            }
+        } else {
+            NavigationLink(value: route) {
+                label()
+            }
+        }
+    }
+
     private var sessionStarters: some View {
         let practice = dataStore.randomCharacters(matching: selectedFilter, count: settings.sessionCount)
         let recall = dataStore.randomCharacters(matching: selectedFilter, count: settings.sessionCount, forRecall: true)
@@ -173,7 +198,7 @@ struct KanjiPickerView: View {
 
     private var sentencesCard: some View {
         let route = SentenceSessionRoute(promptIDs: wordPromptStore.randomSentencePromptIDs(count: 5))
-        return NavigationLink(value: route) {
+        return routeLink(route) {
             linkCardLabel(title: "Sentences", subtitle: "write the whole sentence", systemImage: "text.alignleft")
         }
         .buttonStyle(.plain)
@@ -183,7 +208,7 @@ struct KanjiPickerView: View {
 
     private var wordsCard: some View {
         let route = WordSessionRoute(promptIDs: wordPromptStore.randomPromptIDs(count: settings.sessionCount))
-        return NavigationLink(value: route) {
+        return routeLink(route) {
             linkCardLabel(title: "Words", subtitle: "write the missing kanji", systemImage: "character.book.closed.ja")
         }
         .buttonStyle(.plain)
@@ -219,7 +244,7 @@ struct KanjiPickerView: View {
         route: SessionRoute,
         identifier: String
     ) -> some View {
-        NavigationLink(value: route) {
+        routeLink(route) {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Image(systemName: systemImage)
@@ -244,7 +269,7 @@ struct KanjiPickerView: View {
     }
 
     private func reviewCard(_ review: [PracticeStats.ReviewItem]) -> some View {
-        NavigationLink(value: SessionRoute.review(review, count: settings.sessionCount)) {
+        routeLink(SessionRoute.review(review, count: settings.sessionCount)) {
             HStack(spacing: 6) {
                 Image(systemName: "repeat")
                     .foregroundStyle(Color.accentColor)

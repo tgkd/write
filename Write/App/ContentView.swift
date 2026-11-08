@@ -72,33 +72,27 @@ struct ContentView: View {
         Binding(
             get: { selectedCodePoint },
             set: { newValue in
-                if newValue != selectedCodePoint {
-                    iPadNavigationPath = NavigationPath()
-                }
+                iPadNavigationPath = NavigationPath()
                 selectedCodePoint = newValue
             }
         )
     }
 
+    private func openInDetail(_ route: any Hashable) {
+        var path = NavigationPath()
+        path.append(route)
+        iPadNavigationPath = path
+    }
+
     private var iPadLayout: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            KanjiPickerView(dataStore: dataStore, wordPromptStore: wordPromptStore, selectedCodePoint: sidebarSelection)
-                .navigationDestination(for: SessionRoute.self) { route in
-                    SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind, origin: route.origin)
-                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
-                }
-                .navigationDestination(for: WordSessionRoute.self) { route in
-                    WordPracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
-                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
-                }
-                .navigationDestination(for: SentenceSessionRoute.self) { route in
-                    SentencePracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
-                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
-                }
-                .navigationDestination(for: ProgressRoute.self) { _ in
-                    PracticeProgressView(dataStore: dataStore)
-                }
-                .removingSystemSidebarToggle()
+            KanjiPickerView(
+                dataStore: dataStore,
+                wordPromptStore: wordPromptStore,
+                selectedCodePoint: sidebarSelection,
+                openRoute: openInDetail
+            )
+            .removingSystemSidebarToggle()
         } detail: {
             NavigationStack(path: $iPadNavigationPath) {
                 Group {
@@ -121,19 +115,35 @@ struct ContentView: View {
                     }
                 }
                 .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
-            }
-            .navigationDestination(for: PracticeRoute.self) { route in
-                if let kanji = dataStore.lookup(codePoint: route.codePoint) {
-                    iPadPracticeView(kanjiData: kanji, mode: settings.practiceMode, context: RunContext(origin: route.origin))
-                        .id(route.codePoint)
+                .navigationDestination(for: PracticeRoute.self) { route in
+                    if let kanji = dataStore.lookup(codePoint: route.codePoint) {
+                        iPadPracticeView(kanjiData: kanji, mode: settings.practiceMode, context: RunContext(origin: route.origin))
+                            .id(route.codePoint)
+                            .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
+                    }
+                }
+                .navigationDestination(for: NotebookRoute.self) { route in
+                    let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
+                    NotebookViewRepresentable(kanjiList: kanji)
+                        .navigationBarBackButtonHidden(true)
                         .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
                 }
-            }
-            .navigationDestination(for: NotebookRoute.self) { route in
-                let kanji = route.codePoints.compactMap { dataStore.lookup(codePoint: $0) }
-                NotebookViewRepresentable(kanjiList: kanji)
-                    .navigationBarBackButtonHidden(true)
-                    .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
+                .navigationDestination(for: SessionRoute.self) { route in
+                    SessionPracticeView(kanji: dataStore.queue(for: route), kind: route.kind, origin: route.origin)
+                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
+                }
+                .navigationDestination(for: WordSessionRoute.self) { route in
+                    WordPracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
+                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
+                }
+                .navigationDestination(for: SentenceSessionRoute.self) { route in
+                    SentencePracticeView(prompts: wordPromptStore.prompts(for: route), dataStore: dataStore)
+                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
+                }
+                .navigationDestination(for: ProgressRoute.self) { _ in
+                    PracticeProgressView(dataStore: dataStore)
+                        .modifier(SidebarToggleToolbar(columnVisibility: $columnVisibility))
+                }
             }
         }
         .navigationSplitViewStyle(.balanced)
