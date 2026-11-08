@@ -103,12 +103,12 @@ final class KanjiDataStoreTests: XCTestCase {
 
     func testCharacterConversion() {
         let kanji = store.lookup(codePoint: "4eee")!
-        XCTAssertEqual(kanji.character, "仮")
+        XCTAssertEqual(kanji.text, "仮")
     }
 
     func testCharacterConversionYama() {
         let kanji = store.lookup(codePoint: "5c71")!
-        XCTAssertEqual(kanji.character, "山")
+        XCTAssertEqual(kanji.text, "山")
     }
 
     // MARK: - Simple kanji tests
@@ -131,6 +131,19 @@ final class KanjiDataStoreTests: XCTestCase {
         let emptyStore = try KanjiDataStore(data: emptyData)
         XCTAssertEqual(emptyStore.count, 0)
         XCTAssertNil(emptyStore.lookup(codePoint: "4eee"))
+    }
+
+    func testYoonTextScriptSortAndSearch() throws {
+        let catalog = KanjiDataStore()
+        let gyo = try XCTUnwrap(catalog.lookup(codePoint: "304e-3087"))
+        XCTAssertEqual(gyo.text, "ぎょ")
+        XCTAssertEqual(gyo.script, .hiragana)
+        XCTAssertEqual(WritingScript(codePoint: "30ae-30e7"), .katakana)
+        XCTAssertEqual(catalog.search(query: "ぎょ").map(\.codePoint), [gyo.codePoint])
+        XCTAssertTrue(catalog.search(query: "gyo").contains(gyo))
+        let start = try XCTUnwrap(catalog.allCodePoints.firstIndex(of: "304d"))
+        let next = Array(catalog.allCodePoints[start..<(start + 5)])
+        XCTAssertEqual(next, ["304d", "304d-3083", "304d-3085", "304d-3087", "304e"])
     }
 
     // MARK: - Helpers

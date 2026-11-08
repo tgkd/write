@@ -23,11 +23,49 @@ final class PreprocessingTests: XCTestCase {
         let characters = store.allCodePoints.compactMap { store.lookup(codePoint: $0) }
         let hiragana = characters.filter { $0.script == .hiragana }
         let katakana = characters.filter { $0.script == .katakana }
-        XCTAssertEqual(hiragana.count, 71)
-        XCTAssertEqual(katakana.count, 71)
+        XCTAssertEqual(hiragana.count, 104)
+        XCTAssertEqual(katakana.count, 104)
         for kana in hiragana + katakana {
             XCTAssertFalse(kana.romaji?.isEmpty ?? true)
             XCTAssertNil(kana.jlpt)
+        }
+    }
+
+    func testYoonInventoryAndGeometry() throws {
+        let inventories = [("きぎしじちにひびぴみり", "ゃゅょ"), ("キギシジチニヒビピミリ", "ャュョ")]
+        let prefixes = ["ky", "gy", "sh", "j", "ch", "ny", "hy", "by", "py", "my", "ry"]
+        let smallStrokeCounts: [Character: Int] = ["ゃ": 3, "ゅ": 2, "ょ": 2, "ャ": 2, "ュ": 2, "ョ": 3]
+        var expectedKeys: Set<String> = []
+        for (bases, smalls) in inventories {
+            for (base, prefix) in zip(bases, prefixes) {
+                let big = try XCTUnwrap(store.lookup(character: base))
+                for (small, vowel) in zip(smalls, "auo") {
+                    let text = String(base) + String(small)
+                    let key = text.unicodeScalars.map { String($0.value, radix: 16) }.joined(separator: "-")
+                    expectedKeys.insert(key)
+                    let item = try XCTUnwrap(store.lookup(codePoint: key), text)
+                    XCTAssertEqual(item.text, text)
+                    XCTAssertEqual(item.element, text)
+                    XCTAssertEqual(item.romaji, prefix + String(vowel))
+                    XCTAssertEqual(item.strokes.count, big.strokes.count + smallStrokeCounts[small]!)
+                    XCTAssertEqual(item.strokes.map(\.strokeNumber), Array(1...item.strokes.count))
+                    XCTAssertTrue(item.components.isEmpty)
+                    for stroke in item.strokes {
+                        let path = try StrokeRenderer.createPath(from: stroke.pathData)
+                        let bounds = path.boundingBoxOfPath
+                        XCTAssertFalse(path.isEmpty, key)
+                        XCTAssertGreaterThanOrEqual(bounds.minX, 0, key)
+                        XCTAssertGreaterThanOrEqual(bounds.minY, 0, key)
+                        XCTAssertLessThanOrEqual(bounds.maxX, 109, key)
+                        XCTAssertLessThanOrEqual(bounds.maxY, 109, key)
+                    }
+                }
+            }
+        }
+        XCTAssertEqual(expectedKeys.count, 66)
+        XCTAssertEqual(Set(store.allCodePoints.filter { $0.contains("-") }), expectedKeys)
+        for small in "ゃゅょャュョ" {
+            XCTAssertNil(store.lookup(character: small))
         }
     }
 

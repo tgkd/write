@@ -23,8 +23,10 @@ struct SessionSummaryView: View {
             List(results.indices, id: \.self) { i in
                 let result = results[i]
                 HStack {
-                    Text(String(result.kanjiData.character))
+                    Text(result.kanjiData.text)
                         .font(.system(size: 28))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.4)
                         .frame(width: 44)
 
                     VStack(alignment: .leading, spacing: 2) {

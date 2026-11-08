@@ -36,8 +36,8 @@ final class KanjiDataStore: Sendable {
 
     private static func sortedByCodePoint(_ codePoints: Dictionary<String, KanjiData>.Keys) -> [String] {
         codePoints.sorted { lhs, rhs in
-            let left = UInt32(lhs, radix: 16) ?? 0
-            let right = UInt32(rhs, radix: 16) ?? 0
+            let left = UInt32(lhs.split(separator: "-").first ?? "", radix: 16) ?? 0
+            let right = UInt32(rhs.split(separator: "-").first ?? "", radix: 16) ?? 0
             if left != right {
                 return left < right
             }
@@ -59,7 +59,7 @@ final class KanjiDataStore: Sendable {
     func search(query: String) -> [KanjiData] {
         let q = query.lowercased()
         return allCodePoints.compactMap { kanjiMap[$0] }.filter { kanji in
-            if kanji.romaji?.lowercased() == q {
+            if kanji.text == query || kanji.romaji?.lowercased() == q {
                 return true
             }
             if let meanings = kanji.meanings {

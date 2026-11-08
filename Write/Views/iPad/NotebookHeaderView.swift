@@ -35,6 +35,10 @@ final class NotebookHeaderView: UICollectionReusableView {
 
         kanjiLabel.font = .systemFont(ofSize: 44)
         kanjiLabel.textAlignment = .center
+        kanjiLabel.numberOfLines = 1
+        kanjiLabel.adjustsFontSizeToFitWidth = true
+        kanjiLabel.minimumScaleFactor = 0.4
+        kanjiLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 44).isActive = true
 
         readingsLabel.font = .systemFont(ofSize: 13)
         readingsLabel.textColor = .secondaryLabel
@@ -45,7 +49,7 @@ final class NotebookHeaderView: UICollectionReusableView {
     }
 
     func configure(with kanji: KanjiData) {
-        kanjiLabel.text = String(kanji.character)
+        kanjiLabel.text = kanji.text
 
         var parts: [String] = []
         if let romaji = kanji.romaji {

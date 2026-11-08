@@ -6,7 +6,7 @@ enum WritingScript: Hashable, Sendable {
     case katakana
 
     init(codePoint: String) {
-        let value = Int(codePoint, radix: 16) ?? 0
+        let value = Int(codePoint.split(separator: "-").first ?? "", radix: 16) ?? 0
         if (0x3041...0x309F).contains(value) {
             self = .hiragana
         } else if (0x30A0...0x30FF).contains(value) {

@@ -72,7 +72,7 @@ final class SpokenReadingTests: XCTestCase {
             guard let text = SpokenReading.text(for: kanji) else {
                 continue
             }
-            XCTAssertNil(text.rangeOfCharacter(from: notation), "\(kanji.character): \(text)")
+            XCTAssertNil(text.rangeOfCharacter(from: notation), "\(kanji.text): \(text)")
         }
     }
 }

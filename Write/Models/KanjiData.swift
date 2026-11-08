@@ -23,11 +23,13 @@ struct KanjiData: Codable, Equatable, Sendable {
         WritingScript(codePoint: codePoint)
     }
 
-    var character: Character {
-        guard let scalar = UInt32(codePoint, radix: 16),
-              let unicode = Unicode.Scalar(scalar) else {
-            fatalError("Invalid code point: \(codePoint)")
-        }
-        return Character(unicode)
+    var text: String {
+        codePoint.split(separator: "-", omittingEmptySubsequences: false).map { component in
+            guard let scalar = UInt32(component, radix: 16),
+                  let unicode = Unicode.Scalar(scalar) else {
+                fatalError("Invalid code point: \(codePoint)")
+            }
+            return String(unicode)
+        }.joined()
     }
 }

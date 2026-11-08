@@ -78,8 +78,8 @@ final class CharacterFilterTests: XCTestCase {
     }
 
     func testRandomSchoolGrade() {
-        XCTAssertEqual(store.randomCharacters(matching: .schoolGrade(1), count: 5).map(\.character), ["山"])
-        XCTAssertEqual(store.randomCharacters(matching: .otherJoyo, count: 5).map(\.character), ["𠮟"])
+        XCTAssertEqual(store.randomCharacters(matching: .schoolGrade(1), count: 5).map(\.text), ["山"])
+        XCTAssertEqual(store.randomCharacters(matching: .otherJoyo, count: 5).map(\.text), ["𠮟"])
     }
 
     func testCodePointsSortNumerically() {
@@ -93,6 +93,6 @@ final class CharacterFilterTests: XCTestCase {
     }
 
     func testRandomHiragana() {
-        XCTAssertEqual(store.randomCharacters(matching: .hiragana, count: 5).map(\.character), ["か"])
+        XCTAssertEqual(store.randomCharacters(matching: .hiragana, count: 5).map(\.text), ["か"])
     }
 }

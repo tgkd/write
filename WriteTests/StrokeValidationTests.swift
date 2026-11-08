@@ -268,6 +268,44 @@ final class FrechetDistanceTests: XCTestCase {
 
 final class StrokeValidatorTests: XCTestCase {
 
+    func testComposedYoonReferenceTracingPassesInOrder() throws {
+        let store = KanjiDataStore()
+        let canvas = CGSize(width: 370, height: 370)
+        var config = ValidationConfig.standard
+        config.leniency = GradingStrictness.normal.leniency
+        for key in ["304e-3087", "30cb-30e7", "30ea-30e5"] {
+            let item = try XCTUnwrap(store.lookup(codePoint: key))
+            let reference = StrokeValidator.sampleReferenceStrokes(
+                item.strokes, canvasSize: canvas, sampleCount: config.sampleCount
+            )
+            let drawn = StrokeValidator.sampleReferenceStrokes(
+                item.strokes, canvasSize: canvas, sampleCount: 200
+            )
+            for guideless in [false, true] {
+                var anchors: [StrokeAnchor] = []
+                var unmatched = Set(item.strokes.indices)
+                for index in item.strokes.indices {
+                    XCTAssertFalse(drawn[index].isEmpty)
+                    let result = StrokeValidator.identifyStroke(
+                        userPoints: drawn[index],
+                        referenceSamples: reference,
+                        unmatchedIndices: unmatched,
+                        canvasSize: canvas,
+                        expectedStrokeIndex: index,
+                        anchors: guideless ? anchors : nil,
+                        config: config
+                    )
+                    XCTAssertTrue(result.accepted, "\(key), stroke \(index), guideless \(guideless)")
+                    XCTAssertTrue(result.correctOrder)
+                    XCTAssertEqual(result.matchedStrokeIndex, index)
+                    anchors.append(try XCTUnwrap(result.anchor))
+                    unmatched.remove(index)
+                }
+                XCTAssertTrue(unmatched.isEmpty)
+            }
+        }
+    }
+
     let canvasSize = CGSize(width: 300, height: 300)
 
     func testIdenticalStrokeScoresHigh() {
