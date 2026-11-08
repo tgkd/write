@@ -125,8 +125,10 @@ struct KanjiPickerView: View {
     private func kanjiCellContent(_ kanji: KanjiData) -> some View {
         let size: CGFloat = usesSelectionBinding ? 40 : 56
         let fontSize: CGFloat = usesSelectionBinding ? 24 : 32
-        return Text(String(kanji.character))
+        return Text(kanji.text)
             .font(.system(size: fontSize))
+            .lineLimit(1)
+            .minimumScaleFactor(0.4)
             .frame(width: size, height: size)
             .background(Color(.secondarySystemBackground))
             .cornerRadius(8)

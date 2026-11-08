@@ -115,8 +115,11 @@ struct iPadPracticeView: View {
         VStack(spacing: 20) {
             Spacer()
 
-            Text(String(practiceState.kanjiData.character))
+            Text(practiceState.kanjiData.text)
                 .font(.system(size: 80))
+                .lineLimit(1)
+                .minimumScaleFactor(0.4)
+                .frame(width: practiceState.kanjiData.text.count > 1 ? 80 : nil)
                 .accessibilityIdentifier("answerGlyph")
 
             readingsBlock

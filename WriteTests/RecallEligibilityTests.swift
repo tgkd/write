@@ -109,6 +109,21 @@ final class RecallEligibilityTests: XCTestCase {
         }
     }
 
+    func testYoonAreEligibleWithoutChangingExistingEligibility() {
+        let store = KanjiDataStore()
+        let all = store.allCodePoints.compactMap { store.lookup(codePoint: $0) }
+        let original = all.filter { !$0.codePoint.contains("-") }
+        let combinations = all.filter { $0.codePoint.contains("-") }
+        let originalEligibility = RecallEligibility(kanji: original)
+        XCTAssertEqual(combinations.count, 66)
+        for item in combinations {
+            XCTAssertTrue(store.recallEligibility.isEligible(item), item.codePoint)
+        }
+        for item in original {
+            XCTAssertEqual(store.recallEligibility.isEligible(item), originalEligibility.isEligible(item), item.codePoint)
+        }
+    }
+
     func testRandomRecallCharactersAreEligible() {
         let store = KanjiDataStore()
         let picked = store.randomCharacters(matching: .all, count: 200, forRecall: true)

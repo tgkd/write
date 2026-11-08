@@ -88,6 +88,22 @@ final class SentencePracticeStateTests: XCTestCase {
         tokens: [SentenceToken(surface: "。", reading: nil)]
     )
 
+    func testYoonCatalogEntryDoesNotChangeSentenceCells() throws {
+        let store = KanjiDataStore()
+        let prompt = WordPrompt(
+            id: "s-yoon", before: "", reading: "しょ", after: "", gloss: "", segments: [], notes: "",
+            tokens: [SentenceToken(surface: "しょ", reading: nil)]
+        )
+        XCTAssertNotNil(store.lookup(codePoint: "3057-3087"))
+        let state = SentencePracticeState(prompts: [prompt], dataStore: store)
+        let item = try XCTUnwrap(state.currentItem)
+        XCTAssertEqual(item.cells.count, 2)
+        XCTAssertEqual(item.writable.count, 1)
+        XCTAssertEqual(item.cells.map(\.character), ["し", "ょ"])
+        XCTAssertEqual(item.writable.first?.character, "し")
+        XCTAssertFalse(item.cells[1].isWritten)
+    }
+
     private func makeState(_ prompts: [WordPrompt]) -> (SentencePracticeState, SentenceRecorder) {
         let state = SentencePracticeState(prompts: prompts, lookup: { self.characters[$0] })
         let recorder = SentenceRecorder()

@@ -25,8 +25,11 @@ struct AnswerGlyph: View {
                 }
             }
         } else {
-            Text(String(kanji.character))
+            Text(kanji.text)
                 .font(.system(size: fontSize))
+                .lineLimit(1)
+                .minimumScaleFactor(0.4)
+                .frame(width: kanji.text.count > 1 ? fontSize : nil)
                 .accessibilityIdentifier("answerGlyph")
         }
     }

@@ -94,6 +94,8 @@ Every mode applies the box rule: a stroke is rejected (`StrokeRejection.outOfFra
 - `geometryAccepted` keeps the verdict from before the box check, so a geometric match to a later stroke still counts as order evidence.
 - Run-level and per-stroke miss counts both go through `MissEvidence.record`. The notice shown and the counts are decided independently.
 
+Yōon catalog entries are composed by the preprocessor from two KanjiVG glyphs and keyed by two hyphen-separated code points. Small kana have no entries of their own. Yōon combinations are not writable units in Sentences or Words.
+
 ### KanjiVG coordinate space
 
 KanjiVG uses a 109x109 coordinate space. StrokeRenderer applies a uniform scale transform to map this to the canvas size.

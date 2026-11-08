@@ -9,8 +9,11 @@ struct KanjiDetailView: View {
         VStack(spacing: 24) {
             Spacer()
 
-            Text(String(kanji.character))
+            Text(kanji.text)
                 .font(.system(size: 120))
+                .lineLimit(1)
+                .minimumScaleFactor(0.4)
+                .frame(width: kanji.text.count > 1 ? 120 : nil)
 
             readingsBlock
 

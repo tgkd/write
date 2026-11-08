@@ -8,7 +8,7 @@ enum SpokenReading {
     static func text(for kanji: KanjiData) -> String? {
         switch kanji.script {
         case .hiragana, .katakana:
-            return String(kanji.character)
+            return kanji.text
         case .kanji:
             let on = cleaned(kanji.onYomi ?? [], limit: maxOnReadings)
             let kun = cleaned(kanji.kunYomi ?? [], limit: maxKunReadings)
