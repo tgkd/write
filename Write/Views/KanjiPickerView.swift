@@ -184,26 +184,13 @@ struct KanjiPickerView: View {
                 reviewCard(review)
             }
             if settings.showWordPractice {
-                wordsCard
-                if showsSentenceCard {
-                    sentencesCard
+                if usesSelectionBinding && DeviceContext.isIPad {
+                    writingCard
+                } else {
+                    wordsCard
                 }
             }
         }
-    }
-
-    private var showsSentenceCard: Bool {
-        DeviceContext.isIPad && !wordPromptStore.sentencePrompts.isEmpty
-    }
-
-    private var sentencesCard: some View {
-        let route = SentenceSessionRoute(promptIDs: wordPromptStore.randomSentencePromptIDs(count: 5))
-        return routeLink(route) {
-            linkCardLabel(title: "Sentences", subtitle: "write the whole sentence", systemImage: "text.alignleft")
-        }
-        .buttonStyle(.plain)
-        .disabled(route.promptIDs.isEmpty)
-        .accessibilityIdentifier("session.sentences")
     }
 
     private var wordsCard: some View {
@@ -214,6 +201,24 @@ struct KanjiPickerView: View {
         .buttonStyle(.plain)
         .disabled(route.promptIDs.isEmpty)
         .accessibilityIdentifier("session.words")
+    }
+
+    private var writingCard: some View {
+        let route = WritingRoute(promptIDs: writingPromptIDs)
+        return routeLink(route) {
+            linkCardLabel(title: "Writing", subtitle: "Free or by strokes", systemImage: "pencil.and.outline")
+        }
+        .buttonStyle(.plain)
+        .disabled(route.promptIDs.isEmpty)
+        .accessibilityIdentifier("session.writing")
+    }
+
+    private var writingPromptIDs: [String] {
+        if ProcessInfo.processInfo.arguments.contains("-uiTestingFreshHistory"),
+           let ids = UserDefaults.standard.string(forKey: "uiTestingWritingPromptIDs") {
+            return ids.split(separator: ",").map(String.init)
+        }
+        return wordPromptStore.randomWritingPromptIDs(count: 5, mode: settings.writingMode)
     }
 
     private func linkCardLabel(title: LocalizedStringKey, subtitle: LocalizedStringKey, systemImage: String) -> some View {

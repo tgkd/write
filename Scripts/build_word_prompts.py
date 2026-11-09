@@ -729,7 +729,20 @@ def kanji_difficulty(character, strokes):
     return None
 
 
-def build_prompt(prompt_id, example, tokens, target_index, gloss, segments, notes):
+def context_spelling_issues(tokens, target_index, by_spelling, homophones, entries):
+    issues = []
+    for index, token in enumerate(tokens):
+        if index == target_index or not has_kanji(token["surface"]):
+            continue
+        try:
+            entry, reading, head, _ = resolve_lemma(token, by_spelling)
+            check_ambiguity(entry, reading, head, token, homophones, entries)
+        except Rejected as rejection:
+            issues.append({"tokenIndex": index, "reason": str(rejection)})
+    return issues
+
+
+def build_prompt(prompt_id, example, tokens, target_index, gloss, segments, notes, empty_issues=None):
     before, reading, after = kana_sentence(tokens, target_index)
     return {
         "id": prompt_id,
@@ -740,11 +753,12 @@ def build_prompt(prompt_id, example, tokens, target_index, gloss, segments, note
         "segments": segments,
         "translation": example["english"],
         "tokens": [{"surface": token["surface"], "reading": token["reading"]} for token in tokens],
+        "presentation": {"version": 1, "groups": chunk_tokens(tokens), "emptyIssues": empty_issues},
         "notes": notes,
     }
 
 
-def build_legacy(examples, transcriptions, by_spelling):
+def build_legacy(examples, transcriptions, by_spelling, homophones, entries):
     prompts = []
     lemmas = set()
     for legacy in LEGACY_PROMPTS:
@@ -755,7 +769,8 @@ def build_legacy(examples, transcriptions, by_spelling):
         if len(target_indices) != 1:
             sys.exit(f"{legacy['id']}: target {answer} not found as one token in {sentence}")
         prompt = build_prompt(
-            legacy["id"], example, tokens, target_indices[0], legacy["gloss"], legacy["segments"], legacy["notes"]
+            legacy["id"], example, tokens, target_indices[0], legacy["gloss"], legacy["segments"], legacy["notes"],
+            context_spelling_issues(tokens, target_indices[0], by_spelling, homophones, entries),
         )
         for key in ("before", "reading", "after"):
             if prompt[key] != legacy[key]:
@@ -890,6 +905,7 @@ def build_new(examples, transcriptions, strokes, by_spelling, homophones, entrie
         prompts.append(build_prompt(
             f"t{example_id}", example, tokens, index, target["gloss"], segments_for(token),
             new_notes(example, target, token),
+            context_spelling_issues(tokens, index, by_spelling, homophones, entries),
         ))
     return prompts, reasons, len(pool)
 
@@ -915,6 +931,7 @@ def encode_prompt(prompt):
         f"    \"segments\": [{segments}],",
         f"    \"translation\": {encode_string(prompt['translation'])},",
         f"    \"tokens\": [{', '.join(tokens)}],",
+        f"    \"presentation\": {json.dumps(prompt['presentation'])},",
         f"    \"notes\": {encode_string(prompt['notes'])}",
     ]
     return "  {\n" + "\n".join(lines) + "\n  }"
@@ -923,6 +940,9 @@ def encode_prompt(prompt):
 def verify(prompts, strokes):
     answers = set()
     for prompt in prompts:
+        groups = prompt["presentation"]["groups"]
+        if not groups or any(not group for group in groups) or [index for group in groups for index in group] != list(range(len(prompt["tokens"]))):
+            sys.exit(f"{prompt['id']}: presentation groups must partition tokens in order")
         written = "".join(token["surface"] for token in prompt["tokens"])
         kana = "".join(token["reading"] or token["surface"] for token in prompt["tokens"])
         if (prompt["before"] + prompt["reading"] + prompt["after"]).replace(" ", "") != kana:
@@ -957,7 +977,7 @@ def main():
     by_spelling, homophones = build_indexes(entries)
     print(f"Loaded {len(examples)} examples, {len(transcriptions)} transcriptions, {len(entries)} JMdict entries")
 
-    legacy, used_lemmas = build_legacy(examples, transcriptions, by_spelling)
+    legacy, used_lemmas = build_legacy(examples, transcriptions, by_spelling, homophones, entries)
     legacy_ids = {item["tatoeba"] for item in LEGACY_PROMPTS}
     new, reasons, pool_size = build_new(
         examples, transcriptions, strokes, by_spelling, homophones, entries, used_lemmas, legacy_ids
@@ -971,6 +991,10 @@ def main():
         f.write("[\n" + ",\n".join(encode_prompt(prompt) for prompt in prompts) + "\n]\n")
 
     print(f"Wrote {len(prompts)} prompts ({len(legacy)} kept, {len(new)} new from {pool_size} candidates) to {output_path}")
+    flagged = [prompt for prompt in prompts if prompt["presentation"]["emptyIssues"]]
+    print(f"Empty eligible: {len(prompts) - len(flagged)}; flagged: {len(flagged)}")
+    for prompt in flagged:
+        print(f"  {prompt['id']}: {json.dumps(prompt['presentation']['emptyIssues'], ensure_ascii=False)}")
     for reason, count in sorted(reasons.items(), key=lambda item: (-item[1], item[0])):
         print(f"  rejected {count}: {reason}")
 

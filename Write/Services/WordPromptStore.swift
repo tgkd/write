@@ -37,11 +37,17 @@ final class WordPromptStore: Sendable {
         prompts.filter { $0.tokens?.isEmpty == false && $0.translation != nil }
     }
 
-    func prompts(for route: SentenceSessionRoute) -> [WordPrompt] {
-        route.promptIDs.compactMap { id in sentencePrompts.first { $0.id == id } }
+    var writingPrompts: [WordPrompt] {
+        sentencePrompts.filter { prompt in
+            prompt.presentation?.validatedGroups(tokenCount: prompt.tokens?.count ?? 0) != nil
+        }
     }
 
-    func randomSentencePromptIDs(count: Int) -> [String] {
-        Array(sentencePrompts.shuffled().prefix(count)).map(\.id)
+    func prompts(for route: WritingRoute) -> [WordPrompt] {
+        route.promptIDs.compactMap { id in writingPrompts.first { $0.id == id } }
+    }
+
+    func randomWritingPromptIDs(count: Int, mode: WritingMode) -> [String] {
+        Array(writingPrompts.filter { mode != .empty || $0.presentation?.allowsEmpty == true }.shuffled().prefix(count)).map(\.id)
     }
 }

@@ -15,6 +15,9 @@ struct PracticeCanvasArea: View {
     var notice: String?
     var startMarker: CGPoint?
     var captureContext: StrokeCaptureContext?
+    var retainedCanvasView: DrawingCanvasView?
+    var canvasIdentifier: String = "drawingCanvas"
+    var installsPencilInteraction: Bool = true
 
     var onStrokeBegan: ((UITouch.TouchType) -> Void)?
     var onStrokeCompleted: (([CGPoint]) -> Void)?
@@ -70,6 +73,9 @@ struct PracticeCanvasArea: View {
                 smoothingStrength: smoothingStrength,
                 brushThickness: brushThickness,
                 captureContext: captureContext,
+                retainedCanvasView: retainedCanvasView,
+                canvasIdentifier: canvasIdentifier,
+                installsPencilInteraction: installsPencilInteraction,
                 canvasView: $canvasView
             )
 
@@ -115,6 +121,10 @@ struct KanjiReferenceRepresentable: UIViewRepresentable {
     let isHidden: Bool
     @Binding var referenceView: KanjiReferenceView?
     var onReady: (() -> Void)?
+
+    static func dismantleUIView(_ uiView: KanjiReferenceView, coordinator: ()) {
+        uiView.onLayersRebuilt = nil
+    }
 
     func makeUIView(context: Context) -> KanjiReferenceView {
         let view = KanjiReferenceView()

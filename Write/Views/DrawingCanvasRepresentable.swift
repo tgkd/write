@@ -15,6 +15,9 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     var smoothingStrength: SmoothingStrength = .medium
     var brushThickness: BrushThickness = .medium
     var captureContext: StrokeCaptureContext?
+    var retainedCanvasView: DrawingCanvasView?
+    var canvasIdentifier: String = "drawingCanvas"
+    var installsPencilInteraction: Bool = true
 
     @Binding var canvasView: DrawingCanvasView?
 
@@ -23,7 +26,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> DrawingCanvasView {
-        let view = DrawingCanvasView()
+        let view = retainedCanvasView ?? DrawingCanvasView()
         view.onPointAdded = onPointAdded
         view.onStrokeBegan = onStrokeBegan
         view.onStrokeCompleted = onStrokeCompleted
@@ -32,13 +35,27 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         applyBrushSettings(to: view)
         view.backgroundColor = .clear
         view.isAccessibilityElement = true
-        view.accessibilityIdentifier = "drawingCanvas"
+        view.accessibilityIdentifier = canvasIdentifier
         view.accessibilityLabel = String(localized: "Drawing canvas")
         view.accessibilityTraits = .allowsDirectInteraction
+        if retainedCanvasView != nil {
+            view.accessibilityValue = String(view.strokeCount)
+            if view.gestureRecognizers?.contains(where: { $0 is WritingTouchRecognizer }) != true {
+                let gesture = WritingTouchRecognizer()
+                gesture.cancelsTouchesInView = false
+                gesture.delaysTouchesBegan = false
+                gesture.allowedTouchTypes = allowedTouchTypes.map { NSNumber(value: $0.rawValue) }
+                view.addGestureRecognizer(gesture)
+            }
+        }
 
-        let interaction = UIPencilInteraction()
-        interaction.delegate = context.coordinator
-        view.addInteraction(interaction)
+        if installsPencilInteraction {
+            let interaction = view.interactions.compactMap { $0 as? UIPencilInteraction }.first ?? UIPencilInteraction()
+            interaction.delegate = context.coordinator
+            if interaction.view == nil {
+                view.addInteraction(interaction)
+            }
+        }
         context.coordinator.onPencilDoubleTap = onPencilDoubleTap
 
         DispatchQueue.main.async {
@@ -53,6 +70,9 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         uiView.onStrokeCompleted = onStrokeCompleted
         uiView.onStrokeCaptured = strokeCaptureHandler()
         uiView.allowedTouchTypes = allowedTouchTypes
+        for gesture in uiView.gestureRecognizers ?? [] where gesture is WritingTouchRecognizer {
+            gesture.allowedTouchTypes = allowedTouchTypes.map { NSNumber(value: $0.rawValue) }
+        }
         context.coordinator.onPencilDoubleTap = onPencilDoubleTap
         applyBrushSettings(to: uiView)
     }
