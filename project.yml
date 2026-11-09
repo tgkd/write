@@ -117,7 +117,9 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - WriteTests
+      - path: WriteTests
+        excludes:
+          - "*.py"
       - path: WriteWidget/Resources/daily_kanji.json
         buildPhase: resources
     resources:

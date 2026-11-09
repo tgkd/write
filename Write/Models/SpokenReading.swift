@@ -5,6 +5,12 @@ enum SpokenReading {
     static let maxKunReadings = 2
     static let separator = "、"
 
+    static func text(for prompt: WordPrompt) -> String? {
+        let text = prompt.tokens?.map { $0.reading ?? $0.surface }.joined() ?? prompt.sentence
+        let cleaned = clean(text)
+        return cleaned.isEmpty ? nil : cleaned
+    }
+
     static func text(for kanji: KanjiData) -> String? {
         switch kanji.script {
         case .hiragana, .katakana:

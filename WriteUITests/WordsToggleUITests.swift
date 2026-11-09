@@ -19,7 +19,9 @@ final class WordsToggleUITests: XCTestCase {
     }
 
     private var practiceCard: XCUIElement { app.buttons["session.practice"] }
-    private var wordsCard: XCUIElement { app.buttons["session.words"] }
+    private var wordsCard: XCUIElement {
+        app.buttons[UIDevice.current.userInterfaceIdiom == .pad ? "session.writing" : "session.words"]
+    }
 
     func testWordsCardIsHiddenWhenTheSettingIsOff() {
         launch(showWordPractice: false)

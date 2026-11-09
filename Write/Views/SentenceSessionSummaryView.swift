@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SentenceSessionSummaryView: View {
-    let results: [SentencePracticeState.SentenceResult]
+    let results: [WritingSession.SentenceResult]
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -82,7 +82,7 @@ struct SentenceSessionSummaryView: View {
         return String(localized: "\(written) · \(hinted) needed a hint")
     }
 
-    private func detail(for result: SentencePracticeState.SentenceResult) -> String {
+    private func detail(for result: WritingSession.SentenceResult) -> String {
         var parts: [String] = []
         if result.hintsUsed > 0 {
             parts.append(result.hintsUsed == 1 ? String(localized: "1 hint") : String(localized: "\(result.hintsUsed) hints"))

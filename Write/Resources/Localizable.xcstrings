@@ -1,6 +1,178 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "No remaining prompts are eligible for Empty. This session will finish after this sentence." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "残りの文には空欄モードを使えるものがありません。この文でセッションを終了します。" } } } },
+    "Written character" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書いた文字" } } } },
+    "Finish sentence": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文を終了"
+          }
+        }
+      }
+    },
+    "Restart phrase": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フレーズをやり直す"
+          }
+        }
+      }
+    },
+    "Mode changes apply to the next sentence.": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "モードの変更は次の文から適用されます。"
+          }
+        }
+      }
+    },
+    "By strokes · Empty": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "筆順練習・空欄"
+          }
+        }
+      }
+    },
+    "By strokes · Trace": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "筆順練習・なぞり書き"
+          }
+        }
+      }
+    },
+    "Free": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自由筆記"
+          }
+        }
+      }
+    },
+    "Writing mode": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "筆記モード"
+          }
+        }
+      }
+    },
+    "Free or by strokes": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自由筆記・筆順練習"
+          }
+        }
+      }
+    },
+    "Writing": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "筆記"
+          }
+        }
+      }
+    },
+    "Phrase %lld of %lld": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フレーズ %1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "Sentence %lld of %lld": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文 %1$lld / %2$lld"
+          }
+        }
+      }
+    },
+    "Writing complete": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "筆記が終わりました"
+          }
+        }
+      }
+    },
+    "Next sentence": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次の文"
+          }
+        }
+      }
+    },
+    "Next phrase": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次のフレーズ"
+          }
+        }
+      }
+    },
+    "Clear cell": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "マスを消去"
+          }
+        }
+      }
+    },
+    "No checking": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "判定なし"
+          }
+        }
+      }
+    },
+    "Free writing": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自由筆記"
+          }
+        }
+      }
+    },
     "%lld sentence written" : {
       "localizations" : {
         "ja" : {

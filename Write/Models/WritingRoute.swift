@@ -1,5 +1,5 @@
 import Foundation
 
-struct SentenceSessionRoute: Hashable {
+struct WritingRoute: Hashable {
     let promptIDs: [String]
 }

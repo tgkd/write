@@ -11,6 +11,7 @@ final class AppSettings: ObservableObject {
     static let showPracticeGridKey = "showPracticeGrid"
     static let iCloudSyncEnabledKey = "iCloudSyncEnabled"
     static let recallCueOrderKey = "recallCueOrder"
+    static let writingModeKey = "writingMode"
 
     private let defaults: UserDefaults
 
@@ -44,6 +45,10 @@ final class AppSettings: ObservableObject {
 
     @Published var showWordPractice: Bool {
         didSet { defaults.set(showWordPractice, forKey: Self.showWordPracticeKey) }
+    }
+
+    @Published var writingMode: WritingMode {
+        didSet { defaults.set(writingMode.rawValue, forKey: Self.writingModeKey) }
     }
 
     @Published var iCloudSyncEnabled: Bool {
@@ -120,6 +125,7 @@ final class AppSettings: ObservableObject {
         self.practiceMode = PracticeMode(rawValue: storedMode) ?? .trace
 
         self.showWordPractice = defaults.bool(forKey: Self.showWordPracticeKey)
+        self.writingMode = WritingMode(rawValue: defaults.string(forKey: Self.writingModeKey) ?? "") ?? .free
 
         self.iCloudSyncEnabled = defaults.object(forKey: Self.iCloudSyncEnabledKey) == nil
             ? true
