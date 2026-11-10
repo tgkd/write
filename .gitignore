@@ -24,6 +24,10 @@ appstore-screenshots/
 
 # Cloudflare Wrangler
 .wrangler/
+.cloudflare/
+
+# App Store Connect CLI (archives, exports, release checkpoints)
+.asc/
 
 # Pi / codetask runner
 .pi/
