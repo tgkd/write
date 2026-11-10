@@ -46,7 +46,6 @@ final class WritingSession: ObservableObject {
     @Published private(set) var cellIndex = 0
     @Published private(set) var activeMode: WritingMode
     @Published private(set) var slotState: PracticeState?
-    @Published private(set) var isPhraseComplete = false
     @Published private(set) var isSentenceComplete = false
     @Published private(set) var isComplete = false
     @Published private(set) var results: [SentenceResult] = []
@@ -93,7 +92,7 @@ final class WritingSession: ObservableObject {
         }
         if let first = items.firstIndex(where: { mode != .empty || $0.prompt.presentation?.allowsEmpty == true }) {
             promptIndex = first
-            startPhrase()
+            startSentence()
         } else {
             isComplete = true
         }
@@ -107,7 +106,6 @@ final class WritingSession: ObservableObject {
     }
 
     var currentPhrase: Phrase? { currentItem?.phrases[phraseIndex] }
-    var isLastPhrase: Bool { phraseIndex + 1 == currentItem?.phrases.count }
     var isLastPrompt: Bool { nextPromptIndex == nil }
 
     var sentenceNumber: Int {
@@ -123,7 +121,7 @@ final class WritingSession: ObservableObject {
     }
 
     var currentCell: Cell? {
-        guard activeMode != .free, !isPhraseComplete, !isSentenceComplete,
+        guard activeMode != .free, !isSentenceComplete,
               let phrase = currentPhrase, phrase.writable.indices.contains(cellIndex) else {
             return nil
         }
@@ -139,57 +137,94 @@ final class WritingSession: ObservableObject {
 
     private var nextPromptIndex: Int? { remainingPromptIndices.first }
 
+    private var allowsRequestedMode: Bool {
+        requestedMode != .empty || currentItem?.prompt.presentation?.allowsEmpty == true
+    }
+
+    private var firstWritablePhraseIndex: Int? {
+        currentItem?.phrases.firstIndex { !$0.writable.isEmpty }
+    }
+
     func advance() {
-        guard let item = currentItem else {
+        guard currentItem != nil else {
             return
         }
-        if isSentenceComplete {
-            guard let next = nextPromptIndex else {
-                isComplete = true
-                slotState = nil
-                return
-            }
-            promptIndex = next
-            phraseIndex = 0
-            activeMode = requestedMode
-            slotRecords = [:]
-            completedCellIDs = []
-            isSentenceComplete = false
-            startPhrase()
-        } else if activeMode == .free || isPhraseComplete {
-            if phraseIndex + 1 < item.phrases.count {
-                phraseIndex += 1
-                startPhrase()
-            } else {
-                finishSentence()
-            }
+        if activeMode == .free {
+            completedSentenceCount += 1
+            startNextPrompt()
+        } else if isSentenceComplete {
+            startNextPrompt()
         }
     }
 
-    func restartPhrase() {
-        guard !isSentenceComplete, let phrase = currentPhrase else {
-            return
+    @discardableResult
+    func restartPhrase() -> [Cell] {
+        guard !isSentenceComplete, let item = currentItem else {
+            return []
         }
-        if phraseIndex == 0, requestedMode != .empty || currentItem?.prompt.presentation?.allowsEmpty == true {
+        if activeMode == .free {
+            if allowsRequestedMode {
+                activeMode = requestedMode
+            }
+            startSentence()
+            return item.phrases.flatMap(\.units)
+        }
+        guard let phrase = currentPhrase else {
+            return []
+        }
+        if phraseIndex == firstWritablePhraseIndex, allowsRequestedMode {
             activeMode = requestedMode
+            startSentence()
+            return phrase.units
         }
         for cell in phrase.units {
             slotRecords[cell.characterIndex] = nil
             completedCellIDs.remove(cell.id)
         }
-        startPhrase()
+        cellIndex = 0
+        slotState = makeSlotState()
+        return phrase.units
     }
 
-    private func startPhrase() {
-        cellIndex = 0
-        isPhraseComplete = false
-        slotState = makeSlotState()
-        if activeMode != .free && currentPhrase?.writable.isEmpty == true {
-            isPhraseComplete = true
-            if isLastPhrase {
-                finishSentence()
-            }
+    private func startNextPrompt() {
+        guard let next = nextPromptIndex else {
+            isComplete = true
+            slotState = nil
+            return
         }
+        promptIndex = next
+        activeMode = requestedMode
+        isSentenceComplete = false
+        startSentence()
+    }
+
+    private func startSentence() {
+        slotRecords = [:]
+        completedCellIDs = []
+        cellIndex = 0
+        if activeMode == .free {
+            phraseIndex = 0
+            slotState = nil
+        } else {
+            phraseIndex = firstWritablePhraseIndex ?? 0
+            slotState = makeSlotState()
+        }
+    }
+
+    private func moveToNextCell() {
+        guard let item = currentItem else {
+            return
+        }
+        if cellIndex + 1 < item.phrases[phraseIndex].writable.count {
+            cellIndex += 1
+        } else if let next = item.phrases.indices.first(where: { $0 > phraseIndex && !item.phrases[$0].writable.isEmpty }) {
+            phraseIndex = next
+            cellIndex = 0
+        } else {
+            finishSentence()
+            return
+        }
+        slotState = makeSlotState()
     }
 
     private func makeSlotState() -> PracticeState? {
@@ -205,16 +240,7 @@ final class WritingSession: ObservableObject {
             }
             self.slotRecords[current.characterIndex] = WordSlotRecord(segmentIndex: current.characterIndex, record: record)
             self.completedCellIDs.insert(current.id)
-            self.cellIndex += 1
-            if self.cellIndex >= (self.currentPhrase?.writable.count ?? 0) {
-                self.slotState = nil
-                self.isPhraseComplete = true
-                if self.isLastPhrase {
-                    self.finishSentence()
-                }
-            } else {
-                self.slotState = self.makeSlotState()
-            }
+            self.moveToNextCell()
         }
         return state
     }

@@ -4,7 +4,6 @@ struct WritingView: View {
     @StateObject private var session: WritingSession
     @StateObject private var ink = WritingInkStore()
     @State private var cellSide: CGFloat?
-    @State private var restartID = UUID()
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var wordHistory: WordHistoryStore
     @Environment(\.dismiss) private var dismiss
@@ -25,8 +24,8 @@ struct WritingView: View {
                 } else {
                     SentenceSessionSummaryView(results: session.results)
                 }
-            } else if let item = session.currentItem, let phrase = session.currentPhrase {
-                writingContent(item: item, phrase: phrase)
+            } else if let item = session.currentItem {
+                writingContent(item: item)
             }
         }
         .background(WritingPencilInteraction(onDoubleTap: undo))
@@ -46,7 +45,7 @@ struct WritingView: View {
         .onChange(of: settings.gradingStrictness) { _ in session.validationConfig = settings.validationConfig }
     }
 
-    private func writingContent(item: WritingSession.Item, phrase: WritingSession.Phrase) -> some View {
+    private func writingContent(item: WritingSession.Item) -> some View {
         GeometryReader { geometry in
             ScrollViewReader { proxy in
                 ScrollView {
@@ -60,29 +59,31 @@ struct WritingView: View {
                             Text("Sentence \(session.sentenceNumber) of \(session.totalSentenceCount)")
                                 .font(.caption).accessibilityIdentifier("writing.sentenceProgress")
                             Spacer()
-                            if session.isSentenceComplete {
-                                ReadingSpeakerButton(text: SpokenReading.text(for: item.prompt))
-                            }
-                        }
-                        if !session.isSentenceComplete {
-                            Text("Phrase \(session.phraseIndex + 1) of \(item.phrases.count)")
-                                .font(.caption).accessibilityIdentifier("writing.progress")
-                            Text(phrase.reading).font(.title2).accessibilityIdentifier("writing.phrase")
+                            ReadingSpeakerButton(text: SpokenReading.text(for: item.prompt))
                         }
                         if let cellSide {
-                            WordFlowLayout(spacing: 12, lineSpacing: 12) {
-                                ForEach(session.isSentenceComplete ? item.phrases.flatMap(\.units) : phrase.units) { cell in
-                                    unitView(cell, side: cellSide)
-                                        .id(cell.id)
+                            VStack(alignment: .leading, spacing: 20) {
+                                ForEach(Array(item.phrases.enumerated()), id: \.element.id) { index, phrase in
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        Text(phrase.reading)
+                                            .font(.title3)
+                                            .foregroundStyle(.secondary)
+                                            .accessibilityIdentifier("writing.phrase.\(index)")
+                                        WordFlowLayout(spacing: 12, lineSpacing: 12) {
+                                            ForEach(phrase.units) { cell in
+                                                unitView(cell, side: cellSide)
+                                                    .id(cell.id)
+                                            }
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
                                 }
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .id(session.isSentenceComplete ? "\(item.prompt.id).finished" : phrase.id)
-                            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
                         }
                     }
                     .padding(16)
                 }
+                .id(item.prompt.id)
                 .onChange(of: session.currentCell?.id) { id in
                     if let id {
                         withAnimation(.easeOut(duration: 0.2)) { proxy.scrollTo(id, anchor: .center) }
@@ -94,17 +95,6 @@ struct WritingView: View {
                     }
                 }
                 .safeAreaInset(edge: .bottom) { controls }
-                .task(id: "\(phrase.id).\(session.isPhraseComplete).\(restartID)") {
-                    guard session.activeMode != .free, session.isPhraseComplete, !session.isSentenceComplete else {
-                        return
-                    }
-                    do {
-                        try await Task.sleep(for: .milliseconds(650))
-                    } catch {
-                        return
-                    }
-                    withAnimation(.easeInOut(duration: 0.25)) { session.advance() }
-                }
             }
         }
     }
@@ -120,7 +110,8 @@ struct WritingView: View {
                 .id(ObjectIdentifier(state)).frame(width: side, height: side)
         } else {
             WritingCellView(cell: cell, mode: session.activeMode,
-                            isFinished: session.isSentenceComplete || session.completedCellIDs.contains(cell.id),
+                            isFinished: session.activeMode != .free
+                                && (session.isSentenceComplete || session.completedCellIDs.contains(cell.id)),
                             isActive: false, ink: ink)
                 .frame(width: side, height: side)
         }
@@ -128,6 +119,17 @@ struct WritingView: View {
 
     private var controls: some View {
         VStack(spacing: 8) {
+            if session.activeMode != .free {
+                Group {
+                    if let state = session.slotState {
+                        WritingRejectionNotice(state: state)
+                            .id(ObjectIdentifier(state))
+                    } else {
+                        Color.clear
+                    }
+                }
+                .frame(height: 36)
+            }
             Picker("Writing mode", selection: $settings.writingMode) {
                 ForEach(WritingMode.allCases) { mode in Text(mode.title).tag(mode) }
             }
@@ -157,21 +159,18 @@ struct WritingView: View {
                 }
                 if !session.isSentenceComplete {
                     Button {
-                        if let phrase = session.currentPhrase {
-                            ink.clear(phrase.units.map(\.id))
-                        }
-                        restartID = UUID()
-                        session.restartPhrase()
+                        ink.clear(session.restartPhrase().map(\.id))
                     } label: {
                         Image(systemName: "arrow.counterclockwise").frame(minWidth: 44, minHeight: 44)
                     }
-                    .accessibilityLabel("Restart phrase").accessibilityIdentifier("writing.restart")
+                    .accessibilityLabel(session.activeMode == .free ? "Restart sentence" : "Restart phrase")
+                    .accessibilityIdentifier("writing.restart")
                 }
                 Spacer(minLength: 0)
                 if session.activeMode == .free || session.isSentenceComplete {
                     Button {
                         ink.leavePhrase()
-                        withAnimation(.easeInOut(duration: 0.25)) { session.advance() }
+                        session.advance()
                     } label: { Text(nextLabel) }
                     .buttonStyle(.borderedProminent).accessibilityIdentifier("writing.next")
                 }
@@ -197,9 +196,6 @@ struct WritingView: View {
     }
 
     private var nextLabel: LocalizedStringKey {
-        if session.isSentenceComplete {
-            return session.isLastPrompt ? "Done" : "Next sentence"
-        }
-        return session.isLastPhrase ? "Finish sentence" : "Next phrase"
+        session.isLastPrompt ? "Done" : "Next sentence"
     }
 }

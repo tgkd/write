@@ -34,7 +34,7 @@ final class WritingUITests: XCTestCase {
         launch(mode: mode, ids: ids)
         XCTAssertTrue(card.waitForExistence(timeout: 5))
         card.tap()
-        XCTAssertTrue(app.staticTexts["writing.phrase"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["writing.sentence"].waitForExistence(timeout: 5))
     }
 
     private func draw(in canvas: XCUIElement, start: CGVector = CGVector(dx: 0.2, dy: 0.3), end: CGVector = CGVector(dx: 0.8, dy: 0.7)) {
@@ -112,6 +112,7 @@ final class WritingUITests: XCTestCase {
         let first = app.otherElements["writing.canvas.0.0"]
         XCTAssertTrue(first.waitForExistence(timeout: 5))
         XCTAssertEqual(canvases.count, 1)
+        XCTAssertTrue(app.staticTexts["writing.phrase.1"].exists)
         draw(in: first, start: CGVector(dx: 0.101, dy: 0.498), end: CGVector(dx: 0.889, dy: 0.459))
         XCTAssertTrue(app.otherElements["writing.canvas.0.1"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.images["writing.ink.0.0"].exists)
@@ -131,7 +132,10 @@ final class WritingUITests: XCTestCase {
         app.buttons["writing.hint"].tap()
         XCTAssertTrue(app.otherElements["strokeGuide"].waitForExistence(timeout: 5))
         draw(in: canvases.firstMatch, start: CGVector(dx: 0.05, dy: 0.05), end: CGVector(dx: 0.15, dy: 0.05))
-        XCTAssertTrue(app.staticTexts["strokeNotice"].waitForExistence(timeout: 5))
+        let notice = app.staticTexts["strokeNotice"]
+        XCTAssertTrue(notice.waitForExistence(timeout: 5))
+        let dismissal = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == false"), object: notice)
+        XCTAssertEqual(XCTWaiter.wait(for: [dismissal], timeout: 6), .completed)
         app.buttons["writing.restart"].tap()
         XCTAssertFalse(app.otherElements["strokeGuide"].exists)
         XCTAssertFalse(app.staticTexts["answerGlyph"].exists)

@@ -46,22 +46,27 @@ final class WritingSessionTests: XCTestCase {
         XCTAssertEqual(item.phrases.flatMap(\.units).last?.characterIndex, 4)
     }
 
-    func testFreeAdvancesWithoutRecordsOrGrading() {
-        let state = WritingSession(prompts: [prompt()], lookup: lookup)
+    func testFreeAdvancesWholeSentencesWithoutRecordsOrGrading() {
+        let state = WritingSession(prompts: [prompt(), prompt(id: "second")], lookup: lookup)
         var records: [WordRecord] = []
         state.onSentenceCompleted = { records.append($0) }
         XCTAssertNil(state.slotState)
+        XCTAssertNil(state.currentCell)
+        XCTAssertFalse(state.isLastPrompt)
         state.advance()
-        XCTAssertEqual(state.phraseIndex, 1)
-        state.advance()
-        XCTAssertTrue(state.isSentenceComplete)
+        XCTAssertEqual(state.currentItem?.prompt.id, "second")
+        XCTAssertFalse(state.isSentenceComplete)
+        XCTAssertEqual(state.completedSentenceCount, 1)
+        XCTAssertEqual(state.sentenceNumber, 2)
+        XCTAssertTrue(state.isLastPrompt)
         state.advance()
         XCTAssertTrue(state.isComplete)
+        XCTAssertEqual(state.completedSentenceCount, 2)
         XCTAssertTrue(records.isEmpty)
         XCTAssertTrue(state.results.isEmpty)
     }
 
-    func testOrderedCellsPauseAtPhraseBoundariesAndTraceRecordsAreExposed() throws {
+    func testTraceMovesThroughWholeSentenceAndRecordsAreExposed() throws {
         let state = WritingSession(prompts: [prompt()], mode: .trace, lookup: lookup)
         var records: [WordRecord] = []
         state.onSentenceCompleted = { records.append($0) }
@@ -69,15 +74,15 @@ final class WritingSessionTests: XCTestCase {
         XCTAssertEqual(state.phraseIndex, 0)
         XCTAssertEqual(state.currentCell?.characterIndex, 0)
         try complete(state, misses: 1)
-        XCTAssertTrue(state.isPhraseComplete)
-        XCTAssertEqual(state.phraseIndex, 0)
-        XCTAssertNil(state.slotState)
-        state.advance()
+        XCTAssertEqual(state.phraseIndex, 1)
         XCTAssertEqual(state.currentCell?.characterIndex, 2)
+        XCTAssertNotNil(state.slotState)
         try complete(state)
         XCTAssertEqual(state.currentCell?.characterIndex, 3)
         try complete(state)
         XCTAssertTrue(state.isSentenceComplete)
+        XCTAssertNil(state.currentCell)
+        XCTAssertNil(state.slotState)
         let record = try XCTUnwrap(records.first)
         XCTAssertEqual(record.slotCount, 3)
         XCTAssertEqual(record.misses, 1)
@@ -86,8 +91,10 @@ final class WritingSessionTests: XCTestCase {
         XCTAssertEqual(record.slots?.map(\.segmentIndex), [0, 2, 3])
         XCTAssertTrue(record.slots?.allSatisfy { $0.record.exposed && $0.record.mode == PracticeMode.trace.rawValue } == true)
         state.advance()
+        XCTAssertTrue(state.isComplete)
         state.advance()
         XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(state.results.count, 1)
     }
 
     func testEmptyUsesRecallAndHintsInNestedRecords() throws {
@@ -97,7 +104,6 @@ final class WritingSessionTests: XCTestCase {
         XCTAssertTrue(state.slotState?.hidesGuide == true)
         state.slotState?.showNextHint()
         try complete(state)
-        state.advance()
         try complete(state)
         try complete(state)
         XCTAssertEqual(record?.hintsUsed, 1)
@@ -110,34 +116,54 @@ final class WritingSessionTests: XCTestCase {
         var record: WordRecord?
         state.onSentenceCompleted = { record = $0 }
         try complete(state, misses: 1)
-        state.advance()
         try complete(state, misses: 4)
         XCTAssertEqual(state.currentCell?.characterIndex, 3)
-        state.restartPhrase()
+        let cleared = state.restartPhrase()
+        XCTAssertEqual(cleared.map(\.id), ["0.2", "0.3", "0.4"])
         XCTAssertEqual(state.currentCell?.characterIndex, 2)
-        XCTAssertEqual(state.completedCellIDs.count, 1)
+        XCTAssertEqual(state.completedCellIDs, ["0.0"])
         try complete(state)
         try complete(state)
         XCTAssertEqual(record?.misses, 1)
         XCTAssertEqual(record?.slots?.map(\.segmentIndex), [0, 2, 3])
     }
 
-    func testModeFreezesUntilNextPromptAndCanRestartFirstPhrase() throws {
+    func testModeAppliesOnFirstPhraseRestartOtherwiseAtNextSentence() throws {
         let state = WritingSession(prompts: [prompt(), prompt(id: "second")], mode: .trace, lookup: lookup)
         state.requestedMode = .empty
         XCTAssertFalse(state.slotState?.isRecall ?? true)
         state.restartPhrase()
+        XCTAssertEqual(state.activeMode, .empty)
         XCTAssertTrue(state.slotState?.isRecall == true)
         state.requestedMode = .trace
         try complete(state)
-        state.advance()
+        XCTAssertEqual(state.phraseIndex, 1)
         state.restartPhrase()
         XCTAssertEqual(state.activeMode, .empty)
+        XCTAssertTrue(state.slotState?.isRecall == true)
+        XCTAssertEqual(state.currentCell?.characterIndex, 2)
         try complete(state)
         try complete(state)
+        XCTAssertTrue(state.isSentenceComplete)
         state.advance()
         XCTAssertEqual(state.activeMode, .trace)
         XCTAssertFalse(state.slotState?.isRecall ?? true)
+    }
+
+    func testFreeRestartClearsWholeSentenceAndAppliesAllowedQueuedMode() {
+        let state = WritingSession(prompts: [prompt()], lookup: lookup)
+        state.requestedMode = .trace
+        let cleared = state.restartPhrase()
+        XCTAssertEqual(cleared.map(\.characterIndex), [0, 1, 2, 3, 4])
+        XCTAssertEqual(state.activeMode, .trace)
+        XCTAssertEqual(state.currentCell?.characterIndex, 0)
+        XCTAssertNotNil(state.slotState)
+
+        let unsafe = WritingSession(prompts: [prompt(safe: false)], lookup: lookup)
+        unsafe.requestedMode = .empty
+        XCTAssertEqual(unsafe.restartPhrase().count, 5)
+        XCTAssertEqual(unsafe.activeMode, .free)
+        XCTAssertNil(unsafe.slotState)
     }
 
     func testEmptyExcludesFlaggedAndUnreviewedPrompts() {
@@ -174,7 +200,6 @@ final class WritingSessionTests: XCTestCase {
         for expected in 1...3 {
             XCTAssertEqual(state.sentenceNumber, expected)
             try complete(state)
-            state.advance()
             try complete(state)
             try complete(state)
             XCTAssertTrue(state.isSentenceComplete)
@@ -194,14 +219,11 @@ final class WritingSessionTests: XCTestCase {
         XCTAssertEqual(state.totalSentenceCount, 1)
         XCTAssertFalse(state.isComplete)
         XCTAssertFalse(state.isSentenceComplete)
-        state.advance()
-        state.advance()
-        XCTAssertTrue(state.isSentenceComplete)
-        XCTAssertEqual(state.completedSentenceCount, 1)
-        XCTAssertEqual(state.sentenceNumber, 1)
         XCTAssertTrue(state.isLastPrompt)
         state.advance()
         XCTAssertTrue(state.isComplete)
+        XCTAssertEqual(state.completedSentenceCount, 1)
+        XCTAssertEqual(state.sentenceNumber, 1)
         XCTAssertTrue(state.results.isEmpty)
     }
 }

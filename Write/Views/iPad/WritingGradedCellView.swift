@@ -22,7 +22,7 @@ struct WritingGradedCellView: View {
             pressureSensitivity: settings.pressureSensitivity, tiltSensitivity: settings.tiltSensitivity,
             smoothingStrength: settings.smoothingStrength, brushThickness: settings.brushThickness,
             showCompletionCheck: false, hidesReference: slotState.hidesGuide, showsGrid: settings.showPracticeGrid,
-            notice: settings.rejectionNotice(for: slotState.lastRejection), startMarker: slotState.startMarker,
+            startMarker: slotState.startMarker,
             captureContext: StrokeCaptureContext(codePoint: slotState.kanjiData.codePoint, mode: slotState.isRecall ? "writing-empty" : "writing-trace"),
             retainedCanvasView: ink.canvas(for: cell.id), canvasIdentifier: "writing.canvas.\(cell.id)", installsPencilInteraction: false,
             onStrokeBegan: { [weak slotState] type in slotState?.noteStrokeBegan(touchType: type) },
