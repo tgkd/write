@@ -25,6 +25,7 @@ final class DrawingCanvasView: UIView {
     // MARK: - State
 
     private(set) var strokes: [[CGPoint]] = []
+    private(set) var lastStrokeAlternates: [[CGPoint]] = []
     var currentStrokePoints: [CGPoint] { currentSamples.map(\.point) }
     private var currentSamples: [BrushStroke.Sample] = []
     private var strokeLayers: [CAShapeLayer] = []
@@ -36,6 +37,7 @@ final class DrawingCanvasView: UIView {
     private var strokeConfig = BrushStroke.Config()
     private var validationFilter = OneEuroFilter()
     private var validationPoints: [CGPoint] = []
+    private var validationForces: [CGFloat] = []
     private var lastValidationRawPoint: CGPoint?
     private var liveRenderer: BrushStroke.LiveRenderer?
     private var lastLayoutSize: CGSize = .zero
@@ -192,7 +194,7 @@ final class DrawingCanvasView: UIView {
         inputFilter.beta = strokeConfig.filterBeta
         inputFilter.reset()
         let point = inputFilter.filter(point: rawPoint, timestamp: touch.timestamp)
-        startValidation(at: rawPoint, timestamp: touch.timestamp)
+        startValidation(at: rawPoint, timestamp: touch.timestamp, force: force)
 
         pendingRefinement = nil
         activeEstimationIndexMap = [:]
@@ -228,7 +230,7 @@ final class DrawingCanvasView: UIView {
             let cf = normalizedForce(of: ct)
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
-            appendValidation(rawPoint, timestamp: ct.timestamp)
+            appendValidation(rawPoint, timestamp: ct.timestamp, force: cf)
             let sample = BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca)
             currentSamples.append(sample)
             liveRenderer?.append(sample)
@@ -269,7 +271,7 @@ final class DrawingCanvasView: UIView {
             let ca = ct.type == .pencil ? ct.altitudeAngle : nil
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
             if rawPoint != lastValidationRawPoint {
-                appendValidation(rawPoint, timestamp: ct.timestamp)
+                appendValidation(rawPoint, timestamp: ct.timestamp, force: cf)
             }
             if point != currentSamples.last?.point {
                 let sample = BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca)
@@ -501,20 +503,28 @@ final class DrawingCanvasView: UIView {
     }
 
     private func committedPath(from samples: [BrushStroke.Sample], config: BrushStroke.Config) -> CGPath {
-        let range = StrokeHookTrimmer.keptRange(of: samples.map(\.point), parameters: hookParameters)
+        let range = StrokeHookTrimmer.keptRange(
+            of: samples.map(\.point),
+            forces: samples.compactMap(\.force),
+            parameters: hookParameters
+        )
         return BrushStroke.createPath(from: Array(samples[range]), config: config)
     }
 
-    private func startValidation(at rawPoint: CGPoint, timestamp: TimeInterval) {
+    private func startValidation(at rawPoint: CGPoint, timestamp: TimeInterval, force: CGFloat?) {
         let params = SmoothingStrength.validation.filterParams
         validationFilter = OneEuroFilter(minCutoff: params.minCutoff, beta: params.beta)
         validationPoints = []
-        appendValidation(rawPoint, timestamp: timestamp)
+        validationForces = []
+        appendValidation(rawPoint, timestamp: timestamp, force: force)
     }
 
-    private func appendValidation(_ rawPoint: CGPoint, timestamp: TimeInterval) {
+    private func appendValidation(_ rawPoint: CGPoint, timestamp: TimeInterval, force: CGFloat?) {
         lastValidationRawPoint = rawPoint
         validationPoints.append(validationFilter.filter(point: rawPoint, timestamp: timestamp))
+        if let force {
+            validationForces.append(force)
+        }
     }
 
     private func updatePredictedPath(predictedSamples: [BrushStroke.Sample]) {
@@ -534,7 +544,9 @@ final class DrawingCanvasView: UIView {
     }
 
     private func finalizeCurrentStroke() {
-        let points = StrokeHookTrimmer.trim(validationPoints, parameters: hookParameters)
+        let points = StrokeHookTrimmer.trim(validationPoints, forces: validationForces, parameters: hookParameters)
+        let legacy = StrokeHookTrimmer.trim(validationPoints, parameters: .legacy(canvasSize: bounds.size))
+        lastStrokeAlternates = legacy == points ? [] : [legacy]
         let strokeIndex = strokes.count
 
         strokes.append(points)
@@ -558,6 +570,7 @@ final class DrawingCanvasView: UIView {
 
     private func resetValidation() {
         validationPoints = []
+        validationForces = []
         lastValidationRawPoint = nil
     }
 

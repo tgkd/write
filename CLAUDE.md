@@ -98,6 +98,13 @@ User stroke -> sample N points -> Procrustes normalize (center + scale, no rotat
 
 Stroke identification uses centroid distance as a fast rejection filter before running the full Frechet comparison.
 
+Before grading, the canvas trims touch-down and lift-off artefacts from the filtered points (`StrokeHookTrimmer`): faint Pencil tails, whose force is well below the stroke's median, and short sharp hooks at either end.
+- The limits are in points, capped as a share of the arc. A pen's hook does not shrink with the canvas, so a small Writing cell gets nearly the same window as a full-size canvas.
+- A corner must also be sharp locally, so the steady curve of a small circle is not a hook.
+- The committed ink is cut to the same range: what is graded is what stays on screen.
+- The stroke as the older, narrower rules trim it (`Parameters.legacy`) is graded as a second candidate, and either passing accepts (`StrokeValidator.identifyStroke(candidates:)`). A rejection reports the first candidate. Widening the trim can therefore only add acceptances.
+- Finger strokes carry no force, so only the hook rule applies to them.
+
 Position is always checked against the fixed reference in canvas coordinates; the reference never moves to follow the user's ink. With a guide drawn (Trace, Guided) the tolerance is `positionTolerance`; in Copy and Recall it is the looser `guidelessPositionTolerance` for every stroke, and stroke 1 gets a start marker (`PracticeState.startMarker`). A character drawn shifted or at another size is reported as position errors. The proportion check (enforced only on Strict, and only without a guide) compares each stroke's size with the reference stroke itself. An expected stroke that passes always wins over a better-scoring lookalike.
 
 Every graded mode applies the box rule: a stroke is rejected (`StrokeRejection.outOfFrame`) when its centerline leaves the canvas by more than `ValidationConfig.boundaryTolerance`.

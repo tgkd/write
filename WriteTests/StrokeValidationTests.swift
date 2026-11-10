@@ -567,3 +567,67 @@ final class StrokeValidatorTests: XCTestCase {
         XCTAssertTrue(result.correctOrder)
     }
 }
+
+// MARK: - Candidate strokes
+
+final class StrokeCandidateTests: XCTestCase {
+    private let canvas = CGSize(width: 300, height: 300)
+    private let strokes = [
+        KanjiStroke(strokeNumber: 1, pathData: "M20,30 L90,30", strokeType: nil),
+        KanjiStroke(strokeNumber: 2, pathData: "M55,40 L55,95", strokeType: nil)
+    ]
+
+    private var reference: [[CGPoint]] {
+        StrokeValidator.sampleReferenceStrokes(strokes, canvasSize: canvas, sampleCount: ValidationConfig.standard.sampleCount)
+    }
+
+    private func identify(_ candidates: [[CGPoint]]) -> StrokeValidationResult {
+        StrokeValidator.identifyStroke(
+            candidates: candidates,
+            referenceSamples: reference,
+            unmatchedIndices: [0, 1],
+            canvasSize: canvas,
+            expectedStrokeIndex: 0
+        )
+    }
+
+    private var good: [CGPoint] {
+        reference[0]
+    }
+
+    private var shifted: [CGPoint] {
+        reference[0].map { CGPoint(x: $0.x, y: $0.y + 60) }
+    }
+
+    private var bent: [CGPoint] {
+        reference[0].enumerated().map { index, point in
+            CGPoint(x: point.x, y: point.y + (index > 25 ? CGFloat(index - 25) * 4 : 0))
+        }
+    }
+
+    func testAnyAcceptedCandidateAcceptsTheStroke() {
+        XCTAssertTrue(identify([good]).accepted)
+        XCTAssertTrue(identify([bent, good]).accepted)
+        XCTAssertTrue(identify([good, bent]).accepted)
+    }
+
+    func testRejectionReportsTheFirstCandidate() {
+        let result = identify([shifted, bent])
+
+        XCTAssertFalse(result.accepted)
+        XCTAssertEqual(result.expectedEvidence?.shapePassed, true)
+        XCTAssertEqual(result.expectedEvidence?.positionPassed, false)
+    }
+
+    func testCandidateMatchingALaterStrokeDoesNotAccept() {
+        let result = identify([bent, reference[1]])
+
+        XCTAssertFalse(result.accepted && result.correctOrder)
+        XCTAssertEqual(result.expectedEvidence?.shapePassed, false)
+    }
+
+    func testNoCandidatesIsARejection() {
+        XCTAssertFalse(identify([]).accepted)
+    }
+}
+

@@ -19,7 +19,7 @@ extension PracticeState {
 
         let canvasSize = canvas.bounds.size
         let result = StrokeValidator.identifyStroke(
-            userPoints: points,
+            candidates: [points] + canvas.lastStrokeAlternates,
             referenceSamples: referenceSamples(canvasSize: canvasSize),
             unmatchedIndices: unmatchedIndices,
             canvasSize: canvasSize,

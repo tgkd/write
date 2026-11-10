@@ -36,7 +36,7 @@ struct ValidationConfig: Equatable, Sendable {
 
     static let standard = ValidationConfig()
 
-    static let gradingVersion = 6
+    static let gradingVersion = 7
 }
 
 /// Result of validating a single user stroke against a reference.
@@ -157,6 +157,44 @@ enum StrokeValidator {
             canvasSize: canvasSize,
             expectedStrokeIndex: expectedStrokeIndex,
             config: config
+        )
+    }
+
+    static func identifyStroke(
+        candidates: [[CGPoint]],
+        referenceSamples: [[CGPoint]],
+        unmatchedIndices: Set<Int>,
+        canvasSize: CGSize,
+        expectedStrokeIndex: Int,
+        anchors: [StrokeAnchor]? = nil,
+        alternates: [Int: [[CGPoint]]] = [:],
+        config: ValidationConfig = .standard
+    ) -> StrokeValidationResult {
+        var first: StrokeValidationResult?
+        for points in candidates {
+            let result = identifyStroke(
+                userPoints: points,
+                referenceSamples: referenceSamples,
+                unmatchedIndices: unmatchedIndices,
+                canvasSize: canvasSize,
+                expectedStrokeIndex: expectedStrokeIndex,
+                anchors: anchors,
+                alternates: alternates,
+                config: config
+            )
+            if result.accepted && result.correctOrder {
+                return result
+            }
+            if first == nil {
+                first = result
+            }
+        }
+        return first ?? StrokeValidationResult(
+            score: 0,
+            accepted: false,
+            matchedStrokeIndex: nil,
+            correctOrder: false,
+            frechetDistance: .infinity
         )
     }
 
