@@ -35,7 +35,7 @@ struct RecallCue: Equatable, Sendable {
 
     static func readingLines(for kanji: KanjiData) -> [Line] {
         var lines: [Line] = []
-        if let romaji = kanji.romaji, !romaji.isEmpty {
+        if let romaji = cueRomaji(for: kanji) {
             lines.append(Line(kind: .romaji, text: romaji))
         }
         if let on = kanji.onYomi, !on.isEmpty {
@@ -46,6 +46,18 @@ struct RecallCue: Equatable, Sendable {
         }
         return lines
     }
+
+    static func cueRomaji(for kanji: KanjiData) -> String? {
+        guard let romaji = kanji.romaji, !romaji.isEmpty else {
+            return nil
+        }
+        guard let distinct = distinctRomaji[kanji.text] else {
+            return romaji
+        }
+        return "\(romaji) (\(distinct))"
+    }
+
+    private static let distinctRomaji = ["ぢ": "di", "づ": "du", "ヂ": "di", "ヅ": "du"]
 
     static func meaningLines(for kanji: KanjiData) -> [Line] {
         let meanings = (kanji.meanings ?? []).prefix(RecallEligibility.meaningsShown)

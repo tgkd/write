@@ -43,7 +43,7 @@ struct RecallEligibility: Sendable {
     private static func cue(for kanji: KanjiData) -> Cue {
         Cue(
             script: kanji.script,
-            romaji: kanji.romaji,
+            romaji: RecallCue.cueRomaji(for: kanji),
             onYomi: kanji.onYomi ?? [],
             kunYomi: kanji.kunYomi ?? [],
             meanings: Array((kanji.meanings ?? []).prefix(meaningsShown)),

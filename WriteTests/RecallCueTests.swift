@@ -65,6 +65,14 @@ final class RecallCueTests: XCTestCase {
         }
     }
 
+    func testKanaSharingARomajiGetADistinctCue() {
+        let cues = ["3062": "ji (di)", "3058": "ji", "3065": "zu (du)", "305a": "zu", "30c2": "ji (di)", "30c5": "zu (du)"]
+        for (codePoint, expected) in cues {
+            let sample = kanji(codePoint, romaji: String(expected.prefix(2)))
+            XCTAssertEqual(RecallCue(kanji: sample, order: .readingsFirst).primary.map(\.text), [expected])
+        }
+    }
+
     func testMissingGroupMovesTheOtherToPrimary() {
         let readingsOnly = kanji(on: ["サン"])
         let meaningsOnly = kanji(meanings: ["mountain"])

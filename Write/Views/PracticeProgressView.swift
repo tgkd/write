@@ -129,7 +129,7 @@ struct PracticeProgressView: View {
     private func cueText(_ kanji: KanjiData) -> String {
         switch kanji.script {
         case .hiragana, .katakana:
-            return "\(kanji.romaji ?? "") · \(kanji.script.displayName)"
+            return "\(RecallCue.cueRomaji(for: kanji) ?? "") · \(kanji.script.displayName)"
         case .kanji:
             let cue = RecallCue(kanji: kanji, order: settings.recallCueOrder)
             switch cue.primary.first?.kind {
