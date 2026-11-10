@@ -37,7 +37,7 @@ struct ContentView: View {
 
     private var iPhoneLayout: some View {
         NavigationStack(path: $iPhonePath) {
-            KanjiPickerView(dataStore: dataStore, wordPromptStore: wordPromptStore)
+            KanjiPickerView(dataStore: dataStore, wordPromptStore: wordPromptStore, openRoute: { iPhonePath.append($0) })
                 .navigationDestination(for: String.self) { codePoint in
                     if let kanji = dataStore.lookup(codePoint: codePoint) {
                         PracticeView(kanjiData: kanji, mode: settings.practiceMode, context: RunContext(origin: .grid))
