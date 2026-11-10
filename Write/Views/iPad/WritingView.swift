@@ -59,6 +59,7 @@ struct WritingView: View {
                                 }
                             }
                             .padding(.horizontal, 16)
+                            .frame(maxWidth: .infinity)
                             .padding(.vertical, geometry.size.height / 2)
                         }
                     }
@@ -127,7 +128,6 @@ struct WritingView: View {
                         .id(cell.id)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .opacity(isFocused || session.isSentenceComplete ? 1 : 0.35)
         .allowsHitTesting(isFocused)

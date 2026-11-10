@@ -145,6 +145,33 @@ final class WritingUITests: XCTestCase {
         XCTAssertTrue(card.waitForExistence(timeout: 5))
     }
 
+    func testRowsAreOneHorizontallyCentredBlock() throws {
+        XCUIDevice.shared.orientation = .landscapeLeft
+        try open(ids: "w02")
+        let first = app.otherElements["writing.canvas.0.0"]
+        let second = app.otherElements["writing.canvas.0.2"]
+        let third = app.otherElements["writing.canvas.0.4"]
+        let last = app.otherElements["writing.canvas.0.6"]
+        XCTAssertTrue(last.waitForExistence(timeout: 5))
+        let leading = app.staticTexts["writing.sentenceProgress"].frame.minX
+        let trailing = app.buttons["playReading"].frame.maxX
+        let punctuation = app.staticTexts.matching(NSPredicate(format: "identifier BEGINSWITH %@", "writing.punctuation.")).firstMatch
+        let blockEnd = punctuation.exists ? max(last.frame.maxX, punctuation.frame.maxX) : last.frame.maxX
+        let leftMargin = first.frame.minX - leading
+        let rightMargin = trailing - blockEnd
+        XCTAssertGreaterThan(leftMargin, 60)
+        XCTAssertEqual(leftMargin, rightMargin, accuracy: 14)
+        XCTAssertEqual(first.frame.minX, second.frame.minX, accuracy: 1)
+        XCTAssertEqual(first.frame.minX, third.frame.minX, accuracy: 1)
+        XCTAssertEqual(app.staticTexts["writing.phrase.0"].frame.minX, first.frame.minX, accuracy: 1)
+        let centred = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        centred.name = "Writing centred rows"
+        centred.lifetime = .keepAlways
+        add(centred)
+        app.buttons["writing.end"].tap()
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+    }
+
     func testSessionSurvivesACompactWindow() throws {
         try open(mode: "trace", ids: "t190270")
         let first = app.otherElements["writing.canvas.0.0"]
