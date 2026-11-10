@@ -150,6 +150,7 @@
 		BE927C39B8525F3B22DD4E20 /* StrokeHookTrimmerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0261AA0113DE605CEEAF3F19 /* StrokeHookTrimmerTests.swift */; };
 		BFA4C7F031F1540B7F63408E /* WritingModeSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB6ED492E6E1EAA1EEFFDA1 /* WritingModeSettingsTests.swift */; };
 		BFA5CA744E957B314398344D /* HistorySyncStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A7022E3582C02F213EE192 /* HistorySyncStatus.swift */; };
+		C08FD4132A58B926D3DE47AF /* UITestingSizeClassToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2507F16981D8454BA57C51AB /* UITestingSizeClassToggle.swift */; };
 		C12AC366AA836136BF38279C /* WordPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867DDB5C7818D43AC17D78AC /* WordPrompt.swift */; };
 		C14A938526D29F16D5D96210 /* PracticeModePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A69ADD85D74462EE94A52D6 /* PracticeModePicker.swift */; };
 		C200F2B4884E0AA416DCF59A /* SentenceSessionSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4451B7A7D278FB117C47760 /* SentenceSessionSummaryView.swift */; };
@@ -272,6 +273,7 @@
 		21F6055451A43C538E53796A /* WordFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordFlowLayout.swift; sourceTree = "<group>"; };
 		2374E2808124DF04F9ADB346 /* ReadingSpeaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSpeaker.swift; sourceTree = "<group>"; };
 		24D2DE7EF17035327BD13B3D /* RecallCueText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecallCueText.swift; sourceTree = "<group>"; };
+		2507F16981D8454BA57C51AB /* UITestingSizeClassToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestingSizeClassToggle.swift; sourceTree = "<group>"; };
 		25CBBCB68667372609A4A51E /* DailyKanji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanji.swift; sourceTree = "<group>"; };
 		26C7480B4C98A8D075738579 /* WordHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordHistoryStore.swift; sourceTree = "<group>"; };
 		26FB7CC3EEC51777470FD493 /* PracticeHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeHistoryStore.swift; sourceTree = "<group>"; };
@@ -707,6 +709,7 @@
 			isa = PBXGroup;
 			children = (
 				41BE9563E3884403974EFDDA /* ContentView.swift */,
+				2507F16981D8454BA57C51AB /* UITestingSizeClassToggle.swift */,
 				B1837E06356F61F94BAA0150 /* WriteApp.swift */,
 			);
 			path = App;
@@ -1084,6 +1087,7 @@
 				0CB29F59D67B7DC0884F392F /* StrokeStat.swift in Sources */,
 				33EEC4F95AB70FB6809965DC /* StrokeValidator.swift in Sources */,
 				D0A500E2DD6AE973FBC03D07 /* SyncSettingsSection.swift in Sources */,
+				C08FD4132A58B926D3DE47AF /* UITestingSizeClassToggle.swift in Sources */,
 				B037177797577ABE30D2A867 /* WordFlowLayout.swift in Sources */,
 				EBB928480847C5E4250E028F /* WordHistoryStore.swift in Sources */,
 				BC17BA35E56196B4D9AD8455 /* WordPracticeState.swift in Sources */,

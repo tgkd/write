@@ -19,7 +19,7 @@ final class WritingUITests: XCTestCase {
             "-uiTestingFreshHistory", "-showWordPractice", enabled ? "YES" : "NO",
             "-allowFingerDrawing", "YES", "-captureStrokes", "-writingMode", mode,
             "-gradingStrictness", "normal", "-showRejectionReasons", "YES",
-            "-uiTestingWritingPromptIDs", ids
+            "-uiTestingWritingPromptIDs", ids, "-uiTestingSizeClassToggle"
         ]
         app.launch()
     }
@@ -119,6 +119,53 @@ final class WritingUITests: XCTestCase {
         app.buttons["writing.restart"].tap()
         XCTAssertTrue(app.otherElements["writing.canvas.0.0"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.images["writing.ink.0.0"].exists)
+        app.buttons["writing.end"].tap()
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+    }
+
+    func testFreeRowsMoveByButtonAndOnlyTheFocusedRowTakesInk() throws {
+        try open(ids: "w02")
+        let first = app.otherElements["writing.canvas.0.0"]
+        let second = app.otherElements["writing.canvas.0.2"]
+        XCTAssertTrue(second.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["writing.previousRow"].isEnabled)
+        draw(in: second)
+        XCTAssertEqual(second.value as? String, "0")
+        app.buttons["writing.nextRow"].tap()
+        draw(in: second)
+        XCTAssertEqual(second.value as? String, "1")
+        let rows = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        rows.name = "Writing rows"
+        rows.lifetime = .keepAlways
+        add(rows)
+        app.buttons["writing.previousRow"].tap()
+        draw(in: first)
+        XCTAssertEqual(first.value as? String, "1")
+        app.buttons["writing.end"].tap()
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+    }
+
+    func testSessionSurvivesACompactWindow() throws {
+        try open(mode: "trace", ids: "t190270")
+        let first = app.otherElements["writing.canvas.0.0"]
+        XCTAssertTrue(first.waitForExistence(timeout: 5))
+        draw(in: first, start: CGVector(dx: 0.101, dy: 0.498), end: CGVector(dx: 0.889, dy: 0.459))
+        let second = app.otherElements["writing.canvas.0.1"]
+        XCTAssertTrue(second.waitForExistence(timeout: 5))
+        let toggle = app.buttons["uiTesting.sizeClassToggle"]
+        toggle.tap()
+        XCTAssertTrue(app.staticTexts["writing.sentence"].waitForExistence(timeout: 5))
+        XCTAssertTrue(second.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.images["writing.ink.0.0"].exists)
+        XCTAssertFalse(card.exists)
+        let compact = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        compact.name = "Writing compact"
+        compact.lifetime = .keepAlways
+        add(compact)
+        toggle.tap()
+        XCTAssertTrue(second.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.images["writing.ink.0.0"].exists)
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
         app.buttons["writing.end"].tap()
         XCTAssertTrue(card.waitForExistence(timeout: 5))
     }

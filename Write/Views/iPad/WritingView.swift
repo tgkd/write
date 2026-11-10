@@ -4,6 +4,7 @@ struct WritingView: View {
     @StateObject private var session: WritingSession
     @StateObject private var ink = WritingInkStore()
     @State private var cellSide: CGFloat?
+    @State private var focusedPhrase = 0
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var wordHistory: WordHistoryStore
     @Environment(\.dismiss) private var dismiss
@@ -46,56 +47,128 @@ struct WritingView: View {
     }
 
     private func writingContent(item: WritingSession.Item) -> some View {
-        GeometryReader { geometry in
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text(session.activeMode == .empty && !session.isSentenceComplete ? item.kana : item.sentence)
-                            .font(.title3).accessibilityIdentifier("writing.sentence")
-                        if let translation = item.prompt.translation {
-                            Text(translation).foregroundStyle(.secondary)
-                        }
-                        HStack {
-                            Text("Sentence \(session.sentenceNumber) of \(session.totalSentenceCount)")
-                                .font(.caption).accessibilityIdentifier("writing.sentenceProgress")
-                            Spacer()
-                            ReadingSpeakerButton(text: SpokenReading.text(for: item.prompt))
-                        }
+        VStack(spacing: 0) {
+            header(item: item)
+            GeometryReader { geometry in
+                ScrollViewReader { proxy in
+                    ScrollView {
                         if let cellSide {
-                            VStack(alignment: .leading, spacing: 20) {
+                            VStack(alignment: .leading, spacing: 28) {
                                 ForEach(Array(item.phrases.enumerated()), id: \.element.id) { index, phrase in
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        Text(phrase.reading)
-                                            .font(.title3)
-                                            .foregroundStyle(.secondary)
-                                            .accessibilityIdentifier("writing.phrase.\(index)")
-                                        WordFlowLayout(spacing: 12, lineSpacing: 12) {
-                                            ForEach(phrase.units) { cell in
-                                                unitView(cell, side: cellSide)
-                                                    .id(cell.id)
-                                            }
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
+                                    phraseRow(phrase, index: index, side: cellSide)
                                 }
                             }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, geometry.size.height / 2)
                         }
                     }
-                    .padding(16)
-                }
-                .id(item.prompt.id)
-                .onChange(of: session.currentCell?.id) { id in
-                    if let id {
-                        withAnimation(.easeOut(duration: 0.2)) { proxy.scrollTo(id, anchor: .center) }
+                    .scrollDisabled(true)
+                    .id(item.prompt.id)
+                    .onChange(of: focusedPhraseIndex) { _ in
+                        centerFocus(item: item, proxy: proxy, animated: true)
+                    }
+                    .onChange(of: session.currentCell?.id) { _ in
+                        centerFocus(item: item, proxy: proxy, animated: true)
+                    }
+                    .onChange(of: cellSide) { _ in
+                        DispatchQueue.main.async {
+                            centerFocus(item: item, proxy: proxy, animated: false)
+                        }
+                    }
+                    .onChange(of: geometry.size) { _ in
+                        DispatchQueue.main.async {
+                            centerFocus(item: item, proxy: proxy, animated: false)
+                        }
+                    }
+                    .onAppear {
+                        if cellSide == nil, geometry.size.width > 32 {
+                            cellSide = min(200, geometry.size.width - 32)
+                        }
+                        DispatchQueue.main.async {
+                            centerFocus(item: item, proxy: proxy, animated: false)
+                        }
                     }
                 }
-                .onAppear {
-                    if cellSide == nil, geometry.size.width > 32 {
-                        cellSide = min(200, geometry.size.width - 32)
-                    }
-                }
-                .safeAreaInset(edge: .bottom) { controls }
             }
+        }
+        .safeAreaInset(edge: .bottom) { controls }
+        .onChange(of: session.promptIndex) { _ in resetFocus() }
+        .onChange(of: session.phraseIndex) { _ in resetFocus() }
+    }
+
+    private func header(item: WritingSession.Item) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(session.activeMode == .empty && !session.isSentenceComplete ? item.kana : item.sentence)
+                .font(.title3).accessibilityIdentifier("writing.sentence")
+            if let translation = item.prompt.translation {
+                Text(translation).foregroundStyle(.secondary)
+            }
+            HStack {
+                Text("Sentence \(session.sentenceNumber) of \(session.totalSentenceCount)")
+                    .font(.caption).accessibilityIdentifier("writing.sentenceProgress")
+                Spacer()
+                ReadingSpeakerButton(text: SpokenReading.text(for: item.prompt))
+            }
+        }
+        .padding(.horizontal, 16).padding(.top, 16).padding(.bottom, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func phraseRow(_ phrase: WritingSession.Phrase, index: Int, side: CGFloat) -> some View {
+        let isFocused = index == focusedPhraseIndex
+        return VStack(alignment: .leading, spacing: 6) {
+            Text(phrase.reading)
+                .font(.title3)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("writing.phrase.\(index)")
+            WordFlowLayout(spacing: 12, lineSpacing: 12) {
+                ForEach(phrase.units) { cell in
+                    unitView(cell, side: side)
+                        .id(cell.id)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .opacity(isFocused || session.isSentenceComplete ? 1 : 0.35)
+        .allowsHitTesting(isFocused)
+        .id(phrase.id)
+        .animation(.easeOut(duration: 0.2), value: isFocused)
+    }
+
+    private var isFocusManual: Bool {
+        session.activeMode == .free || session.isSentenceComplete
+    }
+
+    private var focusedPhraseIndex: Int {
+        isFocusManual ? focusedPhrase : session.phraseIndex
+    }
+
+    private func resetFocus() {
+        focusedPhrase = session.activeMode == .free ? 0 : session.phraseIndex
+    }
+
+    private func moveFocus(by delta: Int) {
+        let count = session.currentItem?.phrases.count ?? 0
+        guard count > 0 else {
+            return
+        }
+        ink.leavePhrase()
+        focusedPhrase = min(max(focusedPhraseIndex + delta, 0), count - 1)
+    }
+
+    private func centerFocus(item: WritingSession.Item, proxy: ScrollViewProxy, animated: Bool) {
+        let target: String
+        if let cell = session.currentCell {
+            target = cell.id
+        } else if item.phrases.indices.contains(focusedPhraseIndex) {
+            target = item.phrases[focusedPhraseIndex].id
+        } else {
+            return
+        }
+        if animated {
+            withAnimation(.easeOut(duration: 0.2)) { proxy.scrollTo(target, anchor: .center) }
+        } else {
+            proxy.scrollTo(target, anchor: .center)
         }
     }
 
@@ -160,11 +233,28 @@ struct WritingView: View {
                 if !session.isSentenceComplete {
                     Button {
                         ink.clear(session.restartPhrase().map(\.id))
+                        resetFocus()
                     } label: {
                         Image(systemName: "arrow.counterclockwise").frame(minWidth: 44, minHeight: 44)
                     }
                     .accessibilityLabel(session.activeMode == .free ? "Restart sentence" : "Restart phrase")
                     .accessibilityIdentifier("writing.restart")
+                }
+                if isFocusManual, phraseCount > 1 {
+                    Button {
+                        moveFocus(by: -1)
+                    } label: {
+                        Image(systemName: "chevron.up").frame(minWidth: 44, minHeight: 44)
+                    }
+                    .accessibilityLabel("Previous row").accessibilityIdentifier("writing.previousRow")
+                    .disabled(focusedPhraseIndex == 0)
+                    Button {
+                        moveFocus(by: 1)
+                    } label: {
+                        Image(systemName: "chevron.down").frame(minWidth: 44, minHeight: 44)
+                    }
+                    .accessibilityLabel("Next row").accessibilityIdentifier("writing.nextRow")
+                    .disabled(focusedPhraseIndex + 1 >= phraseCount)
                 }
                 Spacer(minLength: 0)
                 if session.activeMode == .free || session.isSentenceComplete {
@@ -177,6 +267,10 @@ struct WritingView: View {
             }
         }
         .padding(.horizontal, 16).padding(.vertical, 8).background(.bar)
+    }
+
+    private var phraseCount: Int {
+        session.currentItem?.phrases.count ?? 0
     }
 
     private var canUndo: Bool {

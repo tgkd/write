@@ -8,7 +8,7 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if sizeClass == .regular {
+            if usesSplitShell {
                 iPadLayout
             } else {
                 iPhoneLayout
@@ -17,13 +17,23 @@ struct ContentView: View {
         .onOpenURL { openPracticeLink($0) }
     }
 
+    private var usesSplitShell: Bool {
+        if sizeClass == .regular {
+            return true
+        }
+        guard #available(iOS 17, *) else {
+            return false
+        }
+        return DeviceContext.isIPad && !iPadNavigationPath.isEmpty
+    }
+
     private func openPracticeLink(_ url: URL) {
         guard let linkedCodePoint = PracticeLink.codePoint(from: url),
               let kanji = dataStore.lookup(codePoint: linkedCodePoint) else {
             return
         }
         let route = PracticeRoute(codePoint: kanji.codePoint, origin: .widget)
-        if sizeClass == .regular {
+        if usesSplitShell {
             selectedCodePoint = route.codePoint
             iPadNavigationPath = NavigationPath([route])
         } else {
@@ -84,8 +94,25 @@ struct ContentView: View {
         iPadNavigationPath = path
     }
 
+    @ViewBuilder
+    private func splitShell<Sidebar: View, Detail: View>(
+        @ViewBuilder sidebar: () -> Sidebar,
+        @ViewBuilder detail: () -> Detail
+    ) -> some View {
+        if #available(iOS 17, *) {
+            NavigationSplitView(
+                columnVisibility: $columnVisibility,
+                preferredCompactColumn: .constant(.detail),
+                sidebar: sidebar,
+                detail: detail
+            )
+        } else {
+            NavigationSplitView(columnVisibility: $columnVisibility, sidebar: sidebar, detail: detail)
+        }
+    }
+
     private var iPadLayout: some View {
-        NavigationSplitView(columnVisibility: $columnVisibility) {
+        splitShell {
             KanjiPickerView(
                 dataStore: dataStore,
                 wordPromptStore: wordPromptStore,

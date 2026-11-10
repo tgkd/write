@@ -11,6 +11,7 @@ struct WriteApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modifier(UITestingSizeClassToggle())
                 .environmentObject(settings)
                 .environmentObject(history)
                 .environmentObject(wordHistory)
