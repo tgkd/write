@@ -121,6 +121,7 @@
 		93440E65B98BF6F9F988AC81 /* RunOrigin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6670FDAF5B47883C06B219C2 /* RunOrigin.swift */; };
 		94039D249418AD1889961776 /* RecallHintButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7D454A56EDF0A5C47EF61F /* RecallHintButton.swift */; };
 		9433C522096FF66FDCD2E3D0 /* WordPracticeSettingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05372C47C34F052B438B5340 /* WordPracticeSettingTests.swift */; };
+		98B49E926E05B8F0B51D66AB /* WritingRejectionNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A79BBDC8A2289BA791F8E89 /* WritingRejectionNotice.swift */; };
 		99275ABF2EF45371FE93D8BE /* RecallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C050024FC404C10CAA074 /* RecallUITests.swift */; };
 		997D85BC3B675A7D487DEE36 /* HistorySyncControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6318A9467691D30D3EAE7E4 /* HistorySyncControllerTests.swift */; };
 		998FCA762B4EEDEDFCDE2EC1 /* DrawingCanvasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */; };
@@ -349,6 +350,7 @@
 		89A6062B92CEC9AF6083D51F /* WritingHintControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingHintControls.swift; sourceTree = "<group>"; };
 		8A08EB9E5999956764EFCD71 /* RejectionNoticeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RejectionNoticeTests.swift; sourceTree = "<group>"; };
 		8A41398576631CF20005AABB /* DailyKanjiCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiCatalog.swift; sourceTree = "<group>"; };
+		8A79BBDC8A2289BA791F8E89 /* WritingRejectionNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingRejectionNotice.swift; sourceTree = "<group>"; };
 		8CFE38DE1DDAD1B3F3EBE131 /* DailyKanjiPickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiPickerTests.swift; sourceTree = "<group>"; };
 		8D517CC48ABC842765F86C37 /* PracticeRecordingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeRecordingTests.swift; sourceTree = "<group>"; };
 		8D55FC26C8DCAEC50C3EA6A4 /* HistorySyncSaveCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistorySyncSaveCollector.swift; sourceTree = "<group>"; };
@@ -761,6 +763,7 @@
 				89A6062B92CEC9AF6083D51F /* WritingHintControls.swift */,
 				7F7A0537876621148FFD95FF /* WritingInkStore.swift */,
 				E08916945EDEF46120E0F607 /* WritingPencilInteraction.swift */,
+				8A79BBDC8A2289BA791F8E89 /* WritingRejectionNotice.swift */,
 				DE99C6252A5C6ABD36602E7E /* WritingTouchRecognizer.swift */,
 				63578D8E7F9F595840CEB286 /* WritingView.swift */,
 			);
@@ -1101,6 +1104,7 @@
 				D736F604102CBBF062559166 /* WritingInkStore.swift in Sources */,
 				1EE5892E0E7E7A81BD7A3DBB /* WritingMode.swift in Sources */,
 				52B7063D485E4AFE7174A209 /* WritingPencilInteraction.swift in Sources */,
+				98B49E926E05B8F0B51D66AB /* WritingRejectionNotice.swift in Sources */,
 				51C6FB6A078702625DD616B8 /* WritingRoute.swift in Sources */,
 				E14C89F541D2BFDC109DD0B6 /* WritingScript.swift in Sources */,
 				08847BE7C5E039E278FAB425 /* WritingSession.swift in Sources */,
