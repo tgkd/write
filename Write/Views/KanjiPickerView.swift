@@ -12,6 +12,7 @@ struct KanjiPickerView: View {
     @State private var showSettings = false
     @State private var selectedFilter: CharacterFilter = .all
     @State private var levelScheme: CharacterFilter.Scheme = .jlpt
+    @State private var poolSizes: (practice: Int, recall: Int)?
 
     @Binding var selectedCodePoint: String?
     private let usesSelectionBinding: Bool
@@ -87,7 +88,7 @@ struct KanjiPickerView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 16) {
-                    routeLink(ProgressRoute()) {
+                    routeLink({ ProgressRoute() }) {
                         Image(systemName: "chart.bar")
                     }
                     .accessibilityLabel("Progress")
@@ -102,6 +103,14 @@ struct KanjiPickerView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
+        }
+        .onAppear {
+            if poolSizes == nil {
+                poolSizes = computePoolSizes()
+            }
+        }
+        .onChange(of: selectedFilter) { _ in
+            poolSizes = computePoolSizes()
         }
     }
 
@@ -141,42 +150,58 @@ struct KanjiPickerView: View {
             .cornerRadius(8)
     }
 
-    @ViewBuilder
-    private func routeLink<Route: Hashable, Label: View>(
-        _ route: Route,
+    private func routeLink<Label: View>(
+        _ route: @escaping () -> any Hashable,
         @ViewBuilder label: () -> Label
     ) -> some View {
-        if let openRoute {
-            Button {
-                openRoute(route)
-            } label: {
-                label()
-            }
-        } else {
-            NavigationLink(value: route) {
-                label()
-            }
+        Button {
+            openRoute?(route())
+        } label: {
+            label()
         }
     }
 
+    private func computePoolSizes() -> (practice: Int, recall: Int) {
+        var practice = 0
+        var recall = 0
+        for kanji in allKanji where selectedFilter.includes(kanji) {
+            practice += 1
+            if dataStore.recallEligibility.isEligible(kanji) {
+                recall += 1
+            }
+        }
+        return (practice, recall)
+    }
+
+    private func sessionRoute(kind: SessionKind) -> SessionRoute {
+        let codePoints = dataStore.randomCharacters(
+            matching: selectedFilter,
+            count: settings.sessionCount,
+            forRecall: kind == .recall
+        ).map(\.codePoint)
+        return SessionRoute(codePoints: codePoints, kind: kind)
+    }
+
     private var sessionStarters: some View {
-        let practice = dataStore.randomCharacters(matching: selectedFilter, count: settings.sessionCount)
-        let recall = dataStore.randomCharacters(matching: selectedFilter, count: settings.sessionCount, forRecall: true)
+        let practicePool = poolSizes?.practice
+        let recallPool = poolSizes?.recall
         let review = PracticeStats.reviewItems(from: history.records)
         return VStack(spacing: 8) {
             HStack(spacing: 8) {
                 sessionCard(
                     title: "Practice",
-                    subtitle: "\(practice.count) random · \(settings.practiceMode.displayName)",
+                    subtitle: "\(min(settings.sessionCount, practicePool ?? 0)) random · \(settings.practiceMode.displayName)",
                     systemImage: "pencil.tip",
-                    route: SessionRoute(codePoints: practice.map(\.codePoint), kind: .practice),
+                    isEmpty: practicePool == 0,
+                    route: { sessionRoute(kind: .practice) },
                     identifier: "session.practice"
                 )
                 sessionCard(
                     title: "Recall",
-                    subtitle: "\(recall.count) random · from memory",
+                    subtitle: "\(min(settings.sessionCount, recallPool ?? 0)) random · from memory",
                     systemImage: "brain.head.profile",
-                    route: SessionRoute(codePoints: recall.map(\.codePoint), kind: .recall),
+                    isEmpty: recallPool == 0,
+                    route: { sessionRoute(kind: .recall) },
                     identifier: "session.recall"
                 )
             }
@@ -194,29 +219,42 @@ struct KanjiPickerView: View {
     }
 
     private var wordsCard: some View {
-        let route = WordSessionRoute(promptIDs: wordPromptStore.randomPromptIDs(count: settings.sessionCount))
-        return routeLink(route) {
+        routeLink({ WordSessionRoute(promptIDs: wordPromptStore.randomPromptIDs(count: settings.sessionCount)) }) {
             linkCardLabel(title: "Words", subtitle: "write the missing kanji", systemImage: "character.book.closed.ja")
         }
         .buttonStyle(.plain)
-        .disabled(route.promptIDs.isEmpty)
+        .disabled(wordPromptStore.prompts.isEmpty)
         .accessibilityIdentifier("session.words")
     }
 
     private var writingCard: some View {
-        let route = WritingRoute(promptIDs: writingPromptIDs)
-        return routeLink(route) {
+        routeLink({ WritingRoute(promptIDs: writingPromptIDs()) }) {
             linkCardLabel(title: "Writing", subtitle: "Free or by strokes", systemImage: "pencil.and.outline")
         }
         .buttonStyle(.plain)
-        .disabled(route.promptIDs.isEmpty)
+        .disabled(!hasWritingPrompts)
         .accessibilityIdentifier("session.writing")
     }
 
-    private var writingPromptIDs: [String] {
-        if ProcessInfo.processInfo.arguments.contains("-uiTestingFreshHistory"),
-           let ids = UserDefaults.standard.string(forKey: "uiTestingWritingPromptIDs") {
-            return ids.split(separator: ",").map(String.init)
+    private var uiTestingWritingPromptIDs: [String]? {
+        guard ProcessInfo.processInfo.arguments.contains("-uiTestingFreshHistory"),
+              let ids = UserDefaults.standard.string(forKey: "uiTestingWritingPromptIDs") else {
+            return nil
+        }
+        return ids.split(separator: ",").map(String.init)
+    }
+
+    private var hasWritingPrompts: Bool {
+        if let ids = uiTestingWritingPromptIDs {
+            return !ids.isEmpty
+        }
+        let mode = settings.writingMode
+        return wordPromptStore.writingPrompts.contains { mode != .empty || $0.presentation?.allowsEmpty == true }
+    }
+
+    private func writingPromptIDs() -> [String] {
+        if let ids = uiTestingWritingPromptIDs {
+            return ids
         }
         return wordPromptStore.randomWritingPromptIDs(count: 5, mode: settings.writingMode)
     }
@@ -246,10 +284,11 @@ struct KanjiPickerView: View {
         title: LocalizedStringKey,
         subtitle: LocalizedStringKey,
         systemImage: String,
-        route: SessionRoute,
+        isEmpty: Bool,
+        route: @escaping () -> SessionRoute,
         identifier: String
     ) -> some View {
-        routeLink(route) {
+        routeLink({ route() }) {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Image(systemName: systemImage)
@@ -269,12 +308,12 @@ struct KanjiPickerView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
-        .disabled(route.codePoints.isEmpty)
+        .disabled(isEmpty)
         .accessibilityIdentifier(identifier)
     }
 
     private func reviewCard(_ review: [PracticeStats.ReviewItem]) -> some View {
-        routeLink(SessionRoute.review(review, count: settings.sessionCount)) {
+        routeLink({ SessionRoute.review(review, count: settings.sessionCount) }) {
             HStack(spacing: 6) {
                 Image(systemName: "repeat")
                     .foregroundStyle(Color.accentColor)
