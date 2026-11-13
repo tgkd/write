@@ -1,6 +1,8 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Rate Kanji Write" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "Kanji Write を評価" } } } },
+    "Leave a rating on the App Store" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "App Store で評価する" } } } },
     "No remaining prompts are eligible for Empty. This session will finish after this sentence." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "残りの文には空欄モードを使えるものがありません。この文でセッションを終了します。" } } } },
     "Written character" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書いた文字" } } } },
     "Finish sentence": {

@@ -1,9 +1,13 @@
+import StoreKit
 import SwiftUI
 
 struct SessionSummaryView: View {
     let results: [SessionState.KanjiResult]
     let kind: SessionKind
+    @EnvironmentObject private var settings: AppSettings
+    @EnvironmentObject private var history: PracticeHistoryStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.requestReview) private var requestReview
 
     var body: some View {
         VStack(spacing: 24) {
@@ -67,7 +71,7 @@ struct SessionSummaryView: View {
             }
 
             Button {
-                dismiss()
+                finish()
             } label: {
                 Text("Done")
                     .font(.headline)
@@ -79,6 +83,26 @@ struct SessionSummaryView: View {
                     .padding(.horizontal, 16)
             }
             .padding(.bottom, 16)
+        }
+    }
+
+    private func finish() {
+        let now = Date()
+        let asksForReview = history.unsavedCount == 0 && ReviewPromptGate.isEligible(
+            completedAt: history.records.map(\.completedAt),
+            lastAttemptAt: settings.lastReviewAttemptAt,
+            now: now,
+            calendar: .current
+        )
+        if asksForReview {
+            settings.lastReviewAttemptAt = now
+        }
+        dismiss()
+        guard asksForReview else { return }
+        let requestReview = requestReview
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
+            requestReview()
         }
     }
 

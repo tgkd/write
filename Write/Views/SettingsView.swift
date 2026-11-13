@@ -69,6 +69,11 @@ struct SettingsView: View {
 
                     experimentalSection
 
+                    rateRow
+                        .padding(16)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Acknowledgments")
                             .font(.subheadline)
@@ -319,6 +324,25 @@ struct SettingsView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 4)
+        }
+    }
+
+    private var rateRow: some View {
+        Link(destination: URL(string: "https://apps.apple.com/app/id6760963794?action=write-review")!) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Rate Kanji Write")
+                        .foregroundStyle(.primary)
+                    Text("Leave a rating on the App Store")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "arrow.up.right")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+            }
         }
     }
 

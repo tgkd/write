@@ -12,6 +12,7 @@ final class AppSettings: ObservableObject {
     static let iCloudSyncEnabledKey = "iCloudSyncEnabled"
     static let recallCueOrderKey = "recallCueOrder"
     static let writingModeKey = "writingMode"
+    static let lastReviewAttemptAtKey = "lastReviewAttemptAt"
 
     private let defaults: UserDefaults
 
@@ -57,6 +58,10 @@ final class AppSettings: ObservableObject {
 
     @Published var recallCueOrder: RecallCueOrder {
         didSet { defaults.set(recallCueOrder.rawValue, forKey: Self.recallCueOrderKey) }
+    }
+
+    @Published var lastReviewAttemptAt: Date? {
+        didSet { defaults.set(lastReviewAttemptAt, forKey: Self.lastReviewAttemptAtKey) }
     }
 
     // MARK: - iPad Settings
@@ -133,6 +138,7 @@ final class AppSettings: ObservableObject {
 
         let storedCueOrder = defaults.string(forKey: Self.recallCueOrderKey) ?? ""
         self.recallCueOrder = RecallCueOrder(rawValue: storedCueOrder) ?? .meaningsFirst
+        self.lastReviewAttemptAt = defaults.object(forKey: Self.lastReviewAttemptAtKey) as? Date
 
         let storedSensitivity = defaults.string(forKey: "pressureSensitivity") ?? ""
         self.pressureSensitivity = PressureSensitivity(rawValue: storedSensitivity) ?? .medium
