@@ -13,6 +13,7 @@ struct RecallHintButton: View {
         }
         .buttonStyle(.bordered)
         .disabled(practiceState.nextHint == nil)
+        .accessibilityInputLabels([Text(title), Text("Hint")])
     }
 
     private var title: String {

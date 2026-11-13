@@ -7,7 +7,23 @@ struct DailyKanjiEntryView: View {
 
     var body: some View {
         familyView
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Daily Kanji")
+            .accessibilityValue(accessibilitySummary)
+            .accessibilityHint("Opens practice for this kanji.")
             .widgetURL(PracticeLink.url(codePoint: entry.kanji.codePoint))
+    }
+
+    private var accessibilitySummary: String {
+        let kanji = entry.kanji
+        let parts: [String?] = [
+            kanji.character,
+            kanji.meanings.isEmpty ? nil : kanji.meanings.joined(separator: ", "),
+            kanji.onYomi,
+            kanji.kunYomi,
+            kanji.strokeCountLabel
+        ]
+        return parts.compactMap { $0 }.joined(separator: ", ")
     }
 
     @ViewBuilder

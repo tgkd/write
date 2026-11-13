@@ -17,11 +17,24 @@ struct RecentActivityGrid: View {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(fill(for: day.completions, peak: peak))
                     .aspectRatio(1, contentMode: .fit)
-                    .accessibilityLabel(label(for: day))
             }
         }
         .frame(maxWidth: Self.maxGridWidth)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Recent activity")
+        .accessibilityValue(summary)
+    }
+
+    private var summary: String {
+        let activeDays = days.filter { $0.completions > 0 }
+        let total = activeDays.reduce(0) { $0 + $1.completions }
+        let overview = String(localized: "Practiced on \(activeDays.count) of \(days.count) days, \(total) completed")
+        guard let latest = activeDays.max(by: { $0.day < $1.day }) else {
+            return overview
+        }
+        let latestLabel = label(for: latest)
+        return String(localized: "\(overview). Latest: \(latestLabel)")
     }
 
     private func fill(for completions: Int, peak: Int) -> Color {

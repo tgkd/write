@@ -12,6 +12,7 @@ struct PracticeView: View {
     @State private var showCompletionCheck = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     let onComplete: ((PracticeRecord) -> Void)?
     let showToolbar: Bool
@@ -52,6 +53,7 @@ struct PracticeView: View {
             controls
                 .padding(.bottom, 48)
         }
+        .practiceAnnouncements(for: practiceState)
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -166,6 +168,7 @@ struct PracticeView: View {
                 codePoint: practiceState.kanjiData.codePoint,
                 mode: practiceState.isRecall ? PracticeRecord.recallMode : practiceState.mode.rawValue
             ),
+            canvasProgress: practiceState.strokeProgressDescription,
             onStrokeBegan: { touchType in
                 practiceState.noteStrokeBegan(touchType: touchType)
             },
@@ -193,6 +196,8 @@ struct PracticeView: View {
                 } label: {
                     Image(systemName: "arrow.uturn.backward")
                         .font(.title3)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .disabled(practiceState.matchedStrokeIndices.isEmpty)
                 .accessibilityLabel("Undo stroke")
@@ -212,6 +217,8 @@ struct PracticeView: View {
                 } label: {
                     Image(systemName: "arrow.counterclockwise")
                         .font(.title3)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .accessibilityLabel("Start over")
             }
@@ -263,12 +270,12 @@ struct PracticeView: View {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
 
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+        withAnimation(reduceMotion ? nil : .spring(response: 0.4, dampingFraction: 0.6)) {
             showCompletionCheck = true
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-            withAnimation(.easeOut(duration: 0.4)) {
+            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.4)) {
                 showCompletionCheck = false
             }
         }

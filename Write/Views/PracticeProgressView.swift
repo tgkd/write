@@ -5,6 +5,7 @@ struct PracticeProgressView: View {
 
     @EnvironmentObject private var history: PracticeHistoryStore
     @EnvironmentObject private var settings: AppSettings
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private static let dayCount = 35
 
@@ -113,7 +114,7 @@ struct PracticeProgressView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(kanji.map(cueText) ?? "")
                     .font(.subheadline)
-                    .lineLimit(1)
+                    .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 1)
                 Text(reasonText(item.reason))
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -124,6 +125,7 @@ struct PracticeProgressView: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(.vertical, 8)
+        .accessibilityElement(children: .combine)
     }
 
     private func cueText(_ kanji: KanjiData) -> String {
@@ -148,6 +150,7 @@ struct PracticeProgressView: View {
             .font(.subheadline)
             .foregroundStyle(.secondary)
             .textCase(.uppercase)
+            .accessibilityAddTraits(.isHeader)
     }
 
     private func reasonText(_ reason: PracticeStats.Reason) -> String {

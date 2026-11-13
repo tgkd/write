@@ -8,6 +8,7 @@ struct KanjiPickerView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var history: PracticeHistoryStore
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var searchText = ""
     @State private var showSettings = false
     @State private var selectedFilter: CharacterFilter = .all
@@ -130,12 +131,22 @@ struct KanjiPickerView: View {
                     )
             }
             .buttonStyle(.plain)
+            .accessibilityValue(cellAccessibilityValue(kanji))
+            .accessibilityAddTraits(selectedCodePoint == kanji.codePoint ? .isSelected : [])
         } else {
             NavigationLink(value: kanji.codePoint) {
                 kanjiCellContent(kanji)
             }
             .buttonStyle(.plain)
+            .accessibilityValue(cellAccessibilityValue(kanji))
         }
+    }
+
+    private func cellAccessibilityValue(_ kanji: KanjiData) -> String {
+        if let meanings = kanji.meanings, !meanings.isEmpty {
+            return meanings.prefix(2).joined(separator: ", ")
+        }
+        return kanji.romaji ?? ""
     }
 
     private func kanjiCellContent(_ kanji: KanjiData) -> some View {
@@ -186,8 +197,11 @@ struct KanjiPickerView: View {
         let practicePool = poolSizes?.practice
         let recallPool = poolSizes?.recall
         let review = PracticeStats.reviewItems(from: history.records)
+        let cardLayout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 8))
         return VStack(spacing: 8) {
-            HStack(spacing: 8) {
+            cardLayout {
                 sessionCard(
                     title: "Practice",
                     subtitle: "\(min(settings.sessionCount, practicePool ?? 0)) random · \(settings.practiceMode.displayName)",
@@ -225,6 +239,7 @@ struct KanjiPickerView: View {
         .buttonStyle(.plain)
         .disabled(wordPromptStore.prompts.isEmpty)
         .accessibilityIdentifier("session.words")
+        .accessibilityInputLabels([Text("Words")])
     }
 
     private var writingCard: some View {
@@ -234,6 +249,7 @@ struct KanjiPickerView: View {
         .buttonStyle(.plain)
         .disabled(!hasWritingPrompts)
         .accessibilityIdentifier("session.writing")
+        .accessibilityInputLabels([Text("Writing")])
     }
 
     private var uiTestingWritingPromptIDs: [String]? {
@@ -267,12 +283,12 @@ struct KanjiPickerView: View {
                     .accessibilityHidden(true)
                 Text(title)
                     .font(.headline)
-                    .lineLimit(1)
+                    .lineLimit(cardLineLimit)
             }
             Text(subtitle)
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .lineLimit(1)
+                .lineLimit(cardLineLimit)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
@@ -300,7 +316,7 @@ struct KanjiPickerView: View {
                 Text(subtitle)
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                    .lineLimit(cardLineLimit)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(12)
@@ -310,6 +326,11 @@ struct KanjiPickerView: View {
         .buttonStyle(.plain)
         .disabled(isEmpty)
         .accessibilityIdentifier(identifier)
+        .accessibilityInputLabels([Text(title)])
+    }
+
+    private var cardLineLimit: Int? {
+        dynamicTypeSize.isAccessibilitySize ? nil : 1
     }
 
     private func reviewCard(_ review: [PracticeStats.ReviewItem]) -> some View {
@@ -331,6 +352,7 @@ struct KanjiPickerView: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("session.review")
+        .accessibilityInputLabels([Text("Review")])
     }
 
     private var filterBar: some View {
@@ -366,8 +388,12 @@ struct KanjiPickerView: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
             .overlay(Capsule().stroke(Color(.separator)))
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
         }
         .tint(.primary)
+        .accessibilityLabel("Levels")
+        .accessibilityValue(levelScheme.label)
         .accessibilityIdentifier("filter.scheme")
     }
 
@@ -402,7 +428,10 @@ struct KanjiPickerView: View {
                 .background(isSelected ? Color.primary : Color(.secondarySystemBackground))
                 .foregroundStyle(isSelected ? Color(.systemBackground) : .primary)
                 .clipShape(Capsule())
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

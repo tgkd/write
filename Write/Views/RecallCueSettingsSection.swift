@@ -9,6 +9,7 @@ struct RecallCueSettingsSection: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
 
             VStack(spacing: 0) {

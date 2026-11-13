@@ -29,6 +29,7 @@ struct WordSlotCanvas: View {
 
             controls
         }
+        .practiceAnnouncements(for: slotState)
         .onChange(of: slotState.hint) { _ in
             applyGhostVisibility()
         }
@@ -77,6 +78,7 @@ struct WordSlotCanvas: View {
                 codePoint: slotState.kanjiData.codePoint,
                 mode: "word"
             ),
+            canvasProgress: slotState.strokeProgressDescription,
             onStrokeBegan: { touchType in
                 slotState.noteStrokeBegan(touchType: touchType)
             },
@@ -104,6 +106,8 @@ struct WordSlotCanvas: View {
                 } label: {
                     Image(systemName: "arrow.uturn.backward")
                         .font(.title3)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .disabled(isLocked || slotState.matchedStrokeIndices.isEmpty)
                 .accessibilityLabel("Undo stroke")
@@ -117,6 +121,8 @@ struct WordSlotCanvas: View {
                 } label: {
                     Image(systemName: "arrow.counterclockwise")
                         .font(.title3)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .disabled(isLocked)
                 .accessibilityLabel("Restart word")

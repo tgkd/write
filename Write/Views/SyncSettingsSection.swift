@@ -11,6 +11,7 @@ struct SyncSettingsSection: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
 
             Toggle("Sync practice history", isOn: $settings.iCloudSyncEnabled)

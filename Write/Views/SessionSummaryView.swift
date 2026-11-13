@@ -16,6 +16,7 @@ struct SessionSummaryView: View {
                     .accessibilityHidden(true)
                 Text("Session Complete")
                     .font(.title2.weight(.semibold))
+                    .accessibilityAddTraits(.isHeader)
                 Text(subtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -57,6 +58,7 @@ struct SessionSummaryView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
             }
             .listStyle(.plain)
 

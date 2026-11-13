@@ -5,6 +5,7 @@ struct SessionPracticeView: View {
     @EnvironmentObject private var settings: AppSettings
     @State private var showNextButton = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(kanji: [KanjiData], kind: SessionKind = .practice, origin: RunOrigin = .randomSession) {
         _sessionState = StateObject(wrappedValue: SessionState(kanjiQueue: kanji, kind: kind, origin: origin))
@@ -33,6 +34,7 @@ struct SessionPracticeView: View {
                     Text("\(title) · \(p.current) / \(p.total)")
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)
+                        .accessibilityLabel(String(localized: "\(title), \(p.current) of \(p.total)"))
                 }
             }
         }
@@ -60,7 +62,7 @@ struct SessionPracticeView: View {
                 onComplete: { record in
                     sessionState.recordResult(attemptCount: record.misses, usedHint: record.revealed)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
-                        withAnimation(.easeInOut(duration: 0.3)) {
+                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
                             showNextButton = true
                         }
                     }
@@ -70,7 +72,7 @@ struct SessionPracticeView: View {
 
             if showNextButton {
                 nextButton
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
                     .padding(.bottom, 48)
             }
         }
@@ -78,7 +80,7 @@ struct SessionPracticeView: View {
 
     private var nextButton: some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
                 showNextButton = false
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {

@@ -10,6 +10,7 @@ struct WordPracticeView: View {
     @State private var showCompletionCheck = false
     @State private var showNextButton = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(prompts: [WordPrompt], dataStore: KanjiDataStore) {
         self.prompts = prompts
@@ -40,6 +41,7 @@ struct WordPracticeView: View {
                     Text("Words · \(progress.current) / \(progress.total)")
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)
+                        .accessibilityLabel(String(localized: "\(String(localized: "Words")), \(progress.current) of \(progress.total)"))
                         .accessibilityIdentifier("word.progress")
                 }
             }
@@ -78,7 +80,7 @@ struct WordPracticeView: View {
             if showNextButton {
                 nextButton
                     .frame(maxWidth: 640)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
                     .padding(.bottom, 48)
             }
         }
@@ -108,7 +110,7 @@ struct WordPracticeView: View {
 
     private var nextButton: some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.2)) {
                 showNextButton = false
             }
             showCompletionCheck = false
@@ -132,16 +134,16 @@ struct WordPracticeView: View {
             return
         }
         UINotificationFeedbackGenerator().notificationOccurred(.success)
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+        withAnimation(reduceMotion ? nil : .spring(response: 0.4, dampingFraction: 0.6)) {
             showCompletionCheck = true
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-            withAnimation(.easeOut(duration: 0.4)) {
+            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.4)) {
                 showCompletionCheck = false
             }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
-            withAnimation(.easeInOut(duration: 0.3)) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
                 showNextButton = true
             }
         }

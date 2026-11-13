@@ -13,6 +13,7 @@ struct SentenceSessionSummaryView: View {
                     .accessibilityHidden(true)
                 Text("Session Complete")
                     .font(.title2.weight(.semibold))
+                    .accessibilityAddTraits(.isHeader)
                 Text(subtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -49,6 +50,7 @@ struct SentenceSessionSummaryView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .accessibilityElement(children: .combine)
                 .padding(.vertical, 4)
             }
             .listStyle(.plain)

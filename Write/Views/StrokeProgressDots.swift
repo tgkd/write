@@ -20,6 +20,9 @@ struct StrokeProgressDots: View {
                     )
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Strokes")
+        .accessibilityValue(practiceState.strokeProgressDescription)
     }
 
     private func fillColor(for index: Int) -> Color {

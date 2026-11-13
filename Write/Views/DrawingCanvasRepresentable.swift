@@ -17,7 +17,9 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     var captureContext: StrokeCaptureContext?
     var retainedCanvasView: DrawingCanvasView?
     var canvasIdentifier: String = "drawingCanvas"
+    var canvasLabel: String?
     var installsPencilInteraction: Bool = true
+    var accessibilityProgress: String?
 
     @Binding var canvasView: DrawingCanvasView?
 
@@ -36,8 +38,10 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         view.backgroundColor = .clear
         view.isAccessibilityElement = true
         view.accessibilityIdentifier = canvasIdentifier
-        view.accessibilityLabel = String(localized: "Drawing canvas")
+        view.accessibilityLabel = canvasLabel ?? String(localized: "Drawing canvas")
         view.accessibilityTraits = .allowsDirectInteraction
+        view.accessibilityHint = String(localized: "Draw the strokes here.")
+        applyAccessibilityProgress(to: view)
         if retainedCanvasView != nil {
             view.accessibilityValue = String(view.strokeCount)
             if view.gestureRecognizers?.contains(where: { $0 is WritingTouchRecognizer }) != true {
@@ -75,6 +79,15 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         }
         context.coordinator.onPencilDoubleTap = onPencilDoubleTap
         applyBrushSettings(to: uiView)
+        uiView.accessibilityLabel = canvasLabel ?? String(localized: "Drawing canvas")
+        applyAccessibilityProgress(to: uiView)
+    }
+
+    private func applyAccessibilityProgress(to view: DrawingCanvasView) {
+        guard let accessibilityProgress else {
+            return
+        }
+        view.accessibilityValue = accessibilityProgress
     }
 
     private func strokeCaptureHandler() -> ((CanvasStrokeCapture) -> Void)? {

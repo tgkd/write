@@ -21,10 +21,12 @@ struct SettingsView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .textCase(.uppercase)
+                            .accessibilityAddTraits(.isHeader)
                             .padding(.leading, 4)
 
                         HStack {
                             Text("Kanji per session")
+                                .accessibilityHidden(true)
                             Spacer()
                             Stepper(
                                 "\(settings.sessionCount)",
@@ -32,6 +34,8 @@ struct SettingsView: View {
                                 in: 3...30,
                                 step: 1
                             )
+                            .accessibilityLabel("Kanji per session")
+                            .accessibilityValue("\(settings.sessionCount)")
                         }
                         .padding(16)
                         .background(Color(.secondarySystemBackground))
@@ -43,6 +47,7 @@ struct SettingsView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .textCase(.uppercase)
+                            .accessibilityAddTraits(.isHeader)
                             .padding(.leading, 4)
 
                         VStack(spacing: 0) {
@@ -79,6 +84,7 @@ struct SettingsView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .textCase(.uppercase)
+                            .accessibilityAddTraits(.isHeader)
                             .padding(.leading, 4)
 
                         VStack(alignment: .leading, spacing: 12) {
@@ -124,6 +130,7 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
 
             VStack(alignment: .leading, spacing: 10) {
@@ -160,18 +167,21 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
 
             VStack(spacing: 0) {
                 HStack {
                     Text("Smoothing")
+                        .accessibilityHidden(true)
                     Spacer()
-                    Picker("", selection: $settings.smoothingStrength) {
+                    Picker("Smoothing", selection: $settings.smoothingStrength) {
                         ForEach(SmoothingStrength.allCases, id: \.self) { level in
                             Text(level.displayName).tag(level)
                         }
                     }
                     .pickerStyle(.menu)
+                    .labelsHidden()
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -180,13 +190,15 @@ struct SettingsView: View {
 
                 HStack {
                     Text("Brush Thickness")
+                        .accessibilityHidden(true)
                     Spacer()
-                    Picker("", selection: $settings.brushThickness) {
+                    Picker("Brush Thickness", selection: $settings.brushThickness) {
                         ForEach(BrushThickness.allCases, id: \.self) { level in
                             Text(level.displayName).tag(level)
                         }
                     }
                     .pickerStyle(.menu)
+                    .labelsHidden()
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -209,18 +221,21 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
 
             VStack(spacing: 0) {
                 HStack {
                     Text("Handedness")
+                        .accessibilityHidden(true)
                     Spacer()
-                    Picker("", selection: $settings.handedness) {
+                    Picker("Handedness", selection: $settings.handedness) {
                         ForEach(Handedness.allCases, id: \.self) { h in
                             Text(h.displayName).tag(h)
                         }
                     }
                     .pickerStyle(.menu)
+                    .labelsHidden()
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -232,19 +247,22 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
                 .padding(.top, 8)
 
             VStack(spacing: 0) {
                 HStack {
                     Text("Pen Pressure")
+                        .accessibilityHidden(true)
                     Spacer()
-                    Picker("", selection: $settings.pressureSensitivity) {
+                    Picker("Pen Pressure", selection: $settings.pressureSensitivity) {
                         ForEach(PressureSensitivity.allCases, id: \.self) { level in
                             Text(level.displayName).tag(level)
                         }
                     }
                     .pickerStyle(.menu)
+                    .labelsHidden()
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -253,13 +271,15 @@ struct SettingsView: View {
 
                 HStack {
                     Text("Pen Tilt")
+                        .accessibilityHidden(true)
                     Spacer()
-                    Picker("", selection: $settings.tiltSensitivity) {
+                    Picker("Pen Tilt", selection: $settings.tiltSensitivity) {
                         ForEach(TiltSensitivity.allCases, id: \.self) { level in
                             Text(level.displayName).tag(level)
                         }
                     }
                     .pickerStyle(.menu)
+                    .labelsHidden()
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -278,6 +298,7 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
                 .padding(.top, 8)
 
@@ -290,6 +311,7 @@ struct SettingsView: View {
 
                 HStack {
                     Text("Cells per Row")
+                        .accessibilityHidden(true)
                     Spacer()
                     Stepper(
                         "\(settings.cellsPerRow)",
@@ -297,6 +319,8 @@ struct SettingsView: View {
                         in: 6...10,
                         step: 2
                     )
+                    .accessibilityLabel("Cells per Row")
+                    .accessibilityValue("\(settings.cellsPerRow)")
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -312,6 +336,7 @@ struct SettingsView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
 
             Toggle("Word practice", isOn: $settings.showWordPractice)
@@ -410,6 +435,7 @@ private struct GuideWidthControl: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+                .accessibilityAddTraits(.isHeader)
                 .padding(.leading, 4)
 
             VStack(spacing: 16) {
@@ -423,20 +449,42 @@ private struct GuideWidthControl: View {
                             onChanged(sliderWidth)
                         }
                     }
-                    Text(String(format: "%.0f", sliderWidth))
+                    .accessibilityLabel("Guide Width")
+                    .accessibilityValue(widthText)
+                    .accessibilityAdjustableAction(adjustWidth)
+                    Text(widthText)
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
-                        .frame(width: 24, alignment: .trailing)
+                        .frame(minWidth: 24, alignment: .trailing)
+                        .accessibilityHidden(true)
                 }
 
                 RoundedRectangle(cornerRadius: sliderWidth / 2)
                     .fill(Color(uiColor: palette.strokeOrderColor(index: 0, total: 3)))
                     .frame(height: sliderWidth)
                     .opacity(0.5)
+                    .accessibilityHidden(true)
             }
             .padding(16)
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
+    }
+
+    private var widthText: String {
+        String(format: "%.0f", sliderWidth)
+    }
+
+    private func adjustWidth(_ direction: AccessibilityAdjustmentDirection) {
+        let range = AppSettings.maskPathWidthRange
+        switch direction {
+        case .increment:
+            sliderWidth = min(sliderWidth + 1, range.upperBound)
+        case .decrement:
+            sliderWidth = max(sliderWidth - 1, range.lowerBound)
+        @unknown default:
+            return
+        }
+        onChanged(sliderWidth)
     }
 }

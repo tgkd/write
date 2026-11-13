@@ -6,6 +6,8 @@ struct WordSlotsRow: View {
     let currentSegment: Int?
     @ObservedObject var slotState: PracticeState
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     private let boxSize: CGFloat = 56
 
     var body: some View {
@@ -47,7 +49,7 @@ struct WordSlotsRow: View {
             }
         }
         .frame(width: boxSize, height: boxSize)
-        .animation(.spring(response: 0.35, dampingFraction: 0.7), value: isRevealed)
+        .animation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.7), value: isRevealed)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityLabel(text: text, isRevealed: isRevealed, isCurrent: isCurrent))
         .accessibilityIdentifier("wordSlot.\(index)")
