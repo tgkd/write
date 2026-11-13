@@ -108,6 +108,7 @@
 		86CB1B5872ACDDA4A1D93B5F /* DailyKanji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CBBCB68667372609A4A51E /* DailyKanji.swift */; };
 		87636BFB0601EDE433A0945B /* StrokeHookTrimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA7E9B059436EA492095336 /* StrokeHookTrimmer.swift */; };
 		87A352C6474310C7FBC14A84 /* PracticeRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DDBFDF4EC8C00E45285CDED /* PracticeRecord.swift */; };
+		8944DC4E84EE1667280E04A9 /* AccessibilityAnnouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75604EDA80F207F844E3D00A /* AccessibilityAnnouncer.swift */; };
 		8A87797F9254742F0AD5304F /* PracticeHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FB7CC3EEC51777470FD493 /* PracticeHistoryStore.swift */; };
 		8AA059ECEE0D6195B45CACFF /* PracticeGridLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11383DC67C2F1BE614A4183 /* PracticeGridLines.swift */; };
 		8B6E6CEDB31268067D0064FD /* WritingSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1327BED1F11A45695014DFB4 /* WritingSessionTests.swift */; };
@@ -122,6 +123,7 @@
 		94039D249418AD1889961776 /* RecallHintButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7D454A56EDF0A5C47EF61F /* RecallHintButton.swift */; };
 		9433C522096FF66FDCD2E3D0 /* WordPracticeSettingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05372C47C34F052B438B5340 /* WordPracticeSettingTests.swift */; };
 		98B49E926E05B8F0B51D66AB /* WritingRejectionNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A79BBDC8A2289BA791F8E89 /* WritingRejectionNotice.swift */; };
+		98C00A3BDF2CB0038B6A8F70 /* PracticeStrokeProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48D861749D3CBA86FE447BB /* PracticeStrokeProgress.swift */; };
 		99275ABF2EF45371FE93D8BE /* RecallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014C050024FC404C10CAA074 /* RecallUITests.swift */; };
 		997D85BC3B675A7D487DEE36 /* HistorySyncControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6318A9467691D30D3EAE7E4 /* HistorySyncControllerTests.swift */; };
 		998FCA762B4EEDEDFCDE2EC1 /* DrawingCanvasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B073A44C4C6B9825749F4D0 /* DrawingCanvasTests.swift */; };
@@ -182,6 +184,7 @@
 		DB9CB170523F77D78A5C5D74 /* WordPromptDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F432BC00F9C276EC83E69456 /* WordPromptDataTests.swift */; };
 		DC72ABB9183BB6EC4635B08F /* RejectionNoticeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A08EB9E5999956764EFCD71 /* RejectionNoticeTests.swift */; };
 		DD2E5A5AE1513EC29B663887 /* WordHistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1EC7D912AE81459BF48A71 /* WordHistoryStoreTests.swift */; };
+		DEDF55F5BD7216B6F36E9AAE /* PracticeAnnouncements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76AEF5B433E4ECD456A28C8 /* PracticeAnnouncements.swift */; };
 		E06F60CC74BA13B9FCC60278 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1061A3078D31136BA4CE4C66 /* DrawingCanvasView.swift */; };
 		E14C89F541D2BFDC109DD0B6 /* WritingScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC9BCA8EE2B0A9725C6403E /* WritingScript.swift */; };
 		E1AD8F7E1D0D638F003925C1 /* BrushStroke.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919D2510E02A64F8DC10620F /* BrushStroke.swift */; };
@@ -334,6 +337,7 @@
 		6CF1EE613AE96A2AA1E74A13 /* DailyKanjiDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyKanjiDataTests.swift; sourceTree = "<group>"; };
 		6D84FDA72BA84ADF1FAE1AFE /* RecentActivityGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentActivityGrid.swift; sourceTree = "<group>"; };
 		726FF41DE0192AE24EBF3B42 /* CircularDailyKanjiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularDailyKanjiView.swift; sourceTree = "<group>"; };
+		75604EDA80F207F844E3D00A /* AccessibilityAnnouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityAnnouncer.swift; sourceTree = "<group>"; };
 		757A68FE30703D42F6A7844F /* WritingCellSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCellSmokeTests.swift; sourceTree = "<group>"; };
 		76A573E07580005FA275E101 /* KanjiDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStore.swift; sourceTree = "<group>"; };
 		787DEC6143AF5C3E8D2B0A69 /* AnswerGlyph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerGlyph.swift; sourceTree = "<group>"; };
@@ -383,6 +387,7 @@
 		A38E5D0257B76A3C0E3F76E1 /* WriteTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WriteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A65F9957ADA9C3C85D14D26A /* WritingCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingCellView.swift; sourceTree = "<group>"; };
 		A745F198732D30DE5AC76A8D /* StrokeRejection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeRejection.swift; sourceTree = "<group>"; };
+		A76AEF5B433E4ECD456A28C8 /* PracticeAnnouncements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeAnnouncements.swift; sourceTree = "<group>"; };
 		A9C4444928FFE24B6BBA78EF /* OneEuroFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneEuroFilter.swift; sourceTree = "<group>"; };
 		AA8DD207971C88884DA22D49 /* RunContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunContext.swift; sourceTree = "<group>"; };
 		AE8A0A8EAE16F53B28499FCE /* ValidationCorpusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationCorpusTests.swift; sourceTree = "<group>"; };
@@ -411,6 +416,7 @@
 		CD2CBB00D92DFAF5253060C4 /* WordPromptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordPromptStore.swift; sourceTree = "<group>"; };
 		CF2839C39B854D958B7C59CF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D169FBF0B8A86837BD3CD663 /* RecallHint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecallHint.swift; sourceTree = "<group>"; };
+		D48D861749D3CBA86FE447BB /* PracticeStrokeProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeStrokeProgress.swift; sourceTree = "<group>"; };
 		D7C63D0EA4D3CD0F61D0FCE6 /* PencilSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilSettings.swift; sourceTree = "<group>"; };
 		D84C58562B37941FCA1C5518 /* WordPracticeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordPracticeState.swift; sourceTree = "<group>"; };
 		D8EC9F1455E9555D260F3DFF /* PracticeStatsSchemaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeStatsSchemaTests.swift; sourceTree = "<group>"; };
@@ -614,6 +620,7 @@
 		532E1ED38260C73ABF920966 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				75604EDA80F207F844E3D00A /* AccessibilityAnnouncer.swift */,
 				787DEC6143AF5C3E8D2B0A69 /* AnswerGlyph.swift */,
 				F465DCAF6696204E7C3D85D5 /* DrawingCanvasRepresentable.swift */,
 				1061A3078D31136BA4CE4C66 /* DrawingCanvasView.swift */,
@@ -622,6 +629,7 @@
 				FBBCC89B164C829B11B97323 /* KanjiReferenceView.swift */,
 				6A55B5A3382E587D6C4B51B2 /* NavigationGestureGuard.swift */,
 				35E6ED38AA97D0CF33DA08F8 /* NavigationGestureGuardRepresentable.swift */,
+				A76AEF5B433E4ECD456A28C8 /* PracticeAnnouncements.swift */,
 				E11383DC67C2F1BE614A4183 /* PracticeGridLines.swift */,
 				7C6A0D944E2C77DD9F066AC4 /* PracticeGridView.swift */,
 				DFBC3C78107C245CAB7822EB /* PracticeModelSlot.swift */,
@@ -629,6 +637,7 @@
 				9A69ADD85D74462EE94A52D6 /* PracticeModePicker.swift */,
 				09467A3890CD8C766D06E7A1 /* PracticeProgressView.swift */,
 				DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */,
+				D48D861749D3CBA86FE447BB /* PracticeStrokeProgress.swift */,
 				44A5A9E84315E390CECEC817 /* PracticeView.swift */,
 				B2F31DB2AA57261CB1AE8F1A /* ReadingSpeakerButton.swift */,
 				9E5E7D0872C341B23C8A0BB9 /* RecallCue.swift */,
@@ -996,6 +1005,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8944DC4E84EE1667280E04A9 /* AccessibilityAnnouncer.swift in Sources */,
 				75A0B077C04C1B28736E915E /* AnswerGlyph.swift in Sources */,
 				D8F590153A99714D63DB1421 /* AppSettings.swift in Sources */,
 				E1AD8F7E1D0D638F003925C1 /* BrushStroke.swift in Sources */,
@@ -1045,6 +1055,7 @@
 				A5B185377B1743E1A27978E3 /* OneEuroFilter.swift in Sources */,
 				C7720D4B2FB8B039A59FCD9C /* PencilSettings.swift in Sources */,
 				0B56AA0894FC0939DE713946 /* PointSampler.swift in Sources */,
+				DEDF55F5BD7216B6F36E9AAE /* PracticeAnnouncements.swift in Sources */,
 				B91198FA842033EEFEBB4BD6 /* PracticeCanvasArea.swift in Sources */,
 				8AA059ECEE0D6195B45CACFF /* PracticeGridLines.swift in Sources */,
 				C79CCF8F0ADAC45D3C327CEE /* PracticeGridView.swift in Sources */,
@@ -1059,6 +1070,7 @@
 				B78475BE7EA8CECEEEE3D241 /* PracticeSessionActions.swift in Sources */,
 				013FE94AD914E50DD46A8286 /* PracticeState.swift in Sources */,
 				CF177FA2D2605D8D2A5E252B /* PracticeStats.swift in Sources */,
+				98C00A3BDF2CB0038B6A8F70 /* PracticeStrokeProgress.swift in Sources */,
 				5B44846DBEA1792BA3DA966E /* PracticeView.swift in Sources */,
 				A804FD3A9F8B74A9AE25B5DB /* ProcrustesNormalizer.swift in Sources */,
 				F7B293F82349DF8130160E6E /* ReadingSpeaker.swift in Sources */,

@@ -1,10 +1,30 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Stroke not accepted" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画は受け付けられませんでした" } } } },
+    "Complete" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } } } },
+    "Stroke %lld of %lld" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%2$lld画中%1$lld画目" } } } },
+    "Draw the strokes here." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ここに線を書いてください。" } } } },
+    "%@, %lld of %lld" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%1$@、%2$lld / %3$lld" } } } },
+    "Hint" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ヒント" } } } },
+    "Recent activity" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "最近の練習" } } } },
+    "Practiced on %lld of %lld days, %lld completed" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%2$lld日中%1$lld日練習、%3$lld回完了" } } } },
+    "%@. Latest: %@" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%1$@。最新：%2$@" } } } },
+    "Show sidebar" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "サイドバーを表示" } } } },
+    "Hide sidebar" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "サイドバーを非表示" } } } },
+    "Sidebar" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "サイドバー" } } } },
+    "Frequency rank" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "頻度順位" } } } },
+    "Written" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "記入済み" } } } },
+    "Not written" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "未記入" } } } },
+    "Row %lld, character %lld" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld行目、%2$lld文字目" } } } },
+    "Sentence complete" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "文が完成しました" } } } },
+    "Plays the stroke order." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書き順を再生します。" } } } },
+    "%@, row %lld, cell %lld" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%1$@、%2$lld行目、%3$lldマス目" } } } },
+    "Shows the next tip." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "次のヒントを表示します。" } } } },
+    "Tip %lld of %lld" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ヒント %1$lld / %2$lld" } } } },
     "Rate Kanji Write" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "Kanji Write を評価" } } } },
     "Leave a rating on the App Store" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "App Store で評価する" } } } },
     "No remaining prompts are eligible for Empty. This session will finish after this sentence." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "残りの文には空欄モードを使えるものがありません。この文でセッションを終了します。" } } } },
-    "Written character" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書いた文字" } } } },
     "Finish sentence": {
       "localizations": {
         "ja": {
@@ -1670,17 +1690,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "線の大きさがお手本と違います。"
-          }
-        }
-      }
-    },
-    "Toggle Sidebar" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "サイドバーの表示を切り替え"
           }
         }
       }

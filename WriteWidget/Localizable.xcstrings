@@ -1,6 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Opens practice for this kanji." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この漢字の練習を開きます。" } } } },
     "%@ · JLPT N%@" : {
       "localizations" : {
         "en" : {
