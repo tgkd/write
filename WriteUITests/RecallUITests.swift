@@ -5,6 +5,7 @@ final class RecallUITests: XCTestCase {
     private var app: XCUIApplication!
 
     override func setUp() async throws {
+        try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "The grid push flow is iPhone only")
         continueAfterFailure = false
         app = XCUIApplication()
         app.launchArguments = ["-uiTestingFreshHistory", "-practiceMode", "trace"]
