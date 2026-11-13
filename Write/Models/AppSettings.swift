@@ -64,6 +64,8 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(lastReviewAttemptAt, forKey: Self.lastReviewAttemptAtKey) }
     }
 
+    @Published var isReviewRequestPending = false
+
     // MARK: - iPad Settings
 
     @Published var pressureSensitivity: PressureSensitivity {

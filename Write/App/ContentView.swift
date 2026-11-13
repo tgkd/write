@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 
 struct ContentView: View {
@@ -5,6 +6,7 @@ struct ContentView: View {
     private let wordPromptStore = WordPromptStore()
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.requestReview) private var requestReview
 
     var body: some View {
         Group {
@@ -15,6 +17,18 @@ struct ContentView: View {
             }
         }
         .onOpenURL { openPracticeLink($0) }
+        .onChange(of: iPhonePath.count) { requestPendingReview(pathIsEmpty: $0 == 0) }
+        .onChange(of: iPadNavigationPath.count) { requestPendingReview(pathIsEmpty: $0 == 0) }
+    }
+
+    private func requestPendingReview(pathIsEmpty: Bool) {
+        guard pathIsEmpty, settings.isReviewRequestPending else { return }
+        settings.isReviewRequestPending = false
+        let requestReview = requestReview
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 600_000_000)
+            requestReview()
+        }
     }
 
     private var usesSplitShell: Bool {

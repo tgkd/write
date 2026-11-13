@@ -1,4 +1,3 @@
-import StoreKit
 import SwiftUI
 
 struct SessionSummaryView: View {
@@ -7,7 +6,6 @@ struct SessionSummaryView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var history: PracticeHistoryStore
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.requestReview) private var requestReview
 
     var body: some View {
         VStack(spacing: 24) {
@@ -96,14 +94,9 @@ struct SessionSummaryView: View {
         )
         if asksForReview {
             settings.lastReviewAttemptAt = now
+            settings.isReviewRequestPending = true
         }
         dismiss()
-        guard asksForReview else { return }
-        let requestReview = requestReview
-        Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 1_000_000_000)
-            requestReview()
-        }
     }
 
     private var subtitle: String {
