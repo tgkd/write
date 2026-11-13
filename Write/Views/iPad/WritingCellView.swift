@@ -5,6 +5,7 @@ struct WritingCellView: View {
     let mode: WritingMode
     let isFinished: Bool
     let isActive: Bool
+    let positionLabel: String
     @ObservedObject var ink: WritingInkStore
     @EnvironmentObject private var settings: AppSettings
     @State private var canvasView: DrawingCanvasView?
@@ -24,8 +25,11 @@ struct WritingCellView: View {
             } else if isFinished {
                 if let image = ink.snapshots[cell.id] {
                     Image(uiImage: image).resizable().scaledToFit()
-                        .accessibilityLabel("Written character")
+                        .accessibilityLabel(positionLabel)
+                        .accessibilityValue("Written")
                         .accessibilityIdentifier("writing.ink.\(cell.id)")
+                } else {
+                    pendingElement
                 }
             } else if mode == .free, let data = cell.kanjiData {
                 KanjiReferenceRepresentable(kanjiData: data, lineWidth: settings.maskPathWidth,
@@ -42,12 +46,14 @@ struct WritingCellView: View {
                     smoothingStrength: settings.smoothingStrength, brushThickness: settings.brushThickness,
                     captureContext: StrokeCaptureContext(codePoint: data.codePoint, mode: "free-writing-trace"),
                     retainedCanvasView: ink.canvas(for: cell.id), canvasIdentifier: "writing.canvas.\(cell.id)",
-                    installsPencilInteraction: false, canvasView: $canvasView
+                    canvasLabel: positionLabel, installsPencilInteraction: false, canvasView: $canvasView
                 )
             } else if mode == .trace, let data = cell.kanjiData {
                 KanjiReferenceRepresentable(kanjiData: data, lineWidth: settings.maskPathWidth,
                                              palette: settings.colorPalette, isHidden: false, referenceView: $referenceView)
                     .allowsHitTesting(false)
+            } else {
+                pendingElement
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -55,5 +61,12 @@ struct WritingCellView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(isActive || (mode == .free && ink.selectedCellID == cell.id) ? Color.accentColor : Color(.systemGray4), lineWidth: 2)
         }
+    }
+
+    private var pendingElement: some View {
+        Color.clear
+            .accessibilityElement()
+            .accessibilityLabel(positionLabel)
+            .accessibilityValue("Not written")
     }
 }

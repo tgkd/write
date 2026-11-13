@@ -40,12 +40,16 @@ final class NotebookHeaderView: UICollectionReusableView {
         kanjiLabel.minimumScaleFactor = 0.4
         kanjiLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 44).isActive = true
 
-        readingsLabel.font = .systemFont(ofSize: 13)
+        readingsLabel.font = .preferredFont(forTextStyle: .footnote)
+        readingsLabel.adjustsFontForContentSizeCategory = true
         readingsLabel.textColor = .secondaryLabel
         readingsLabel.textAlignment = .center
         readingsLabel.numberOfLines = 3
         readingsLabel.adjustsFontSizeToFitWidth = true
-        readingsLabel.minimumScaleFactor = 0.7
+        readingsLabel.minimumScaleFactor = 0.5
+
+        isAccessibilityElement = true
+        accessibilityTraits = .header
     }
 
     func configure(with kanji: KanjiData) {
@@ -62,11 +66,15 @@ final class NotebookHeaderView: UICollectionReusableView {
             parts.append(kun.joined(separator: "、"))
         }
         readingsLabel.text = parts.joined(separator: "\n")
+        accessibilityLabel = kanji.text
+        accessibilityValue = parts.joined(separator: ", ")
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         kanjiLabel.text = nil
         readingsLabel.text = nil
+        accessibilityLabel = nil
+        accessibilityValue = nil
     }
 }

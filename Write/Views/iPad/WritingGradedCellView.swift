@@ -2,14 +2,16 @@ import SwiftUI
 
 struct WritingGradedCellView: View {
     let cell: WritingSession.Cell
+    let positionLabel: String
     @ObservedObject var slotState: PracticeState
     @ObservedObject var ink: WritingInkStore
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var references: References
 
-    init(cell: WritingSession.Cell, slotState: PracticeState, ink: WritingInkStore) {
+    init(cell: WritingSession.Cell, positionLabel: String, slotState: PracticeState, ink: WritingInkStore) {
         self.cell = cell
+        self.positionLabel = positionLabel
         self.slotState = slotState
         self.ink = ink
         _references = StateObject(wrappedValue: References(canvas: ink.canvas(for: cell.id)))
@@ -24,7 +26,7 @@ struct WritingGradedCellView: View {
             showCompletionCheck: false, hidesReference: slotState.hidesGuide, showsGrid: settings.showPracticeGrid,
             startMarker: slotState.startMarker,
             captureContext: StrokeCaptureContext(codePoint: slotState.kanjiData.codePoint, mode: slotState.isRecall ? "writing-empty" : "writing-trace"),
-            retainedCanvasView: ink.canvas(for: cell.id), canvasIdentifier: "writing.canvas.\(cell.id)", installsPencilInteraction: false,
+            retainedCanvasView: ink.canvas(for: cell.id), canvasIdentifier: "writing.canvas.\(cell.id)", canvasLabel: positionLabel, installsPencilInteraction: false,
             onStrokeBegan: { [weak slotState] type in slotState?.noteStrokeBegan(touchType: type) },
             onStrokeCompleted: { [weak slotState, weak references, weak ink, id = cell.id] points in
                 guard let slotState, let canvas = references?.canvas else {

@@ -8,6 +8,8 @@ struct WritingView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var wordHistory: WordHistoryStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .footnote) private var noticeHeight: CGFloat = 36
 
     init(prompts: [WordPrompt], dataStore: KanjiDataStore, mode: WritingMode) {
         _session = StateObject(wrappedValue: WritingSession(prompts: prompts, mode: mode, lookup: { dataStore.lookup(character: $0) }))
@@ -44,6 +46,11 @@ struct WritingView: View {
         }
         .onChange(of: settings.writingMode) { session.requestedMode = $0 }
         .onChange(of: settings.gradingStrictness) { _ in session.validationConfig = settings.validationConfig }
+        .onChange(of: session.isSentenceComplete) { complete in
+            if complete, !session.isComplete {
+                AccessibilityAnnouncer.announce(String(localized: "Sentence complete"))
+            }
+        }
     }
 
     private func writingContent(item: WritingSession.Item) -> some View {
@@ -122,9 +129,10 @@ struct WritingView: View {
                 .font(.title3)
                 .foregroundStyle(.secondary)
                 .accessibilityIdentifier("writing.phrase.\(index)")
+                .accessibilityAddTraits(isFocused && !session.isSentenceComplete ? .isSelected : [])
             WordFlowLayout(spacing: 12, lineSpacing: 12) {
                 ForEach(phrase.units) { cell in
-                    unitView(cell, side: side)
+                    unitView(cell, positionLabel: positionLabel(of: cell, in: phrase, row: index), side: side)
                         .id(cell.id)
                 }
             }
@@ -132,7 +140,12 @@ struct WritingView: View {
         .opacity(isFocused || session.isSentenceComplete ? 1 : 0.35)
         .allowsHitTesting(isFocused)
         .id(phrase.id)
-        .animation(.easeOut(duration: 0.2), value: isFocused)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: isFocused)
+    }
+
+    private func positionLabel(of cell: WritingSession.Cell, in phrase: WritingSession.Phrase, row: Int) -> String {
+        let position = (phrase.cells.firstIndex { $0.id == cell.id } ?? 0) + 1
+        return String(localized: "Row \(row + 1), character \(position)")
     }
 
     private var isFocusManual: Bool {
@@ -165,7 +178,7 @@ struct WritingView: View {
         } else {
             return
         }
-        if animated {
+        if animated, !reduceMotion {
             withAnimation(.easeOut(duration: 0.2)) { proxy.scrollTo(target, anchor: .center) }
         } else {
             proxy.scrollTo(target, anchor: .center)
@@ -173,19 +186,19 @@ struct WritingView: View {
     }
 
     @ViewBuilder
-    private func unitView(_ cell: WritingSession.Cell, side: CGFloat) -> some View {
+    private func unitView(_ cell: WritingSession.Cell, positionLabel: String, side: CGFloat) -> some View {
         if cell.isPunctuation {
             Text(String(cell.character)).font(.title2)
                 .frame(width: 24, height: side)
                 .accessibilityIdentifier("writing.punctuation.\(cell.id)")
         } else if let state = session.slotState, session.currentCell?.id == cell.id {
-            WritingGradedCellView(cell: cell, slotState: state, ink: ink)
+            WritingGradedCellView(cell: cell, positionLabel: positionLabel, slotState: state, ink: ink)
                 .id(ObjectIdentifier(state)).frame(width: side, height: side)
         } else {
             WritingCellView(cell: cell, mode: session.activeMode,
                             isFinished: session.activeMode != .free
                                 && (session.isSentenceComplete || session.completedCellIDs.contains(cell.id)),
-                            isActive: false, ink: ink)
+                            isActive: false, positionLabel: positionLabel, ink: ink)
                 .frame(width: side, height: side)
         }
     }
@@ -201,7 +214,7 @@ struct WritingView: View {
                         Color.clear
                     }
                 }
-                .frame(height: 36)
+                .frame(height: noticeHeight)
             }
             Picker("Writing mode", selection: $settings.writingMode) {
                 ForEach(WritingMode.allCases) { mode in Text(mode.title).tag(mode) }

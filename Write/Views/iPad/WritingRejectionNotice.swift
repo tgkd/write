@@ -21,6 +21,7 @@ struct WritingRejectionNotice: View {
                     .font(.footnote.weight(.medium))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
+                    .minimumScaleFactor(0.7)
                     .transition(.opacity)
                     .accessibilityIdentifier("strokeNotice")
             }
@@ -29,6 +30,9 @@ struct WritingRejectionNotice: View {
         .animation(.easeInOut(duration: 0.2), value: notice)
         .task(id: state.attemptCount) {
             let attempt = state.attemptCount
+            if let notice {
+                AccessibilityAnnouncer.announce(notice)
+            }
             do {
                 try await Task.sleep(for: Self.visibleDuration)
             } catch {

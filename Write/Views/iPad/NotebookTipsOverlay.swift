@@ -44,12 +44,16 @@ final class NotebookTipsOverlay: UIView {
         addSubview(bubbleView)
 
         label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = UIFontMetrics(forTextStyle: .callout).scaledFont(for: .systemFont(ofSize: 16, weight: .medium))
+        label.adjustsFontForContentSizeCategory = true
         label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
         bubbleView.addSubview(label)
 
-        pageLabel.font = .systemFont(ofSize: 13)
+        pageLabel.font = .preferredFont(forTextStyle: .footnote)
+        pageLabel.adjustsFontForContentSizeCategory = true
+        pageLabel.numberOfLines = 0
+        pageLabel.textAlignment = .right
         pageLabel.textColor = .secondaryLabel
         pageLabel.translatesAutoresizingMaskIntoConstraints = false
         bubbleView.addSubview(pageLabel)
@@ -59,12 +63,32 @@ final class NotebookTipsOverlay: UIView {
             label.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 16),
             label.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -16),
             pageLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 10),
+            pageLabel.leadingAnchor.constraint(greaterThanOrEqualTo: bubbleView.leadingAnchor, constant: 16),
             pageLabel.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -16),
             pageLabel.bottomAnchor.constraint(equalTo: bubbleView.bottomAnchor, constant: -14),
         ])
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(advance))
         addGestureRecognizer(tap)
+
+        dimView.isAccessibilityElement = false
+        bubbleView.isAccessibilityElement = true
+        bubbleView.accessibilityTraits = .button
+        bubbleView.accessibilityHint = String(localized: "Shows the next tip.")
+        accessibilityViewIsModal = true
+        accessibilityElements = [bubbleView]
+    }
+
+    override func accessibilityPerformEscape() -> Bool {
+        dismiss()
+        return true
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard tips.indices.contains(currentIndex),
+              traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory else { return }
+        layoutBubble(tip: tips[currentIndex])
     }
 
     func show(tips: [NotebookTip], in parentView: UIView, onDismiss: @escaping () -> Void) {
@@ -79,19 +103,27 @@ final class NotebookTipsOverlay: UIView {
         self.alpha = 0
         showCurrentTip()
         UIView.animate(withDuration: 0.25) { self.alpha = 1 }
+        UIAccessibility.post(notification: .screenChanged, argument: bubbleView)
     }
 
     @objc private func advance() {
         currentIndex += 1
         if currentIndex >= tips.count {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.alpha = 0
-            }) { _ in
-                self.removeFromSuperview()
-                self.onDismiss?()
-            }
+            dismiss()
         } else {
             showCurrentTip()
+            UIAccessibility.post(notification: .layoutChanged, argument: bubbleView)
+        }
+    }
+
+    private func dismiss() {
+        currentIndex = tips.count
+        UIView.animate(withDuration: 0.2, animations: {
+            self.alpha = 0
+        }) { _ in
+            self.removeFromSuperview()
+            self.onDismiss?()
+            UIAccessibility.post(notification: .screenChanged, argument: nil)
         }
     }
 
@@ -99,6 +131,8 @@ final class NotebookTipsOverlay: UIView {
         let tip = tips[currentIndex]
         label.text = tip.text
         pageLabel.text = String(localized: "\(currentIndex + 1) / \(tips.count)  — tap anywhere")
+        bubbleView.accessibilityLabel = tip.text
+        bubbleView.accessibilityValue = String(localized: "Tip \(currentIndex + 1) of \(tips.count)")
 
         updateSpotlight(rect: tip.sourceRect)
         layoutBubble(tip: tip)
@@ -117,12 +151,14 @@ final class NotebookTipsOverlay: UIView {
     }
 
     private func layoutBubble(tip: NotebookTip) {
-        let maxWidth: CGFloat = 280
         let padding: CGFloat = 20
 
+        let preferredWidth = traitCollection.preferredContentSizeCategory.isAccessibilityCategory ? bounds.width * 0.6 : 280
+        let maxWidth = min(max(280, preferredWidth), bounds.width - 2 * padding)
         let fitSize = label.sizeThatFits(CGSize(width: maxWidth - 32, height: .greatestFiniteMagnitude))
-        let bubbleHeight = fitSize.height + 60
-        let bubbleWidth = min(maxWidth, fitSize.width + 32)
+        let pageSize = pageLabel.sizeThatFits(CGSize(width: maxWidth - 32, height: .greatestFiniteMagnitude))
+        let bubbleHeight = 16 + fitSize.height + 10 + pageSize.height + 14
+        let bubbleWidth = min(maxWidth, max(fitSize.width, pageSize.width) + 32)
 
         var bubbleX = tip.sourceRect.midX - bubbleWidth / 2
         bubbleX = max(padding, min(bounds.width - bubbleWidth - padding, bubbleX))
@@ -135,8 +171,13 @@ final class NotebookTipsOverlay: UIView {
         }
         bubbleY = max(padding, min(bounds.height - bubbleHeight - padding, bubbleY))
 
-        UIView.animate(withDuration: 0.25) {
-            self.bubbleView.frame = CGRect(x: bubbleX, y: bubbleY, width: bubbleWidth, height: bubbleHeight)
+        let frame = CGRect(x: bubbleX, y: bubbleY, width: bubbleWidth, height: bubbleHeight)
+        if UIAccessibility.isReduceMotionEnabled {
+            bubbleView.frame = frame
+        } else {
+            UIView.animate(withDuration: 0.25) {
+                self.bubbleView.frame = frame
+            }
         }
     }
 }

@@ -291,10 +291,16 @@ extension NotebookViewController: UICollectionViewDataSource {
             smoothingStrength: smoothingStrength,
             brushThickness: brushThickness
         )
+        cell.configurePracticeAccessibility(label: practiceCellLabel(at: indexPath, kanji: state.rows[indexPath.section].kanjiData))
         cell.onPencilActivity = { [weak self, weak cell] in
             self?.lastDrawnCanvas = cell?.canvasView
         }
         return cell
+    }
+
+    private func practiceCellLabel(at indexPath: IndexPath, kanji: KanjiData) -> String {
+        let column = handedness == .left ? indexPath.item + 1 : indexPath.item
+        return String(localized: "\(kanji.text), row \(indexPath.section + 1), cell \(column)")
     }
 
     private func isReferenceItem(at indexPath: IndexPath) -> Bool {
@@ -311,7 +317,9 @@ extension NotebookViewController: UIPencilInteractionDelegate {
     nonisolated func pencilInteractionDidTap(_ interaction: UIPencilInteraction) {
         MainActor.assumeIsolated {
             guard UIPencilInteraction.preferredTapAction != .ignore else { return }
-            lastDrawnCanvas?.clearAll()
+            guard let canvas = lastDrawnCanvas else { return }
+            canvas.clearAll()
+            NotebookCellView.refreshAccessibilityValue(of: canvas)
         }
     }
 }

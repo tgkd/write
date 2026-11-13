@@ -17,7 +17,9 @@ struct PracticeCanvasArea: View {
     var captureContext: StrokeCaptureContext?
     var retainedCanvasView: DrawingCanvasView?
     var canvasIdentifier: String = "drawingCanvas"
+    var canvasLabel: String?
     var installsPencilInteraction: Bool = true
+    var canvasProgress: String?
 
     var onStrokeBegan: ((UITouch.TouchType) -> Void)?
     var onStrokeCompleted: (([CGPoint]) -> Void)?
@@ -28,6 +30,8 @@ struct PracticeCanvasArea: View {
     @Binding var feedbackView: FeedbackOverlayView?
 
     var onReferenceReady: (() -> Void)?
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ZStack {
@@ -75,7 +79,9 @@ struct PracticeCanvasArea: View {
                 captureContext: captureContext,
                 retainedCanvasView: retainedCanvasView,
                 canvasIdentifier: canvasIdentifier,
+                canvasLabel: canvasLabel,
                 installsPencilInteraction: installsPencilInteraction,
+                accessibilityProgress: canvasProgress,
                 canvasView: $canvasView
             )
 
@@ -89,7 +95,7 @@ struct PracticeCanvasArea: View {
                     .font(.system(size: 80, weight: .medium))
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.3), radius: 12, y: 4)
-                    .transition(.scale(scale: 0.5).combined(with: .opacity))
+                    .transition(reduceMotion ? .opacity : .scale(scale: 0.5).combined(with: .opacity))
                     .accessibilityHidden(true)
             }
         }

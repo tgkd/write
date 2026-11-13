@@ -16,8 +16,13 @@ struct SidebarToggleToolbar: ViewModifier {
             } label: {
                 Image(systemName: "sidebar.left")
             }
-            .accessibilityLabel("Toggle Sidebar")
+            .accessibilityLabel(toggleLabel)
+            .accessibilityInputLabels([toggleLabel, "Sidebar"])
         }
+    }
+
+    private var toggleLabel: LocalizedStringKey {
+        columnVisibility == .detailOnly ? "Show sidebar" : "Hide sidebar"
     }
 }
 

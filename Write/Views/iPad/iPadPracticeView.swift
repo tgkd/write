@@ -12,6 +12,8 @@ struct iPadPracticeView: View {
     @State private var showCompletionCheck = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     let onComplete: ((Int) -> Void)?
 
@@ -30,17 +32,14 @@ struct iPadPracticeView: View {
             if settings.handedness == .left {
                 canvasArea
                 Divider()
-                infoPanel
-                    .frame(width: 280)
-                    .padding()
+                infoColumn
             } else {
-                infoPanel
-                    .frame(width: 280)
-                    .padding()
+                infoColumn
                 Divider()
                 canvasArea
             }
         }
+        .practiceAnnouncements(for: practiceState)
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -113,6 +112,22 @@ struct iPadPracticeView: View {
 
     // MARK: - Left Panel
 
+    @ViewBuilder
+    private var infoColumn: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            ScrollView {
+                infoPanel
+                    .frame(width: 280)
+                    .padding()
+            }
+            .frame(width: 280 + 32)
+        } else {
+            infoPanel
+                .frame(width: 280)
+                .padding()
+        }
+    }
+
     private var infoPanel: some View {
         VStack(spacing: 20) {
             Spacer()
@@ -164,6 +179,7 @@ struct iPadPracticeView: View {
             } label: {
                 Image(systemName: "arrow.uturn.backward")
                     .font(.title3)
+                    .frame(minWidth: 44, minHeight: 44)
             }
             .disabled(practiceState.matchedStrokeIndices.isEmpty)
             .accessibilityLabel("Undo stroke")
@@ -177,6 +193,7 @@ struct iPadPracticeView: View {
             } label: {
                 Image(systemName: "arrow.counterclockwise")
                     .font(.title3)
+                    .frame(minWidth: 44, minHeight: 44)
             }
             .accessibilityLabel("Start over")
         }
@@ -215,6 +232,7 @@ struct iPadPracticeView: View {
                 codePoint: practiceState.kanjiData.codePoint,
                 mode: practiceState.mode.rawValue
             ),
+            canvasProgress: practiceState.strokeProgressDescription,
             onStrokeBegan: { touchType in
                 practiceState.noteStrokeBegan(touchType: touchType)
             },
@@ -269,7 +287,7 @@ struct iPadPracticeView: View {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
 
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+        withAnimation(reduceMotion ? .easeOut(duration: 0.2) : .spring(response: 0.4, dampingFraction: 0.6)) {
             showCompletionCheck = true
         }
 

@@ -78,6 +78,10 @@ final class NotebookCellView: UICollectionViewCell {
         referenceKanji = nil
         lastReferenceSize = .zero
         isAnimating = false
+        isAccessibilityElement = false
+        accessibilityLabel = nil
+        accessibilityHint = nil
+        accessibilityTraits = .none
         if let gesture = referenceTapGesture {
             contentView.removeGestureRecognizer(gesture)
             referenceTapGesture = nil
@@ -95,12 +99,24 @@ final class NotebookCellView: UICollectionViewCell {
         referenceKanji = kanji
         lastReferenceSize = .zero
         rebuildReferenceLayers()
+        isAccessibilityElement = true
+        accessibilityLabel = kanji.text
+        accessibilityHint = String(localized: "Plays the stroke order.")
+        accessibilityTraits = [.button, .startsMediaSession]
 
         if referenceTapGesture == nil {
             let tap = UITapGestureRecognizer(target: self, action: #selector(handleReferenceTap))
             contentView.addGestureRecognizer(tap)
             referenceTapGesture = tap
         }
+    }
+
+    override func accessibilityActivate() -> Bool {
+        guard referenceKanji != nil else {
+            return super.accessibilityActivate()
+        }
+        handleReferenceTap()
+        return true
     }
 
     @objc private func handleReferenceTap() {
@@ -189,6 +205,26 @@ final class NotebookCellView: UICollectionViewCell {
 
     /// Applies non-structural settings changes to an existing practice canvas
     /// without recreating it, so drawn ink survives. No-op on reference cells.
+    func configurePracticeAccessibility(label: String) {
+        guard let canvas = canvasView else { return }
+        canvas.isAccessibilityElement = true
+        canvas.accessibilityLabel = label
+        canvas.accessibilityTraits = .allowsDirectInteraction
+        canvas.accessibilityCustomActions = [
+            UIAccessibilityCustomAction(name: String(localized: "Clear cell")) { [weak self] _ in
+                self?.handleDoubleTap()
+                return true
+            }
+        ]
+        Self.refreshAccessibilityValue(of: canvas)
+    }
+
+    static func refreshAccessibilityValue(of canvas: DrawingCanvasView) {
+        canvas.accessibilityValue = canvas.strokeCount == 0
+            ? String(localized: "Not written")
+            : String(localized: "Written")
+    }
+
     func updatePracticeSettings(
         showCrosshair: Bool,
         allowedTouchTypes: Set<UITouch.TouchType>,
@@ -223,6 +259,10 @@ final class NotebookCellView: UICollectionViewCell {
         canvas.onPencilStrokeBegan = { [weak self] in
             self?.onPencilActivity?()
         }
+        canvas.onStrokeCompleted = { [weak canvas] _, _ in
+            guard let canvas else { return }
+            Self.refreshAccessibilityValue(of: canvas)
+        }
         contentView.addSubview(canvas)
         canvasView = canvas
 
@@ -242,6 +282,8 @@ final class NotebookCellView: UICollectionViewCell {
     }
 
     @objc private func handleDoubleTap() {
-        canvasView?.clearAll()
+        guard let canvas = canvasView else { return }
+        canvas.clearAll()
+        Self.refreshAccessibilityValue(of: canvas)
     }
 }
