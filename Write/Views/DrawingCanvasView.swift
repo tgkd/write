@@ -29,7 +29,8 @@ final class DrawingCanvasView: UIView {
     private(set) var strokes: [[CGPoint]] = []
     private(set) var lastStrokeAlternates: [[CGPoint]] = []
     var currentStrokePoints: [CGPoint] { currentSamples.map(\.point) }
-    private var currentSamples: [BrushStroke.Sample] = []
+    private var currentSamples: [BrushStroke.Sample] { ink?.samples ?? [] }
+    private var ink: BrushInk?
     private var strokeLayers: [CAShapeLayer] = []
     private var activeLayer: CAShapeLayer?
     private var predictedLayer: CAShapeLayer?
@@ -41,7 +42,6 @@ final class DrawingCanvasView: UIView {
     private var validationPoints: [CGPoint] = []
     private var validationForces: [CGFloat] = []
     private var lastValidationRawPoint: CGPoint?
-    private var liveRenderer: BrushStroke.LiveRenderer?
     private var lastLayoutSize: CGSize = .zero
 
     /// Pencil force/altitude arrive as estimates and are refined a few frames
@@ -52,9 +52,11 @@ final class DrawingCanvasView: UIView {
     /// arrive after touchesEnded. Dropped when the next stroke begins.
     private var pendingRefinement: (
         samples: [BrushStroke.Sample],
+        startIndex: Int,
         layer: CAShapeLayer,
         indexMap: [NSNumber: Int],
-        config: BrushStroke.Config
+        config: BrushStroke.Config,
+        hookParameters: StrokeHookTrimmer.Parameters
     )?
 
     private struct PendingCapture {
@@ -199,9 +201,8 @@ final class DrawingCanvasView: UIView {
         activeEstimationIndexMap = [:]
         endPendingCapture()
         let sample = BrushStroke.Sample(point: point, timestamp: touch.timestamp, force: force, altitude: altitude)
-        currentSamples = [sample]
-        liveRenderer = BrushStroke.LiveRenderer(config: strokeConfig)
-        liveRenderer?.append(sample)
+        ink = BrushInk(config: strokeConfig, hookParameters: hookParameters)
+        ink?.append(sample)
         recordEstimationIndex(for: touch, sampleIndex: 0)
         captureSamples = []
         captureOutstanding = [:]
@@ -231,8 +232,7 @@ final class DrawingCanvasView: UIView {
             let point = inputFilter.filter(point: rawPoint, timestamp: ct.timestamp)
             appendValidation(rawPoint, timestamp: ct.timestamp, force: cf)
             let sample = BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca)
-            currentSamples.append(sample)
-            liveRenderer?.append(sample)
+            ink?.append(sample)
             recordEstimationIndex(for: ct, sampleIndex: currentSamples.count - 1)
             appendCaptureSample(for: ct, rawPoint: rawPoint, force: cf, altitude: ca)
         }
@@ -274,8 +274,7 @@ final class DrawingCanvasView: UIView {
             }
             if point != currentSamples.last?.point {
                 let sample = BrushStroke.Sample(point: point, timestamp: ct.timestamp, force: cf, altitude: ca)
-                currentSamples.append(sample)
-                liveRenderer?.append(sample)
+                ink?.append(sample)
                 recordEstimationIndex(for: ct, sampleIndex: currentSamples.count - 1)
                 appendCaptureSample(for: ct, rawPoint: rawPoint, force: cf, altitude: ca)
             }
@@ -303,11 +302,7 @@ final class DrawingCanvasView: UIView {
             let altitude = touch.altitudeAngle
 
             if let idx = activeEstimationIndexMap[key], currentSamples.indices.contains(idx) {
-                let old = currentSamples[idx]
-                currentSamples[idx] = BrushStroke.Sample(
-                    point: old.point, timestamp: old.timestamp, force: force, altitude: altitude
-                )
-                liveRenderer?.refine(rawIndex: idx, force: force, altitude: altitude)
+                ink?.refine(rawIndex: idx, force: force, altitude: altitude)
                 activeNeedsRender = true
             } else if var pending = pendingRefinement,
                       let idx = pending.indexMap[key],
@@ -317,7 +312,12 @@ final class DrawingCanvasView: UIView {
                     point: old.point, timestamp: old.timestamp, force: force, altitude: altitude
                 )
                 pendingRefinement = pending
-                pending.layer.path = committedPath(from: pending.samples, config: pending.config)
+                pending.layer.path = BrushInk.committedPath(
+                    from: pending.samples,
+                    startIndex: pending.startIndex,
+                    config: pending.config,
+                    hookParameters: pending.hookParameters
+                )
             }
             refineCapture(with: touch, key: key, force: force, altitude: altitude)
         }
@@ -504,21 +504,11 @@ final class DrawingCanvasView: UIView {
 
     private func updateActivePath() {
         guard let activeLayer else { return }
-        activeLayer.path = liveRenderer?.currentPath()
-            ?? BrushStroke.createPath(from: currentSamples, config: strokeConfig)
+        activeLayer.path = ink?.livePath()
     }
 
     private var hookParameters: StrokeHookTrimmer.Parameters {
         StrokeHookTrimmer.Parameters(canvasSize: bounds.size)
-    }
-
-    private func committedPath(from samples: [BrushStroke.Sample], config: BrushStroke.Config) -> CGPath {
-        let range = StrokeHookTrimmer.keptRange(
-            of: samples.map(\.point),
-            forces: samples.compactMap(\.force),
-            parameters: hookParameters
-        )
-        return BrushStroke.createPath(from: Array(samples[range]), config: config)
     }
 
     private func startValidation(at rawPoint: CGPoint, timestamp: TimeInterval, force: CGFloat?) {
@@ -538,14 +528,14 @@ final class DrawingCanvasView: UIView {
     }
 
     private func updatePredictedPath(predictedSamples: [BrushStroke.Sample]) {
-        guard let liveRenderer else { return }
+        guard let ink else { return }
         if predictedLayer == nil {
             let pl = makeBrushLayer()
             pl.opacity = 0.4
             layer.addSublayer(pl)
             predictedLayer = pl
         }
-        predictedLayer?.path = liveRenderer.predictedPath(with: predictedSamples)
+        predictedLayer?.path = ink.predictedPath(with: predictedSamples)
     }
 
     private func clearPredicted() {
@@ -562,18 +552,19 @@ final class DrawingCanvasView: UIView {
         strokes.append(points)
 
         if let active = activeLayer {
-            active.path = committedPath(from: currentSamples, config: strokeConfig)
+            active.path = ink?.committedPath()
             strokeLayers.append(active)
-            if !activeEstimationIndexMap.isEmpty {
-                pendingRefinement = (currentSamples, active, activeEstimationIndexMap, strokeConfig)
+            if let ink, !activeEstimationIndexMap.isEmpty {
+                pendingRefinement = (
+                    ink.samples, ink.startIndex, active, activeEstimationIndexMap, ink.config, ink.hookParameters
+                )
             }
             activeLayer = nil
         }
 
         activeEstimationIndexMap = [:]
-        currentSamples = []
+        ink = nil
         resetValidation()
-        liveRenderer = nil
         emitCapture(touchType: activeTouch?.type ?? .direct)
         onStrokeCompleted?(points, strokeIndex)
     }
@@ -590,9 +581,8 @@ final class DrawingCanvasView: UIView {
         clearPredicted()
         activeLayer?.removeFromSuperlayer()
         activeLayer = nil
-        currentSamples = []
+        ink = nil
         resetValidation()
-        liveRenderer = nil
         activeEstimationIndexMap = [:]
         captureSamples = []
         captureOutstanding = [:]

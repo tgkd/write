@@ -40,6 +40,12 @@ enum StrokeHookTrimmer {
         Array(points[keptRange(of: points, forces: forces, parameters: parameters)])
     }
 
+    static func startDecisionLength(parameters: Parameters = Parameters()) -> CGFloat {
+        let fullWindowLength = parameters.maxHookLength / parameters.maxHookFraction
+        let readLength = parameters.maxHookLength * 5
+        return max(fullWindowLength, readLength) + parameters.maxHookLength
+    }
+
     static func keptRange(of points: [CGPoint], forces: [CGFloat], parameters: Parameters = Parameters()) -> Range<Int> {
         let pressed = pressedRange(of: points, forces: forces, parameters: parameters)
         let kept = keptRange(of: Array(points[pressed]), parameters: parameters)
