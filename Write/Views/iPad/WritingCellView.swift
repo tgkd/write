@@ -43,7 +43,7 @@ struct WritingCellView: View {
                     },
                     allowedTouchTypes: settings.allowedTouchTypes,
                     pressureSensitivity: settings.pressureSensitivity, tiltSensitivity: settings.tiltSensitivity,
-                    smoothingStrength: settings.smoothingStrength, brushThickness: settings.brushThickness,
+                    smoothingStrength: settings.smoothingStrength, brushThickness: settings.brushThickness, inkColor: settings.inkColor,
                     captureContext: StrokeCaptureContext(codePoint: data.codePoint, mode: "free-writing-trace"),
                     retainedCanvasView: ink.canvas(for: cell.id), canvasIdentifier: "writing.canvas.\(cell.id)",
                     canvasLabel: positionLabel, installsPencilInteraction: false, canvasView: $canvasView

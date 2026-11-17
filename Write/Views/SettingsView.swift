@@ -42,25 +42,9 @@ struct SettingsView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
 
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Color Palette")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .textCase(.uppercase)
-                            .accessibilityAddTraits(.isHeader)
-                            .padding(.leading, 4)
+                    InkColorPicker(selection: $settings.inkColor)
 
-                        VStack(spacing: 0) {
-                            ForEach(ColorPalette.allCases, id: \.self) { palette in
-                                paletteRow(palette)
-                                if palette != ColorPalette.allCases.last {
-                                    Divider().padding(.leading, 52)
-                                }
-                            }
-                        }
-                        .background(Color(.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                    }
+                    GuidePalettePicker(selection: $settings.colorPalette)
 
                     drawingSection
 
@@ -74,10 +58,16 @@ struct SettingsView: View {
 
                     experimentalSection
 
-                    rateRow
-                        .padding(16)
-                        .background(Color(.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    VStack(spacing: 0) {
+                        rateRow
+                            .padding(16)
+                        Divider().padding(.leading, 16)
+                        linkRow(title: "Privacy Policy", url: "https://write.thetango.org/privacy")
+                        Divider().padding(.leading, 16)
+                        linkRow(title: "Support", url: "https://write.thetango.org")
+                    }
+                    .background(Color(.secondarySystemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
 
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Acknowledgments")
@@ -390,31 +380,19 @@ struct SettingsView: View {
         }
     }
 
-    private func paletteRow(_ palette: ColorPalette) -> some View {
-        Button {
-            settings.colorPalette = palette
-        } label: {
-            HStack(spacing: 12) {
-                HStack(spacing: 3) {
-                    ForEach(0..<5, id: \.self) { i in
-                        Circle()
-                            .fill(Color(uiColor: palette.strokeOrderColor(index: i, total: 5)))
-                            .frame(width: 16, height: 16)
-                    }
-                }
-                Text(palette.displayName)
+    private func linkRow(title: LocalizedStringKey, url: String) -> some View {
+        Link(destination: URL(string: url)!) {
+            HStack {
+                Text(title)
                     .foregroundStyle(.primary)
                 Spacer()
-                if settings.colorPalette == palette {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(.tint)
-                        .accessibilityHidden(true)
-                }
+                Image(systemName: "arrow.up.right")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(16)
         }
-        .accessibilityAddTraits(settings.colorPalette == palette ? .isSelected : [])
     }
 }
 

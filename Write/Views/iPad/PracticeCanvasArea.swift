@@ -9,6 +9,7 @@ struct PracticeCanvasArea: View {
     let tiltSensitivity: TiltSensitivity
     let smoothingStrength: SmoothingStrength
     let brushThickness: BrushThickness
+    let inkColor: InkColor
     let showCompletionCheck: Bool
     let hidesReference: Bool
     let showsGrid: Bool
@@ -76,6 +77,7 @@ struct PracticeCanvasArea: View {
                 tiltSensitivity: tiltSensitivity,
                 smoothingStrength: smoothingStrength,
                 brushThickness: brushThickness,
+                inkColor: inkColor,
                 captureContext: captureContext,
                 retainedCanvasView: retainedCanvasView,
                 canvasIdentifier: canvasIdentifier,

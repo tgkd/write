@@ -18,6 +18,7 @@ struct NotebookViewRepresentable: UIViewControllerRepresentable {
         vc.tiltSensitivity = settingsObj.tiltSensitivity
         vc.smoothingStrength = settingsObj.smoothingStrength
         vc.brushThickness = settingsObj.brushThickness
+        vc.inkColor = settingsObj.inkColor
         vc.handedness = settingsObj.handedness
         vc.title = String(localized: "Notebook")
 
@@ -38,6 +39,7 @@ struct NotebookViewRepresentable: UIViewControllerRepresentable {
             tiltSensitivity: settingsObj.tiltSensitivity,
             smoothingStrength: settingsObj.smoothingStrength,
             brushThickness: settingsObj.brushThickness,
+            inkColor: settingsObj.inkColor,
             handedness: settingsObj.handedness,
             cellsPerRow: settingsObj.cellsPerRow
         )

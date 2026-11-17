@@ -69,6 +69,7 @@ struct WordSlotCanvas: View {
             tiltSensitivity: settings.tiltSensitivity,
             smoothingStrength: settings.smoothingStrength,
             brushThickness: settings.brushThickness,
+            inkColor: settings.inkColor,
             showCompletionCheck: showCompletionCheck,
             hidesReference: slotState.hidesGuide,
             showsGrid: settings.showPracticeGrid,

@@ -14,6 +14,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     var tiltSensitivity: TiltSensitivity = .off
     var smoothingStrength: SmoothingStrength = .medium
     var brushThickness: BrushThickness = .medium
+    let inkColor: InkColor
     var captureContext: StrokeCaptureContext?
     var retainedCanvasView: DrawingCanvasView?
     var canvasIdentifier: String = "drawingCanvas"
@@ -35,6 +36,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         view.onStrokeCaptured = strokeCaptureHandler()
         view.allowedTouchTypes = allowedTouchTypes
         applyBrushSettings(to: view)
+        applyInkColor(to: view, coordinator: context.coordinator)
         view.backgroundColor = .clear
         view.isAccessibilityElement = true
         view.accessibilityIdentifier = canvasIdentifier
@@ -79,6 +81,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         }
         context.coordinator.onPencilDoubleTap = onPencilDoubleTap
         applyBrushSettings(to: uiView)
+        applyInkColor(to: uiView, coordinator: context.coordinator)
         uiView.accessibilityLabel = canvasLabel ?? String(localized: "Drawing canvas")
         applyAccessibilityProgress(to: uiView)
     }
@@ -108,9 +111,18 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         )
     }
 
+    private func applyInkColor(to view: DrawingCanvasView, coordinator: Coordinator) {
+        guard coordinator.appliedInkColor != inkColor else {
+            return
+        }
+        coordinator.appliedInkColor = inkColor
+        view.strokeColor = inkColor.color
+    }
+
     @MainActor
     final class Coordinator: NSObject, UIPencilInteractionDelegate {
         var onPencilDoubleTap: (() -> Void)?
+        var appliedInkColor: InkColor?
 
         nonisolated func pencilInteractionDidTap(_ interaction: UIPencilInteraction) {
             MainActor.assumeIsolated {

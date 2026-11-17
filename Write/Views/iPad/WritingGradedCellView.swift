@@ -22,7 +22,7 @@ struct WritingGradedCellView: View {
             kanjiData: slotState.kanjiData, lineWidth: settings.maskPathWidth, palette: settings.colorPalette,
             allowedTouchTypes: settings.allowedTouchTypes,
             pressureSensitivity: settings.pressureSensitivity, tiltSensitivity: settings.tiltSensitivity,
-            smoothingStrength: settings.smoothingStrength, brushThickness: settings.brushThickness,
+            smoothingStrength: settings.smoothingStrength, brushThickness: settings.brushThickness, inkColor: settings.inkColor,
             showCompletionCheck: false, hidesReference: slotState.hidesGuide, showsGrid: settings.showPracticeGrid,
             startMarker: slotState.startMarker,
             captureContext: StrokeCaptureContext(codePoint: slotState.kanjiData.codePoint, mode: slotState.isRecall ? "writing-empty" : "writing-trace"),

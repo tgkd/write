@@ -9,7 +9,7 @@ enum ColorPalette: String, CaseIterable, Sendable {
         switch self {
         case .warm: return String(localized: "Warm")
         case .cool: return String(localized: "Cool")
-        case .ink: return String(localized: "Ink")
+        case .ink: return String(localized: "Mono")
         }
     }
 
@@ -59,10 +59,13 @@ enum ColorPalette: String, CaseIterable, Sendable {
     }
 
     private func inkColor(index: Int, total: Int) -> UIColor {
-        guard total > 1 else {
-            return UIColor(hue: 0, saturation: 0, brightness: 0.15, alpha: 1)
+        let brightness: CGFloat = total > 1
+            ? 0.15 + CGFloat(index) / CGFloat(total - 1) * 0.40
+            : 0.15
+        let light = UIColor(hue: 0, saturation: 0, brightness: brightness, alpha: 1)
+        let dark = UIColor(hue: 0, saturation: 0, brightness: 1 - brightness, alpha: 1)
+        return UIColor { traits in
+            traits.userInterfaceStyle == .dark ? dark : light
         }
-        let brightness = 0.15 + CGFloat(index) / CGFloat(total - 1) * 0.40
-        return UIColor(hue: 0, saturation: 0, brightness: brightness, alpha: 1)
     }
 }

@@ -159,6 +159,7 @@ struct PracticeView: View {
             tiltSensitivity: settings.tiltSensitivity,
             smoothingStrength: settings.smoothingStrength,
             brushThickness: settings.brushThickness,
+            inkColor: settings.inkColor,
             showCompletionCheck: showCompletionCheck,
             hidesReference: practiceState.hidesGuide,
             showsGrid: settings.showPracticeGrid,

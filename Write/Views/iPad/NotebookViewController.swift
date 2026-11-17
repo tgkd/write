@@ -13,6 +13,7 @@ final class NotebookViewController: UIViewController {
     var tiltSensitivity: TiltSensitivity = .off
     var smoothingStrength: SmoothingStrength = .medium
     var brushThickness: BrushThickness = .medium
+    var inkColor: InkColor = .sumi
     var handedness: Handedness = .right
 
     var sourceKanji: [KanjiData] = []
@@ -24,6 +25,7 @@ final class NotebookViewController: UIViewController {
         tiltSensitivity: TiltSensitivity,
         smoothingStrength: SmoothingStrength,
         brushThickness: BrushThickness,
+        inkColor: InkColor,
         handedness: Handedness,
         cellsPerRow: Int
     ) {
@@ -37,6 +39,7 @@ final class NotebookViewController: UIViewController {
             || self.tiltSensitivity != tiltSensitivity
             || self.smoothingStrength != smoothingStrength
             || self.brushThickness != brushThickness
+            || self.inkColor != inkColor
 
         self.showCrosshair = showCrosshair
         self.allowedTouchTypes = allowedTouchTypes
@@ -44,6 +47,7 @@ final class NotebookViewController: UIViewController {
         self.tiltSensitivity = tiltSensitivity
         self.smoothingStrength = smoothingStrength
         self.brushThickness = brushThickness
+        self.inkColor = inkColor
         self.handedness = handedness
 
         let cellsChanged = notebookState?.cellsPerRow != cellsPerRow
@@ -66,7 +70,8 @@ final class NotebookViewController: UIViewController {
                 cell.updatePracticeSettings(
                     showCrosshair: showCrosshair,
                     allowedTouchTypes: allowedTouchTypes,
-                    brushConfig: config
+                    brushConfig: config,
+                    inkColor: inkColor
                 )
             }
         }
@@ -289,7 +294,8 @@ extension NotebookViewController: UICollectionViewDataSource {
             pressureSensitivity: pressureSensitivity,
             tiltSensitivity: tiltSensitivity,
             smoothingStrength: smoothingStrength,
-            brushThickness: brushThickness
+            brushThickness: brushThickness,
+            inkColor: inkColor
         )
         cell.configurePracticeAccessibility(label: practiceCellLabel(at: indexPath, kanji: state.rows[indexPath.section].kanjiData))
         cell.onPencilActivity = { [weak self, weak cell] in

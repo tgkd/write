@@ -190,7 +190,8 @@ final class NotebookCellView: UICollectionViewCell {
         pressureSensitivity: PressureSensitivity,
         tiltSensitivity: TiltSensitivity,
         smoothingStrength: SmoothingStrength,
-        brushThickness: BrushThickness
+        brushThickness: BrushThickness,
+        inkColor: InkColor = .sumi
     ) {
         self.showCrosshair = showCrosshair
         contentView.backgroundColor = .clear
@@ -201,6 +202,7 @@ final class NotebookCellView: UICollectionViewCell {
             smoothingStrength: smoothingStrength,
             brushThickness: brushThickness
         )
+        canvasView?.strokeColor = inkColor.color
     }
 
     /// Applies non-structural settings changes to an existing practice canvas
@@ -228,12 +230,14 @@ final class NotebookCellView: UICollectionViewCell {
     func updatePracticeSettings(
         showCrosshair: Bool,
         allowedTouchTypes: Set<UITouch.TouchType>,
-        brushConfig: BrushStroke.Config
+        brushConfig: BrushStroke.Config,
+        inkColor: InkColor = .sumi
     ) {
         guard let canvas = canvasView else { return }
         self.showCrosshair = showCrosshair
         canvas.allowedTouchTypes = allowedTouchTypes
         canvas.brushConfig = brushConfig
+        canvas.strokeColor = inkColor.color
     }
 
     // MARK: - Canvas
