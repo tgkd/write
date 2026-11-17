@@ -6,8 +6,10 @@ struct PracticeProgressView: View {
     @EnvironmentObject private var history: PracticeHistoryStore
     @EnvironmentObject private var settings: AppSettings
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     private static let dayCount = 35
+    private static let calendarColumnWidth: CGFloat = 400
 
     var body: some View {
         let today = Date()
@@ -23,8 +25,17 @@ struct PracticeProgressView: View {
                     unsavedBanner
                 }
                 countsRow(stats)
-                recentSection(stats, today: today)
-                reviewSection(stats)
+                if horizontalSizeClass == .regular {
+                    HStack(alignment: .top, spacing: 28) {
+                        recentSection(stats, today: today)
+                            .frame(width: Self.calendarColumnWidth)
+                        reviewSection(stats)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                } else {
+                    recentSection(stats, today: today)
+                    reviewSection(stats)
+                }
             }
             .padding()
         }
