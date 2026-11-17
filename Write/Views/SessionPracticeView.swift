@@ -6,6 +6,7 @@ struct SessionPracticeView: View {
     @State private var showNextButton = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     init(kanji: [KanjiData], kind: SessionKind = .practice, origin: RunOrigin = .randomSession) {
         _sessionState = StateObject(wrappedValue: SessionState(kanjiQueue: kanji, kind: kind, origin: origin))
@@ -47,33 +48,58 @@ struct SessionPracticeView: View {
         }
     }
 
+    private var usesIPadLayout: Bool {
+        DeviceContext.isIPad && horizontalSizeClass == .regular && sessionState.kind == .practice
+    }
+
     private func practiceContent(kanji: KanjiData) -> some View {
         ZStack(alignment: .bottom) {
-            PracticeView(
-                kanjiData: kanji,
-                mode: settings.practiceMode,
-                isRecall: sessionState.kind == .recall,
-                showToolbar: false,
-                context: RunContext(
-                    sessionID: sessionState.id,
-                    origin: sessionState.origin,
-                    slot: sessionState.currentIndex
-                ),
-                onComplete: { record in
-                    sessionState.recordResult(attemptCount: record.misses, usedHint: record.revealed)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
-                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
-                            showNextButton = true
-                        }
-                    }
+            Group {
+                if usesIPadLayout {
+                    iPadPracticeView(
+                        kanjiData: kanji,
+                        mode: settings.practiceMode,
+                        context: runContext,
+                        showsBackButton: false,
+                        onComplete: handleCompletion
+                    )
+                } else {
+                    PracticeView(
+                        kanjiData: kanji,
+                        mode: settings.practiceMode,
+                        isRecall: sessionState.kind == .recall,
+                        showToolbar: false,
+                        context: runContext,
+                        onComplete: handleCompletion
+                    )
                 }
-            )
+            }
             .id(sessionState.currentIndex)
 
             if showNextButton {
                 nextButton
+                    .frame(maxWidth: usesIPadLayout ? Self.iPadNextButtonWidth : .infinity)
                     .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
                     .padding(.bottom, 48)
+            }
+        }
+    }
+
+    private static let iPadNextButtonWidth: CGFloat = 420
+
+    private var runContext: RunContext {
+        RunContext(
+            sessionID: sessionState.id,
+            origin: sessionState.origin,
+            slot: sessionState.currentIndex
+        )
+    }
+
+    private func handleCompletion(_ record: PracticeRecord) {
+        sessionState.recordResult(attemptCount: record.misses, usedHint: record.revealed)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
+                showNextButton = true
             }
         }
     }

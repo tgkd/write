@@ -15,15 +15,18 @@ struct iPadPracticeView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    let onComplete: ((Int) -> Void)?
+    let showsBackButton: Bool
+    let onComplete: ((PracticeRecord) -> Void)?
 
     init(
         kanjiData: KanjiData,
         mode: PracticeMode = .trace,
         context: RunContext = RunContext(),
-        onComplete: ((Int) -> Void)? = nil
+        showsBackButton: Bool = true,
+        onComplete: ((PracticeRecord) -> Void)? = nil
     ) {
         _practiceState = StateObject(wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode, context: context))
+        self.showsBackButton = showsBackButton
         self.onComplete = onComplete
     }
 
@@ -43,11 +46,13 @@ struct iPadPracticeView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.backward")
+            if showsBackButton {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button { dismiss() } label: {
+                        Image(systemName: "chevron.backward")
+                    }
+                    .accessibilityLabel("Back")
                 }
-                .accessibilityLabel("Back")
             }
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
@@ -104,7 +109,7 @@ struct iPadPracticeView: View {
             practiceState.cueOrder = settings.recallCueOrder
             practiceState.onRunCompleted = { record in
                 history.add(record)
-                onComplete?(record.misses)
+                onComplete?(record)
             }
             practiceState.noteCueShown()
         }
