@@ -186,6 +186,16 @@ final class WritingSession: ObservableObject {
         return phrase.units
     }
 
+    @discardableResult
+    func applyRequestedMode() -> [Cell] {
+        guard requestedMode != activeMode, !isSentenceComplete, allowsRequestedMode, let item = currentItem else {
+            return []
+        }
+        activeMode = requestedMode
+        startSentence()
+        return item.phrases.flatMap(\.units)
+    }
+
     private func startNextPrompt() {
         guard let next = nextPromptIndex else {
             isComplete = true

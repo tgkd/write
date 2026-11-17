@@ -3,7 +3,8 @@ import SwiftUI
 struct WritingView: View {
     @StateObject private var session: WritingSession
     @StateObject private var ink = WritingInkStore()
-    @State private var cellSide: CGFloat?
+    @State private var availableWidth: CGFloat?
+    @State private var modePendingConfirmation: WritingMode?
     @State private var focusedPhrase = 0
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var wordHistory: WordHistoryStore
@@ -36,7 +37,17 @@ struct WritingView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                if !session.isComplete {
+                    SizeStepperButtons(
+                        value: $settings.writingCellSide,
+                        range: AppSettings.writingCellSideRange,
+                        step: AppSettings.writingCellSideStep,
+                        smallerLabel: "Smaller cells",
+                        largerLabel: "Larger cells",
+                        isLocked: hasInkInProgress
+                    )
+                }
                 Button("End session") { dismiss() }.accessibilityIdentifier("writing.end")
             }
         }
@@ -44,7 +55,14 @@ struct WritingView: View {
             session.validationConfig = settings.validationConfig
             session.onSentenceCompleted = { [weak wordHistory] in wordHistory?.add($0) }
         }
-        .onChange(of: settings.writingMode) { session.requestedMode = $0 }
+        .onChange(of: settings.writingMode) { mode in
+            session.requestedMode = mode
+            let cleared = session.applyRequestedMode()
+            if !cleared.isEmpty {
+                ink.clear(cleared.map(\.id))
+                resetFocus()
+            }
+        }
         .onChange(of: settings.gradingStrictness) { _ in session.validationConfig = settings.validationConfig }
         .onChange(of: session.isSentenceComplete) { complete in
             if complete, !session.isComplete {
@@ -78,19 +96,22 @@ struct WritingView: View {
                     .onChange(of: session.currentCell?.id) { _ in
                         centerFocus(item: item, proxy: proxy, animated: true)
                     }
-                    .onChange(of: cellSide) { _ in
+                    .onChange(of: settings.writingCellSide) { _ in
                         DispatchQueue.main.async {
                             centerFocus(item: item, proxy: proxy, animated: false)
                         }
                     }
-                    .onChange(of: geometry.size) { _ in
+                    .onChange(of: geometry.size) { size in
+                        if size.width > 32 {
+                            availableWidth = size.width
+                        }
                         DispatchQueue.main.async {
                             centerFocus(item: item, proxy: proxy, animated: false)
                         }
                     }
                     .onAppear {
-                        if cellSide == nil, geometry.size.width > 32 {
-                            cellSide = min(200, geometry.size.width - 32)
+                        if availableWidth == nil, geometry.size.width > 32 {
+                            availableWidth = geometry.size.width
                         }
                         DispatchQueue.main.async {
                             centerFocus(item: item, proxy: proxy, animated: false)
@@ -102,6 +123,48 @@ struct WritingView: View {
         .safeAreaInset(edge: .bottom) { controls }
         .onChange(of: session.promptIndex) { _ in resetFocus() }
         .onChange(of: session.phraseIndex) { _ in resetFocus() }
+    }
+
+    private var cellSide: CGFloat? {
+        availableWidth.map { min(settings.writingCellSide, $0 - 32) }
+    }
+
+    @ViewBuilder
+    private var pendingModeNote: some View {
+        if session.endsBeforeQueuedEmpty {
+            Text("No remaining prompts are eligible for Empty. This session will finish after this sentence.")
+                .font(.caption).foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.7)
+                .accessibilityIdentifier("writing.noRemainingEmpty")
+        } else {
+            Text("Mode changes apply to the next sentence.")
+                .font(.caption).foregroundStyle(.secondary)
+        }
+    }
+
+    private var modeSelection: Binding<WritingMode> {
+        Binding(
+            get: { settings.writingMode },
+            set: { mode in
+                if hasSentenceProgress && !session.isSentenceComplete {
+                    modePendingConfirmation = mode
+                } else {
+                    settings.writingMode = mode
+                }
+            }
+        )
+    }
+
+    private var hasSentenceProgress: Bool {
+        hasInkInProgress || !session.completedCellIDs.isEmpty
+    }
+
+    private var hasInkInProgress: Bool {
+        if let state = session.slotState, !state.matchedStrokeIndices.isEmpty {
+            return true
+        }
+        return session.activeMode == .free && ink.strokeCounts.values.contains { $0 > 0 }
     }
 
     private func header(item: WritingSession.Item) -> some View {
@@ -170,14 +233,10 @@ struct WritingView: View {
     }
 
     private func centerFocus(item: WritingSession.Item, proxy: ScrollViewProxy, animated: Bool) {
-        let target: String
-        if let cell = session.currentCell {
-            target = cell.id
-        } else if item.phrases.indices.contains(focusedPhraseIndex) {
-            target = item.phrases[focusedPhraseIndex].id
-        } else {
+        guard item.phrases.indices.contains(focusedPhraseIndex) else {
             return
         }
+        let target = item.phrases[focusedPhraseIndex].id
         if animated, !reduceMotion {
             withAnimation(.easeOut(duration: 0.2)) { proxy.scrollTo(target, anchor: .center) }
         } else {
@@ -205,50 +264,60 @@ struct WritingView: View {
 
     private var controls: some View {
         VStack(spacing: 8) {
-            if session.activeMode != .free {
-                Group {
-                    if let state = session.slotState {
-                        WritingRejectionNotice(state: state)
-                            .id(ObjectIdentifier(state))
-                    } else {
-                        Color.clear
-                    }
+            Group {
+                if let state = session.slotState, session.activeMode != .free {
+                    WritingRejectionNotice(state: state)
+                        .id(ObjectIdentifier(state))
+                } else if settings.writingMode != session.activeMode {
+                    pendingModeNote
+                } else {
+                    Color.clear
                 }
-                .frame(height: noticeHeight)
             }
-            Picker("Writing mode", selection: $settings.writingMode) {
+            .frame(height: noticeHeight)
+            Picker("Writing mode", selection: modeSelection) {
                 ForEach(WritingMode.allCases) { mode in Text(mode.title).tag(mode) }
             }
-            .pickerStyle(.menu).accessibilityIdentifier("writing.mode")
-            if settings.writingMode != session.activeMode {
-                if session.endsBeforeQueuedEmpty {
-                    Text("No remaining prompts are eligible for Empty. This session will finish after this sentence.")
-                        .font(.caption).accessibilityIdentifier("writing.noRemainingEmpty")
-                } else {
-                    Text("Mode changes apply to the next sentence.").font(.caption)
+            .pickerStyle(.segmented)
+            .frame(maxWidth: Self.modePickerWidth)
+            .accessibilityIdentifier("writing.mode")
+            .confirmationDialog(
+                "Switch mode?",
+                isPresented: Binding(
+                    get: { modePendingConfirmation != nil },
+                    set: { if !$0 { modePendingConfirmation = nil } }
+                ),
+                titleVisibility: .visible,
+                presenting: modePendingConfirmation
+            ) { mode in
+                Button("Switch and start over", role: .destructive) {
+                    settings.writingMode = mode
                 }
+                .accessibilityIdentifier("writing.mode.confirm")
+                Button("Cancel", role: .cancel) {}
+            } message: { _ in
+                Text("Your progress in this sentence will be cleared.")
             }
-            if session.activeMode == .free {
-                Text("No checking").font(.footnote).foregroundStyle(.secondary)
-            }
-            HStack(spacing: 12) {
+            HStack(spacing: 32) {
                 Button(action: undo) {
-                    Image(systemName: "arrow.uturn.backward").frame(minWidth: 44, minHeight: 44)
+                    Image(systemName: "arrow.uturn.backward")
+                        .font(.title3)
+                        .frame(minWidth: 44, minHeight: 44)
                 }
                 .accessibilityLabel("Undo stroke").accessibilityIdentifier("writing.undo")
                 .disabled(!canUndo)
                 if session.activeMode == .free {
                     Button("Clear cell") { ink.clear() }
                         .accessibilityIdentifier("writing.clear").disabled(!ink.canUndo)
-                } else if let state = session.slotState, state.isRecall {
-                    WritingHintControls(state: state)
                 }
                 if !session.isSentenceComplete {
                     Button {
                         ink.clear(session.restartPhrase().map(\.id))
                         resetFocus()
                     } label: {
-                        Image(systemName: "arrow.counterclockwise").frame(minWidth: 44, minHeight: 44)
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.title3)
+                            .frame(minWidth: 44, minHeight: 44)
                     }
                     .accessibilityLabel(session.activeMode == .free ? "Restart sentence" : "Restart phrase")
                     .accessibilityIdentifier("writing.restart")
@@ -257,30 +326,40 @@ struct WritingView: View {
                     Button {
                         moveFocus(by: -1)
                     } label: {
-                        Image(systemName: "chevron.up").frame(minWidth: 44, minHeight: 44)
+                        Image(systemName: "chevron.up")
+                            .font(.title3)
+                            .frame(minWidth: 44, minHeight: 44)
                     }
                     .accessibilityLabel("Previous row").accessibilityIdentifier("writing.previousRow")
                     .disabled(focusedPhraseIndex == 0)
                     Button {
                         moveFocus(by: 1)
                     } label: {
-                        Image(systemName: "chevron.down").frame(minWidth: 44, minHeight: 44)
+                        Image(systemName: "chevron.down")
+                            .font(.title3)
+                            .frame(minWidth: 44, minHeight: 44)
                     }
                     .accessibilityLabel("Next row").accessibilityIdentifier("writing.nextRow")
                     .disabled(focusedPhraseIndex + 1 >= phraseCount)
                 }
-                Spacer(minLength: 0)
+            }
+            .frame(maxWidth: .infinity)
+            .overlay(alignment: .trailing) {
                 if session.activeMode == .free || session.isSentenceComplete {
                     Button {
                         ink.leavePhrase()
                         session.advance()
                     } label: { Text(nextLabel) }
                     .buttonStyle(.borderedProminent).accessibilityIdentifier("writing.next")
+                } else if let state = session.slotState, state.isRecall {
+                    WritingHintControls(state: state)
                 }
             }
         }
         .padding(.horizontal, 16).padding(.vertical, 8).background(.bar)
     }
+
+    private static let modePickerWidth: CGFloat = 360
 
     private var phraseCount: Int {
         session.currentItem?.phrases.count ?? 0

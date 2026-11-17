@@ -1,6 +1,13 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Cancel" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "キャンセル" } } } },
+    "Switch mode?" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "モードを切り替えますか？" } } } },
+    "Switch and start over" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "切り替えてやり直す" } } } },
+    "Your progress in this sentence will be cleared." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この文の書いた内容は消えます。" } } } },
+    "Empty" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "空欄" } } } },
+    "Smaller cells" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "マスを小さく" } } } },
+    "Larger cells" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "マスを大きく" } } } },
     "Random practice" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ランダム練習" } } } },
     "Random recall" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ランダムに思い出して書く" } } } },
     "Ready to write" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書いてみよう" } } } },
@@ -65,26 +72,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "モードの変更は次の文から適用されます。"
-          }
-        }
-      }
-    },
-    "By strokes · Empty": {
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "筆順練習・空欄"
-          }
-        }
-      }
-    },
-    "By strokes · Trace": {
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "筆順練習・なぞり書き"
           }
         }
       }
@@ -175,16 +162,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "マスを消去"
-          }
-        }
-      }
-    },
-    "No checking": {
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "判定なし"
           }
         }
       }

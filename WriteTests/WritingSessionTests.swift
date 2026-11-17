@@ -150,6 +150,29 @@ final class WritingSessionTests: XCTestCase {
         XCTAssertFalse(state.slotState?.isRecall ?? true)
     }
 
+    func testRequestedModeAppliesAtOnceAndRestartsTheSentence() throws {
+        let state = WritingSession(prompts: [prompt(), prompt(id: "second")], mode: .trace, lookup: lookup)
+        try complete(state)
+        state.requestedMode = .empty
+        let cleared = state.applyRequestedMode()
+        XCTAssertEqual(cleared.map(\.characterIndex), [0, 1, 2, 3, 4])
+        XCTAssertEqual(state.activeMode, .empty)
+        XCTAssertTrue(state.slotState?.isRecall == true)
+        XCTAssertTrue(state.completedCellIDs.isEmpty)
+        XCTAssertEqual(state.currentCell?.characterIndex, 0)
+
+        state.requestedMode = .free
+        XCTAssertEqual(state.applyRequestedMode().count, 5)
+        XCTAssertEqual(state.activeMode, .free)
+        XCTAssertNil(state.slotState)
+        XCTAssertTrue(state.applyRequestedMode().isEmpty)
+
+        let unsafe = WritingSession(prompts: [prompt(safe: false)], lookup: lookup)
+        unsafe.requestedMode = .empty
+        XCTAssertTrue(unsafe.applyRequestedMode().isEmpty)
+        XCTAssertEqual(unsafe.activeMode, .free)
+    }
+
     func testFreeRestartClearsWholeSentenceAndAppliesAllowedQueuedMode() {
         let state = WritingSession(prompts: [prompt()], lookup: lookup)
         state.requestedMode = .trace

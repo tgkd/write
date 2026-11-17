@@ -60,7 +60,7 @@ final class WritingUITests: XCTestCase {
 
     func testFreeDrawingUndoClearReflowAndCompletion() throws {
         try open()
-        XCTAssertTrue(app.staticTexts["No checking"].exists)
+        XCTAssertTrue(app.segmentedControls["writing.mode"].buttons["Free"].isSelected)
         let canvas = canvases.firstMatch
         XCTAssertTrue(canvas.waitForExistence(timeout: 5))
         let id = canvas.identifier
@@ -220,13 +220,11 @@ final class WritingUITests: XCTestCase {
     func testQueuedEmptyEndsClearlyWhenNoPromptsRemain() throws {
         try open(ids: "w01,w03")
         XCTAssertEqual(app.staticTexts["writing.sentenceProgress"].label, "Sentence 1 of 2")
-        app.buttons["writing.mode"].tap()
-        let empty = app.buttons["By strokes · Empty"]
+        let empty = app.segmentedControls["writing.mode"].buttons["Empty"]
         XCTAssertTrue(empty.waitForExistence(timeout: 5))
         empty.tap()
         XCTAssertTrue(app.staticTexts["writing.noRemainingEmpty"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["writing.sentenceProgress"].label, "Sentence 1 of 1")
-        XCTAssertTrue(app.staticTexts["No checking"].exists)
         for _ in 0..<8 {
             if app.staticTexts["writing.complete"].exists { break }
             app.buttons["writing.next"].tap()

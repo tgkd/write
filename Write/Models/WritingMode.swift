@@ -10,8 +10,8 @@ enum WritingMode: String, CaseIterable, Identifiable {
     var title: LocalizedStringKey {
         switch self {
         case .free: return "Free"
-        case .trace: return "By strokes · Trace"
-        case .empty: return "By strokes · Empty"
+        case .trace: return "Trace"
+        case .empty: return "Empty"
         }
     }
 }

@@ -6,7 +6,7 @@ struct WritingHintControls: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            RecallHintButton(practiceState: state).accessibilityIdentifier("writing.hint")
+            RecallHintButton(practiceState: state, isCompact: true).accessibilityIdentifier("writing.hint")
             if !state.hidesCharacter {
                 PracticeModelView(kanji: state.kanjiData, showsGrid: settings.showPracticeGrid)
                     .frame(width: 44, height: 44)

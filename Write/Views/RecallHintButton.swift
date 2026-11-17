@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RecallHintButton: View {
     @ObservedObject var practiceState: PracticeState
+    var isCompact = false
 
     var body: some View {
         Button {
@@ -9,7 +10,7 @@ struct RecallHintButton: View {
         } label: {
             Label(title, systemImage: "eye")
                 .font(.subheadline.weight(.medium))
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: isCompact ? nil : .infinity)
         }
         .buttonStyle(.bordered)
         .disabled(practiceState.nextHint == nil)
