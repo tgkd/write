@@ -19,7 +19,7 @@ final class WritingUITests: XCTestCase {
             "-uiTestingFreshHistory", "-showWordPractice", enabled ? "YES" : "NO",
             "-allowFingerDrawing", "YES", "-captureStrokes", "-writingMode", mode,
             "-gradingStrictness", "normal", "-showRejectionReasons", "YES",
-            "-uiTestingWritingPromptIDs", ids, "-uiTestingSizeClassToggle"
+            "-uiTestingWritingPromptIDs", ids, "-uiTestingSizeClassToggle", "-writingCellSide", "200"
         ]
         app.launch()
     }
