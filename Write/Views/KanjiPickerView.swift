@@ -246,7 +246,7 @@ struct KanjiPickerView: View {
         var cards: [AnyView] = [
             AnyView(sessionCard(
                 title: "Practice",
-                subtitle: "\(min(settings.sessionCount, practicePool ?? 0)) random · \(settings.practiceMode.displayName)",
+                spokenTitle: "Random practice",
                 systemImage: "pencil.tip",
                 isEmpty: practicePool == 0,
                 route: { sessionRoute(kind: .practice) },
@@ -254,7 +254,7 @@ struct KanjiPickerView: View {
             )),
             AnyView(sessionCard(
                 title: "Recall",
-                subtitle: "\(min(settings.sessionCount, recallPool ?? 0)) random · from memory",
+                spokenTitle: "Random recall",
                 systemImage: "brain.head.profile",
                 isEmpty: recallPool == 0,
                 route: { sessionRoute(kind: .recall) },
@@ -290,7 +290,6 @@ struct KanjiPickerView: View {
         routeLink({ SessionRoute.review(review, count: settings.sessionCount) }) {
             linkCardLabel(
                 title: "Review",
-                subtitle: "\(min(settings.sessionCount, review.count)) to recall again",
                 systemImage: "repeat"
             )
         }
@@ -310,7 +309,7 @@ struct KanjiPickerView: View {
             cardLayout {
                 sessionCard(
                     title: "Practice",
-                    subtitle: "\(min(settings.sessionCount, practicePool ?? 0)) random · \(settings.practiceMode.displayName)",
+                    spokenTitle: "Random practice",
                     systemImage: "pencil.tip",
                     isEmpty: practicePool == 0,
                     route: { sessionRoute(kind: .practice) },
@@ -318,7 +317,7 @@ struct KanjiPickerView: View {
                 )
                 sessionCard(
                     title: "Recall",
-                    subtitle: "\(min(settings.sessionCount, recallPool ?? 0)) random · from memory",
+                    spokenTitle: "Random recall",
                     systemImage: "brain.head.profile",
                     isEmpty: recallPool == 0,
                     route: { sessionRoute(kind: .recall) },
@@ -340,7 +339,7 @@ struct KanjiPickerView: View {
 
     private var wordsCard: some View {
         routeLink({ WordSessionRoute(promptIDs: wordPromptStore.randomPromptIDs(count: settings.sessionCount)) }) {
-            linkCardLabel(title: "Words", subtitle: "write the missing kanji", systemImage: "character.book.closed.ja")
+            linkCardLabel(title: "Words", systemImage: "character.book.closed.ja")
         }
         .buttonStyle(.plain)
         .disabled(wordPromptStore.prompts.isEmpty)
@@ -350,7 +349,7 @@ struct KanjiPickerView: View {
 
     private var writingCard: some View {
         routeLink({ WritingRoute(promptIDs: writingPromptIDs()) }) {
-            linkCardLabel(title: "Writing", subtitle: "Free or by strokes", systemImage: "pencil.and.outline")
+            linkCardLabel(title: "Writing", systemImage: "pencil.and.outline")
         }
         .buttonStyle(.plain)
         .disabled(!hasWritingPrompts)
@@ -381,7 +380,7 @@ struct KanjiPickerView: View {
         return wordPromptStore.randomWritingPromptIDs(count: 5, mode: settings.writingMode)
     }
 
-    private func linkCardLabel(title: LocalizedStringKey, subtitle: LocalizedStringKey, systemImage: String) -> some View {
+    private func linkCardLabel(title: LocalizedStringKey, systemImage: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
                 Image(systemName: systemImage)
@@ -391,10 +390,6 @@ struct KanjiPickerView: View {
                     .font(.headline)
                     .lineLimit(cardLineLimit)
             }
-            Text(subtitle)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .lineLimit(cardLineLimit)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
@@ -404,7 +399,7 @@ struct KanjiPickerView: View {
 
     private func sessionCard(
         title: LocalizedStringKey,
-        subtitle: LocalizedStringKey,
+        spokenTitle: LocalizedStringKey,
         systemImage: String,
         isEmpty: Bool,
         route: @escaping () -> SessionRoute,
@@ -419,10 +414,6 @@ struct KanjiPickerView: View {
                     Text(title)
                 }
                 .font(.headline)
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(cardLineLimit)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(12)
@@ -431,8 +422,9 @@ struct KanjiPickerView: View {
         }
         .buttonStyle(.plain)
         .disabled(isEmpty)
+        .accessibilityLabel(Text(spokenTitle))
         .accessibilityIdentifier(identifier)
-        .accessibilityInputLabels([Text(title)])
+        .accessibilityInputLabels([Text(title), Text(spokenTitle)])
     }
 
     private var cardLineLimit: Int? {
@@ -447,9 +439,6 @@ struct KanjiPickerView: View {
                     .accessibilityHidden(true)
                 Text("Review")
                     .font(.headline)
-                Text("\(min(settings.sessionCount, review.count)) to recall again")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(12)

@@ -1,10 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Random practice" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ランダム練習" } } } },
+    "Random recall" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ランダムに思い出して書く" } } } },
     "Ready to write" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書いてみよう" } } } },
     "%lld done today" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "今日 %lld 回完了" } } } },
     "Last month" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この1か月" } } } },
-    "^[%lld day](inflect: true) practiced" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld 日練習" } } } },
+    "^[%lld active day](inflect: true)" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "練習日 %lld 日" } } } },
     "Stroke not accepted" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画は受け付けられませんでした" } } } },
     "Complete" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } } } },
     "Stroke %lld of %lld" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%2$lld画中%1$lld画目" } } } },
@@ -103,16 +105,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "筆記モード"
-          }
-        }
-      }
-    },
-    "Free or by strokes": {
-      "localizations": {
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自由筆記・筆順練習"
           }
         }
       }
@@ -359,28 +351,6 @@
         }
       }
     },
-    "%lld random · %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld字 · %@"
-          }
-        }
-      }
-    },
-    "%lld random · from memory" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld字 · 見ないで書く"
-          }
-        }
-      }
-    },
     "%lld retries" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -410,17 +380,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld画"
-          }
-        }
-      }
-    },
-    "%lld to recall again" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld字をもう一度"
           }
         }
       }
@@ -1819,16 +1778,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "色のついたマスの漢字を書いてください。"
-          }
-        }
-      }
-    },
-    "write the missing kanji" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "空欄の漢字を書く"
           }
         }
       }

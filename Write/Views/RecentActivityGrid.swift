@@ -28,7 +28,7 @@ struct RecentActivityGrid: View {
                     .font(.headline)
                     .accessibilityAddTraits(.isHeader)
                 Spacer()
-                Text("^[\(activeCount) day](inflect: true) practiced")
+                Text("^[\(activeCount) active day](inflect: true)")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .accessibilityHidden(true)
