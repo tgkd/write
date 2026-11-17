@@ -1,6 +1,10 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Ready to write" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書いてみよう" } } } },
+    "%lld done today" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "今日 %lld 回完了" } } } },
+    "Last month" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この1か月" } } } },
+    "^[%lld day](inflect: true) practiced" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%lld 日練習" } } } },
     "Stroke not accepted" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この画は受け付けられませんでした" } } } },
     "Complete" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "完了" } } } },
     "Stroke %lld of %lld" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "%2$lld画中%1$lld画目" } } } },
@@ -594,16 +598,6 @@
         }
       }
     },
-    "Completed practice only. Notebook writing isn't counted." : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "完了した練習だけを数えます。ノートでの練習は含まれません。"
-          }
-        }
-      }
-    },
     "Cool" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1003,17 +997,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "キャンバスを大きく"
-          }
-        }
-      }
-    },
-    "Last %lld weeks" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "直近%lld週間"
           }
         }
       }
