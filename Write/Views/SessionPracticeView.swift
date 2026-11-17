@@ -29,6 +29,17 @@ struct SessionPracticeView: View {
                 }
                 .accessibilityLabel("End session")
             }
+            if usesScalableRecallCanvas && !sessionState.isSessionComplete {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    SizeStepperButtons(
+                        value: $settings.practiceCanvasScale,
+                        range: AppSettings.canvasScaleRange,
+                        step: AppSettings.canvasScaleStep,
+                        smallerLabel: "Smaller canvas",
+                        largerLabel: "Larger canvas"
+                    )
+                }
+            }
             ToolbarItem(placement: .principal) {
                 if !sessionState.isSessionComplete {
                     let p = sessionState.progress
@@ -48,8 +59,16 @@ struct SessionPracticeView: View {
         }
     }
 
+    private var isRegularIPad: Bool {
+        DeviceContext.isIPad && horizontalSizeClass == .regular
+    }
+
     private var usesIPadLayout: Bool {
-        DeviceContext.isIPad && horizontalSizeClass == .regular && sessionState.kind == .practice
+        isRegularIPad && sessionState.kind == .practice
+    }
+
+    private var usesScalableRecallCanvas: Bool {
+        isRegularIPad && sessionState.kind == .recall
     }
 
     private func practiceContent(kanji: KanjiData) -> some View {
@@ -69,6 +88,7 @@ struct SessionPracticeView: View {
                         mode: settings.practiceMode,
                         isRecall: sessionState.kind == .recall,
                         showToolbar: false,
+                        canvasScale: usesScalableRecallCanvas ? settings.practiceCanvasScale : nil,
                         context: runContext,
                         onComplete: handleCompletion
                     )

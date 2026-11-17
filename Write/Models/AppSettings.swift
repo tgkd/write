@@ -112,6 +112,14 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(Double(practiceCanvasScale), forKey: "practiceCanvasScale") }
     }
 
+    static let writingCellSideRange: ClosedRange<CGFloat> = 120...320
+    static let writingCellSideStep: CGFloat = 20
+    static let defaultWritingCellSide: CGFloat = 200
+
+    @Published var writingCellSide: CGFloat {
+        didSet { defaults.set(Double(writingCellSide), forKey: "writingCellSide") }
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         self.gradingStrictness = Self.storedStrictness(in: defaults)
@@ -178,6 +186,11 @@ final class AppSettings: ObservableObject {
 
         let storedScale = defaults.double(forKey: "practiceCanvasScale")
         self.practiceCanvasScale = storedScale > 0 ? CGFloat(storedScale) : 0.7
+
+        let storedCellSide = defaults.double(forKey: "writingCellSide")
+        self.writingCellSide = storedCellSide > 0
+            ? min(max(CGFloat(storedCellSide), Self.writingCellSideRange.lowerBound), Self.writingCellSideRange.upperBound)
+            : Self.defaultWritingCellSide
     }
 
     static func storedStrictness(in defaults: UserDefaults) -> GradingStrictness {

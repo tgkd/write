@@ -16,12 +16,14 @@ struct PracticeView: View {
 
     let onComplete: ((PracticeRecord) -> Void)?
     let showToolbar: Bool
+    let canvasScale: CGFloat?
 
     init(
         kanjiData: KanjiData,
         mode: PracticeMode = .trace,
         isRecall: Bool = false,
         showToolbar: Bool = true,
+        canvasScale: CGFloat? = nil,
         context: RunContext = RunContext(),
         onComplete: ((PracticeRecord) -> Void)? = nil
     ) {
@@ -29,6 +31,7 @@ struct PracticeView: View {
             wrappedValue: PracticeState(kanjiData: kanjiData, mode: mode, isRecall: isRecall, context: context)
         )
         self.showToolbar = showToolbar
+        self.canvasScale = canvasScale
         self.onComplete = onComplete
     }
 
@@ -36,19 +39,18 @@ struct PracticeView: View {
         VStack(spacing: 8) {
             kanjiHeader
 
-            Spacer(minLength: 0)
+            if let canvasScale {
+                scaledCanvasSection(scale: canvasScale)
+            } else {
+                Spacer(minLength: 0)
 
-            strokeProgressDots
-                .padding(.horizontal)
+                strokeProgressDots
+                    .padding(.horizontal)
 
-            canvasArea
-                .aspectRatio(1, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color(.systemGray4), lineWidth: 0.5)
-                )
-                .padding(.horizontal, 16)
+                framedCanvas
+                    .aspectRatio(1, contentMode: .fit)
+                    .padding(.horizontal, 16)
+            }
 
             controls
                 .padding(.bottom, 48)
@@ -147,6 +149,30 @@ struct PracticeView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
+    }
+
+    private static let dotsAllowance: CGFloat = 24
+
+    private var framedCanvas: some View {
+        canvasArea
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(.systemGray4), lineWidth: 0.5)
+            )
+    }
+
+    private func scaledCanvasSection(scale: CGFloat) -> some View {
+        GeometryReader { geometry in
+            let available = min(geometry.size.width - 32, geometry.size.height - Self.dotsAllowance)
+            let side = max(0, available * scale)
+            VStack(spacing: 8) {
+                strokeProgressDots
+                framedCanvas
+                    .frame(width: side, height: side)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
     }
 
     private var canvasArea: some View {

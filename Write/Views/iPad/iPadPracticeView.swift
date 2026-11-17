@@ -55,23 +55,13 @@ struct iPadPracticeView: View {
                 }
             }
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button {
-                    let newScale = settings.practiceCanvasScale - AppSettings.canvasScaleStep
-                    settings.practiceCanvasScale = max(AppSettings.canvasScaleRange.lowerBound, newScale)
-                } label: {
-                    Image(systemName: "minus")
-                }
-                .accessibilityLabel("Smaller canvas")
-                .disabled(settings.practiceCanvasScale <= AppSettings.canvasScaleRange.lowerBound)
-
-                Button {
-                    let newScale = settings.practiceCanvasScale + AppSettings.canvasScaleStep
-                    settings.practiceCanvasScale = min(AppSettings.canvasScaleRange.upperBound, newScale)
-                } label: {
-                    Image(systemName: "plus")
-                }
-                .accessibilityLabel("Larger canvas")
-                .disabled(settings.practiceCanvasScale >= AppSettings.canvasScaleRange.upperBound)
+                SizeStepperButtons(
+                    value: $settings.practiceCanvasScale,
+                    range: AppSettings.canvasScaleRange,
+                    step: AppSettings.canvasScaleStep,
+                    smallerLabel: "Smaller canvas",
+                    largerLabel: "Larger canvas"
+                )
             }
         }
         .onChange(of: practiceState.mode) { _ in
