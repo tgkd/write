@@ -39,6 +39,12 @@ struct PracticeStats: Equatable {
         review = Self.reviewItems(from: records)
     }
 
+    static func completedRuns(on day: Date, in records: [PracticeRecord], calendar: Calendar) -> Int {
+        records.reduce(0) { count, record in
+            calendar.isDate(record.completedAt, inSameDayAs: day) ? count + 1 : count
+        }
+    }
+
     static func reviewItems(from records: [PracticeRecord]) -> [ReviewItem] {
         let hiddenRecallRuns = records.filter { $0.isRecall && !$0.exposed }
         let latestRecallRuns = Dictionary(grouping: hiddenRecallRuns, by: \.codePoint)

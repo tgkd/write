@@ -54,6 +54,17 @@ final class PracticeStatsTests: XCTestCase {
         XCTAssertEqual(stats.recentDays.last?.day, calendar.startOfDay(for: today))
     }
 
+    func testCompletedRunsCountsOnlyThatDay() {
+        let records = [
+            record("4e00", daysAgo: 0),
+            record("4e00", daysAgo: 0, minutes: 5),
+            record("4e8c", daysAgo: 1),
+        ]
+
+        XCTAssertEqual(PracticeStats.completedRuns(on: today, in: records, calendar: calendar), 2)
+        XCTAssertEqual(PracticeStats.completedRuns(on: today, in: [], calendar: calendar), 0)
+    }
+
     func testReviewUsesLatestRecallRunPerCharacter() {
         let stats = PracticeStats(
             records: [

@@ -10,9 +10,10 @@ struct PracticeProgressView: View {
     private static let dayCount = 35
 
     var body: some View {
+        let today = Date()
         let stats = PracticeStats(
             records: history.records,
-            today: Date(),
+            today: today,
             calendar: .current,
             dayCount: Self.dayCount
         )
@@ -22,7 +23,7 @@ struct PracticeProgressView: View {
                     unsavedBanner
                 }
                 countsRow(stats)
-                recentSection(stats)
+                recentSection(stats, today: today)
                 reviewSection(stats)
             }
             .padding()
@@ -45,15 +46,10 @@ struct PracticeProgressView: View {
     }
 
     private func countsRow(_ stats: PracticeStats) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
-                countTile(value: stats.practicedDays, label: "Days", identifier: "Days")
-                countTile(value: stats.completedRuns, label: "Completed", identifier: "Completed")
-                countTile(value: stats.distinctKanji, label: "Characters", identifier: "Characters")
-            }
-            Text("Completed practice only. Notebook writing isn't counted.")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
+        HStack(spacing: 8) {
+            countTile(value: stats.practicedDays, label: "Days", identifier: "Days")
+            countTile(value: stats.completedRuns, label: "Completed", identifier: "Completed")
+            countTile(value: stats.distinctKanji, label: "Characters", identifier: "Characters")
         }
     }
 
@@ -74,11 +70,8 @@ struct PracticeProgressView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private func recentSection(_ stats: PracticeStats) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            sectionTitle("Last \(Self.dayCount / 7) weeks")
-            RecentActivityGrid(days: stats.recentDays)
-        }
+    private func recentSection(_ stats: PracticeStats, today: Date) -> some View {
+        RecentActivityGrid(days: stats.recentDays, today: today, calendar: .current)
     }
 
     private func reviewSection(_ stats: PracticeStats) -> some View {

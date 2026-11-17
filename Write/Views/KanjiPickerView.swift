@@ -67,9 +67,14 @@ struct KanjiPickerView: View {
 
     var body: some View {
         ScrollView {
-            filterBar
-                .padding(.horizontal)
-                .padding(.top, 4)
+            VStack(spacing: 4) {
+                if !usesSelectionBinding {
+                    todayHeader
+                }
+                filterBar
+            }
+            .padding(.horizontal)
+            .padding(.top, 4)
 
             if searchText.isEmpty {
                 sessionStarters
@@ -86,7 +91,15 @@ struct KanjiPickerView: View {
         }
         .searchable(text: $searchText, prompt: "Search kanji or kana")
         .navigationTitle("Write")
+        .navigationBarTitleDisplayMode(usesSelectionBinding ? .automatic : .inline)
         .toolbar {
+            if !usesSelectionBinding {
+                ToolbarItem(placement: .principal) {
+                    Color.clear
+                        .frame(width: 1, height: 1)
+                        .accessibilityHidden(true)
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 16) {
                     routeLink({ ProgressRoute() }) {
@@ -193,7 +206,100 @@ struct KanjiPickerView: View {
         return SessionRoute(codePoints: codePoints, kind: kind)
     }
 
+    private var todayHeader: some View {
+        let today = Date()
+        let done = PracticeStats.completedRuns(on: today, in: history.records, calendar: .current)
+        return VStack(alignment: .leading, spacing: 2) {
+            Text(today.formatted(.dateTime.weekday(.wide).month(.abbreviated).day()))
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .textCase(.uppercase)
+            Group {
+                if done == 0 {
+                    Text("Ready to write")
+                } else {
+                    Text("\(done) done today")
+                }
+            }
+            .font(.title.bold())
+            .accessibilityAddTraits(.isHeader)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("home.today")
+    }
+
+    @ViewBuilder
     private var sessionStarters: some View {
+        if usesSelectionBinding {
+            sidebarSessionStarters
+        } else {
+            phoneSessionStarters
+        }
+    }
+
+    private var phoneSessionStarters: some View {
+        let practicePool = poolSizes?.practice
+        let recallPool = poolSizes?.recall
+        let review = PracticeStats.reviewItems(from: history.records)
+        let columnCount = dynamicTypeSize.isAccessibilitySize ? 1 : 2
+        var cards: [AnyView] = [
+            AnyView(sessionCard(
+                title: "Practice",
+                subtitle: "\(min(settings.sessionCount, practicePool ?? 0)) random · \(settings.practiceMode.displayName)",
+                systemImage: "pencil.tip",
+                isEmpty: practicePool == 0,
+                route: { sessionRoute(kind: .practice) },
+                identifier: "session.practice"
+            )),
+            AnyView(sessionCard(
+                title: "Recall",
+                subtitle: "\(min(settings.sessionCount, recallPool ?? 0)) random · from memory",
+                systemImage: "brain.head.profile",
+                isEmpty: recallPool == 0,
+                route: { sessionRoute(kind: .recall) },
+                identifier: "session.recall"
+            )),
+        ]
+        if !review.isEmpty {
+            cards.append(AnyView(reviewTile(review)))
+        }
+        if settings.showWordPractice {
+            cards.append(AnyView(wordsCard))
+        }
+        let rows = stride(from: 0, to: cards.count, by: columnCount).map { start in
+            Array(cards[start..<min(start + columnCount, cards.count)].indices)
+        }
+        return Grid(horizontalSpacing: 10, verticalSpacing: 10) {
+            ForEach(rows, id: \.self) { row in
+                GridRow {
+                    ForEach(row, id: \.self) { index in
+                        cards[index]
+                            .frame(maxHeight: .infinity)
+                    }
+                    if row.count < columnCount {
+                        Color.clear
+                            .gridCellUnsizedAxes([.horizontal, .vertical])
+                    }
+                }
+            }
+        }
+    }
+
+    private func reviewTile(_ review: [PracticeStats.ReviewItem]) -> some View {
+        routeLink({ SessionRoute.review(review, count: settings.sessionCount) }) {
+            linkCardLabel(
+                title: "Review",
+                subtitle: "\(min(settings.sessionCount, review.count)) to recall again",
+                systemImage: "repeat"
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("session.review")
+        .accessibilityInputLabels([Text("Review")])
+    }
+
+    private var sidebarSessionStarters: some View {
         let practicePool = poolSizes?.practice
         let recallPool = poolSizes?.recall
         let review = PracticeStats.reviewItems(from: history.records)
@@ -341,7 +447,7 @@ struct KanjiPickerView: View {
                     .accessibilityHidden(true)
                 Text("Review")
                     .font(.headline)
-                Text("\(review.count) to recall again")
+                Text("\(min(settings.sessionCount, review.count)) to recall again")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
