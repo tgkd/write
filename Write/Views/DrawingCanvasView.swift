@@ -10,7 +10,9 @@ final class DrawingCanvasView: UIView {
     // MARK: - Configuration
 
     var brushConfig = BrushStroke.Config()
-    var strokeColor: UIColor = .label
+    var strokeColor: UIColor = .label {
+        didSet { applyStrokeColor() }
+    }
 
     var allowedTouchTypes: Set<UITouch.TouchType> = [.direct, .pencil]
 
@@ -134,10 +136,7 @@ final class DrawingCanvasView: UIView {
         super.traitCollectionDidChange(previousTraitCollection)
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
 
-        let resolved = strokeColor.resolvedColor(with: traitCollection).cgColor
-        for strokeLayer in strokeLayers { strokeLayer.fillColor = resolved }
-        activeLayer?.fillColor = resolved
-        predictedLayer?.fillColor = resolved
+        applyStrokeColor()
         if let hover = hoverLayer {
             hover.fillColor = UIColor.label.withAlphaComponent(0.15)
                 .resolvedColor(with: traitCollection).cgColor
@@ -483,10 +482,21 @@ final class DrawingCanvasView: UIView {
         onStrokeCaptured(pending.capture)
     }
 
+    private var resolvedStrokeColor: CGColor {
+        strokeColor.resolvedColor(with: traitCollection).cgColor
+    }
+
+    private func applyStrokeColor() {
+        let resolved = resolvedStrokeColor
+        for strokeLayer in strokeLayers { strokeLayer.fillColor = resolved }
+        activeLayer?.fillColor = resolved
+        predictedLayer?.fillColor = resolved
+    }
+
     private func makeBrushLayer() -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
         shapeLayer.contentsScale = layer.contentsScale
-        shapeLayer.fillColor = strokeColor.cgColor
+        shapeLayer.fillColor = resolvedStrokeColor
         shapeLayer.strokeColor = nil
         shapeLayer.actions = ["path": NSNull()]
         return shapeLayer

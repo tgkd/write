@@ -24,6 +24,14 @@
     "Tip %lld of %lld" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ヒント %1$lld / %2$lld" } } } },
     "Rate Kanji Write" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "Kanji Write を評価" } } } },
     "Leave a rating on the App Store" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "App Store で評価する" } } } },
+    "Privacy Policy" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "プライバシーポリシー" } } } },
+    "Support" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "サポート" } } } },
+    "Ink Color" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "インクの色" } } } },
+    "Guide Colors" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "お手本の色" } } } },
+    "Sumi" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "墨" } } } },
+    "Indigo" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "藍" } } } },
+    "Vermilion" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "朱" } } } },
+    "Mono" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "モノクロ" } } } },
     "No remaining prompts are eligible for Empty. This session will finish after this sentence." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "残りの文には空欄モードを使えるものがありません。この文でセッションを終了します。" } } } },
     "Finish sentence": {
       "localizations": {
@@ -575,16 +583,6 @@
         }
       }
     },
-    "Color Palette" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "カラーパレット"
-          }
-        }
-      }
-    },
     "Completed" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -963,17 +961,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloudアカウントを利用できません"
-          }
-        }
-      }
-    },
-    "Ink" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "墨"
           }
         }
       }

@@ -116,6 +116,7 @@
 		8C007E60BF46A9CC14EBFCD2 /* StrokeEvidence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4755E0D4B147F26087AE49E5 /* StrokeEvidence.swift */; };
 		8CB07ECC2A6CB1C7C0DF0E3D /* StrokeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A28B635AA4D8F942C074B55 /* StrokeRenderer.swift */; };
 		8D494BFBFA0EAA7E14BC5C90 /* DailyKanji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CBBCB68667372609A4A51E /* DailyKanji.swift */; };
+		8E610CBBE03A87430A4047BA /* InkColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112B442D6E407976DDED8145 /* InkColor.swift */; };
 		8FE1C2A61657BBA9662BD109 /* WritingGradedCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97FB24678D129C7CBA704BF /* WritingGradedCellView.swift */; };
 		92972E3B743CAF971A3486F5 /* WordSlotRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E66E8B4BB083BFF9D50D1C6 /* WordSlotRecord.swift */; };
 		931539011E1B5DE53D8C52E3 /* kanji_strokes.json in Resources */ = {isa = PBXBuildFile; fileRef = C6B4C54713FB059B5DF110E2 /* kanji_strokes.json */; };
@@ -265,6 +266,7 @@
 		0FE1B0BE867D120C7B58025A /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		1061A3078D31136BA4CE4C66 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
 		10C89F5B131A72BBA8176DDC /* NotebookViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookViewRepresentable.swift; sourceTree = "<group>"; };
+		112B442D6E407976DDED8145 /* InkColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InkColor.swift; sourceTree = "<group>"; };
 		112DFDA96E143651A19DDCE5 /* NotebookTipsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotebookTipsOverlay.swift; sourceTree = "<group>"; };
 		1218FC775663C580B435BC2E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		12323F75478344DC11AB0C5D /* MissEvidence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissEvidence.swift; sourceTree = "<group>"; };
@@ -468,6 +470,7 @@
 				1218FC775663C580B435BC2E /* AppSettings.swift */,
 				F193A4EB55122496F990982B /* CharacterFilter.swift */,
 				2B138A055F1450C9C03D9543 /* ColorPalette.swift */,
+				112B442D6E407976DDED8145 /* InkColor.swift */,
 				B69D6BC67F10FFB80CFEEA78 /* InputKind.swift */,
 				51D3EA225B25052BFBC34F84 /* KanjiData.swift */,
 				E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */,
@@ -1035,6 +1038,7 @@
 				ADD8FEF06219AE2BCB8E1DEB /* HistorySyncState.swift in Sources */,
 				BFA5CA744E957B314398344D /* HistorySyncStatus.swift in Sources */,
 				D2C2B7CD6A45677452812C53 /* HistorySyncUpload.swift in Sources */,
+				8E610CBBE03A87430A4047BA /* InkColor.swift in Sources */,
 				56E1BC22C709F646656C76AF /* InputKind.swift in Sources */,
 				CF291346A303DBA047615F8A /* KanaStrokeVariants.swift in Sources */,
 				28975F97AAC63CD86AE2072B /* KanjiData.swift in Sources */,

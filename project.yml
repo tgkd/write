@@ -54,7 +54,7 @@ targets:
       path: Write/Info.plist
       properties:
         CFBundleDevelopmentRegion: en
-        CFBundleDisplayName: Write
+        CFBundleDisplayName: Kanji Write
         CFBundleExecutable: $(EXECUTABLE_NAME)
         CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
         CFBundleInfoDictionaryVersion: "6.0"
@@ -103,7 +103,7 @@ targets:
       path: WriteWidget/Info.plist
       properties:
         CFBundleDevelopmentRegion: en
-        CFBundleDisplayName: Write
+        CFBundleDisplayName: Kanji Write
         CFBundleExecutable: $(EXECUTABLE_NAME)
         CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
         CFBundleInfoDictionaryVersion: "6.0"

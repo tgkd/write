@@ -13,6 +13,7 @@ final class AppSettings: ObservableObject {
     static let recallCueOrderKey = "recallCueOrder"
     static let writingModeKey = "writingMode"
     static let lastReviewAttemptAtKey = "lastReviewAttemptAt"
+    static let inkColorKey = "inkColor"
 
     private let defaults: UserDefaults
 
@@ -34,6 +35,10 @@ final class AppSettings: ObservableObject {
 
     @Published var colorPalette: ColorPalette {
         didSet { defaults.set(colorPalette.rawValue, forKey: "colorPalette") }
+    }
+
+    @Published var inkColor: InkColor {
+        didSet { defaults.set(inkColor.rawValue, forKey: Self.inkColorKey) }
     }
 
     @Published var sessionCount: Int {
@@ -124,6 +129,9 @@ final class AppSettings: ObservableObject {
 
         let storedPalette = defaults.string(forKey: "colorPalette") ?? ""
         self.colorPalette = ColorPalette(rawValue: storedPalette) ?? .warm
+
+        let storedInk = defaults.string(forKey: Self.inkColorKey) ?? ""
+        self.inkColor = InkColor(rawValue: storedInk) ?? .sumi
 
         let storedCount = defaults.integer(forKey: "sessionCount")
         self.sessionCount = storedCount > 0 ? storedCount : 10
