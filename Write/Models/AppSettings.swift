@@ -11,7 +11,6 @@ final class AppSettings: ObservableObject {
     static let iCloudSyncEnabledKey = "iCloudSyncEnabled"
     static let recallCueOrderKey = "recallCueOrder"
     static let writingModeKey = "writingMode"
-    static let practiceFocusKey = "practiceFocus"
     static let lastReviewAttemptAtKey = "lastReviewAttemptAt"
     static let inkColorKey = "inkColor"
     nonisolated static let pencilDoubleTapEnabledKey = "pencilDoubleTapEnabled"
@@ -53,10 +52,6 @@ final class AppSettings: ObservableObject {
 
     @Published var writingMode: WritingMode {
         didSet { defaults.set(writingMode.rawValue, forKey: Self.writingModeKey) }
-    }
-
-    @Published var practiceFocus: PracticeFocus {
-        didSet { defaults.set(practiceFocus.rawValue, forKey: Self.practiceFocusKey) }
     }
 
     @Published var iCloudSyncEnabled: Bool {
@@ -158,7 +153,6 @@ final class AppSettings: ObservableObject {
         self.practiceMode = PracticeMode(rawValue: storedMode) ?? .trace
 
         self.writingMode = WritingMode(rawValue: defaults.string(forKey: Self.writingModeKey) ?? "") ?? .free
-        self.practiceFocus = PracticeFocus(rawValue: defaults.string(forKey: Self.practiceFocusKey) ?? "") ?? .new
 
         self.iCloudSyncEnabled = defaults.object(forKey: Self.iCloudSyncEnabledKey) == nil
             ? true

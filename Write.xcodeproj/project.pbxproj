@@ -88,6 +88,7 @@
 		61AF686CC04E46EA3B27F4CF /* KanjiDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A573E07580005FA275E101 /* KanjiDataStore.swift */; };
 		64382CE86D5215FA9FC47A4A /* WordPracticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2C967D0732F5EEFA8D9F4A /* WordPracticeView.swift */; };
 		6498CB5719CC919AE2A9D4F6 /* WordPromptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2CBB00D92DFAF5253060C4 /* WordPromptStore.swift */; };
+		65BF93100A394B4198F3ED4E /* PracticeQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8B631BD631644668C32289 /* PracticeQueueTests.swift */; };
 		674696AC2B9A184A1FCDAA24 /* NotebookTipsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112DFDA96E143651A19DDCE5 /* NotebookTipsOverlay.swift */; };
 		686299C8F3EAA5E06F5F4B64 /* StrokeProgressDots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDCCDE40E98E78252A0FD0E /* StrokeProgressDots.swift */; };
 		6CCBA1457AF84E85537FD908 /* NotebookHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D15C8C8ADEE5C47903061F /* NotebookHeaderView.swift */; };
@@ -218,6 +219,7 @@
 		F559626C8A958E8FF148A068 /* StrokeAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E0E8906C4E2FD0A0CD7886 /* StrokeAnchor.swift */; };
 		F6A2FE7FAD40C6585935356A /* StrokeValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32519557EA2BD27FE3ACF368 /* StrokeValidationTests.swift */; };
 		F7B293F82349DF8130160E6E /* ReadingSpeaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2374E2808124DF04F9ADB346 /* ReadingSpeaker.swift */; };
+		F95A5A42DC3D14106ADA8A3F /* PracticeSessionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E921A7829513AC7FFB87938D /* PracticeSessionCard.swift */; };
 		FA0C3EDD95B810160A149BCC /* WritingCellSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757A68FE30703D42F6A7844F /* WritingCellSmokeTests.swift */; };
 		FB17898AA4CFCE1E2611A35B /* CharacterFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F12DD54E7482308F5E56E5 /* CharacterFilterTests.swift */; };
 		FBB4B4E1DC63B8FCB5416030 /* HistorySyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4187ADD8C74224F0E71B3ACA /* HistorySyncEngine.swift */; };
@@ -365,6 +367,7 @@
 		76A573E07580005FA275E101 /* KanjiDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiDataStore.swift; sourceTree = "<group>"; };
 		787DEC6143AF5C3E8D2B0A69 /* AnswerGlyph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerGlyph.swift; sourceTree = "<group>"; };
 		7B37186D09ACE811FF4E4A27 /* WriteWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = WriteWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B8B631BD631644668C32289 /* PracticeQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeQueueTests.swift; sourceTree = "<group>"; };
 		7C6A0D944E2C77DD9F066AC4 /* PracticeGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeGridView.swift; sourceTree = "<group>"; };
 		7C785701BA93F927E1C30C2E /* RecallCueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecallCueTests.swift; sourceTree = "<group>"; };
 		7F1EC7D912AE81459BF48A71 /* WordHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordHistoryStoreTests.swift; sourceTree = "<group>"; };
@@ -464,6 +467,7 @@
 		E558EF5CF41E0D212EE665D7 /* KanjiStroke.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KanjiStroke.swift; sourceTree = "<group>"; };
 		E5B6A020ABFC1FA04CCEF053 /* IPadDetailNavigationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadDetailNavigationUITests.swift; sourceTree = "<group>"; };
 		E767A77F798EDC96B49F04FC /* WordPracticeStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordPracticeStateTests.swift; sourceTree = "<group>"; };
+		E921A7829513AC7FFB87938D /* PracticeSessionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionCard.swift; sourceTree = "<group>"; };
 		ECB6ED492E6E1EAA1EEFFDA1 /* WritingModeSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingModeSettingsTests.swift; sourceTree = "<group>"; };
 		F09BDD06E63C6FFA70621782 /* PencilActionResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PencilActionResponder.swift; sourceTree = "<group>"; };
 		F193A4EB55122496F990982B /* CharacterFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterFilter.swift; sourceTree = "<group>"; };
@@ -589,6 +593,7 @@
 				C1AAA99C5ABA5419796BC874 /* PracticeGridTests.swift */,
 				B59B14D36C3E50D20B96F9EB /* PracticeHistoryStoreTests.swift */,
 				80BF101F0465C66B4CE01F75 /* PracticeLinkTests.swift */,
+				7B8B631BD631644668C32289 /* PracticeQueueTests.swift */,
 				8D517CC48ABC842765F86C37 /* PracticeRecordingTests.swift */,
 				D8EC9F1455E9555D260F3DFF /* PracticeStatsSchemaTests.swift */,
 				305CB7F2A902C2CA345E11B8 /* PracticeStatsTests.swift */,
@@ -682,6 +687,7 @@
 				9A69ADD85D74462EE94A52D6 /* PracticeModePicker.swift */,
 				09467A3890CD8C766D06E7A1 /* PracticeProgressView.swift */,
 				DC8F50A0B465B83A186F1656 /* PracticeSessionActions.swift */,
+				E921A7829513AC7FFB87938D /* PracticeSessionCard.swift */,
 				D48D861749D3CBA86FE447BB /* PracticeStrokeProgress.swift */,
 				44A5A9E84315E390CECEC817 /* PracticeView.swift */,
 				B2F31DB2AA57261CB1AE8F1A /* ReadingSpeakerButton.swift */,
@@ -1027,6 +1033,7 @@
 				2CADBD655B2E41316D3213ED /* PracticeGridTests.swift in Sources */,
 				EA6BA6D7C89C39C744B247A0 /* PracticeHistoryStoreTests.swift in Sources */,
 				F16C55ED89FAF273E07ADEAF /* PracticeLinkTests.swift in Sources */,
+				65BF93100A394B4198F3ED4E /* PracticeQueueTests.swift in Sources */,
 				AFF5B85AE113401547A10A21 /* PracticeRecordingTests.swift in Sources */,
 				24EB3F4BFDC07A657374EB45 /* PracticeStatsSchemaTests.swift in Sources */,
 				D5CB0BAA234218E2F98CD159 /* PracticeStatsTests.swift in Sources */,
@@ -1135,6 +1142,7 @@
 				42EDFC08C3D36D17711A0CE6 /* PracticeQueue.swift in Sources */,
 				87A352C6474310C7FBC14A84 /* PracticeRecord.swift in Sources */,
 				B78475BE7EA8CECEEEE3D241 /* PracticeSessionActions.swift in Sources */,
+				F95A5A42DC3D14106ADA8A3F /* PracticeSessionCard.swift in Sources */,
 				013FE94AD914E50DD46A8286 /* PracticeState.swift in Sources */,
 				CF177FA2D2605D8D2A5E252B /* PracticeStats.swift in Sources */,
 				98C00A3BDF2CB0038B6A8F70 /* PracticeStrokeProgress.swift in Sources */,
