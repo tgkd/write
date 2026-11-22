@@ -1280,6 +1280,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -disable-dynamic-actor-isolation";
 				PRODUCT_BUNDLE_IDENTIFIER = com.j.write;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1482,6 +1483,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -disable-dynamic-actor-isolation";
 				PRODUCT_BUNDLE_IDENTIFIER = com.j.write;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
