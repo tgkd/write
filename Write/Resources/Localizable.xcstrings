@@ -5,6 +5,7 @@
     "When turned on, double-tap or squeeze undoes the last stroke. In Notebook, it clears the cell." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "オンにすると、ダブルタップまたはスクイーズで一画戻します。ノートではマスを消します。" } } } },
     "Double-Tap Pencil" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pencilのダブルタップ" } } } },
     "Squeeze Pencil" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "Pencilのスクイーズ" } } } },
+    "Write" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書く" } } } },
     "Switch mode?" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "モードを切り替えますか？" } } } },
     "Switch and start over" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "切り替えてやり直す" } } } },
     "Your progress in this sentence will be cleared." : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この文の書いた内容は消えます。" } } } },

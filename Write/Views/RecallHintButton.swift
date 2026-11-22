@@ -10,9 +10,9 @@ struct RecallHintButton: View {
         } label: {
             Label(title, systemImage: "eye")
                 .font(.subheadline.weight(.medium))
-                .frame(maxWidth: isCompact ? nil : .infinity)
         }
         .buttonStyle(.bordered)
+        .frame(maxWidth: isCompact ? nil : .infinity)
         .disabled(practiceState.nextHint == nil)
         .accessibilityInputLabels([Text(title), Text("Hint")])
     }
