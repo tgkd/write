@@ -35,6 +35,22 @@ final class IPadDetailNavigationUITests: XCTestCase {
         XCTAssertTrue(completedCount.waitForExistence(timeout: 5))
     }
 
+    private func tapLetter(_ character: String, file: StaticString = #filePath, line: UInt = #line) {
+        let cell = letter(character)
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND hittable == true"), object: cell)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed, "\(character) is not tappable", file: file, line: line)
+        cell.tap()
+        let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: cell)
+        XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed, "\(character) is not selected after the tap", file: file, line: line)
+    }
+
+    private func showSidebar() {
+        let show = app.buttons["Show sidebar"]
+        XCTAssertTrue(show.waitForExistence(timeout: 5), "the sidebar does not hide for a canvas")
+        show.tap()
+        XCTAssertTrue(progressButton.waitForExistence(timeout: 5))
+    }
+
     private func openPracticeLink() throws {
         guard #available(iOS 16.4, *) else {
             throw XCTSkip("XCUIApplication.open needs iOS 16.4")
@@ -85,33 +101,30 @@ final class IPadDetailNavigationUITests: XCTestCase {
 
     func testLetterTapLeavesProgress() {
         openProgress()
-        letter("あ").tap()
+        tapLetter("あ")
         assertShowsCard(romaji: "a")
     }
 
     func testTappingAnotherLetterLeavesProgress() {
-        XCTAssertTrue(letter("あ").waitForExistence(timeout: 5))
-        letter("あ").tap()
+        tapLetter("あ")
         assertShowsCard(romaji: "a")
 
         openProgress()
-        letter("い").tap()
+        tapLetter("い")
         assertShowsCard(romaji: "i")
     }
 
     func testTappingTheAlreadySelectedLetterLeavesProgress() {
-        XCTAssertTrue(letter("あ").waitForExistence(timeout: 5))
-        letter("あ").tap()
+        tapLetter("あ")
         assertShowsCard(romaji: "a")
 
         openProgress()
-        letter("あ").tap()
+        tapLetter("あ")
         assertShowsCard(romaji: "a")
     }
 
     func testProgressHasABackButtonToTheSelectedLetter() {
-        XCTAssertTrue(letter("あ").waitForExistence(timeout: 5))
-        letter("あ").tap()
+        tapLetter("あ")
         assertShowsCard(romaji: "a")
 
         openProgress()
@@ -137,14 +150,14 @@ final class IPadDetailNavigationUITests: XCTestCase {
         let end = app.buttons["End session"]
         XCTAssertTrue(end.waitForExistence(timeout: 5))
 
-        letter("あ").tap()
+        showSidebar()
+        tapLetter("あ")
         assertShowsCard(romaji: "a")
         XCTAssertFalse(end.exists)
     }
 
     func testEndingASessionReturnsToTheLetter() {
-        XCTAssertTrue(letter("あ").waitForExistence(timeout: 5))
-        letter("あ").tap()
+        tapLetter("あ")
         assertShowsCard(romaji: "a")
 
         app.buttons["session.practice"].tap()
@@ -159,13 +172,13 @@ final class IPadDetailNavigationUITests: XCTestCase {
         let end = app.buttons["End session"]
         XCTAssertTrue(end.waitForExistence(timeout: 5))
 
+        showSidebar()
         openProgress()
         XCTAssertFalse(end.exists)
     }
 
     func testPracticeStartedFromTheCardReturnsToTheCard() {
-        XCTAssertTrue(letter("あ").waitForExistence(timeout: 5))
-        letter("あ").tap()
+        tapLetter("あ")
         assertShowsCard(romaji: "a")
 
         cardPractice.tap()

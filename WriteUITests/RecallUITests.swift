@@ -24,7 +24,7 @@ final class RecallUITests: XCTestCase {
 
     private func dismissSearch() {
         let progress = app.buttons["Progress"]
-        for _ in 0..<2 {
+        for _ in 0..<3 {
             guard let button = ["close", "Cancel"].map({ app.buttons[$0] }).first(where: \.exists) else {
                 return
             }

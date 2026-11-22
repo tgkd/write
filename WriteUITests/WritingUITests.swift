@@ -63,7 +63,11 @@ final class WritingUITests: XCTestCase {
         XCTAssertTrue(canvas.waitForExistence(timeout: 5))
         let id = canvas.identifier
         let width = canvas.frame.width
-        XCTAssertGreaterThan(canvases.element(boundBy: 3).frame.minY, canvas.frame.minY)
+        app.buttons["Show sidebar"].tap()
+        let wrap = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            self.canvases.element(boundBy: 3).frame.minY > self.app.otherElements[id].frame.minY
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [wrap], timeout: 5), .completed)
         draw(in: canvas)
         XCTAssertEqual(canvas.value as? String, "1")
         let portrait = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
@@ -71,6 +75,7 @@ final class WritingUITests: XCTestCase {
         portrait.lifetime = .keepAlways
         add(portrait)
         XCUIDevice.shared.orientation = .landscapeLeft
+        app.buttons["Hide sidebar"].tap()
         let retained = app.otherElements[id]
         let reflow = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             abs(self.canvases.element(boundBy: 3).frame.minY - retained.frame.minY) < 1
