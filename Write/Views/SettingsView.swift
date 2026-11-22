@@ -278,11 +278,27 @@ struct SettingsView: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
 
+                Divider().padding(.leading, 16)
+
+                Toggle("Double-Tap Pencil", isOn: $settings.pencilDoubleTapEnabled)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .accessibilityIdentifier("pencilDoubleTapEnabled")
+
+                if #available(iOS 17.5, *) {
+                    Divider().padding(.leading, 16)
+
+                    Toggle("Squeeze Pencil", isOn: $settings.pencilSqueezeEnabled)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .accessibilityIdentifier("pencilSqueezeEnabled")
+                }
+
             }
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 10))
 
-            Text("Double-tap or squeeze Apple Pencil to undo the last stroke. In Notebook, it clears the cell.")
+            Text("When turned on, double-tap or squeeze undoes the last stroke. In Notebook, it clears the cell.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 4)

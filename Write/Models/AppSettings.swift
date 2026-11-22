@@ -13,6 +13,8 @@ final class AppSettings: ObservableObject {
     static let writingModeKey = "writingMode"
     static let lastReviewAttemptAtKey = "lastReviewAttemptAt"
     static let inkColorKey = "inkColor"
+    nonisolated static let pencilDoubleTapEnabledKey = "pencilDoubleTapEnabled"
+    nonisolated static let pencilSqueezeEnabledKey = "pencilSqueezeEnabled"
 
     private let defaults: UserDefaults
 
@@ -86,6 +88,14 @@ final class AppSettings: ObservableObject {
 
     @Published var allowFingerDrawing: Bool {
         didSet { defaults.set(allowFingerDrawing, forKey: "allowFingerDrawing") }
+    }
+
+    @Published var pencilDoubleTapEnabled: Bool {
+        didSet { defaults.set(pencilDoubleTapEnabled, forKey: Self.pencilDoubleTapEnabledKey) }
+    }
+
+    @Published var pencilSqueezeEnabled: Bool {
+        didSet { defaults.set(pencilSqueezeEnabled, forKey: Self.pencilSqueezeEnabledKey) }
     }
 
     @Published var handedness: Handedness {
@@ -168,6 +178,9 @@ final class AppSettings: ObservableObject {
             ? true
             : defaults.bool(forKey: "allowFingerDrawing")
 
+        self.pencilDoubleTapEnabled = Self.isPencilDoubleTapEnabled(in: defaults)
+        self.pencilSqueezeEnabled = Self.isPencilSqueezeEnabled(in: defaults)
+
         let storedHandedness = defaults.string(forKey: "handedness") ?? ""
         self.handedness = Handedness(rawValue: storedHandedness) ?? .right
 
@@ -185,6 +198,16 @@ final class AppSettings: ObservableObject {
         self.writingCellSide = storedCellSide > 0
             ? min(max(CGFloat(storedCellSide), Self.writingCellSideRange.lowerBound), Self.writingCellSideRange.upperBound)
             : Self.defaultWritingCellSide
+    }
+
+    nonisolated static func isPencilDoubleTapEnabled(in defaults: UserDefaults) -> Bool {
+        defaults.object(forKey: pencilDoubleTapEnabledKey) == nil
+            ? true
+            : defaults.bool(forKey: pencilDoubleTapEnabledKey)
+    }
+
+    nonisolated static func isPencilSqueezeEnabled(in defaults: UserDefaults) -> Bool {
+        defaults.bool(forKey: pencilSqueezeEnabledKey)
     }
 
     static func storedStrictness(in defaults: UserDefaults) -> GradingStrictness {

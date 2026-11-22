@@ -54,4 +54,21 @@ final class PencilActionResponderTests: XCTestCase {
         responder.handleSqueeze(phase: .ended, preference: .ignore)
         XCTAssertEqual(runCount, 0)
     }
+
+    func testTapIgnoredWhenDisabled() {
+        var runCount = 0
+        let responder = PencilActionResponder { runCount += 1 }
+        responder.handleTap(preference: .switchEraser, isEnabled: false)
+        XCTAssertEqual(runCount, 0)
+    }
+
+    func testSqueezeIgnoredWhenDisabled() throws {
+        guard #available(iOS 17.5, *) else {
+            throw XCTSkip("Squeeze needs iOS 17.5")
+        }
+        var runCount = 0
+        let responder = PencilActionResponder { runCount += 1 }
+        responder.handleSqueeze(phase: .ended, preference: .switchEraser, isEnabled: false)
+        XCTAssertEqual(runCount, 0)
+    }
 }
