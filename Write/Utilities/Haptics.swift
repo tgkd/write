@@ -7,16 +7,57 @@ enum Haptics {
         case runCompleted
     }
 
+    private static let canvasGenerators = NSMapTable<UIView, AnyObject>.weakToStrongObjects()
+
     static func play(_ event: Event, on view: UIView? = nil) {
-        switch event {
-        case .unitCompleted:
-            lightImpact(on: view)
-        case .runCompleted:
-            success(on: view)
+        if #available(iOS 17.5, *), DeviceContext.isIPad, let host = hostView(for: view) {
+            playOnPencil(event, host: host, source: view)
+        } else {
+            playOnDevice(event)
         }
     }
 
-    private static func attachedView(preferring view: UIView?) -> UIView? {
+    static func prepare(on view: UIView) {
+        guard #available(iOS 17.5, *), DeviceContext.isIPad else {
+            return
+        }
+        for host in [view, hostView(for: nil)].compactMap({ $0 }) {
+            canvasGenerator(for: host).prepare()
+        }
+    }
+
+    private static func playOnDevice(_ event: Event) {
+        switch event {
+        case .unitCompleted:
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        case .runCompleted:
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+        }
+    }
+
+    @available(iOS 17.5, *)
+    private static func playOnPencil(_ event: Event, host: UIView, source: UIView?) {
+        let generator = canvasGenerator(for: host)
+        let location = location(of: source, in: host)
+        switch event {
+        case .unitCompleted:
+            generator.alignmentOccurred(at: location)
+        case .runCompleted:
+            generator.pathCompleted(at: location)
+        }
+    }
+
+    @available(iOS 17.5, *)
+    private static func canvasGenerator(for host: UIView) -> UICanvasFeedbackGenerator {
+        if let cached = canvasGenerators.object(forKey: host) as? UICanvasFeedbackGenerator {
+            return cached
+        }
+        let generator = UICanvasFeedbackGenerator(view: host)
+        canvasGenerators.setObject(generator, forKey: host)
+        return generator
+    }
+
+    private static func hostView(for view: UIView?) -> UIView? {
         if let view, view.window != nil {
             return view
         }
@@ -27,19 +68,10 @@ enum Haptics {
             .first(where: \.isKeyWindow)
     }
 
-    private static func lightImpact(on view: UIView?) {
-        if #available(iOS 17.5, *), let view = attachedView(preferring: view) {
-            UIImpactFeedbackGenerator(style: .light, view: view).impactOccurred()
-        } else {
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    private static func location(of source: UIView?, in host: UIView) -> CGPoint {
+        guard let source, source.window != nil, source.window === host.window else {
+            return CGPoint(x: host.bounds.midX, y: host.bounds.midY)
         }
-    }
-
-    private static func success(on view: UIView?) {
-        if #available(iOS 17.5, *), let view = attachedView(preferring: view) {
-            UINotificationFeedbackGenerator(view: view).notificationOccurred(.success)
-        } else {
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
-        }
+        return source.convert(CGPoint(x: source.bounds.midX, y: source.bounds.midY), to: host)
     }
 }

@@ -216,6 +216,7 @@ final class DrawingCanvasView: UIView {
         hideHover()
         onStrokeBegan?(touch.type)
         if touch.type == .pencil {
+            Haptics.prepare(on: self)
             onPencilStrokeBegan?()
         }
         onPointAdded?(point, strokes.count)
