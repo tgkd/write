@@ -706,16 +706,6 @@
         }
       }
     },
-    "Experimental" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "試験中の機能"
-          }
-        }
-      }
-    },
     "Explain rejected strokes" : {
       "localizations" : {
         "ja" : {
@@ -1403,16 +1393,6 @@
         }
       }
     },
-    "Shows the Words session on the home screen. It is still being tested." : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ホーム画面に「ことば」を表示します。まだテスト中の機能です。"
-          }
-        }
-      }
-    },
     "Smaller canvas" : {
       "localizations" : {
         "ja" : {
@@ -1672,16 +1652,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "文字の下のヒントで、どちらを先に表示するかを選びます。どちらの順番でも、同じ読みと意味が表示されます。"
-          }
-        }
-      }
-    },
-    "Word practice" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ことばの練習"
           }
         }
       }

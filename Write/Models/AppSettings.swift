@@ -6,7 +6,6 @@ final class AppSettings: ObservableObject {
     static let defaultMaskPathWidth: CGFloat = 5.0
     static let maskPathWidthRange: ClosedRange<CGFloat> = 3...14
     static let gradingStrictnessKey = "gradingStrictness"
-    static let showWordPracticeKey = "showWordPractice"
     static let showRejectionReasonsKey = "showRejectionReasons"
     static let showPracticeGridKey = "showPracticeGrid"
     static let iCloudSyncEnabledKey = "iCloudSyncEnabled"
@@ -47,10 +46,6 @@ final class AppSettings: ObservableObject {
 
     @Published var practiceMode: PracticeMode {
         didSet { defaults.set(practiceMode.rawValue, forKey: "practiceMode") }
-    }
-
-    @Published var showWordPractice: Bool {
-        didSet { defaults.set(showWordPractice, forKey: Self.showWordPracticeKey) }
     }
 
     @Published var writingMode: WritingMode {
@@ -147,7 +142,6 @@ final class AppSettings: ObservableObject {
         let storedMode = defaults.string(forKey: "practiceMode") ?? ""
         self.practiceMode = PracticeMode(rawValue: storedMode) ?? .trace
 
-        self.showWordPractice = defaults.bool(forKey: Self.showWordPracticeKey)
         self.writingMode = WritingMode(rawValue: defaults.string(forKey: Self.writingModeKey) ?? "") ?? .free
 
         self.iCloudSyncEnabled = defaults.object(forKey: Self.iCloudSyncEnabledKey) == nil

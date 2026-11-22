@@ -56,8 +56,6 @@ struct SettingsView: View {
                         iPadSettingsSection
                     }
 
-                    experimentalSection
-
                     VStack(spacing: 0) {
                         rateRow
                             .padding(16)
@@ -323,28 +321,6 @@ struct SettingsView: View {
             }
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 10))
-        }
-    }
-
-    private var experimentalSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Experimental")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .textCase(.uppercase)
-                .accessibilityAddTraits(.isHeader)
-                .padding(.leading, 4)
-
-            Toggle("Word practice", isOn: $settings.showWordPractice)
-                .accessibilityIdentifier("showWordPractice")
-                .padding(16)
-                .background(Color(.secondarySystemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-
-            Text("Shows the Words session on the home screen. It is still being tested.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, 4)
         }
     }
 

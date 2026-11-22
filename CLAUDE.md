@@ -14,7 +14,7 @@ the user's own devices through iCloud.
 - Practise a character with a guide (trace, guided, or copy without a guide).
 - Recall a character from memory from its readings and meaning, with hints.
 - Review the characters they struggled with in Recall.
-- Write whole words and sentences on iPad (experimental).
+- Write whole words and sentences on iPad.
 - Practise freely in an iPad notebook.
 - Filter characters by kana, JLPT level or school grade.
 

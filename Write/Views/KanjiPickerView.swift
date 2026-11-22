@@ -264,9 +264,7 @@ struct KanjiPickerView: View {
         if !review.isEmpty {
             cards.append(AnyView(reviewTile(review)))
         }
-        if settings.showWordPractice {
-            cards.append(AnyView(wordsCard))
-        }
+        cards.append(AnyView(wordsCard))
         let rows = stride(from: 0, to: cards.count, by: columnCount).map { start in
             Array(cards[start..<min(start + columnCount, cards.count)].indices)
         }
@@ -327,12 +325,10 @@ struct KanjiPickerView: View {
             if !review.isEmpty {
                 reviewCard(review)
             }
-            if settings.showWordPractice {
-                if usesSelectionBinding && DeviceContext.isIPad {
-                    writingCard
-                } else {
-                    wordsCard
-                }
+            if usesSelectionBinding && DeviceContext.isIPad {
+                writingCard
+            } else {
+                wordsCard
             }
         }
     }

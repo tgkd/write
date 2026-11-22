@@ -14,9 +14,9 @@ final class WritingUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
-    private func launch(enabled: Bool = true, mode: String = "free", ids: String = "w11,w02") {
+    private func launch(mode: String = "free", ids: String = "w11,w02") {
         app.launchArguments = [
-            "-uiTestingFreshHistory", "-showWordPractice", enabled ? "YES" : "NO",
+            "-uiTestingFreshHistory",
             "-allowFingerDrawing", "YES", "-captureStrokes", "-writingMode", mode,
             "-gradingStrictness", "normal", "-showRejectionReasons", "YES",
             "-uiTestingWritingPromptIDs", ids, "-uiTestingSizeClassToggle", "-writingCellSide", "200"
@@ -41,7 +41,7 @@ final class WritingUITests: XCTestCase {
         canvas.coordinate(withNormalizedOffset: start).press(forDuration: 0.05, thenDragTo: canvas.coordinate(withNormalizedOffset: end))
     }
 
-    func testWritingReplacesBothIPadCardsAndIsGated() {
+    func testWritingReplacesBothIPadCards() {
         launch()
         XCTAssertTrue(app.buttons["session.practice"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["session.sentences"].exists)
@@ -52,10 +52,6 @@ final class WritingUITests: XCTestCase {
             XCTAssertFalse(card.exists)
             XCTAssertTrue(app.buttons["session.words"].exists)
         }
-        app.terminate()
-        launch(enabled: false)
-        XCTAssertFalse(card.exists)
-        XCTAssertFalse(app.buttons["session.words"].exists)
     }
 
     func testFreeDrawingUndoClearReflowAndCompletion() throws {

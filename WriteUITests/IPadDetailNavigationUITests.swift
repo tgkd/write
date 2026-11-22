@@ -9,7 +9,7 @@ final class IPadDetailNavigationUITests: XCTestCase {
         try XCTSkipUnless(UIDevice.current.userInterfaceIdiom == .pad, "The split layout is iPad only")
         XCUIDevice.shared.orientation = .landscapeLeft
         app = XCUIApplication()
-        app.launchArguments = ["-uiTestingFreshHistory", "-practiceMode", "trace", "-showWordPractice", "NO"]
+        app.launchArguments = ["-uiTestingFreshHistory", "-practiceMode", "trace"]
         app.launch()
     }
 
