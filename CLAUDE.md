@@ -12,8 +12,7 @@ the user's own devices through iCloud.
 ## What the user can do
 
 - Practise a character with a guide (trace, guided, or copy without a guide).
-- Recall a character from memory from its readings and meaning, with hints.
-- Review the characters they struggled with in Recall.
+- Practise new characters with the New button, or use the Review button to write a character from memory from its readings and meaning, with hints. Characters they struggled with come first in Review.
 - Write whole words and sentences on iPad.
 - Practise freely in an iPad notebook.
 - Filter characters by kana, JLPT level or school grade.
@@ -57,4 +56,4 @@ prints its usage.
 - Models are Codable structs. Stored history only grows by optional fields, so old data keeps
   loading.
 - Never change an accessibility identifier that a UI test uses.
-- Recall must never show or announce the hidden character.
+- The from-memory Review session must never show or announce the hidden character.

@@ -92,13 +92,13 @@ struct PracticeProgressView: View {
                 Spacer()
                 if !stats.review.isEmpty {
                     NavigationLink(value: SessionRoute.review(stats.review, count: settings.sessionCount)) {
-                        Label("Recall these", systemImage: "play.fill")
+                        Label("Review these", systemImage: "play.fill")
                             .font(.subheadline.weight(.medium))
                     }
                 }
             }
             if stats.review.isEmpty {
-                Text("Characters you needed a hint or retries for in Recall appear here.")
+                Text("Characters you needed a hint or retries for in Review appear here.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {

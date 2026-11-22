@@ -5,7 +5,7 @@ struct RecallCueSettingsSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Recall")
+            Text("Review")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)

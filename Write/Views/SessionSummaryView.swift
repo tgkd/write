@@ -111,9 +111,9 @@ struct SessionSummaryView: View {
             return String(localized: "\(count) characters practiced")
         case .recall:
             if count == 1 {
-                return String(localized: "\(count) character recalled")
+                return String(localized: "\(count) character reviewed")
             }
-            return String(localized: "\(count) characters recalled")
+            return String(localized: "\(count) characters reviewed")
         }
     }
 

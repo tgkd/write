@@ -11,11 +11,8 @@
     "Empty" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "空欄" } } } },
     "Smaller cells" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "マスを小さく" } } } },
     "Larger cells" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "マスを大きく" } } } },
-    "Random practice" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ランダム練習" } } } },
-    "Random recall" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "ランダムに思い出して書く" } } } },
     "New" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "新しい字" } } } },
     "%lld to review" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "復習 %lld 字" } } } },
-    "Practice focus" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "練習の内容" } } } },
     "Ready to write" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "書いてみよう" } } } },
     "%lld done today" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "今日 %lld 回完了" } } } },
     "Last month" : { "localizations" : { "ja" : { "stringUnit" : { "state" : "translated", "value" : "この1か月" } } } },
@@ -232,9 +229,6 @@
     "%@ strokes" : {
 
     },
-    "%@ to recall again" : {
-
-    },
     "%@: %lld completed" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -268,13 +262,12 @@
         }
       }
     },
-    "%lld character recalled" : {
-      "extractionState" : "stale",
+    "%lld character reviewed" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld字を思い出して書きました"
+            "value" : "%lld字を復習しました"
           }
         }
       }
@@ -290,13 +283,12 @@
         }
       }
     },
-    "%lld characters recalled" : {
-      "extractionState" : "stale",
+    "%lld characters reviewed" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld字を思い出して書きました"
+            "value" : "%lld字を復習しました"
           }
         }
       }
@@ -519,12 +511,12 @@
         }
       }
     },
-    "Characters you needed a hint or retries for in Recall appear here." : {
+    "Characters you needed a hint or retries for in Review appear here." : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "「思い出して書く」でヒントを使ったり書き直したりした文字が、ここに表示されます。"
+            "value" : "「復習」でヒントを使ったり書き直したりした文字が、ここに表示されます。"
           }
         }
       }
@@ -1197,19 +1189,7 @@
         }
       }
     },
-    "Recall" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "思い出して書く"
-          }
-        }
-      }
-    },
-    "Recall these" : {
-      "extractionState" : "stale",
+    "Review these" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
