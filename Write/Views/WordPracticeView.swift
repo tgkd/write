@@ -130,10 +130,10 @@ struct WordPracticeView: View {
 
     private func handleSlotCompleted() {
         guard wordState.isWordComplete else {
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            Haptics.play(.unitCompleted)
             return
         }
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        Haptics.play(.runCompleted)
         withAnimation(reduceMotion ? nil : .spring(response: 0.4, dampingFraction: 0.6)) {
             showCompletionCheck = true
         }

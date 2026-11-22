@@ -294,8 +294,7 @@ struct PracticeView: View {
     }
 
     private func triggerCompletionFeedback() {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.success)
+        Haptics.play(.runCompleted, on: canvasView)
 
         withAnimation(reduceMotion ? nil : .spring(response: 0.4, dampingFraction: 0.6)) {
             showCompletionCheck = true

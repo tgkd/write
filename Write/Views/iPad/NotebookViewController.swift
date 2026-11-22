@@ -84,6 +84,7 @@ final class NotebookViewController: UIViewController {
     /// hardware double-tap. One interaction for the whole grid; per-canvas
     /// interactions would all fire on a single hardware tap.
     private weak var lastDrawnCanvas: DrawingCanvasView?
+    private let pencilResponder = PencilActionResponder()
 
     // MARK: - Lifecycle
 
@@ -183,9 +184,16 @@ final class NotebookViewController: UIViewController {
     // MARK: - Setup
 
     private func setupPencilInteraction() {
+        pencilResponder.action = { [weak self] in self?.clearLastDrawnCanvas() }
         let interaction = UIPencilInteraction()
-        interaction.delegate = self
+        interaction.delegate = pencilResponder
         view.addInteraction(interaction)
+    }
+
+    private func clearLastDrawnCanvas() {
+        guard let canvas = lastDrawnCanvas else { return }
+        canvas.clearAll()
+        NotebookCellView.refreshAccessibilityValue(of: canvas)
     }
 
     private func setupCollectionView() {
@@ -313,19 +321,5 @@ extension NotebookViewController: UICollectionViewDataSource {
         guard let state = notebookState else { return false }
         let lastIndex = state.rows[indexPath.section].cellCount
         return handedness == .left ? indexPath.item == lastIndex : indexPath.item == 0
-    }
-}
-
-// MARK: - UIPencilInteractionDelegate
-
-extension NotebookViewController: UIPencilInteractionDelegate {
-
-    nonisolated func pencilInteractionDidTap(_ interaction: UIPencilInteraction) {
-        MainActor.assumeIsolated {
-            guard UIPencilInteraction.preferredTapAction != .ignore else { return }
-            guard let canvas = lastDrawnCanvas else { return }
-            canvas.clearAll()
-            NotebookCellView.refreshAccessibilityValue(of: canvas)
-        }
     }
 }

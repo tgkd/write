@@ -65,6 +65,9 @@ struct WritingView: View {
             }
         }
         .onChange(of: settings.gradingStrictness) { _ in session.validationConfig = settings.validationConfig }
+        .onChange(of: session.completedCellIDs) { [completed = session.completedCellIDs] ids in
+            playCellCompletionHaptic(previous: completed, current: ids)
+        }
         .onChange(of: session.isSentenceComplete) { complete in
             if complete, !session.isComplete {
                 AccessibilityAnnouncer.announce(String(localized: "Sentence complete"))
@@ -380,6 +383,13 @@ struct WritingView: View {
             ink.canvas(for: cell.id).removeLastStroke()
             ink.noteStroke(in: cell.id)
         }
+    }
+
+    private func playCellCompletionHaptic(previous: Set<String>, current: Set<String>) {
+        guard session.activeMode != .free, let cellID = current.subtracting(previous).first else {
+            return
+        }
+        Haptics.play(session.isSentenceComplete ? .runCompleted : .unitCompleted, on: ink.canvas(for: cellID))
     }
 
     private var nextLabel: LocalizedStringKey {

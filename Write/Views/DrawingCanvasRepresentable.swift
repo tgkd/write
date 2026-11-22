@@ -57,12 +57,12 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
 
         if installsPencilInteraction {
             let interaction = view.interactions.compactMap { $0 as? UIPencilInteraction }.first ?? UIPencilInteraction()
-            interaction.delegate = context.coordinator
+            interaction.delegate = context.coordinator.pencilResponder
             if interaction.view == nil {
                 view.addInteraction(interaction)
             }
         }
-        context.coordinator.onPencilDoubleTap = onPencilDoubleTap
+        context.coordinator.pencilResponder.action = onPencilDoubleTap
 
         DispatchQueue.main.async {
             self.canvasView = view
@@ -79,7 +79,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         for gesture in uiView.gestureRecognizers ?? [] where gesture is WritingTouchRecognizer {
             gesture.allowedTouchTypes = allowedTouchTypes.map { NSNumber(value: $0.rawValue) }
         }
-        context.coordinator.onPencilDoubleTap = onPencilDoubleTap
+        context.coordinator.pencilResponder.action = onPencilDoubleTap
         applyBrushSettings(to: uiView)
         applyInkColor(to: uiView, coordinator: context.coordinator)
         uiView.accessibilityLabel = canvasLabel ?? String(localized: "Drawing canvas")
@@ -120,15 +120,8 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     }
 
     @MainActor
-    final class Coordinator: NSObject, UIPencilInteractionDelegate {
-        var onPencilDoubleTap: (() -> Void)?
+    final class Coordinator {
+        let pencilResponder = PencilActionResponder()
         var appliedInkColor: InkColor?
-
-        nonisolated func pencilInteractionDidTap(_ interaction: UIPencilInteraction) {
-            MainActor.assumeIsolated {
-                guard UIPencilInteraction.preferredTapAction != .ignore else { return }
-                onPencilDoubleTap?()
-            }
-        }
     }
 }

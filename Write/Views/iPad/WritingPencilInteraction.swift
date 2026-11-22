@@ -3,8 +3,8 @@ import SwiftUI
 struct WritingPencilInteraction: UIViewRepresentable {
     let onDoubleTap: () -> Void
 
-    func makeCoordinator() -> Coordinator {
-        Coordinator(onDoubleTap: onDoubleTap)
+    func makeCoordinator() -> PencilActionResponder {
+        PencilActionResponder(action: onDoubleTap)
     }
 
     func makeUIView(context: Context) -> UIView {
@@ -16,22 +16,6 @@ struct WritingPencilInteraction: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
-        context.coordinator.onDoubleTap = onDoubleTap
-    }
-
-    final class Coordinator: NSObject, UIPencilInteractionDelegate {
-        var onDoubleTap: () -> Void
-
-        init(onDoubleTap: @escaping () -> Void) {
-            self.onDoubleTap = onDoubleTap
-        }
-
-        nonisolated func pencilInteractionDidTap(_ interaction: UIPencilInteraction) {
-            MainActor.assumeIsolated {
-                if UIPencilInteraction.preferredTapAction != .ignore {
-                    onDoubleTap()
-                }
-            }
-        }
+        context.coordinator.action = onDoubleTap
     }
 }
