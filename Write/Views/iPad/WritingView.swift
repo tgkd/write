@@ -48,7 +48,13 @@ struct WritingView: View {
                         isLocked: hasInkInProgress
                     )
                 }
-                Button("End session") { dismiss() }.accessibilityIdentifier("writing.end")
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark")
+                }
+                .accessibilityLabel("End session")
+                .accessibilityIdentifier("writing.end")
             }
         }
         .onAppear {

@@ -18,7 +18,10 @@ struct ContentView: View {
         }
         .onOpenURL { openPracticeLink($0) }
         .onChange(of: iPhonePath.count) { requestPendingReview(pathIsEmpty: $0 == 0) }
-        .onChange(of: iPadNavigationPath.count) { requestPendingReview(pathIsEmpty: $0 == 0) }
+        .onChange(of: iPadNavigationPath.count) { count in
+            requestPendingReview(pathIsEmpty: count == 0)
+            showSidebarWhenDetailIsAtRoot(pathIsEmpty: count == 0)
+        }
     }
 
     private func requestPendingReview(pathIsEmpty: Bool) {
@@ -50,6 +53,7 @@ struct ContentView: View {
         if usesSplitShell {
             selectedCodePoint = route.codePoint
             iPadNavigationPath = NavigationPath([route])
+            hideSidebarForCanvas(route)
         } else {
             iPhonePath = NavigationPath([route])
         }
@@ -106,6 +110,26 @@ struct ContentView: View {
         var path = NavigationPath()
         path.append(route)
         iPadNavigationPath = path
+        hideSidebarForCanvas(route)
+    }
+
+    private func showSidebarWhenDetailIsAtRoot(pathIsEmpty: Bool) {
+        guard pathIsEmpty, columnVisibility != .all else { return }
+        withAnimation {
+            columnVisibility = .all
+        }
+    }
+
+    private func hideSidebarForCanvas(_ route: any Hashable) {
+        let opensCanvas = route is PracticeRoute
+            || route is SessionRoute
+            || route is WordSessionRoute
+            || route is WritingRoute
+            || route is NotebookRoute
+        guard opensCanvas else { return }
+        withAnimation {
+            columnVisibility = .detailOnly
+        }
     }
 
     @ViewBuilder
@@ -134,6 +158,7 @@ struct ContentView: View {
                 openRoute: openInDetail
             )
             .removingSystemSidebarToggle()
+            .navigationSplitViewColumnWidth(min: 360, ideal: 420, max: 520)
         } detail: {
             NavigationStack(path: $iPadNavigationPath) {
                 Group {
@@ -142,7 +167,9 @@ struct ContentView: View {
                         KanjiDetailView(
                             kanji: kanji,
                             onPractice: {
-                                iPadNavigationPath.append(PracticeRoute(codePoint: codePoint))
+                                let route = PracticeRoute(codePoint: codePoint)
+                                iPadNavigationPath.append(route)
+                                hideSidebarForCanvas(route)
                             },
                             onNotebook: {
                                 iPadNavigationPath.append(NotebookRoute(codePoints: [codePoint]))
