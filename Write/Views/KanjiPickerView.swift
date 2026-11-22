@@ -13,7 +13,7 @@ struct KanjiPickerView: View {
     @State private var showSettings = false
     @State private var selectedFilter: CharacterFilter = .all
     @State private var levelScheme: CharacterFilter.Scheme = .jlpt
-    @State private var poolSizes: (practice: Int, recall: Int)?
+    @State private var pools: (practice: [String], review: [String])?
 
     @Binding var selectedCodePoint: String?
     private let usesSelectionBinding: Bool
@@ -119,12 +119,12 @@ struct KanjiPickerView: View {
             SettingsView()
         }
         .onAppear {
-            if poolSizes == nil {
-                poolSizes = computePoolSizes()
+            if pools == nil {
+                pools = computePools()
             }
         }
         .onChange(of: selectedFilter) { _ in
-            poolSizes = computePoolSizes()
+            pools = computePools()
         }
     }
 
@@ -185,25 +185,27 @@ struct KanjiPickerView: View {
         }
     }
 
-    private func computePoolSizes() -> (practice: Int, recall: Int) {
-        var practice = 0
-        var recall = 0
+    private func computePools() -> (practice: [String], review: [String]) {
+        var practice: [String] = []
+        var review: [String] = []
         for kanji in allKanji where selectedFilter.includes(kanji) {
-            practice += 1
+            practice.append(kanji.codePoint)
             if dataStore.recallEligibility.isEligible(kanji) {
-                recall += 1
+                review.append(kanji.codePoint)
             }
         }
-        return (practice, recall)
+        return (practice, review)
     }
 
-    private func sessionRoute(kind: SessionKind) -> SessionRoute {
-        let codePoints = dataStore.randomCharacters(
-            matching: selectedFilter,
-            count: settings.sessionCount,
-            forRecall: kind == .recall
-        ).map(\.codePoint)
-        return SessionRoute(codePoints: codePoints, kind: kind)
+    private func practiceRoute(focus: PracticeFocus) -> SessionRoute {
+        let current = pools ?? computePools()
+        return PracticeQueue.route(
+            focus: focus,
+            practicePool: current.practice,
+            reviewPool: current.review,
+            records: history.records,
+            count: settings.sessionCount
+        )
     }
 
     private var todayHeader: some View {
@@ -229,108 +231,28 @@ struct KanjiPickerView: View {
         .accessibilityIdentifier("home.today")
     }
 
-    @ViewBuilder
     private var sessionStarters: some View {
-        if usesSelectionBinding {
-            sidebarSessionStarters
-        } else {
-            phoneSessionStarters
-        }
-    }
-
-    private var phoneSessionStarters: some View {
-        let practicePool = poolSizes?.practice
-        let recallPool = poolSizes?.recall
-        let review = PracticeStats.reviewItems(from: history.records)
-        let columnCount = dynamicTypeSize.isAccessibilitySize ? 1 : 2
-        var cards: [AnyView] = [
-            AnyView(sessionCard(
-                title: "Practice",
-                spokenTitle: "Random practice",
-                systemImage: "pencil.tip",
-                isEmpty: practicePool == 0,
-                route: { sessionRoute(kind: .practice) },
-                identifier: "session.practice"
-            )),
-            AnyView(sessionCard(
-                title: "Recall",
-                spokenTitle: "Random recall",
-                systemImage: "brain.head.profile",
-                isEmpty: recallPool == 0,
-                route: { sessionRoute(kind: .recall) },
-                identifier: "session.recall"
-            )),
-        ]
-        if !review.isEmpty {
-            cards.append(AnyView(reviewTile(review)))
-        }
-        cards.append(AnyView(wordsCard))
-        let rows = stride(from: 0, to: cards.count, by: columnCount).map { start in
-            Array(cards[start..<min(start + columnCount, cards.count)].indices)
-        }
-        return Grid(horizontalSpacing: 10, verticalSpacing: 10) {
-            ForEach(rows, id: \.self) { row in
-                GridRow {
-                    ForEach(row, id: \.self) { index in
-                        cards[index]
-                            .frame(maxHeight: .infinity)
-                    }
-                    if row.count < columnCount {
-                        Color.clear
-                            .gridCellUnsizedAxes([.horizontal, .vertical])
-                    }
-                }
-            }
-        }
-    }
-
-    private func reviewTile(_ review: [PracticeStats.ReviewItem]) -> some View {
-        routeLink({ SessionRoute.review(review, count: settings.sessionCount) }) {
-            linkCardLabel(
-                title: "Review",
-                systemImage: "repeat"
-            )
-        }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier("session.review")
-        .accessibilityInputLabels([Text("Review")])
-    }
-
-    private var sidebarSessionStarters: some View {
-        let practicePool = poolSizes?.practice
-        let recallPool = poolSizes?.recall
-        let review = PracticeStats.reviewItems(from: history.records)
-        let cardLayout = dynamicTypeSize.isAccessibilitySize
-            ? AnyLayout(VStackLayout(spacing: 8))
-            : AnyLayout(HStackLayout(spacing: 8))
-        return VStack(spacing: 8) {
-            cardLayout {
-                sessionCard(
-                    title: "Practice",
-                    spokenTitle: "Random practice",
-                    systemImage: "pencil.tip",
-                    isEmpty: practicePool == 0,
-                    route: { sessionRoute(kind: .practice) },
-                    identifier: "session.practice"
-                )
-                sessionCard(
-                    title: "Recall",
-                    spokenTitle: "Random recall",
-                    systemImage: "brain.head.profile",
-                    isEmpty: recallPool == 0,
-                    route: { sessionRoute(kind: .recall) },
-                    identifier: "session.recall"
-                )
-            }
-            if !review.isEmpty {
-                reviewCard(review)
-            }
+        VStack(spacing: 8) {
+            practiceCard
             if usesSelectionBinding && DeviceContext.isIPad {
                 writingCard
             } else {
                 wordsCard
             }
         }
+    }
+
+    private var practiceCard: some View {
+        let reviewCount = pools.map {
+            PracticeQueue.missedCodePoints(pool: $0.review, records: history.records).count
+        } ?? 0
+        return PracticeSessionCard(
+            reviewCount: reviewCount,
+            isNewEnabled: pools?.practice.isEmpty != true,
+            isReviewEnabled: pools?.review.isEmpty != true,
+            startNew: { openRoute?(practiceRoute(focus: .new)) },
+            startReview: { openRoute?(practiceRoute(focus: .review)) }
+        )
     }
 
     private var wordsCard: some View {
@@ -393,57 +315,8 @@ struct KanjiPickerView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private func sessionCard(
-        title: LocalizedStringKey,
-        spokenTitle: LocalizedStringKey,
-        systemImage: String,
-        isEmpty: Bool,
-        route: @escaping () -> SessionRoute,
-        identifier: String
-    ) -> some View {
-        routeLink({ route() }) {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 6) {
-                    Image(systemName: systemImage)
-                        .foregroundStyle(Color.accentColor)
-                        .accessibilityHidden(true)
-                    Text(title)
-                }
-                .font(.headline)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(12)
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-        .buttonStyle(.plain)
-        .disabled(isEmpty)
-        .accessibilityLabel(Text(spokenTitle))
-        .accessibilityIdentifier(identifier)
-        .accessibilityInputLabels([Text(title), Text(spokenTitle)])
-    }
-
     private var cardLineLimit: Int? {
         dynamicTypeSize.isAccessibilitySize ? nil : 1
-    }
-
-    private func reviewCard(_ review: [PracticeStats.ReviewItem]) -> some View {
-        routeLink({ SessionRoute.review(review, count: settings.sessionCount) }) {
-            HStack(spacing: 6) {
-                Image(systemName: "repeat")
-                    .foregroundStyle(Color.accentColor)
-                    .accessibilityHidden(true)
-                Text("Review")
-                    .font(.headline)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(12)
-            .background(Color(.secondarySystemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-        }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier("session.review")
-        .accessibilityInputLabels([Text("Review")])
     }
 
     private var filterBar: some View {

@@ -45,6 +45,8 @@ final class WritingUITests: XCTestCase {
         launch()
         XCTAssertTrue(app.buttons["session.practice"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["session.sentences"].exists)
+        XCTAssertFalse(app.buttons["session.recall"].exists)
+        XCTAssertTrue(app.buttons["session.review"].exists)
         if UIDevice.current.userInterfaceIdiom == .pad {
             XCTAssertTrue(card.waitForExistence(timeout: 5))
             XCTAssertFalse(app.buttons["session.words"].exists)

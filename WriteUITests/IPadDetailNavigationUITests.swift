@@ -65,6 +65,24 @@ final class IPadDetailNavigationUITests: XCTestCase {
         XCTAssertFalse(end.exists)
     }
 
+    func testSidebarShowsNewReviewAndWriting() {
+        let review = app.buttons["session.review"]
+        XCTAssertTrue(app.buttons["session.practice"].waitForExistence(timeout: 5))
+        XCTAssertTrue(review.exists)
+        XCTAssertTrue(app.buttons["session.writing"].exists)
+        XCTAssertFalse(app.buttons["session.recall"].exists)
+        XCTAssertFalse(app.segmentedControls["practice.focus"].exists)
+        XCTAssertEqual(review.value as? String ?? "", "")
+    }
+
+    func testReviewButtonStartsAHiddenAnswerSession() {
+        let review = app.buttons["session.review"]
+        XCTAssertTrue(review.waitForExistence(timeout: 5))
+        review.tap()
+        XCTAssertTrue(app.staticTexts["hiddenGlyph"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["answerGlyph"].exists)
+    }
+
     func testLetterTapLeavesProgress() {
         openProgress()
         letter("あ").tap()

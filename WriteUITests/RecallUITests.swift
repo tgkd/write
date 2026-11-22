@@ -39,9 +39,28 @@ final class RecallUITests: XCTestCase {
         app.buttons["Back"].firstMatch.tap()
     }
 
+    private var practiceButton: XCUIElement { app.buttons["session.practice"] }
+    private var reviewButton: XCUIElement { app.buttons["session.review"] }
+
     private var hiddenGlyph: XCUIElement { app.staticTexts["hiddenGlyph"] }
     private var answerGlyph: XCUIElement { app.staticTexts["answerGlyph"] }
     private var strokeGuide: XCUIElement { app.otherElements["strokeGuide"] }
+
+    func testHomeShowsNewAndReviewButtons() {
+        XCTAssertTrue(practiceButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(reviewButton.exists)
+        XCTAssertTrue(app.buttons["session.words"].exists)
+        XCTAssertFalse(app.buttons["session.recall"].exists)
+        XCTAssertFalse(app.segmentedControls["practice.focus"].exists)
+        XCTAssertEqual(reviewButton.value as? String ?? "", "")
+    }
+
+    func testNewFocusStartsASessionWithTheAnswerShown() {
+        XCTAssertTrue(practiceButton.waitForExistence(timeout: 5))
+        practiceButton.tap()
+        XCTAssertTrue(answerGlyph.waitForExistence(timeout: 5))
+        XCTAssertFalse(hiddenGlyph.exists)
+    }
 
     func testCharacterFromGridOffersGuideModesAndRemembersTheChoice() {
         openCharacter("一")
@@ -66,9 +85,8 @@ final class RecallUITests: XCTestCase {
     }
 
     func testRecallSessionHidesTheAnswerUntilHints() {
-        let recall = app.buttons["session.recall"]
-        XCTAssertTrue(recall.waitForExistence(timeout: 5))
-        recall.tap()
+        XCTAssertTrue(reviewButton.waitForExistence(timeout: 5))
+        reviewButton.tap()
 
         XCTAssertTrue(hiddenGlyph.waitForExistence(timeout: 5))
         XCTAssertFalse(answerGlyph.exists)
@@ -95,7 +113,7 @@ final class RecallUITests: XCTestCase {
         let progressButton = app.buttons["Progress"]
         XCTAssertTrue(progressButton.waitForExistence(timeout: 5))
         progressButton.tap()
-        XCTAssertTrue(app.staticTexts["Characters you needed a hint or retries for in Recall appear here."]
+        XCTAssertTrue(app.staticTexts["Characters you needed a hint or retries for in Review appear here."]
             .waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["count.Completed"].label, "0, Completed")
         app.navigationBars.buttons.firstMatch.tap()
@@ -112,13 +130,13 @@ final class RecallUITests: XCTestCase {
         goBack()
         dismissSearch()
         XCTAssertTrue(progressButton.waitForExistence(timeout: 5))
-        XCTAssertFalse(app.buttons["session.review"].exists)
+        XCTAssertEqual(reviewButton.value as? String ?? "", "")
         progressButton.tap()
 
         let completed = app.staticTexts["count.Completed"]
         XCTAssertTrue(completed.waitForExistence(timeout: 5))
         XCTAssertEqual(completed.label, "1, Completed")
         XCTAssertEqual(app.staticTexts["count.Characters"].label, "1, Characters")
-        XCTAssertTrue(app.staticTexts["Characters you needed a hint or retries for in Recall appear here."].exists)
+        XCTAssertTrue(app.staticTexts["Characters you needed a hint or retries for in Review appear here."].exists)
     }
 }
