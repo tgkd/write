@@ -53,7 +53,8 @@ struct WritingView: View {
         }
         .onAppear {
             session.validationConfig = settings.validationConfig
-            session.onSentenceCompleted = { [weak wordHistory] in wordHistory?.add($0) }
+            let history = wordHistory
+            session.onSentenceCompleted = { [weak history] in history?.add($0) }
         }
         .onChange(of: settings.writingMode) { mode in
             session.requestedMode = mode

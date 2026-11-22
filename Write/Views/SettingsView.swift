@@ -284,6 +284,12 @@ struct SettingsView: View {
             .background(Color(.secondarySystemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 10))
 
+            Text("Double-tap or squeeze Apple Pencil to undo the last stroke. In Notebook, it clears the cell.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 4)
+                .accessibilityIdentifier("pencilActionsNote")
+
             Text("Notebook")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
