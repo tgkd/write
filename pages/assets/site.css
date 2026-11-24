@@ -745,19 +745,42 @@ main:focus {
   letter-spacing: 0;
 }
 
-.feedback-phone {
-  width: min(100%, 18rem);
-  margin: 0 auto -6rem;
+.feedback-pills {
+  display: grid;
+  gap: var(--spacing-sm);
+  margin: 0;
+  padding: 0 0 var(--spacing-xl);
+  list-style: none;
+}
+
+.feedback-pill {
+  padding: 0.85rem 1.4rem;
+  border-radius: 1.5rem;
+  background: var(--color-surface-strong);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.feedback-pill:nth-child(2) {
+  margin-inline-start: var(--spacing-lg);
+}
+
+.feedback-pill:nth-child(3) {
+  margin-inline-start: calc(var(--spacing-lg) * 2);
 }
 
 @media (min-width: 720px) {
   .feedback {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    padding: var(--spacing-2xl) var(--spacing-2xl) 0;
+    padding: var(--spacing-2xl);
   }
 
-  .feedback-copy {
-    padding-bottom: var(--spacing-2xl);
+  .feedback-pills {
+    padding: 0;
   }
 }
 

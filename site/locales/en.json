@@ -58,7 +58,11 @@
     ],
     "feedbackTitle": "It tells you what went wrong",
     "feedbackBody": "A rejected stroke comes with a reason: right shape but wrong order, wrong shape, or too far from where the stroke belongs. You fix that one stroke and continue.",
-    "screenAlt": "From-memory practice on iPhone with the message: Right shape, wrong order: that was stroke 3. Draw stroke 1 first."
+    "messages": [
+      "Right shape, wrong order: that was stroke 3. Draw stroke 1 first.",
+      "The shape doesn't match this stroke.",
+      "Too far from where this stroke belongs."
+    ]
   },
   "try": {
     "eyebrow": "Try it here",

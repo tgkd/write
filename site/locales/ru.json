@@ -58,7 +58,11 @@
     ],
     "feedbackTitle": "Приложение объясняет ошибку",
     "feedbackBody": "Если черта не засчитана, вы видите причину: форма верная, но порядок нет; форма не та; черта слишком далеко от своего места. Вы исправляете одну черту и пишете дальше.",
-    "screenAlt": "Практика по памяти на iPhone с сообщением на английском: Right shape, wrong order: that was stroke 3. Draw stroke 1 first. То есть: форма верная, порядок нет, это была черта 3, сначала напишите черту 1."
+    "messages": [
+      "Right shape, wrong order: that was stroke 3. Draw stroke 1 first.",
+      "The shape doesn't match this stroke.",
+      "Too far from where this stroke belongs."
+    ]
   },
   "try": {
     "eyebrow": "Попробуйте здесь",
