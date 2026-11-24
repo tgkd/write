@@ -1,0 +1,280 @@
+{
+  "meta": {
+    "title": "Kanji Write: Learn Kanji Stroke Order by Hand",
+    "description": "Practise Japanese handwriting on iPhone and iPad. Kanji Write checks the shape, position, direction and order of every stroke of 2,200+ kanji, hiragana and katakana.",
+    "ogTitle": "Kanji Write: every stroke is checked",
+    "ogDescription": "Write kanji and kana by hand. The app checks the shape, position, direction and order of each stroke.",
+    "ogImageAlt": "The kanji 学 written stroke by stroke next to the words Kanji Write"
+  },
+  "nav": {
+    "skipToContent": "Skip to content",
+    "home": "Kanji Write home",
+    "features": "Features",
+    "tryIt": "Try it",
+    "ipad": "iPad",
+    "faq": "FAQ",
+    "download": "Download",
+    "language": "Language"
+  },
+  "store": {
+    "badgeLabel": "Download on the App Store",
+    "free": "Free",
+    "requirement": "iPhone and iPad, iOS 16 or later"
+  },
+  "hero": {
+    "eyebrow": "Kanji and kana handwriting trainer",
+    "title": "Learn kanji stroke order by hand",
+    "lede": "Write each character with a finger or Apple Pencil. Kanji Write checks every stroke as you draw it and tells you what to fix.",
+    "facts": [
+      "2,200+ kanji",
+      "JLPT N5 to N1",
+      "Hiragana and katakana"
+    ],
+    "demoLabel": "Stroke order of the kanji 学, drawn one stroke at a time",
+    "demoCaption": "学 · study · 8 strokes",
+    "screenAlt": "Kanji Write home screen on iPhone with JLPT level filters, the New and Review buttons and a grid of N5 kanji"
+  },
+  "checks": {
+    "eyebrow": "Stroke validation",
+    "title": "Four checks on every stroke",
+    "lede": "The app compares the line you draw with a reference stroke. A stroke is accepted only when all four checks pass.",
+    "items": [
+      {
+        "title": "Shape",
+        "body": "The curve of your line must follow the curve of the stroke, hooks and turns included."
+      },
+      {
+        "title": "Position",
+        "body": "The stroke must sit in the correct part of the square, so the character keeps its proportions."
+      },
+      {
+        "title": "Direction",
+        "body": "A stroke drawn from the wrong end is rejected, even when it looks correct."
+      },
+      {
+        "title": "Order",
+        "body": "Strokes are accepted only in the correct sequence, in every practice mode."
+      }
+    ],
+    "feedbackTitle": "Feedback that names the problem",
+    "feedbackBody": "When a stroke is rejected, the app tells you the reason: correct shape but wrong order, wrong direction, or wrong position. You correct that one stroke and continue.",
+    "screenAlt": "Practice screen that shows the message: Right shape, wrong order: that was stroke 3. Draw stroke 1 first."
+  },
+  "try": {
+    "eyebrow": "Try it here",
+    "title": "Write a kanji in your browser",
+    "lede": "Draw the strokes in order with a mouse, a finger or a pen. This demo uses the same stroke data as the app and a simplified version of its check.",
+    "canvasLabel": "Drawing area for the kanji {character}",
+    "instruction": "Draw stroke {current} of {total}",
+    "accepted": "Correct",
+    "wrongOrder": "Correct shape, wrong order. Draw stroke {current} first.",
+    "wrongDirection": "Wrong direction. Start from the other end.",
+    "wrongShape": "Not this stroke. Follow the guide.",
+    "done": "Complete. All {total} strokes are in order.",
+    "hint": "Show the stroke",
+    "reset": "Start again",
+    "next": "Next character",
+    "guideOn": "Guide on",
+    "guideOff": "Guide off",
+    "noScript": "This demo needs JavaScript. The app does not."
+  },
+  "guides": {
+    "eyebrow": "Three guide levels",
+    "title": "From tracing to writing alone",
+    "lede": "Select how much help you get. The app remembers the level, and it checks stroke order at every level.",
+    "items": [
+      {
+        "name": "Trace",
+        "title": "Write over the full character",
+        "body": "All strokes show as a guide. You draw over them and each one is checked.",
+        "screenAlt": "Trace mode on iPhone with the full character shown as a grey guide and the first strokes drawn"
+      },
+      {
+        "name": "Guided",
+        "title": "See only the next stroke",
+        "body": "Only the next stroke shows. You learn the sequence one step at a time.",
+        "screenAlt": "Guided mode on iPhone with only the next stroke shown as a guide"
+      },
+      {
+        "name": "Copy",
+        "title": "Write with no guide",
+        "body": "The square is empty. The character stays in view above it and you copy it.",
+        "screenAlt": "Copy mode on iPhone with a completed character written in an empty grid"
+      }
+    ]
+  },
+  "practice": {
+    "eyebrow": "Practice",
+    "title": "New characters, then Review from memory",
+    "lede": "The Home screen has one Practice group with two buttons. You always know what to do next.",
+    "items": [
+      {
+        "name": "New",
+        "title": "Learn characters you have not written",
+        "body": "New gives you the next characters of your level with the guide level you selected.",
+        "screenAlt": "Home screen on iPhone with the New and Review buttons in the Practice group"
+      },
+      {
+        "name": "Review",
+        "title": "Write from memory",
+        "body": "Review hides the character. You see only its readings and meaning and write it from memory. Hints can show the character or the next stroke.",
+        "screenAlt": "Review session on iPhone with the character hidden and its meaning and readings shown"
+      }
+    ],
+    "points": [
+      "Characters that needed a hint or a second try come first in Review.",
+      "The Review button shows how many characters wait for you.",
+      "The Progress screen shows your practice days, completed characters and the last five weeks."
+    ],
+    "progressAlt": "Progress screen on iPhone with practice days, completed characters and a five-week activity grid"
+  },
+  "sentences": {
+    "eyebrow": "Sentences on iPad",
+    "title": "Write whole words and sentences",
+    "lede": "On iPad you write a full sentence, one square for each character. Each stroke of each character is checked.",
+    "points": [
+      "Each sentence comes with its reading and an English translation.",
+      "Trace the characters, write them in empty squares, or write freely with no check.",
+      "The active row stays in the centre, so a resting hand does not move the page."
+    ],
+    "screenAlt": "Sentence writing on iPad with a row of squares, some characters written and the next square active"
+  },
+  "ipad": {
+    "eyebrow": "iPad and Apple Pencil",
+    "title": "Made for Apple Pencil",
+    "lede": "The iPad layout gives the writing area the full screen. With Apple Pencil, practice feels like a paper notebook.",
+    "items": [
+      {
+        "title": "Apple Pencil",
+        "body": "Write with Apple Pencil on iPad, or with a finger on iPhone and iPad."
+      },
+      {
+        "title": "Haptic feedback",
+        "body": "Apple Pencil Pro gives a light tap when a stroke is accepted and when a character is complete. iPhone uses its own haptics."
+      },
+      {
+        "title": "Notebook",
+        "body": "A notebook grid lets you practise freely, row after row, as on squared paper."
+      },
+      {
+        "title": "Sidebar layout",
+        "body": "The sidebar holds levels and sessions. It hides when you write, so the canvas gets all the space."
+      }
+    ],
+    "homeAlt": "Kanji Write on iPad with the sidebar and the kanji grid",
+    "notebookAlt": "Notebook practice on iPad with rows of handwritten characters in a grid"
+  },
+  "library": {
+    "eyebrow": "Characters",
+    "title": "All the kanji you must know, and all the kana",
+    "lede": "Filter characters by JLPT level, by Japanese school grade or by kana type. Search by character, reading or English meaning.",
+    "stats": [
+      {
+        "value": "2,200+",
+        "label": "kanji with stroke data"
+      },
+      {
+        "value": "N5 to N1",
+        "label": "all five JLPT levels"
+      },
+      {
+        "value": "1 to 6",
+        "label": "elementary school grades"
+      },
+      {
+        "value": "あ ア",
+        "label": "hiragana and katakana, with voiced forms and yōon"
+      }
+    ],
+    "glyphsLabel": "Examples of kanji and kana from the app, drawn in stroke order"
+  },
+  "more": {
+    "eyebrow": "Also in the app",
+    "title": "Small things that help you practise each day",
+    "items": [
+      {
+        "title": "Works offline",
+        "body": "All character data is in the app. It needs no internet connection."
+      },
+      {
+        "title": "No account, no tracking",
+        "body": "There is no sign-up, no analytics and no advertising."
+      },
+      {
+        "title": "iCloud sync",
+        "body": "Practice history syncs between your own devices through your private iCloud."
+      },
+      {
+        "title": "Daily kanji widget",
+        "body": "A widget shows one kanji each day on the Home Screen or Lock Screen. Tap it to start practice."
+      },
+      {
+        "title": "Strictness",
+        "body": "Select how strictly strokes are checked: normal or strict."
+      },
+      {
+        "title": "Your ink",
+        "body": "Change the ink colour, the guide colours and the guide width."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Questions and answers",
+    "items": [
+      {
+        "q": "How does Kanji Write check stroke order?",
+        "a": "The app compares each stroke you draw with a reference stroke from the KanjiVG data. It checks the shape, the position, the direction and the place of the stroke in the sequence. A stroke that fails a check is rejected and the app tells you the reason."
+      },
+      {
+        "q": "Is Kanji Write free?",
+        "a": "Yes. Kanji Write is free on the App Store."
+      },
+      {
+        "q": "Which characters can I practise?",
+        "a": "More than 2,200 kanji, which covers JLPT N5 to N1 and the kanji of Japanese elementary school grades 1 to 6, plus all hiragana and katakana with voiced forms and yōon combinations."
+      },
+      {
+        "q": "Can I use Apple Pencil?",
+        "a": "Yes. On iPad you can write with Apple Pencil, and Apple Pencil Pro gives haptic feedback. You can also write with a finger on iPhone and iPad."
+      },
+      {
+        "q": "Does the app work offline?",
+        "a": "Yes. All data is in the app. The app has no account and collects no data."
+      },
+      {
+        "q": "Is it good for JLPT study?",
+        "a": "Yes. You can filter kanji by JLPT level from N5 to N1 and practise each level in order. Writing a kanji by hand helps you remember its form and its parts."
+      },
+      {
+        "q": "What is the difference between New and Review?",
+        "a": "New gives you characters that you have not practised, with a guide. Review hides the character and you write it from memory from its readings and meaning. Characters you found difficult come first."
+      },
+      {
+        "q": "Which languages does the app have?",
+        "a": "The app interface is in English and Japanese. Kanji meanings are in English."
+      },
+      {
+        "q": "Is there an Android version?",
+        "a": "An Android version is in development. Kanji Write is available now for iPhone and iPad."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Start with one stroke",
+    "lede": "Kanji Write is free for iPhone and iPad.",
+    "button": "Download on the App Store"
+  },
+  "footer": {
+    "privacy": "Privacy Policy",
+    "contact": "Contact",
+    "languages": "Languages",
+    "attribution": "Stroke data from KanjiVG (CC BY-SA 3.0). Readings and meanings from KANJIDIC2 (CC BY-SA 4.0). Sentences from Tatoeba (CC BY 2.0 FR).",
+    "trademark": "Apple, iPhone, iPad and Apple Pencil are trademarks of Apple Inc. App Store is a service mark of Apple Inc."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This page does not exist.",
+    "home": "Go to the home page"
+  }
+}

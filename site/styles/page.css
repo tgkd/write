@@ -1,0 +1,7 @@
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
