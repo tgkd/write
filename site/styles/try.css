@@ -1,3 +1,249 @@
-.try {
-  display: block;
+.try-inner {
+  display: grid;
+  gap: var(--spacing-xl);
+  align-items: center;
+}
+
+.try-demo {
+  display: grid;
+  gap: var(--spacing-md);
+  width: 100%;
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
+.try-stage {
+  position: relative;
+}
+
+.try-board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.try-ready .try-board {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: crosshair;
+}
+
+.try-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.try-layer[hidden] {
+  display: none;
+}
+
+.try-grid line {
+  stroke: var(--color-line);
+  stroke-width: 0.6;
+  stroke-dasharray: 2 2;
+}
+
+.try-guide {
+  color: var(--color-text);
+}
+
+.try-ready .try-guide {
+  color: var(--color-guide);
+  transition: opacity var(--duration-fast) var(--easing-standard);
+}
+
+.try-ready.is-guide-off .try-guide {
+  opacity: 0;
+}
+
+.try-ink {
+  overflow: visible;
+}
+
+.try-ink path {
+  fill: none;
+  stroke-width: var(--glyph-stroke-width);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.try-ink-line {
+  stroke: var(--color-text);
+}
+
+.try-ink-line.is-accepted {
+  animation: try-fade-out var(--duration-base) var(--easing-standard) forwards;
+}
+
+.try-ink-line.is-rejected {
+  stroke: var(--color-reject);
+  transform-box: fill-box;
+  animation: try-reject 1400ms var(--easing-standard) forwards;
+}
+
+.try-written-stroke {
+  stroke: var(--color-text);
+}
+
+.try-written-stroke.is-snapping {
+  animation: try-fade-in var(--duration-base) var(--easing-standard);
+}
+
+.try-written-stroke.is-drawing {
+  animation: try-draw var(--duration-stroke) var(--easing-standard) forwards;
+}
+
+.try-start {
+  fill: var(--color-bg);
+  stroke: var(--color-text);
+  stroke-width: 1.2;
+}
+
+.try-feedback {
+  position: absolute;
+  top: var(--spacing-sm);
+  left: 50%;
+  width: max-content;
+  max-width: calc(100% - 2 * var(--spacing-sm));
+  margin: 0;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity var(--duration-fast) var(--easing-standard);
+}
+
+.try-feedback[data-place='bottom'] {
+  top: auto;
+  bottom: var(--spacing-sm);
+}
+
+.try-feedback:empty {
+  visibility: hidden;
+}
+
+.try-feedback.is-visible {
+  opacity: 1;
+}
+
+.try-feedback[data-tone='rejected'] {
+  color: var(--color-reject);
+}
+
+.try-instruction {
+  min-height: calc(2em * var(--line-height-body));
+  margin: 0;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.is-complete .try-instruction {
+  color: var(--color-text);
+}
+
+.try-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--spacing-xs);
+  visibility: hidden;
+}
+
+.try-ready .try-controls {
+  visibility: visible;
+}
+
+.try-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+@media (min-width: 60rem) {
+  .try-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+    gap: var(--spacing-2xl);
+  }
+
+  .try-demo {
+    margin-inline: 0;
+  }
+}
+
+@keyframes try-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes try-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes try-draw {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes try-reject {
+  0%,
+  40% {
+    transform: none;
+  }
+
+  8%,
+  24% {
+    transform: translateX(-2.5px);
+  }
+
+  16%,
+  32% {
+    transform: translateX(2.5px);
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .try-ink-line.is-accepted,
+  .try-ink-line.is-rejected,
+  .try-written-stroke.is-snapping,
+  .try-written-stroke.is-drawing {
+    animation: none;
+  }
+
+  .try-ready .try-guide,
+  .try-feedback {
+    transition: none;
+  }
 }
