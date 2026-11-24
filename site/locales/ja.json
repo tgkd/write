@@ -1,280 +1,280 @@
 {
   "meta": {
-    "title": "Kanji Write: Learn Kanji Stroke Order by Hand",
-    "description": "Practise Japanese handwriting on iPhone and iPad. Kanji Write checks the shape, position, direction and order of every stroke of 2,200+ kanji, hiragana and katakana.",
-    "ogTitle": "Kanji Write: every stroke is checked",
-    "ogDescription": "Write kanji and kana by hand. The app checks the shape, position, direction and order of each stroke.",
-    "ogImageAlt": "The kanji 学 written stroke by stroke next to the words Kanji Write"
+    "title": "漢字・ひらがな・カタカナ書き順練習｜Kanji Write",
+    "description": "漢字2,200字超とひらがな・カタカナを指やApple Pencilで手書き練習。形・位置・向き・書き順を一画ずつ判定。小学1〜6年・JLPT N5〜N1対応。",
+    "ogTitle": "Kanji Write：一画ずつ、書き順を判定",
+    "ogDescription": "漢字とかなを、指やApple Pencilで手書き練習。書いた線の形・位置・向き・書き順を一画ずつ判定します。",
+    "ogImageAlt": "一画ずつ書いた漢字「学」と、Kanji Writeの文字"
   },
   "nav": {
-    "skipToContent": "Skip to content",
-    "home": "Kanji Write home",
-    "features": "Features",
-    "tryIt": "Try it",
+    "skipToContent": "本文へ移動",
+    "home": "Kanji Write ホーム",
+    "features": "機能",
+    "tryIt": "試す",
     "ipad": "iPad",
-    "faq": "FAQ",
-    "download": "Download",
-    "language": "Language"
+    "faq": "よくある質問",
+    "download": "ダウンロード",
+    "language": "言語"
   },
   "store": {
-    "badgeLabel": "Download on the App Store",
-    "free": "Free",
-    "requirement": "iPhone and iPad, iOS 16 or later"
+    "badgeLabel": "App Storeからダウンロード",
+    "free": "無料",
+    "requirement": "iPhone・iPad対応（iOS 16以降）"
   },
   "hero": {
-    "eyebrow": "Kanji and kana handwriting trainer",
-    "title": "Learn kanji stroke order by hand",
-    "lede": "Write each character with a finger or Apple Pencil. Kanji Write checks every stroke as you draw it and tells you what to fix.",
+    "eyebrow": "漢字・ひらがな・カタカナの手書き練習",
+    "title": "漢字の書き順を、手で書いて覚える",
+    "lede": "指やApple Pencilで、一文字ずつ書いてみましょう。Kanji Writeは書いたそばから一画ずつ判定し、どこを直せばよいかを教えます。",
     "facts": [
-      "2,200+ kanji",
-      "JLPT N5 to N1",
-      "Hiragana and katakana"
+      "漢字2,200字以上",
+      "小学1〜6年・JLPT N5〜N1",
+      "ひらがな・カタカナ"
     ],
-    "demoLabel": "Stroke order of the kanji 学, drawn one stroke at a time",
-    "demoCaption": "学 · study · 8 strokes",
-    "screenAlt": "Kanji Write home screen on iPhone with JLPT level filters, the New and Review buttons and a grid of N5 kanji"
+    "demoLabel": "漢字「学」の書き順を一画ずつ表示するアニメーション",
+    "demoCaption": "学 · まなぶ · 8画",
+    "screenAlt": "iPhoneのKanji Writeホーム画面。JLPTのレベル選択、「練習」の「新しい字」「復習」「ことば」ボタン、N5の漢字の一覧"
   },
   "checks": {
-    "eyebrow": "Stroke validation",
-    "title": "Four checks on every stroke",
-    "lede": "The app compares the line you draw with a reference stroke. A stroke is accepted only when all four checks pass.",
+    "eyebrow": "一画ごとの判定",
+    "title": "一画ずつ、4つのポイントを判定",
+    "lede": "書いた線を、お手本の一画と比べます。4つすべてが合っているときだけ、その画を正解にします。",
     "items": [
       {
-        "title": "Shape",
-        "body": "The curve of your line must follow the curve of the stroke, hooks and turns included."
+        "title": "形",
+        "body": "線の形がお手本と合っているかを見ます。はねや曲がりも確認します。"
       },
       {
-        "title": "Position",
-        "body": "The stroke must sit in the correct part of the square, so the character keeps its proportions."
+        "title": "位置",
+        "body": "マスの中の正しい場所に書けているかを見ます。文字のバランスがくずれません。"
       },
       {
-        "title": "Direction",
-        "body": "A stroke drawn from the wrong end is rejected, even when it looks correct."
+        "title": "向き",
+        "body": "書き始めと書き終わりが逆の線は、形が合っていても不正解です。"
       },
       {
-        "title": "Order",
-        "body": "Strokes are accepted only in the correct sequence, in every practice mode."
+        "title": "書き順",
+        "body": "正しい順番で書いたときだけ正解になります。どの練習でも同じです。"
       }
     ],
-    "feedbackTitle": "Feedback that names the problem",
-    "feedbackBody": "When a stroke is rejected, the app tells you the reason: correct shape but wrong order, wrong direction, or wrong position. You correct that one stroke and continue.",
-    "screenAlt": "Practice screen that shows the message: Right shape, wrong order: that was stroke 3. Draw stroke 1 first."
+    "feedbackTitle": "どこが違うかを教えます",
+    "feedbackBody": "不正解のときは、理由を表示します。たとえば「形は合っているが書き順が違う」「形が違う」「位置がずれている」などです。その一画だけを書き直して、続けられます。",
+    "screenAlt": "iPhoneの思い出して書く練習画面。「形は合っていますが、書き順が違います。今のは3画目です。先に1画目を書いてください。」というメッセージ"
   },
   "try": {
-    "eyebrow": "Try it here",
-    "title": "Write a kanji in your browser",
-    "lede": "Draw the strokes in order with a mouse, a finger or a pen. This demo uses the same stroke data as the app and a simplified version of its check.",
-    "canvasLabel": "Drawing area for the kanji {character}",
-    "instruction": "Draw stroke {current} of {total}",
-    "accepted": "Correct",
-    "wrongOrder": "Correct shape, wrong order. Draw stroke {current} first.",
-    "wrongDirection": "Wrong direction. Start from the other end.",
-    "wrongShape": "Not this stroke. Follow the guide.",
-    "done": "Complete. All {total} strokes are in order.",
-    "hint": "Show the stroke",
-    "reset": "Start again",
-    "next": "Next character",
-    "guideOn": "Guide on",
-    "guideOff": "Guide off",
-    "noScript": "This demo needs JavaScript. The app does not."
+    "eyebrow": "ここで試せます",
+    "title": "ブラウザで漢字を書いてみる",
+    "lede": "マウス、指、ペンで、書き順どおりに書いてみてください。アプリと同じ書き順データを使っています。判定はアプリより簡単です。",
+    "canvasLabel": "文字「{character}」を書くスペース",
+    "instruction": "{total}画中{current}画目を書いてください",
+    "accepted": "正解",
+    "wrongOrder": "形は合っていますが、書き順が違います。先に{current}画目を書いてください。",
+    "wrongDirection": "向きが逆です。反対側から書いてください。",
+    "wrongShape": "この画と形が合っていません。",
+    "done": "完成です。{total}画すべて、正しい書き順で書けました。",
+    "hint": "次の一画を表示",
+    "reset": "やり直す",
+    "next": "次の文字",
+    "guideOn": "ガイド：オン",
+    "guideOff": "ガイド：オフ",
+    "noScript": "このデモにはJavaScriptが必要です。アプリには必要ありません。"
   },
   "guides": {
-    "eyebrow": "Three guide levels",
-    "title": "From tracing to writing alone",
-    "lede": "Select how much help you get. The app remembers the level, and it checks stroke order at every level.",
+    "eyebrow": "3つのガイド",
+    "title": "なぞり書きから、お手本なしまで",
+    "lede": "どれだけ手助けがほしいかを選べます。選んだガイドは次回も使われます。どのガイドでも書き順を判定します。",
     "items": [
       {
-        "name": "Trace",
-        "title": "Write over the full character",
-        "body": "All strokes show as a guide. You draw over them and each one is checked.",
-        "screenAlt": "Trace mode on iPhone with the full character shown as a grey guide and the first strokes drawn"
+        "name": "なぞり書き",
+        "title": "お手本全体をなぞる",
+        "body": "文字全体がうすく表示されます。上からなぞって書き、一画ずつ判定します。",
+        "screenAlt": "iPhoneのなぞり書き画面。うすく表示された「学」の上に、最初の数画を書いたところ"
       },
       {
-        "name": "Guided",
-        "title": "See only the next stroke",
-        "body": "Only the next stroke shows. You learn the sequence one step at a time.",
-        "screenAlt": "Guided mode on iPhone with only the next stroke shown as a guide"
+        "name": "ガイド付き",
+        "title": "次の一画だけを表示",
+        "body": "次に書く一画だけが表示されます。書き順を一つずつ覚えられます。",
+        "screenAlt": "iPhoneのガイド付き画面。「書」をほとんど書き終え、次の一画だけがガイドとして表示されている"
       },
       {
-        "name": "Copy",
-        "title": "Write with no guide",
-        "body": "The square is empty. The character stays in view above it and you copy it.",
-        "screenAlt": "Copy mode on iPhone with a completed character written in an empty grid"
+        "name": "見て書く",
+        "title": "ガイドなしで書く",
+        "body": "マスには何も表示されません。上に出ている文字を見ながら書きます。",
+        "screenAlt": "iPhoneの見て書く画面。何もないマスに手書きした「学」と、上のお手本"
       }
     ]
   },
   "practice": {
-    "eyebrow": "Practice",
-    "title": "New characters, then Review from memory",
-    "lede": "The Home screen has one Practice group with two buttons. You always know what to do next.",
+    "eyebrow": "練習",
+    "title": "新しい字を覚えて、復習で思い出して書く",
+    "lede": "ホーム画面の「練習」には、ボタンが2つだけ。次に何をすればよいか迷いません。",
     "items": [
       {
-        "name": "New",
-        "title": "Learn characters you have not written",
-        "body": "New gives you the next characters of your level with the guide level you selected.",
-        "screenAlt": "Home screen on iPhone with the New and Review buttons in the Practice group"
+        "name": "新しい字",
+        "title": "まだ書いていない字を練習",
+        "body": "「新しい字」では、まだ練習していない字を、選んだガイドで練習します。",
+        "screenAlt": "iPhoneのホーム画面。「練習」の「新しい字」と「復習」ボタン"
       },
       {
-        "name": "Review",
-        "title": "Write from memory",
-        "body": "Review hides the character. You see only its readings and meaning and write it from memory. Hints can show the character or the next stroke.",
-        "screenAlt": "Review session on iPhone with the character hidden and its meaning and readings shown"
+        "name": "復習",
+        "title": "思い出して書き取り",
+        "body": "「復習」では文字がかくれ、読みと意味だけが表示されます。思い出せないときは、ヒントで文字や次の一画を見られます。",
+        "screenAlt": "iPhoneの復習画面。文字は「?」でかくれ、意味と読みが表示されている"
       }
     ],
     "points": [
-      "Characters that needed a hint or a second try come first in Review.",
-      "The Review button shows how many characters wait for you.",
-      "The Progress screen shows your practice days, completed characters and the last five weeks."
+      "ヒントを使ったり、書き直したりした字が、復習で先に出ます。",
+      "「復習」ボタンには、復習を待っている字の数が表示されます。",
+      "「記録」画面で、練習した日数、完了回数、文字数と、直近5週間の練習状況を確認できます。"
     ],
-    "progressAlt": "Progress screen on iPhone with practice days, completed characters and a five-week activity grid"
+    "progressAlt": "iPhoneの記録画面。日数・完了回数・文字数、この1か月のカレンダー、復習する字の一覧"
   },
   "sentences": {
-    "eyebrow": "Sentences on iPad",
-    "title": "Write whole words and sentences",
-    "lede": "On iPad you write a full sentence, one square for each character. Each stroke of each character is checked.",
+    "eyebrow": "ことばと文",
+    "title": "ことばや文を、まるごと書く",
+    "lede": "iPadでは、1文字に1マスずつ、文をまるごと書けます。iPhoneでは「ことば」で単語を書いて練習できます。",
     "points": [
-      "Each sentence comes with its reading and an English translation.",
-      "Trace the characters, write them in empty squares, or write freely with no check.",
-      "The active row stays in the centre, so a resting hand does not move the page."
+      "どの文にも、読みと英語の訳がつきます。",
+      "書き方は3つ。「自由筆記」は判定なしでなぞる、「なぞり書き」は一画ずつ判定しながらなぞる、「空欄」は何もないマスに書く練習です。",
+      "読みを音声で聞けます。"
     ],
-    "screenAlt": "Sentence writing on iPad with a row of squares, some characters written and the next square active"
+    "screenAlt": "iPadの文を書く練習（空欄）。マスに手書きした文字と、次に書くマス。上に読みと英語の訳"
   },
   "ipad": {
-    "eyebrow": "iPad and Apple Pencil",
-    "title": "Made for Apple Pencil",
-    "lede": "The iPad layout gives the writing area the full screen. With Apple Pencil, practice feels like a paper notebook.",
+    "eyebrow": "iPadとApple Pencil",
+    "title": "Apple Pencilで、ノートに書くように",
+    "lede": "iPadでは、画面いっぱいを書く場所に使えます。Apple Pencilなら、紙のノートに書く感覚で練習できます。",
     "items": [
       {
         "title": "Apple Pencil",
-        "body": "Write with Apple Pencil on iPad, or with a finger on iPhone and iPad."
+        "body": "iPadではApple Pencilでも指でも書けます。iPhoneでは指で書きます。"
       },
       {
-        "title": "Haptic feedback",
-        "body": "Apple Pencil Pro gives a light tap when a stroke is accepted and when a character is complete. iPhone uses its own haptics."
+        "title": "触覚フィードバック",
+        "body": "Apple Pencil Proは、1文字や1文を書き終えたときに軽く振動します。iPhoneでは本体が振動します。"
       },
       {
-        "title": "Notebook",
-        "body": "A notebook grid lets you practise freely, row after row, as on squared paper."
+        "title": "ノート",
+        "body": "字を選んで、マス目に何度でも自由に書けます。各行の最初にお手本が表示されます。"
       },
       {
-        "title": "Sidebar layout",
-        "body": "The sidebar holds levels and sessions. It hides when you write, so the canvas gets all the space."
+        "title": "サイドバー",
+        "body": "検索、絞り込み、文字の一覧はサイドバーにあります。書く画面ではサイドバーがかくれ、広く書けます。"
       }
     ],
-    "homeAlt": "Kanji Write on iPad with the sidebar and the kanji grid",
-    "notebookAlt": "Notebook practice on iPad with rows of handwritten characters in a grid"
+    "homeAlt": "iPadのKanji Write。サイドバーに検索、絞り込み、「練習」、漢字の一覧。右側に選んだ漢字「学」と「練習」「ノート」ボタン",
+    "notebookAlt": "iPadのノート。各行の最初にお手本の「学」があり、その後に手書きの「学」が並んでいる"
   },
   "library": {
-    "eyebrow": "Characters",
-    "title": "All the kanji you must know, and all the kana",
-    "lede": "Filter characters by JLPT level, by Japanese school grade or by kana type. Search by character, reading or English meaning.",
+    "eyebrow": "収録文字",
+    "title": "漢字2,200字以上と、ひらがな・カタカナ",
+    "lede": "JLPTのレベル、小学校の学年、ひらがな・カタカナで絞り込めます。文字、読み、英語の意味で検索でき、読みは音声で聞けます。",
     "stats": [
       {
         "value": "2,200+",
-        "label": "kanji with stroke data"
+        "label": "書き順データのある漢字"
       },
       {
-        "value": "N5 to N1",
-        "label": "all five JLPT levels"
+        "value": "N5〜N1",
+        "label": "JLPTの全5レベル"
       },
       {
-        "value": "1 to 6",
-        "label": "elementary school grades"
+        "value": "1〜6年",
+        "label": "小学校の学年別の漢字と、その他の常用漢字"
       },
       {
         "value": "あ ア",
-        "label": "hiragana and katakana, with voiced forms and yōon"
+        "label": "ひらがな・カタカナ（濁音・半濁音・拗音も）"
       }
     ],
-    "glyphsLabel": "Examples of kanji and kana from the app, drawn in stroke order"
+    "glyphsLabel": "アプリに収録された漢字とかなの例。書き順どおりに表示"
   },
   "more": {
-    "eyebrow": "Also in the app",
-    "title": "Small things that help you practise each day",
+    "eyebrow": "そのほかの機能",
+    "title": "毎日の練習に役立つ機能",
     "items": [
       {
-        "title": "Works offline",
-        "body": "All character data is in the app. It needs no internet connection."
+        "title": "オフラインで使える",
+        "body": "文字のデータはすべてアプリに入っています。インターネットに接続しなくても使えます。"
       },
       {
-        "title": "No account, no tracking",
-        "body": "There is no sign-up, no analytics and no advertising."
+        "title": "アカウント不要、追跡なし",
+        "body": "登録は必要ありません。分析ツールも広告もありません。"
       },
       {
-        "title": "iCloud sync",
-        "body": "Practice history syncs between your own devices through your private iCloud."
+        "title": "iCloudで同期",
+        "body": "練習の記録は、あなた自身のiCloudを通じて、お使いのデバイス間で同期されます。"
       },
       {
-        "title": "Daily kanji widget",
-        "body": "A widget shows one kanji each day on the Home Screen or Lock Screen. Tap it to start practice."
+        "title": "今日の漢字ウィジェット",
+        "body": "毎日1つの漢字を、ホーム画面やロック画面に表示します。タップすると、すぐに練習を始められます。"
       },
       {
-        "title": "Strictness",
-        "body": "Select how strictly strokes are checked: normal or strict."
+        "title": "判定の厳しさ",
+        "body": "線がお手本にどれだけ近ければ正解にするかを、「ふつう」と「きびしめ」から選べます。「きびしめ」では線の長さも確認します。"
       },
       {
-        "title": "Your ink",
-        "body": "Change the ink colour, the guide colours and the guide width."
+        "title": "インクとお手本",
+        "body": "インクの色、お手本の色、お手本の太さを変えられます。"
       }
     ]
   },
   "faq": {
     "eyebrow": "FAQ",
-    "title": "Questions and answers",
+    "title": "よくある質問",
     "items": [
       {
-        "q": "How does Kanji Write check stroke order?",
-        "a": "The app compares each stroke you draw with a reference stroke from the KanjiVG data. It checks the shape, the position, the direction and the place of the stroke in the sequence. A stroke that fails a check is rejected and the app tells you the reason."
+        "q": "Kanji Writeは、どのように書き順（筆順）を判定しますか？",
+        "a": "書いた一画を、KanjiVGのお手本の一画と比べます。形、位置、向き、そして何画目に書いたかを確認します。合っていない画は不正解になり、アプリがその理由を表示します。"
       },
       {
-        "q": "Is Kanji Write free?",
-        "a": "Yes. Kanji Write is free on the App Store."
+        "q": "Kanji Writeは無料ですか？",
+        "a": "はい。Kanji WriteはiPhone・iPad向けに、App Storeで無料で配信しています。アプリ内課金も広告もありません。"
       },
       {
-        "q": "Which characters can I practise?",
-        "a": "More than 2,200 kanji, which covers JLPT N5 to N1 and the kanji of Japanese elementary school grades 1 to 6, plus all hiragana and katakana with voiced forms and yōon combinations."
+        "q": "小学生の漢字練習に使えますか？",
+        "a": "はい。小学1〜6年の学年別に漢字を絞り込んで、書き順を練習できます。その他の常用漢字とJLPT N5〜N1の漢字もあり、全部で2,200字以上です。ひらがな・カタカナの書き方も、濁音・半濁音・拗音まで練習できます。操作画面は日本語に対応していますが、漢字の意味は英語で表示されます。"
       },
       {
-        "q": "Can I use Apple Pencil?",
-        "a": "Yes. On iPad you can write with Apple Pencil, and Apple Pencil Pro gives haptic feedback. You can also write with a finger on iPhone and iPad."
+        "q": "Apple Pencilで書けますか？",
+        "a": "はい。iPadではApple Pencilで書けます。Apple Pencil Proでは、書き終えたときに軽い振動があります。iPhoneとiPadでは、指でも書けます。"
       },
       {
-        "q": "Does the app work offline?",
-        "a": "Yes. All data is in the app. The app has no account and collects no data."
+        "q": "オフラインでも使えますか？",
+        "a": "はい。文字のデータはすべてアプリに入っているので、インターネットに接続しなくても使えます。アカウントは不要で、アプリはデータを収集しません。"
       },
       {
-        "q": "Is it good for JLPT study?",
-        "a": "Yes. You can filter kanji by JLPT level from N5 to N1 and practise each level in order. Writing a kanji by hand helps you remember its form and its parts."
+        "q": "日本語能力試験（JLPT）の漢字の勉強に使えますか？",
+        "a": "はい。N5からN1までのレベル別に漢字を絞り込み、1レベルずつ練習できます。一画ずつ手で書くことで、形と書き順を確かめながら覚えられます。"
       },
       {
-        "q": "What is the difference between New and Review?",
-        "a": "New gives you characters that you have not practised, with a guide. Review hides the character and you write it from memory from its readings and meaning. Characters you found difficult come first."
+        "q": "「新しい字」と「復習」は何が違いますか？",
+        "a": "「新しい字」では、まだ練習していない字を、ガイドを見ながら練習します。「復習」では文字がかくれ、読みと意味を手がかりに思い出して書きます。ヒントを使ったり書き直したりした字が先に出ます。"
       },
       {
-        "q": "Which languages does the app have?",
-        "a": "The app interface is in English and Japanese. Kanji meanings are in English."
+        "q": "アプリは日本語に対応していますか？",
+        "a": "はい。操作画面は日本語と英語に対応しています。漢字の意味と文の訳は英語で表示されます。"
       },
       {
-        "q": "Is there an Android version?",
-        "a": "An Android version is in development. Kanji Write is available now for iPhone and iPad."
+        "q": "Android版はありますか？",
+        "a": "まだありません。Android版は開発中で、公開日は決まっていません。Kanji Writeは今、iPhoneとiPadで使えます。"
       }
     ]
   },
   "cta": {
-    "title": "Start with one stroke",
-    "lede": "Kanji Write is free for iPhone and iPad.",
-    "button": "Download on the App Store"
+    "title": "まずは一画から",
+    "lede": "Kanji Writeは、iPhone・iPad向けの無料アプリです。",
+    "button": "App Storeからダウンロード"
   },
   "footer": {
-    "privacy": "Privacy Policy",
-    "contact": "Contact",
-    "languages": "Languages",
-    "attribution": "Stroke data from KanjiVG (CC BY-SA 3.0). Readings and meanings from KANJIDIC2 (CC BY-SA 4.0). Sentences from Tatoeba (CC BY 2.0 FR).",
-    "trademark": "Apple, iPhone, iPad and Apple Pencil are trademarks of Apple Inc. App Store is a service mark of Apple Inc."
+    "privacy": "プライバシーポリシー",
+    "contact": "お問い合わせ",
+    "languages": "言語",
+    "attribution": "書き順データ：KanjiVG（CC BY-SA 3.0）。読みと意味：KANJIDIC2（CC BY-SA 4.0）。例文：Tatoeba（CC BY 2.0 FR）。",
+    "trademark": "Apple、iPhone、iPad、Apple Pencilは、Apple Inc.の商標です。App Storeは、Apple Inc.のサービスマークです。"
   },
   "notFound": {
-    "title": "Page not found",
-    "body": "This page does not exist.",
-    "home": "Go to the home page"
+    "title": "ページが見つかりません",
+    "body": "お探しのページは存在しません。",
+    "home": "ホームページへ戻る"
   }
 }
